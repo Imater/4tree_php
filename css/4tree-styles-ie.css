@@ -1,0 +1,24 @@
+.view_type
+{
+}
+
+#v1
+{
+  background-image:url(../img/view1.png);
+}
+#v2
+{
+  background-image:url(../img/view2.png);
+}
+#v3
+{
+  background-image:url(../img/view3.png);
+}
+#v4
+{
+  background-image:url(../img/view4.png);
+}
+.folder_closed
+{
+background-image: url("../img/folder-closed.png");
+}

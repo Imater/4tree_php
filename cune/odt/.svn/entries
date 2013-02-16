@@ -1,0 +1,102 @@
+8
+
+dir
+7
+file:///svnroot/cunewebform/odt
+file:///svnroot/cunewebform
+
+
+
+2009-10-11T15:59:18.930010Z
+7
+lamaster
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+b7b89cda-3f19-4f8c-8f82-ade7a537d211
+
+settings.xml
+file
+
+
+
+
+2009-12-01T02:36:55.000000Z
+2c1e39def1b167c0bd1c2294438cf795
+2009-10-11T15:59:18.930010Z
+7
+lamaster
+has-props
+
+META-INF
+dir
+
+styles.xml
+file
+
+
+
+
+2009-12-01T02:36:55.000000Z
+560eab5ec2378de2366fc343b9474651
+2009-10-11T15:59:18.930010Z
+7
+lamaster
+has-props
+
+meta.xml
+file
+
+
+
+
+2009-12-01T02:36:55.000000Z
+7ecc9ddd3f7b88f1330b2caea21e6050
+2009-10-11T15:59:18.930010Z
+7
+lamaster
+has-props
+
+Thumbnails
+dir
+
+content.xml~
+file
+
+
+
+
+2009-12-01T02:36:55.000000Z
+f4d439151569188259b4762f911d73b5
+2009-10-11T15:59:18.930010Z
+7
+lamaster
+has-props
+
+mimetype
+file
+
+
+
+
+2009-12-01T02:36:55.000000Z
+12fbdab5e8e99fd318f5fbdcdc92670a
+2009-10-11T15:59:18.930010Z
+7
+lamaster
+has-props
+
+Configurations2
+dir
+

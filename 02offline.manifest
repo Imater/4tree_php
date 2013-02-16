@@ -1,0 +1,18 @@
+CACHE MANIFEST
+
+# VERSION 14
+
+CACHE:
+index.php
+min/all_1352882199.jsgz
+css/styles_1352882199.cssgz
+fullcalendar/fullcalendar/fullcalendar.js
+*
+css/*
+img/*
+
+NETWORK:
+*
+
+FALLBACK:
+index.php

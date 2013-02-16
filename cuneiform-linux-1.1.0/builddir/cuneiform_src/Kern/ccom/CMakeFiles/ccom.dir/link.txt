@@ -1,0 +1,1 @@
+/usr/bin/gcc  -fPIC  -Wl,-Bsymbolic -shared -Wl,-soname,libccom.so.0 -o libccom.so.1.1.0 CMakeFiles/ccom.dir/src/ccom.c.o CMakeFiles/ccom.dir/src/ccom_loc.c.o 

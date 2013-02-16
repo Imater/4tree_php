@@ -1,0 +1,16 @@
+CACHE MANIFEST
+# AppName : 4tree
+# Version: 4
+
+
+NETWORK:
+http://4tree.ru
+http://4tree.ru/min/*
+http://4tree.ru/jsredactor/redactor/*
+http://4tree.ru/css/*
+http://4tree.ru/js/*
+http://4tree.ru/fullcalendar/*
+*
+
+FALLBACK:
+fav-4tree.png

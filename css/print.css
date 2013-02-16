@@ -1,0 +1,13 @@
+h2
+{
+font-size: 60px !important;
+color: red;
+font-style: italic;
+background-color: black;
+}
+
+img
+{
+max-width:900px;
+max-height: 1000px;
+}

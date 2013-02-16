@@ -1,0 +1,10 @@
+CACHE MANIFEST
+# AppName : 4tree
+# Version: 1
+
+
+NETWORK:
+http://4tree.ru
+
+FALLBACK:
+fav-4tree.png

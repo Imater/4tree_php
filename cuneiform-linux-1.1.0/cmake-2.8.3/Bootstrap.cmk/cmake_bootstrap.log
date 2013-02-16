@@ -1,0 +1,165 @@
+Checking for GNU toolchain
+Try: gcc
+Line: gcc  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+int main() { return 0; }
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: gcc: command not found
+Test failed to compile
+Checking for Clang toolchain
+Try: clang
+Line: clang  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+int main() { return 0; }
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: clang: command not found
+Test failed to compile
+Checking for XL toolchain
+Try: xlc
+Line: xlc  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+int main() { return 0; }
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: xlc: command not found
+Test failed to compile
+Checking for PGI toolchain
+Try: pgcc
+Line: pgcc  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+int main() { return 0; }
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: pgcc: command not found
+Test failed to compile
+Checking for PathScale toolchain
+Try: pathcc
+Line: pathcc  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+int main() { return 0; }
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: pathcc: command not found
+Test failed to compile
+Try: cc
+Line: cc  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+
+#ifdef __cplusplus
+# error "The CMAKE_C_COMPILER is set to a C++ compiler"
+#endif
+
+#include<stdio.h>
+
+#if defined(__CLASSIC_C__)
+int main(argc, argv)
+  int argc;
+  char* argv[];
+#else
+int main(int argc, char* argv[])
+#endif
+{
+  printf("%d%c", (argv != 0), (char)0x0a);
+  return argc-1;
+}
+
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: cc: command not found
+Test failed to compile
+Try: gcc
+Line: gcc  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+
+#ifdef __cplusplus
+# error "The CMAKE_C_COMPILER is set to a C++ compiler"
+#endif
+
+#include<stdio.h>
+
+#if defined(__CLASSIC_C__)
+int main(argc, argv)
+  int argc;
+  char* argv[];
+#else
+int main(int argc, char* argv[])
+#endif
+{
+  printf("%d%c", (argv != 0), (char)0x0a);
+  return argc-1;
+}
+
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: gcc: command not found
+Test failed to compile
+Try: xlc
+Line: xlc  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+
+#ifdef __cplusplus
+# error "The CMAKE_C_COMPILER is set to a C++ compiler"
+#endif
+
+#include<stdio.h>
+
+#if defined(__CLASSIC_C__)
+int main(argc, argv)
+  int argc;
+  char* argv[];
+#else
+int main(int argc, char* argv[])
+#endif
+{
+  printf("%d%c", (argv != 0), (char)0x0a);
+  return argc-1;
+}
+
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: xlc: command not found
+Test failed to compile
+Try: icc
+Line: icc  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+
+#ifdef __cplusplus
+# error "The CMAKE_C_COMPILER is set to a C++ compiler"
+#endif
+
+#include<stdio.h>
+
+#if defined(__CLASSIC_C__)
+int main(argc, argv)
+  int argc;
+  char* argv[];
+#else
+int main(int argc, char* argv[])
+#endif
+{
+  printf("%d%c", (argv != 0), (char)0x0a);
+  return argc-1;
+}
+
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: icc: command not found
+Test failed to compile
+Try: tcc
+Line: tcc  cmake_bootstrap_13710_test.c -o cmake_bootstrap_13710_test
+----------  file   -----------------------
+
+#ifdef __cplusplus
+# error "The CMAKE_C_COMPILER is set to a C++ compiler"
+#endif
+
+#include<stdio.h>
+
+#if defined(__CLASSIC_C__)
+int main(argc, argv)
+  int argc;
+  char* argv[];
+#else
+int main(int argc, char* argv[])
+#endif
+{
+  printf("%d%c", (argv != 0), (char)0x0a);
+  return argc-1;
+}
+
+------------------------------------------
+/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/cmake-2.8.3/bootstrap: line 458: tcc: command not found
+Test failed to compile

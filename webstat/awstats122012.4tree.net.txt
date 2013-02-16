@@ -1,0 +1,322 @@
+AWSTATS DATA FILE 6.95 (build 1.943)
+# If you remove this file, all statistics for date 201212 will be lost/reset.
+# Last config file used to build this data file was /etc/awstats/awstats.4tree.net.conf.
+
+# Position (offset in bytes) in this file for beginning of each section for
+# direct I/O access. If you made changes somewhere in this file, you should
+# also remove completely the MAP section (AWStats will rewrite it at next
+# update).
+BEGIN_MAP 27
+POS_GENERAL 1955                
+POS_TIME 2633                
+POS_VISITOR 6478                
+POS_DAY 7331                
+POS_DOMAIN 3251                
+POS_LOGIN 3482                
+POS_ROBOT 3637                
+POS_WORMS 3929                
+POS_EMAILSENDER 4060                
+POS_EMAILRECEIVER 4203                
+POS_SESSION 7643                
+POS_SIDER 7821                
+POS_FILETYPES 4338                
+POS_OS 4609                
+POS_BROWSER 4715                
+POS_SCREENSIZE 4914                
+POS_UNKNOWNREFERER 4988                
+POS_UNKNOWNREFERERBROWSER 5204                
+POS_ORIGIN 5316                
+POS_SEREFERRALS 5452                
+POS_PAGEREFS 5596                
+POS_SEARCHWORDS 5744                
+POS_KEYWORDS 5896                
+POS_MISC 2297                
+POS_ERRORS 5955                
+POS_CLUSTER 3338                
+POS_SIDER_404 6083                
+END_MAP
+
+# LastLine    = Date of last record processed - Last record line number in last log - Last record offset in last log - Last record signature value
+# FirstTime   = Date of first visit for history file
+# LastTime    = Date of last visit for history file
+# LastUpdate  = Date of last update - Nb of parsed records - Nb of parsed old records - Nb of parsed new records - Nb of parsed corrupted - Nb of parsed dropped
+# TotalVisits = Number of visits
+# TotalUnique = Number of unique visitors
+# MonthHostsKnown   = Number of hosts known
+# MonthHostsUnKnown = Number of hosts unknown
+BEGIN_GENERAL 8
+LastLine 20130101060402 845 215649 8275980370308
+FirstTime 20121218071233
+LastTime 20121231101348
+LastUpdate 20130101070106 1 0 0 0 0
+TotalVisits 22                  
+TotalUnique 20                  
+MonthHostsKnown 0                   
+MonthHostsUnknown 20                  
+END_GENERAL
+
+# Misc ID - Pages - Hits - Bandwidth
+BEGIN_MISC 10
+QuickTimeSupport 0 0 0
+JavaEnabled 0 0 0
+JavascriptDisabled 0 0 0
+PDFSupport 0 0 0
+WindowsMediaPlayerSupport 0 0 0
+AddToFavourites 0 4 0
+RealPlayerSupport 0 0 0
+TotalMisc 0 0 0
+DirectorSupport 0 0 0
+FlashSupport 0 0 0
+END_MISC
+
+# Hour - Pages - Hits - Bandwidth - Not viewed Pages - Not viewed Hits - Not viewed Bandwidth
+BEGIN_TIME 24
+0 5 11 534085 3 3 4814
+1 0 0 0 5 5 2316
+2 0 0 0 5 5 9172
+3 0 0 0 3 3 4817
+4 3 3 21432 4 4 1852
+5 0 0 0 1 1 3860
+6 1 1 13755 7 7 15528
+7 178 461 57333599 173 187 18868045
+8 10 10 3385 13 15 62014
+9 19 62 1498841 3 4 5716
+10 2 2 27804 11 12 85424
+11 2 2 2766 1 1 462
+12 1 1 13755 2 2 857
+13 1 1 356 7 7 10067
+14 3 3 4572 6 6 11488
+15 0 0 0 4 4 8646
+16 0 0 0 0 0 0
+17 0 0 0 0 0 0
+18 1 1 3891 2 2 4324
+19 1 1 3860 6 6 13058
+20 0 0 0 8 8 13962
+21 0 0 0 2 2 7751
+22 0 0 0 0 0 0
+23 1 1 13755 0 0 0
+END_TIME
+
+# Domain - Pages - Hits - Bandwidth
+# The 10 first Pages must be first (order not required for others)
+BEGIN_DOMAIN 1
+ip 228 560 59475856
+END_DOMAIN
+
+# Cluster ID - Pages - Hits - Bandwidth
+BEGIN_CLUSTER 0
+END_CLUSTER
+
+# Login - Pages - Hits - Bandwidth - Last visit
+# The 10 first Pages must be first (order not required for others)
+BEGIN_LOGIN 0
+END_LOGIN
+
+# Robot ID - Hits - Bandwidth - Last visit - Hits on robots.txt
+# The 10 first Hits must be first (order not required for others)
+BEGIN_ROBOT 4
+baiduspider 19 62315 20121230215847 0
+googlebot 11 42706 20121231203613 0
+bot[\s_+:,\.\;\/\\-] 8 111216 20121231101346 0
+no_user_agent 5 55523 20121231101347 0
+END_ROBOT
+
+# Worm ID - Hits - Bandwidth - Last visit
+# The 5 first Hits must be first (order not required for others)
+BEGIN_WORMS 0
+END_WORMS
+
+# EMail - Hits - Bandwidth - Last visit
+# The 20 first Hits must be first (order not required for others)
+BEGIN_EMAILSENDER 0
+END_EMAILSENDER
+
+# EMail - Hits - Bandwidth - Last visit
+# The 20 first hits must be first (order not required for others)
+BEGIN_EMAILRECEIVER 0
+END_EMAILRECEIVER
+
+# Files type - Hits - Bandwidth - Bandwidth without compression - Bandwidth after compression
+BEGIN_FILETYPES 12
+css 23 337197 0 0
+png 194 52473901 0 0
+jsgz 19 1081884 0 0
+cssgz 18 90281 0 0
+woff 12 250887 0 0
+php 80 1332865 0 0
+html 25 167640 0 0
+jpg 3 827207 0 0
+js 97 2577438 0 0
+jpeg 14 100646 0 0
+svg 74 234061 0 0
+gif 1 1849 0 0
+END_FILETYPES
+
+# OS ID - Hits
+BEGIN_OS 7
+macosx 473
+winme 2
+winlong 4
+winxp 69
+Unknown 10
+linux 1
+win2008 1
+END_OS
+
+# Browser ID - Hits
+BEGIN_BROWSER 10
+msie6.0 6
+mozilla 8
+firefox3.0.6 2
+firefox14.0.1 2
+msie7.0 5
+firefox7.0.1 1
+Unknown 2
+chrome23.0.1271.97 471
+chrome18.0.1025.168 62
+firefox3.6.13 1
+END_BROWSER
+
+# Screen size - Hits
+BEGIN_SCREENSIZE 0
+END_SCREENSIZE
+
+# Unknown referer OS - Last visit date
+BEGIN_UNKNOWNREFERER 2
+SEOstats_2.1.0 20121231101348
+Mozilla/4.0_(compatible;_http://search.thunderstone.com/texis/websearch/about.html) 20121227002950
+END_UNKNOWNREFERER
+
+# Unknown referer Browser - Last visit date
+BEGIN_UNKNOWNREFERERBROWSER 1
+SEOstats_2.1.0 20121231101348
+END_UNKNOWNREFERERBROWSER
+
+# Origin - Pages - Hits 
+BEGIN_ORIGIN 6
+From0 24 31
+From1 2 2
+From2 0 0
+From3 0 0
+From4 202 527
+From5 0 0
+END_ORIGIN
+
+# Search engine referers ID - Pages - Hits
+BEGIN_SEREFERRALS 0
+END_SEREFERRALS
+
+# External page referers - Pages - Hits
+# The 10 first Pages must be first (order not required for others)
+BEGIN_PAGEREFS 0
+END_PAGEREFS
+
+# Search keyphrases - Number of search
+# The 10 first number of search must be first (order not required for others)
+BEGIN_SEARCHWORDS 0
+END_SEARCHWORDS
+
+# Search keywords - Number of search
+# The 10 first number of search must be first (order not required for others)
+BEGIN_KEYWORDS 0
+END_KEYWORDS
+
+# Errors - Hits - Bandwidth
+BEGIN_ERRORS 4
+206 12 18787984
+500 172 47300
+301 1 509
+404 52 23570
+END_ERRORS
+
+# URL with 404 errors - Hits - Last URL referer
+BEGIN_SIDER_404 2
+/robots.txt 50 -
+/4tree/data/721/clipboard_321.png 2 http://4tree.net/4tree/index.php
+END_SIDER_404
+
+# Host - Pages - Hits - Bandwidth - Last visit date - [Start date of last visit] - [Last page of last visit]
+# [Start date of last visit] and [Last page of last visit] are saved only if session is not finished
+# The 10 first Hits must be first (order not required for others)
+BEGIN_VISITOR 20
+79.104.36.26 188 471 57325803 20121218115540
+89.237.13.65 7 29 487107 20121218094433
+89.237.13.64 6 22 393044 20121218094436
+89.237.13.66 6 11 618690 20121218094432
+206.183.1.74 2 8 492673 20121227002947
+38.100.21.120 2 2 712 20121218142626
+38.99.82.191 2 2 7782 20121226044112
+69.64.32.191 2 2 27804 20121231101348
+38.229.70.44 2 2 27510 20121222002302
+108.179.240.228 1 1 13755 20121220072225
+80.86.88.172 1 1 3860 20121223195052
+60.247.94.106 1 1 13650 20121220043132
+114.43.183.87 1 1 13755 20121220064049
+69.58.178.56 1 1 13755 20121224002845
+85.25.110.111 1 1 3891 20121230182151
+208.80.194.142 1 1 356 20121219133536
+82.235.56.238 1 1 192 20121220081218
+205.186.155.78 1 1 13755 20121220125946
+150.70.195.138 1 1 13902 20121229000450
+199.30.228.146 1 1 3860 20121220140954
+END_VISITOR
+
+# Date - Pages - Hits - Bandwidth - Visits
+BEGIN_DAY 12
+20121218 209 535 58825356 6
+20121219 1 1 356 1
+20121220 6 6 58967 6
+20121221 1 1 13755 1
+20121222 1 1 13755 1
+20121223 1 1 3860 1
+20121224 1 1 13755 1
+20121226 2 2 7782 1
+20121227 2 8 492673 1
+20121229 1 1 13902 1
+20121230 1 1 3891 1
+20121231 2 2 27804 1
+END_DAY
+
+# Session range - Number of visits
+BEGIN_SESSION 4
+5mn-15mn 1
+30s-2mn 1
+0s-30s 19
+30mn-1h 1
+END_SESSION
+
+# URL - Pages - Bandwidth - Entry - Exit
+# The 10 first Pages must be first (order not required for others)
+BEGIN_SIDER 31
+/4tree/do.php 47 862441 0 1
+/ 24 164009 20 16
+/4tree/index.php 17 62831 0 0
+/4tree/min/all_1352882199.jsgz 14 689466 0 0
+/4tree/min/styles_1352882199.cssgz 14 44130 0 0
+/4tree/fontello/font/fontello.woff 11 215046 0 0
+/4tree/img/view1.svg 10 19000 0 0
+/4tree/img/view4.svg 10 15545 0 0
+/4tree/img/view3.svg 10 19045 0 0
+/4tree/img/view2.svg 10 23895 0 0
+/4tree.php 4 9484 0 1
+/4tree/ 1 3631 0 0
+/themes/classic/d.svg 1 18410 0 1
+/min/all_1352226664.jsgz 1 138588 0 0
+/4tree/min/4tree_1352882199.jsgz 1 46302 0 0
+/fontello/font/fontello.woff 1 35841 0 0
+/min/styles_1352226664.cssgz 1 42665 0 0
+/4tree/img/note-4.svg 1 7958 0 0
+/4tree/img/note-1.svg 9 30144 0 0
+/min/all_1355849031.jsgz 1 114924 0 1
+/do.php 9 7646 1 2
+/4tree/img/note-clean.svg 3 14138 0 0
+/4tree/img/folder-open.svg 9 35928 0 0
+/4tree/img/note-6.svg 2 16502 0 0
+/min/4tree_1352226664.jsgz 2 92604 1 0
+/4tree/4tree.php 1 2464 0 0
+/min/4tree_1352226664.cssgz 2 2324 0 0
+/4tree/img/folder-closed.svg 9 33496 0 0
+/index.php 1 6242 0 0
+/4tree/min/4tree_1352882199.cssgz 1 1162 0 0
+/server.php 1 381757 0 0
+END_SIDER
