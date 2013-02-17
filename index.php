@@ -171,6 +171,10 @@ $(document).ready(jsDoFirst);
 				        	<li><a class="m_refresh">Обновить дерево<span class="m_key">alt+"R"</span></a></li>  
 				        	<li><a class="m_refresh_all">Обновить дерево полностью<span class="m_key"></span></a></li>  
 				        </ul>
+				    </li>
+				    <li>
+				    	<font color="lightgray">версия 4tree.ru — <? include "!version.txt"; ?></font>
+				    </li>
 			    </ul>  
 			</div>  
 
