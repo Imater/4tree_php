@@ -5,3 +5,5 @@ cleanversion=${projectversion%%-*}
 
 #echo "$projectversion-$revisioncount"
 echo "$cleanversion.$revisioncount" > !version.txt
+echo "$cleanversion.$revisioncount"
+git add !version.txt
