@@ -124,15 +124,48 @@ $(document).ready(jsDoFirst);
 			<li><i class="icon-hourglass"></i> Ожидание<div class="left_count">24</div></li>
 		</ul>
 		<div class="horizont_line"></div>
-		<h1><i class="icon-down-dir"></i> ФИЛЬТР</h1>
+
+		<h1><i class="icon-down-dir"></i> ПРОЕКТЫ</h1>
 		<ul>
-			<li><i class="icon-calendar-1"></i> Календарь<div class="left_count">210</div></li>
-			<li><i class="icon-archive"></i> Когда-нибудь</li>
-			<li><i class="icon-hourglass"></i> Ожидание<div class="left_count">24</div></li>
-			<li><i class="icon-calendar"></i> Сегодня<div class="left_count">4</div></li>
-			<li><i class="icon-calendar"></i> Завтра<div class="left_count">5</div></li>
+			<li><i class="icon-leaf"></i> Обучение менеджеров</li>
+			<li><i class="icon-leaf"></i> Командировка</li>
+			<li><i class="icon-leaf"></i> Новый салон на северозападе</li>
+			<li><i class="icon-leaf"></i> Заказ авто</li>
+			<li><i class="icon-leaf"></i> Закупка оборудования</li>
 		</ul>
 		<div class="horizont_line"></div>
+
+		<h1><i class="icon-down-dir"></i> КОНТЕКСТЫ</h1>
+		<ul>
+			<li><i class="icon-at"></i> Дома</li>
+			<li><i class="icon-at"></i> На работе</li>
+			<li><i class="icon-at"></i> Магазин</li>
+			<li><i class="icon-at"></i> Северозапад</li>
+			<li><i class="icon-at"></i> За компьютером</li>
+		</ul>
+		<div class="horizont_line"></div>
+
+		<h1><i class="icon-down-dir"></i> КОНТАКТЫ</h1>
+		  <div class="left_contacts">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/0.jpeg" title="Вецель Валентина">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/katya.png">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/sergey.png">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/roma.png">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/john.png">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/tania.png">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/7.jpeg">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/1.jpeg">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/2.jpeg">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/3.jpeg">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/4.jpeg">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/5.jpeg">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/6.jpeg">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/7.jpeg">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/8.jpeg">
+			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/9.jpeg">
+		  </div>
+		<div class="horizont_line"></div>
+
 	</div>
 </div>
 	<div id="main_window">

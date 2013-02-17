@@ -1102,6 +1102,17 @@ function jsRegAllKey() //все общие delegate и регистрация к
 
 	setTimeout(function(){ $("#left_panel_opener").click(); }, 1000);
 
+	$('#left_panel').delegate("h1","click",function(){
+		$(this).next("ul").slideToggle(200,function(){
+			if($(this).is(":visible")) 
+					$(this).prev("h1").find(".icon-right-dir").attr("class","icon-down-dir");
+			else
+					$(this).prev("h1").find(".icon-down-dir").attr("class","icon-right-dir");
+			
+			});
+		return false;
+		});		
+
 	$('*').delegate("#left_panel_opener","click",function(){
 		if($("#left_panel").css("width") != "0px")
 			{

@@ -3670,7 +3670,7 @@ cursor: pointer;
 display: block;
 position: absolute;
 top: 46%;
-left: -4px;
+left: -2px;
 font-size: 20px;
 color: gray;
 }
@@ -3693,8 +3693,10 @@ bottom: 0px;
 
 .inside_left_panel
 {
-width: 158px;
-margin-top: 31px;
+width: 155px;
+height: 100%;
+overflow-x: hidden;
+overflow-y: hidden;
 }
 
 .inside_left_panel ul
@@ -3707,19 +3709,33 @@ margin-top:0px;
 margin-bottom: 10px;
 }
 
+
+
+
 .inside_left_panel li
 {
 font-size: 13px;
-padding: 5px;
-padding-left: 10px;
+padding: 4px;
+margin-left: 4px;
+padding-left: 6px;
 color: #4a4a4a;
 cursor: pointer;
+-moz-transition: all 0.1s; 
+-webkit-transition: all 0.1s;  
+-ms-transition: all 0.1s;  
+-o-transition: all 0.1s;  
+transition: all 0.1s;  
 }
 
 .inside_left_panel li:hover
 {
 color: #000;
 background: #a9a9a9;
+-moz-transition: all 0.1s; 
+-webkit-transition: all 0.1s;  
+-ms-transition: all 0.1s;  
+-o-transition: all 0.1s;  
+transition: all 0.1s;  
 }
 
 .inside_left_panel .left_count
@@ -3742,18 +3758,34 @@ box-shadow: 0 1px 0 rgba(0,0,0,0.35) inset,0 1px 0 rgba(255,255,255,0.4);
 
 .inside_left_panel li:hover .left_count
 {
-color: #FFF;
+color: #ededed;
+-moz-transition: all 0.1s; 
+-webkit-transition: all 0.1s;  
+-ms-transition: all 0.1s;  
+-o-transition: all 0.1s;  
+transition: all 0.1s;  
 }
 
 .inside_left_panel h1
 {
 margin: 0px;
-font-size: 14px;
+font-size: 13px;
 font-weight: bold;
 padding: 0px;
 color: gray;
 padding-left: 10px;
 padding-bottom: 8px;
+cursor: pointer;
+}
+
+.inside_left_panel h1:first-child
+{
+margin-top: 10px;
+}
+
+.inside_left_panel h1:hover i
+{
+	color: black;
 }
 
 .inside_left_panel h1 i
@@ -3767,4 +3799,18 @@ border-bottom: 1px solid #d4d4d4;
 border-top: 1px solid #a2a2a2;
 margin: 3px 10px;
 margin-bottom: 15px;
+}
+
+
+.left_contacts
+{
+padding-left: 7px;
+}
+
+.left_contacts img
+{
+width: 33px;
+height: 33px;
+padding: 0px;
+cursor: pointer;
 }
