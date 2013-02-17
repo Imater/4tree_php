@@ -12,8 +12,6 @@ var autosave_timer,mypomidor,endtime,my_min,old_title,widthpanel,RestMin, show_h
 var is_rendering_now,last_input_click;
 var timestamp=new Date().getTime();
 
-console.info("!!!!In Test Branch - edited_remotely");
-
 function jsTestDate() //тестирование парсера даты
 {
 test = [
