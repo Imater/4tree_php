@@ -1,4 +1,3 @@
-
 var note_saved=false,myr,t1,t2,my_all_data,my_all_share,my_all_frends,remember_old_panel="top_panel";
 var main_x = 50; //ширина левой панели в процентах
 var main_y = 250;//высота верхней панели в пикселях
