@@ -1100,6 +1100,35 @@ function jsRegAllKey() //все общие delegate и регистрация к
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 
+	setTimeout(function(){ $("#left_panel_opener").click(); }, 1000);
+
+	$('*').delegate("#left_panel_opener","click",function(){
+		if($("#left_panel").css("width") != "0px")
+			{
+			$("#left_panel").animate({"width":"0"},200,function(){ $(this).hide(); });
+			$("#main_window").animate({"left":"0"},200);
+			$("#left_panel_opener").animate({"left":"0"},200);
+			$("#search_panel").animate({"left":"16"},200, function(){ 
+						$("#left_panel_opener .icon-left-open").attr("class","icon-right-open");
+						onResize();
+						});
+			console.info("closed_left_panel");
+			}
+		else
+			{
+			$("#left_panel").css({"width":"0"}).show().animate({"width":"150"},300);
+			$("#left_panel_opener").animate({"left":"150"},300);
+			$("#main_window").animate({"left":"150"},300);
+			$("#search_panel").animate({"left":"166"},300, 
+				function(){ 
+						$("#left_panel_opener .icon-right-open").attr("class","icon-left-open");
+						onResize();
+						});
+			console.info("opened_left_panel");
+			}
+		return false;
+		});
+
 	$('*').delegate(".show_mindmap","click",function(){
 		id = $(".makedone").attr("myid");
 		href = "http://4tree.ru/mm.php?mindmap="+id;

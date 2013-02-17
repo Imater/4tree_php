@@ -3656,11 +3656,6 @@ background: red !important;
 
 #left_panel_opener
 {
--moz-transition: all 0.5s; 
--webkit-transition: all 0.5s;  
--ms-transition: all 0.5s;  
--o-transition: all 0.5s;  
-transition: all 0.5s;  
 width: 13px;
 position: absolute;
 left: 0px;
@@ -3675,30 +3670,101 @@ cursor: pointer;
 display: block;
 position: absolute;
 top: 46%;
-left: -3px;
+left: -4px;
 font-size: 20px;
 color: gray;
 }
 
-#left_panel_opener:hover
+#left_panel_opener:hover i
 {
--moz-transition: all 3s; 
--webkit-transition: all 3s;  
--ms-transition: all 3s;  
--o-transition: all 3s;  
-transition: all 3s;
-background: #e8eef5 !important;
-opacity: 0.5;
+color: black;
 }
 
 
 #left_panel
 {
 display: none;
-width: 150px;
+width: 0px;
 position: absolute;
-background: gray;
 left: 0px;
 top: 0px;
 bottom: 0px;
+}
+
+.inside_left_panel
+{
+width: 158px;
+margin-top: 31px;
+}
+
+.inside_left_panel ul
+{
+list-style: none;
+white-space: normal;
+padding-left: 0px;
+padding-top: 0px;
+margin-top:0px;
+margin-bottom: 10px;
+}
+
+.inside_left_panel li
+{
+font-size: 13px;
+padding: 5px;
+padding-left: 10px;
+color: #4a4a4a;
+cursor: pointer;
+}
+
+.inside_left_panel li:hover
+{
+color: #000;
+background: #a9a9a9;
+}
+
+.inside_left_panel .left_count
+{
+text-shadow: 0 1px #000;
+float: right;
+background: darkgray;
+min-width: 30px;
+border-radius: 10px;
+color: #bebebe;
+font-size: 11px;
+font-weight: bold;
+padding: 1px;
+text-align: center;
+text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+-moz-box-shadow: 0 1px 0 rgba(0,0,0,0.35) inset,0 1px 0 rgba(255,255,255,0.4);
+-webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.35) inset,0 1px 0 rgba(255,255,255,0.4);
+box-shadow: 0 1px 0 rgba(0,0,0,0.35) inset,0 1px 0 rgba(255,255,255,0.4);
+}
+
+.inside_left_panel li:hover .left_count
+{
+color: #FFF;
+}
+
+.inside_left_panel h1
+{
+margin: 0px;
+font-size: 14px;
+font-weight: bold;
+padding: 0px;
+color: gray;
+padding-left: 10px;
+padding-bottom: 8px;
+}
+
+.inside_left_panel h1 i
+{
+margin-right: -3px !important;
+}
+
+.horizont_line
+{
+border-bottom: 1px solid #d4d4d4;
+border-top: 1px solid #a2a2a2;
+margin: 3px 10px;
+margin-bottom: 15px;
 }

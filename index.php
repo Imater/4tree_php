@@ -107,7 +107,34 @@ $(document).ready(jsDoFirst);
 <div id="left_panel_opener">
 	<i class="icon-right-open"></i>
 </div>
-<div id="left_panel">Левое меню</div>
+<div id="left_panel">
+	<div class="inside_left_panel">
+		<h1><i class="icon-down-dir"></i> INBOX</h1>
+		<ul>
+			<li><i class="icon-inbox"></i> _Новое<div class="left_count">84</div></li>
+		</ul>
+		<div class="horizont_line"></div>
+		<h1><i class="icon-down-dir"></i> ОТБОРЫ</h1>
+		<ul>
+			<li><i class="icon-calendar"></i> Сегодня<div class="left_count">4</div></li>
+			<li><i class="icon-flag"></i> Следующие<div class="left_count">14</div></li>
+			<li><i class="icon-calendar"></i> Завтра<div class="left_count">5</div></li>
+			<li><i class="icon-calendar-1"></i> Календарь<div class="left_count">210</div></li>
+			<li><i class="icon-archive"></i> Когда-нибудь</li>
+			<li><i class="icon-hourglass"></i> Ожидание<div class="left_count">24</div></li>
+		</ul>
+		<div class="horizont_line"></div>
+		<h1><i class="icon-down-dir"></i> ФИЛЬТР</h1>
+		<ul>
+			<li><i class="icon-calendar-1"></i> Календарь<div class="left_count">210</div></li>
+			<li><i class="icon-archive"></i> Когда-нибудь</li>
+			<li><i class="icon-hourglass"></i> Ожидание<div class="left_count">24</div></li>
+			<li><i class="icon-calendar"></i> Сегодня<div class="left_count">4</div></li>
+			<li><i class="icon-calendar"></i> Завтра<div class="left_count">5</div></li>
+		</ul>
+		<div class="horizont_line"></div>
+	</div>
+</div>
 	<div id="main_window">
 	  <div class="place_of_top">
 	    
