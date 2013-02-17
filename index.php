@@ -506,7 +506,7 @@ $(document).ready(jsDoFirst);
 //	mysql_query_my("SET NAMES utf8");
 //	mysql_select_db('h116',$db);   
 //	if (!$db) { echo "Ошибка подключения к SQL :("; exit();}
-  
+    
 
 if(isset($_GET['confirm']))
    {	
