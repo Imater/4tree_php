@@ -1100,7 +1100,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 
-	setTimeout(function(){ $("#left_panel_opener").click(); }, 1000);
+//	setTimeout(function(){ $("#left_panel_opener").click(); }, 1000);
 
 	$('#left_panel').delegate("h1","click",function(){
 		$(this).next("ul").slideToggle(200,function(){
