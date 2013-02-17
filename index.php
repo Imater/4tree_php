@@ -146,6 +146,7 @@ $(document).ready(jsDoFirst);
 		<div class="horizont_line"></div>
 
 		<h1><i class="icon-down-dir"></i> КОНТАКТЫ</h1>
+		  <ul>
 		  <div class="left_contacts">
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/0.jpeg" title="Вецель Валентина">
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/katya.png">
@@ -164,6 +165,7 @@ $(document).ready(jsDoFirst);
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/8.jpeg">
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/9.jpeg">
 		  </div>
+		  </ul>
 		<div class="horizont_line"></div>
 
 	</div>
