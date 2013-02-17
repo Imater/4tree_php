@@ -3653,3 +3653,52 @@ text-align: center;
 {
 background: red !important;
 }
+
+#left_panel_opener
+{
+-moz-transition: all 0.5s; 
+-webkit-transition: all 0.5s;  
+-ms-transition: all 0.5s;  
+-o-transition: all 0.5s;  
+transition: all 0.5s;  
+width: 13px;
+position: absolute;
+left: 0px;
+top: 0px;
+bottom: 0px;
+z-index: 30;
+cursor: pointer;
+}
+
+#left_panel_opener i
+{
+display: block;
+position: absolute;
+top: 46%;
+left: -3px;
+font-size: 20px;
+color: gray;
+}
+
+#left_panel_opener:hover
+{
+-moz-transition: all 3s; 
+-webkit-transition: all 3s;  
+-ms-transition: all 3s;  
+-o-transition: all 3s;  
+transition: all 3s;
+background: #e8eef5 !important;
+opacity: 0.5;
+}
+
+
+#left_panel
+{
+display: none;
+width: 150px;
+position: absolute;
+background: gray;
+left: 0px;
+top: 0px;
+bottom: 0px;
+}

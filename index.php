@@ -102,7 +102,12 @@ $(document).ready(jsDoFirst);
 	
 </div>
 
+
 <div id="content1" class="v1">
+<div id="left_panel_opener">
+	<i class="icon-right-open"></i>
+</div>
+<div id="left_panel">Левое меню</div>
 	<div id="main_window">
 	  <div class="place_of_top">
 	    
