@@ -3330,7 +3330,7 @@ else
 	jsStartSync("soon","NEW DO");
  	}
 
-
+return new_id;
 }
 
 

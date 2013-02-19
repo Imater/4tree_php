@@ -59,6 +59,7 @@ if(true )echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',
 	<script src="fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="js/pushstream.js" type="text/javascript" language="javascript" charset="utf-8"></script>
 	<script src="js/all_new.js"></script>
+	<script src="js/!test.js"></script>
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 
