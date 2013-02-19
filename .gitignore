@@ -9,6 +9,7 @@
 /webstat/*
 /upload/*
 /imagecache/*
+/data/*
 
 # Packages #
 ############
