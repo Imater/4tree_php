@@ -11,7 +11,10 @@ var autosave_timer,mypomidor,endtime,my_min,old_title,widthpanel,RestMin, show_h
 var is_rendering_now,last_input_click;
 var timestamp=new Date().getTime();
 
+testing = 2;
 //удалил ту строку №2
+alert(testing);
+alert(testing*2)
 
 function jsTestDate() //тестирование парсера даты
 {
