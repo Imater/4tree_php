@@ -14,7 +14,7 @@ var timestamp=new Date().getTime();
 testing = 2;
 //удалил ту строку №2
 alert(testing);
-alert(testing*2)
+alert(testing*2);
 
 function jsTestDate() //тестирование парсера даты
 {
