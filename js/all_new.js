@@ -12,6 +12,7 @@ var is_rendering_now,last_input_click;
 var timestamp=new Date().getTime();
 
 //удалил ту строку
+alert(1);
 
 function jsTestDate() //тестирование парсера даты
 {
