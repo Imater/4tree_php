@@ -344,6 +344,28 @@ if (isset($HTTP_GET_VARS['sync3']))
 echo get_all_share_children(11);
 exit;
 }
+
+
+if (isset($HTTP_GET_VARS['sync_new'])) 
+{
+$sync_id = $HTTP_GET_VARS['sync_new']; //индентификатор клиента
+$client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['time'];  //время последней синхронизации  
+$now_time = $HTTP_GET_VARS['now_time'];  //сколько сейчас времени на клиенте
+$ch = $HTTP_GET_VARS['changes'];
+$confirm = $HTTP_POST_VARS['confirm'];
+$confirms =  json_decode( $confirm , true );  
+
+$display = true;
+if($display) echo "<b>Индентификатор клиента:</b> ".$sync_id."<hr>";
+if($display) echo "<b>Время последней синхронизации:</b> ".date("Y-m-d H:i:s",$client_time/1000)." (".$client_time.")<hr>";
+if($display) echo "<b>Время сейчас на сервере:</b> ".date("Y-m-d H:i:s",now()/1000)." (".now().")<hr>";
+if($display) echo "<b>Пришли изменения с сервера:</b> ".$ch."<hr>";
+if($display) echo "<b>Клиент успешно синхронизировал в прошлый раз:</b> ".$confirm."<hr>";
+
+
+exit;
+}
+
 /////////////////////Синхронизация/////////////////////////
 if (isset($HTTP_GET_VARS['sync'])) 
 {

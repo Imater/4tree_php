@@ -1100,6 +1100,8 @@ function jsRegAllKey() //все общие delegate и регистрация к
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 //	setTimeout(function(){ $("#left_panel_opener").click(); }, 1000);
 
+	setTimeout(function(){ jsSync(); }, 1000);
+
 	$('#left_panel').delegate("h1","click",function(){
 		$(this).next("ul").slideToggle(200,function(){
 			if($(this).is(":visible")) 
@@ -2441,6 +2443,7 @@ $('#tree_back').bind("contextmenu",function(e){
 
      
   $("*").delegate(".m_refresh","click", function () {
+    jsSync();
  	jsRefreshDo();
   	return false;
   	});
@@ -2854,6 +2857,7 @@ var sync_now_timer,myrefreshtimer;
 //синхронизация - отправка изменений на сервер//////////////////////////////////////
 function jsRefreshDo()
 {
+return true;
 clearTimeout(sync_idle_timer1);
 clearTimeout(sync_idle_timer2); //обнуляю таймер long
 
@@ -2978,6 +2982,10 @@ $.post(lnk,changes,function(data,j,k)
 preloader.trigger('hide');
 	
 }
+
+
+
+
 
 var last_local_sync, last_inside_sync;
 
@@ -4122,7 +4130,7 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 				newdate = Date.createFromMysql( newvalue );
 				newdate.setMinutes( newdate.getMinutes() + (dif/60/1000) );
 				answer[0]["date2"] = newdate.toMysqlFormat();
-				changed_fields = changed_fields + "date2,";
+				if(changed_fields.indexOf("date2,")==-1) changed_fields = changed_fields + "date2,";
 				console.info("newdate2=",answer[0]["date2"],"dif-minutes = ",(dif/60/1000),changed_fields);
 			}
 		

@@ -3814,3 +3814,38 @@ height: 33px;
 padding: 0px;
 cursor: pointer;
 }
+
+.sync_console
+{
+position: absolute;
+font-size: 12px;
+padding: 5px;
+height: 50%;
+width: 600px;
+left: 30px;
+bottom: 46px;
+opacity: 1;
+background: white;
+border: 2px solid black;
+-moz-box-shadow: 0px 2px 11px #444;
+-webkit-box-shadow: 0px 2px 11px #444;
+box-shadow: 0px 2px 11px #111;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+z-index: 9000000;
+overflow-y: auto;
+font-family: monospace;
+}
+
+.sync_console ul
+{
+list-style: disc;
+padding: 0px;
+margin: 0px;
+margin-left: 20px;
+}
+
+.sync_console li
+{
+padding: 2px;
+}
