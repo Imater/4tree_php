@@ -335,6 +335,8 @@ exit;
 
 function now()
 {
+//    return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds()).valueOf(); 
+
     return (integer)(microtime(true)*1000);
 }
 
@@ -352,15 +354,55 @@ $sync_id = $HTTP_GET_VARS['sync_new']; //индентификатор клиен
 $client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['time'];  //время последней синхронизации  
 $now_time = $HTTP_GET_VARS['now_time'];  //сколько сейчас времени на клиенте
 $ch = $HTTP_GET_VARS['changes'];
-$confirm = $HTTP_POST_VARS['confirm'];
+if($_SERVER["HTTP_HOST"]=="localhost") $ch = stripslashes($ch);
+$changes =  json_decode( $ch , true );  
+
+$now = now();
+$confirm = $HTTP_GET_VARS['confirm'];
 $confirms =  json_decode( $confirm , true );  
+
+$time_dif = $now - $now_time;
 
 $display = true;
 if($display) echo "<b>Индентификатор клиента:</b> ".$sync_id."<hr>";
 if($display) echo "<b>Время последней синхронизации:</b> ".date("Y-m-d H:i:s",$client_time/1000)." (".$client_time.")<hr>";
-if($display) echo "<b>Время сейчас на сервере:</b> ".date("Y-m-d H:i:s",now()/1000)." (".now().")<hr>";
-if($display) echo "<b>Пришли изменения с сервера:</b> ".$ch."<hr>";
-if($display) echo "<b>Клиент успешно синхронизировал в прошлый раз:</b> ".$confirm."<hr>";
+if($display) echo "<b>Время сейчас на сервере:</b> ".date("Y-m-d H:i:s",($now/1000+60*60))." (".$now.")<hr>";
+if($display) echo "<b>Необходима поправка времени:</b> ".$time_dif." микросекунд<hr>";
+$countlines = count($changes);
+if($display) echo "<b>Пришли изменения с сервера (</b>".$countlines." шт<b>):</b> <font style='font-size:7px'>".$ch."</font>";
+//if($display) print_r($changes);
+if($display) echo "<hr><b>Клиент успешно синхронизировал в прошлый раз:</b> ".$confirm."<hr>";
+if($display) echo "<b>Начинаю обработку присланных от клиента ".$countlines." элементов:</b>";
+for ($i=0; $i<$countlines; $i++)
+	{
+		$id = $changes[$i]['id'];
+		if($id=="") continue;
+		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
+		if($id<0)
+		   {
+		   		$old_id = $id; //сохраняю старый отрицательный id
+		   		
+		   		if($display) echo "Необходимо добавить элемент ".$id." (".$changes[$i]['title'].")<br>";
+		   		
+		   		$sqlnews5="DELETE FROM tree WHERE old_id='".$id."'";
+		   		$result5 = mysql_query_my($sqlnews5); 
+		   		if($display) if(mysql_affected_rows()>0) echo "Удалил дублирующую запись (".mysql_affected_rows()." шт)<br>";
+		   		
+		   		$sqlnews="INSERT INTO `tree` (old_id,user_id,changetime) VALUES ('".$id."','".$GLOBALS['user_id']."','".($now_time)."');";
+		   		$result = mysql_query_my($sqlnews); 
+		   		if($display) echo $sqlnews."<br>";
+		   		$id = mysql_insert_id();
+		   		if($display) echo "<b>Новый id</b> = ".$id."<br>";
+		   		
+		   		$sqlnews = "UPDATE tree SET parent_id =".$id." WHERE parent_id = '".$old_id."' ORDER by id DESC";	
+		   		if($display) echo $sqlnews."<br>";
+		   		
+		   }
+		   ///начинаю обновление данных
+	   	   if($display) echo "<br>Обновляю в базе элемент <b>".$id."</b><br>";
+	   	   	   	   
+		
+	}
 
 
 exit;
