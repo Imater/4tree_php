@@ -347,6 +347,11 @@ echo get_all_share_children(11);
 exit;
 }
 
+function sqltime($now)
+{
+return date("Y-m-d <b>H:i:s</b>",($now/1000+60*60));
+}
+
 
 if (isset($HTTP_GET_VARS['sync_new'])) 
 {
@@ -365,8 +370,8 @@ $time_dif = $now - $now_time;
 
 $display = true;
 if($display) echo "<b>Индентификатор клиента:</b> ".$sync_id."<hr>";
-if($display) echo "<b>Время последней синхронизации:</b> ".date("Y-m-d H:i:s",$client_time/1000)." (".$client_time.")<hr>";
-if($display) echo "<b>Время сейчас на сервере:</b> ".date("Y-m-d H:i:s",($now/1000+60*60))." (".$now.")<hr>";
+if($display) echo "<b>Время последней синхронизации:</b> ".sqltime($client_time/1000)." (".$client_time.")<hr>";
+if($display) echo "<b>Время сейчас на сервере:</b> ".sqltime($now)." (".$now.")<hr>";
 if($display) echo "<b>Необходима поправка времени:</b> ".$time_dif." микросекунд<hr>";
 $countlines = count($changes);
 if($display) echo "<b>Пришли изменения с сервера (</b>".$countlines." шт<b>):</b> <font style='font-size:7px'>".$ch."</font>";
@@ -388,24 +393,170 @@ for ($i=0; $i<$countlines; $i++)
 		   		$result5 = mysql_query_my($sqlnews5); 
 		   		if($display) if(mysql_affected_rows()>0) echo "Удалил дублирующую запись (".mysql_affected_rows()." шт)<br>";
 		   		
-		   		$sqlnews="INSERT INTO `tree` (old_id,user_id,changetime) VALUES ('".$id."','".$GLOBALS['user_id']."','".($now_time)."');";
+		   		$sqlnews="INSERT INTO `tree` (old_id,user_id,changetime,title) VALUES ('".$id."','".$GLOBALS['user_id']."','".($now_time)."','".$changes[$i]['title']." (new)');";
 		   		$result = mysql_query_my($sqlnews); 
-		   		if($display) echo $sqlnews."<br>";
+		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
 		   		$id = mysql_insert_id();
 		   		if($display) echo "<b>Новый id</b> = ".$id."<br>";
 		   		
 		   		$sqlnews = "UPDATE tree SET parent_id =".$id." WHERE parent_id = '".$old_id."' ORDER by id DESC";	
-		   		if($display) echo $sqlnews."<br>";
+		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
 		   		
+		   		for($j=0; $j<$countlines;$j++) //заменяю parent_id где он отрицательный в самом массиве изменений
+		   		    {
+		   		    if( @$changes[$j]['parent_id'] == $old_id ) 
+		   		    	{ 
+		   		    	$changes[$j]['parent_id'] = $id; 
+			   		    if($display) echo "Заменил индекс родителя у дела: ".$changes[$j]['id']." — (".$changes[$j]['title'].") на ".$id."<br>";
+		   		    	}
+		   		    }
+		   		$changes[$i]['old_id'] = $changes[$i]['id'];
+		   		$changes[$i]['id']=$id;
 		   }
-		   ///начинаю обновление данных
-	   	   if($display) echo "<br>Обновляю в базе элемент <b>".$id."</b><br>";
-	   	   	   	   
-		
+    } //first for_i
+if($display) echo "<hr><hr>Начинаю второй проход<br>";
+//второй проход, с учётом добавленных элементов
+for ($i=0; $i<$countlines; $i++)
+	{
+		$id = $changes[$i]['id'];
+		if($id=="") continue;
+		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
+
+		$sqlnews = "SELECT id,title,parent_id,changetime FROM tree WHERE id = '".$id."'";
+		$result = mysql_query_my($sqlnews); 
+		@$sql = mysql_fetch_array($result);
+   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
+   		if($display) echo "Элемент в базе найден: <b>".$sql['title']."</b> (родитель: ".$sql['parent_id'].")<br>";
+
+  		$change_time = $changes[$i]['time']; //время изменения заметки на клиенте
+  		$fromdb_time = $sql['changetime'];
+   		$dif = $fromdb_time - $change_time;
+
+   		if($display) echo "Время изменения на клиенте: ".sqltime($change_time)." — время изменения на сервере: ".sqltime($fromdb_time).") = ".$dif."; ".@$changes[$i]['old_id']."<br>";
+
+   		if($dif<0 OR @$changes[$i]['old_id']<0)
+   			{
+	   		if($display) echo "<span style='color:green'><b>Сохраняю этот элемент в базе данных</b></span><br>";
+	   		sync_save_changes($changes,$i,$sql,$display);
+   			}
+   		else
+   			{
+	   		if($display) echo "<span style='color:red'><b>Делаю резервную копию, но не сохраняю! Есть более свежие изменения сделанные ".$dif." мс. назад; ".@$changes[$i]['old_id']."</b></span><br>";
+   			}
+	   		sync_save_backup($changes,$i,$sql,$display);
+
 	}
 
 
+
 exit;
+}
+
+function sync_save_changes($changes,$i,$sql,$display)
+{
+global $db2;
+if($display) echo "SAVE CHANGES<br>";
+
+	$fields = array ("parent_id","position","title","tab_order","text",
+					 "date1","date2","remind","did","s","fav","del","node_icon");
+
+		$sqlnews2 = "UPDATE  `tree` SET ";
+
+		for($iii=0;$iii<count($fields);$iii++) //меняем в базе только те поля, которые изменились и присланы из клиента
+			{
+			if(array_key_exists($fields[$iii], $changes[$i])) 			
+				{
+				$sqlnews2 .= " ".$fields[$iii]." = :".$fields[$iii].", ";
+				}
+			else
+				{
+				$sqlnews2 .= " `left` = :".$fields[$iii].", ";
+				}
+			}
+		
+		$sqlnews2 .= "changetime = :changetime  WHERE  `tree`.`id` = :id; ";
+   		if($display) echo "<font style='font-size:9px'>".$sqlnews2."</font><br>";
+
+		$date1=$changes[$i]['date1'];
+		$date2=$changes[$i]['date2'];
+		if($date1=="") $date1="0000-00-00 00:00:00";
+		if($date2=="") $date2="0000-00-00 00:00:00";
+
+		$did=$changes[$i]['did'];
+		if($did=="") $did="0000-00-00 00:00:00";
+
+   		if(@$changes[$i]['text']) $note = @$changes[$i]['text'];
+   		else $note = "";
+   		
+		if($changes[$i]['del']==1) $del=1; //флаг удаления дела
+		else $del = 0;
+   		
+   		$changetime = $changes[$i]['time'];
+
+		$values = array( ":id" => $changes[$i]['id'],
+				":parent_id" =>  $changes[$i]['parent_id'],
+				":position" => $changes[$i]['position'],
+				":title" =>  $changes[$i]['title'],
+				":tab_order" =>  $changes[$i]['tab'],
+				":text" => $note,
+				":date1" =>  $date1,
+				":date2" =>  $date2,
+				":remind" => $changes[$i]['remind'],
+				":did" =>  $did,
+				":s" => $changes[$i]['s'],
+				":fav" =>  $changes[$i]['fav'],
+				":changetime" => $changetime,
+				":del" => $del,
+				":node_icon" => $changes[$i]['node_icon']);
+
+		print_r($values);
+
+		$query = $db2->prepare($sqlnews2);
+		$query->execute($values);
+
+					 
+
+}
+
+function sync_save_backup($changes,$i,$sql,$display)
+{
+global $db2;
+if($display) echo "SAVE BACKUP<br>";
+
+	if(@$changes[$i]['text']) $note = @$changes[$i]['text'];
+	else $note = "";
+	$md5 = sha1($note+$changes[$i]['title']); //для предотвращения повтороного сохранения того же
+	
+	$sqlnews2 = "SELECT count(*) cnt FROM `tree_backup` WHERE md5 ='".$md5."' AND user_id='".$GLOBALS['user_id']."'";
+	$result2 = mysql_query_my($sqlnews2); 
+	@$sql2 = mysql_fetch_array($result2);
+		
+	if(($note == "") OR ($sql2['cnt']>0)) 
+		{
+		if($display) echo "Сохранение резервной копии не требуется (заметка уже была или пуста).<br>";
+		return false; //предотвращаю лишние сохранения и пустые заметки
+		}
+
+	$sql11 = "INSERT INTO `tree_backup` SET
+	    	`id` = :id,
+	    	`title` = :title,
+	    	`text` = :text,
+	    	`user_id` = :user_id,
+	    	`changedate` = :changetime,
+	    	`md5` = :md5";
+	echo $sql11;
+		
+	$values11 = array( 
+	    	":id" => $changes[$i]['id'],
+	    	":title" =>  $changes[$i]['title'],
+	    	":text" => $note,
+	    	":user_id" => $GLOBALS['user_id'],
+	    	":changetime" => $changes[$i]['time'],
+	    	":md5" => $md5
+	        );
+	        
+	$query1 = $db2->prepare($sql11);
+	$query1->execute($values11);
 }
 
 /////////////////////Синхронизация/////////////////////////
@@ -498,7 +649,7 @@ if($do)	$result = mysql_query_my($sqlnews);
 }
 
 //print_r($changes);
-
+//ВТОРОЙ ПРОХОД
 for($i=0; $i<count($changes);$i++) //начало for changes
 {
 	
