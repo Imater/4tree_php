@@ -53,7 +53,7 @@ function jsSync()
 	
 	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow()+"&only_save=1";
 	my_console("Отправляю серверу запрос:",lnk);
-	$.getJSON(lnk,changes,function(data,j,k){
+	$.postJSON(lnk,changes,function(data,j,k){
 		 if(j=="success")
 		 	{
 			 	$.each(data.saved,function(i,d) //эти данные сохранены на сервере, можно отметить lsync = now()

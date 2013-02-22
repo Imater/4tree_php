@@ -361,12 +361,12 @@ else $only_save=false;
 $sync_id = $HTTP_GET_VARS['sync_new']; //индентификатор клиента
 $client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['time'];  //время последней синхронизации  
 $now_time = $HTTP_GET_VARS['now_time'];  //сколько сейчас времени на клиенте
-$ch = $HTTP_GET_VARS['changes'];
+$ch = $HTTP_POST_VARS['changes'];
 if($_SERVER["HTTP_HOST"]=="localhost") $ch = stripslashes($ch);
 $changes =  json_decode( $ch , true );  
 
 $now = now();
-$confirm = $HTTP_GET_VARS['confirm'];
+$confirm = $HTTP_POST_VARS['confirm'];
 $confirms =  json_decode( $confirm , true );  
 
 $time_dif = $now - $now_time;
