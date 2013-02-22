@@ -51,16 +51,48 @@ function jsSync()
 	confirm_ids = JSON.stringify( myconfirms ); //высушиваю данные и превращаю в JSON строку
 	changes = 'changes='+encodeURIComponent(changes)+'&confirm='+encodeURIComponent(confirm_ids);
 	
-	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow();
+	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow()+"&only_save=1";
 	my_console("Отправляю серверу запрос:",lnk);
 	$.getJSON(lnk,changes,function(data,j,k){
-		console.info(data,j,k);
+		 if(j=="success")
+		 	{
+			 	$.each(data.saved,function(i,d) //эти данные сохранены на сервере, можно отметить lsync = now()
+			 	    	{
+			 	    	console.info(d.id,data.lsync,d.old_id);
+			 	    	if(d.old_id) 
+			 	    		{
+			 	    		jsChangeNewId(d); //заменяет отрицательный id на положительный
+			 	    		}
+
+			 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit");
+		 	    		jsFind(d.id).lsync = parseInt(data.lsync);
+			 	    	});
+			 }
 		my_console("Получен ответ от сервера:",j);
 		});
 
-	
-
-	
-
 }
+
+function jsChangeNewId(d) //заменяет отрицательный id на положительный
+{
+	jsFind(d.old_id).id = d.id;
+	jsSaveData(d.id);
+
+	$("#panel_"+d.old_id).attr("id","panel_"+d.id); //заменяю индексы видимых панелей
+	$('.redactor_editor[myid='+d.old_id+']').attr("myid", d.id);
+    $('.divider_red[myid="'+d.old_id+'"]').attr('myid',d.id);
+    $(".makedone[myid="+d.old_id+"]").attr("myid",d.id); //заменяю индексы makedone
+    $("li[myid='"+d.old_id+"']").attr("myid",d.id).find(".tcheckbox").attr("title",d.id);
+
+    all_children = jsFindByParent(d.old_id);
+    $.each(all_children,function(i,ddd)
+     	{ 
+     	ddd.parent_id=d.id; 
+     	jsSaveData(ddd.id);
+     	});		//заменяю всех отрицательных родителей на положительных
+	
+	
+}
+
+
 

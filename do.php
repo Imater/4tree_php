@@ -355,6 +355,9 @@ return date("Y-m-d <b>H:i:s</b>",($now/1000+60*60));
 
 if (isset($HTTP_GET_VARS['sync_new'])) 
 {
+$only_save = $HTTP_GET_VARS['only_save'];
+if($only_save==1) $only_save=true;
+else $only_save=false;
 $sync_id = $HTTP_GET_VARS['sync_new']; //индентификатор клиента
 $client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['time'];  //время последней синхронизации  
 $now_time = $HTTP_GET_VARS['now_time'];  //сколько сейчас времени на клиенте
@@ -368,7 +371,8 @@ $confirms =  json_decode( $confirm , true );
 
 $time_dif = $now - $now_time;
 
-$display = true;
+$confirm_id = "";
+$display = false;
 if($display) echo "<b>Индентификатор клиента:</b> ".$sync_id."<hr>";
 if($display) echo "<b>Время последней синхронизации:</b> ".sqltime($client_time/1000)." (".$client_time.")<hr>";
 if($display) echo "<b>Время сейчас на сервере:</b> ".sqltime($now)." (".$now.")<hr>";
@@ -444,9 +448,13 @@ for ($i=0; $i<$countlines; $i++)
 	   		if($display) echo "<span style='color:red'><b>Делаю резервную копию, но не сохраняю! Есть более свежие изменения сделанные ".$dif." мс. назад; ".@$changes[$i]['old_id']."</b></span><br>";
    			}
 	   		sync_save_backup($changes,$i,$sql,$display);
+	   		$confirm_saved_id["saved"][$i]["id"] = "".$id;
+	   		if(@$changes[$i]['old_id']) $confirm_saved_id["saved"][$i]["old_id"] = "".@$changes[$i]['old_id'];
 
 	}
 
+$confirm_saved_id["lsync"] = $now_time;
+echo json_encode($confirm_saved_id);
 
 
 exit;
@@ -509,7 +517,7 @@ if($display) echo "SAVE CHANGES<br>";
 				":del" => $del,
 				":node_icon" => $changes[$i]['node_icon']);
 
-		print_r($values);
+		if($display) print_r($values);
 
 		$query = $db2->prepare($sqlnews2);
 		$query->execute($values);
@@ -525,9 +533,10 @@ if($display) echo "SAVE BACKUP<br>";
 
 	if(@$changes[$i]['text']) $note = @$changes[$i]['text'];
 	else $note = "";
-	$md5 = sha1($note+$changes[$i]['title']); //для предотвращения повтороного сохранения того же
+	$md5 = sha1($note.@$changes[$i]['time']); //для предотвращения повтороного сохранения того же
 	
 	$sqlnews2 = "SELECT count(*) cnt FROM `tree_backup` WHERE md5 ='".$md5."' AND user_id='".$GLOBALS['user_id']."'";
+	if($display) echo $sqlnews2;
 	$result2 = mysql_query_my($sqlnews2); 
 	@$sql2 = mysql_fetch_array($result2);
 		
@@ -544,7 +553,7 @@ if($display) echo "SAVE BACKUP<br>";
 	    	`user_id` = :user_id,
 	    	`changedate` = :changetime,
 	    	`md5` = :md5";
-	echo $sql11;
+	if($display) echo $sql11;
 		
 	$values11 = array( 
 	    	":id" => $changes[$i]['id'],
