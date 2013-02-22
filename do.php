@@ -362,7 +362,8 @@ $sync_id = $HTTP_GET_VARS['sync_new']; //индентификатор клиен
 $client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['time'];  //время последней синхронизации  
 $now_time = $HTTP_GET_VARS['now_time'];  //сколько сейчас времени на клиенте
 $ch = $HTTP_POST_VARS['changes'];
-if($_SERVER["HTTP_HOST"]=="localhost") $ch = stripslashes($ch);
+//if($_SERVER["HTTP_HOST"]=="localhost") 
+$ch = stripslashes($ch);
 $changes =  json_decode( $ch , true );  
 
 $now = now();
