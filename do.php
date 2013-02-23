@@ -539,7 +539,6 @@ if($display) echo "SAVE CHANGES<br>";
 		for($iii=0;$iii<count($fields);$iii++) //меняем в базе только те поля, которые изменились и присланы из клиента
 			{
 			$fieldname = $fields[$iii];
-			echo $fieldname;
 			if($fieldname == "node_icon") $fieldname = "icon";
 			if(array_key_exists($fieldname, $changes[$i])) 			
 				{
@@ -552,7 +551,7 @@ if($display) echo "SAVE CHANGES<br>";
 			}
 		
 		$sqlnews2 .= "changetime = :changetime, lsync = :lsync  WHERE  `tree`.`id` = :id; ";
-   		if(true) echo "<font style='font-size:9px'>".$sqlnews2."</font><br>";
+   		if($display) echo "<font style='font-size:9px'>".$sqlnews2."</font><br>";
 
 		$date1=$changes[$i]['date1'];
 		$date2=$changes[$i]['date2'];
@@ -587,7 +586,7 @@ if($display) echo "SAVE CHANGES<br>";
 				":del" => $del,
 				":node_icon" => $changes[$i]['icon']);
 
-		if(true) print_r($values);
+		if($display) print_r($values);
 
 		$query = $db2->prepare($sqlnews2);
 		$query->execute($values);
