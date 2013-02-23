@@ -2562,6 +2562,16 @@ return id;
 //        var values = $.parseJSON(eventMessage);
         console.info("mymessage-type",eventMessage);
         if( eventMessage.type == "need_refresh_now" ) { jsRefreshDo(); alert("Пришло новое письмо!"); }
+        if( eventMessage.type == "need_refresh_id" ) //сообщение о изменившихся данных от do.php
+        	{ 
+        	mysync_id = jsGetSyncId();
+        	if(mysync_id!=eventMessage.sync_id) //не нужно обновлять, если сообщение пришло благодаря этому клиенту
+        		{
+	        		setTimeout(function(){ jsSync(); },1000); 
+	        		jsTitle("Ваши данные изменились на другом комьютере. Обновляю.",5000); 
+	        		console.info(eventMessage.sync_id,eventMessage.txt);
+        		}
+        	}
       }
     };
 
@@ -2580,6 +2590,7 @@ return id;
     };
 
     function _connect(channel) {
+      if(!channel) return true;
       pushstream.removeAllChannels();
       try {
         pushstream.addChannel(channel);

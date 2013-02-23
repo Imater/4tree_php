@@ -3818,11 +3818,11 @@ cursor: pointer;
 .sync_console
 {
 position: absolute;
-font-size: 12px;
+font-size: 10px;
 padding: 5px;
 height: 50%;
-width: 600px;
-left: 30px;
+width: 500px;
+left: 50px;
 bottom: 46px;
 opacity: 1;
 background: white;

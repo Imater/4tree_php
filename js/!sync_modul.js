@@ -18,7 +18,7 @@ function jsSync()
 	sync_id = jsGetSyncId();
 	my_console("Начинаю синхронизацию. Клиент:",sync_id);
 
-	mytime = parseInt(localStorage.getItem("sync_time_server"));
+	mytime = parseInt(localStorage.getItem("last_sync_time"));
 	timedif = jsNow() - mytime;
 	my_console("Синхронизировался последний раз:",sqldate(mytime) + " ("+ parseInt(timedif/1000) +" сек.назад)");
 	
@@ -50,12 +50,13 @@ function jsSync()
 
 	confirm_ids = JSON.stringify( myconfirms ); //высушиваю данные и превращаю в JSON строку
 	changes = 'changes='+encodeURIComponent(changes)+'&confirm='+encodeURIComponent(confirm_ids);
-	
-	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow()+"&only_save=1";
+	//what_you_need = save,load,all
+	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow()+"&do=save";
 	my_console("Отправляю серверу запрос:",lnk);
-	$.postJSON(lnk,changes,function(data,j,k){
+	$.getJSON(lnk,changes,function(data,j,k){
 		 if(j=="success")
 		 	{
+		 	if(data.saved)
 			 	$.each(data.saved,function(i,d) //эти данные сохранены на сервере, можно отметить lsync = now()
 			 	    	{
 			 	    	console.info(d.id,data.lsync,d.old_id);
@@ -65,11 +66,116 @@ function jsSync()
 			 	    		}
 
 			 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit");
-		 	    		jsFind(d.id).lsync = parseInt(data.lsync);
+			 	    	myelement1=jsFind(d.id);
+		 	    		myelement1.lsync = parseInt(data.lsync);
+		 	    		myelement1.new = "";
+		 	    		jsSaveData(d.id);
 			 	    	});
+
+			 	countit=0;
+		 	if(data.server_changes)
+			 	$.each(data.server_changes,function(i,d) //эти данные сохранены на сервере, можно отметить lsync = now()
+			 	    	{
+			 	    	console.info(d);
+			 	    	jsSaveElement(d);
+			 	    	jsRefreshRedactor(d);
+			 	    	countit=1;
+			 	    	my_console("Пришли новые данные с сервера: "+d.id);
+			 	    	});
+			 	
+			 	    	if(countit==1) 
+			 	    	   {
+				 	    	jsRefreshTree();
+			 	    	   }
+			 	
+			 	localStorage.setItem("last_sync_time",data.lsync); //сохраняю время успешной синхронизации
+			 	    	
+			 	  
 			 }
 		my_console("Получен ответ от сервера:",j);
 		});
+
+}
+
+function jsRefreshRedactor(d)
+{
+	divider = $(".divider_red[myid='"+d.id+"']");
+	
+	if(divider.length==0)	//если открыта одна заметка
+	    {
+	    	id_node = $('.redactor_editor').attr("myid");
+	    	md5text = $('.redactor_editor').attr("md5");
+	    	
+	    	if( (id_node==d.id) && ( $.md5(d.text) != md5text )) //если с сервера прислали новый текст, то обновляю редактор. Нужно дописать, если открыто несколько заметок. bug. никогда не запускается.
+	    	  {
+	    	  old_scroll = $(".redactor_editor").scrollTop();
+	    	  clearTimeout(scrolltimer);
+	    	  jsRedactorOpen([d.id],"FROM SYNC EDITOR");		
+	    	  $(".redactor_editor").scrollTop(old_scroll);
+	    	  }
+	    }
+	else
+	    {				//если открыто несколько заметок
+	    	  old_scroll = $(".redactor_editor").scrollTop();
+	    	  clearTimeout(scrolltimer);
+	    	  if(myelement) divider.next(".edit_text").html(myelement.text);
+	    	  $(".redactor_editor").scrollTop(old_scroll);
+	    }
+	
+
+}
+
+
+function jsSaveElement(d)
+{
+	if(!d) return false;
+	
+	if( (!jsFind(d.id)) && (d.id>0) )  //если такого id нет, то создаю (создан в другом месте)
+		{
+			new_line = my_all_data.length;
+			my_all_data[new_line]=new Object(); 
+			element = my_all_data[new_line];
+			element.date1 = "";
+			element.date2 = "";
+			element.icon = "";
+			element.id = d.id;
+			element.img_class = "note-clean";
+			element.parent_id = d.parent_id;
+			element.position = d.position.toString();
+			element.text = "";
+			element.did = "";
+			element.time = parseInt(d.changetime);
+			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
+			element.user_id = $.cookie("4tree_user_id"); //уверен? а вдруг это дело добавил другой юзер?
+			element.remind = 0;
+			element.new = "";
+			element.s = 0;
+			element.tab = 0;
+			element.fav = 1;
+			element.title = "Новая заметка (new)";
+			jsSaveData(d.id);
+			console.info("new-element",element);
+		}
+				
+	myelement = jsFind(d.id);
+	myelement.title = d.title;
+	myelement.parent_id = d.parent_id;
+	myelement.did = d.did;
+	myelement.fav = d.fav;
+	myelement.date1 = d.date1;
+	myelement.date2 = d.date2;
+	myelement.tab = d.tab;
+	myelement.new = ""; //обнуляю new, чтобы скрыть иконку синхронизации
+	myelement.position = d.position.toString();
+	myelement.icon = d.node_icon;
+	myelement.lsync = parseInt(d.lsync);
+	myelement.user_id = d.user_id;
+	myelement.remind = d.remind;
+	myelement.s = d.s;
+	myelement.text = d.text;
+
+	jsSaveData(d.id,d.old_id,"dontsync"); //не надо, так как есть уже в jsFind
+	
 
 }
 
