@@ -6419,7 +6419,7 @@ function jsSendText(id_node,text,dont)
 	    	icon = "";
 	    	}
 
-		tt = jsFind(id_node, { text : text }); //сохраняю текст в главном массиве
+		tt = jsFind(id_node, { text : text, icon : icon }); //сохраняю текст в главном массиве
 
 		if(tt) if(tt.title.indexOf(" - ")!=-1) jsGetAllMyNotes(); //обновляю массив для календаря дневника
 

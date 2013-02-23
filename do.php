@@ -371,7 +371,7 @@ $confirms =  json_decode( $confirm , true );
 $time_dif = $now - $now_time;
 
 $confirm_id = "";
-$display = false;
+$display = false; ///////////!!!!!!!!!!!!!!
 if($display) echo "<b>Индентификатор клиента:</b> ".$sync_id."<hr>";
 if($display) echo "<b>Время последней синхронизации:</b> ".sqltime($client_time)." (".$client_time.")<hr>";
 if($display) echo "<b>Время сейчас на сервере:</b> ".sqltime($now)." (".$now.")<hr>";
@@ -476,7 +476,7 @@ if( count($confirm_saved_id["saved"])>0 )
 if($what_you_need != "save") //если клиент хочет только сохраниться, то не загружаю новые данные (для ускорения процесса)
 	{
 	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( user_id=".$GLOBALS['user_id']." AND (changetime > '".($client_time+$time_dif)."' OR lsync>'".($client_time+$time_dif)."') AND ($dont_send_ids true))";
-//	echo $sqlnews;
+	if($display) echo $sqlnews;
 	//все объекты у которых дата изменения позже последней синхронизации или
 	//которые синхронизировались позже последней синхронизации
 	//и исключаю те данные, которые только что обновлял $dont_send_ids
@@ -505,7 +505,7 @@ if($what_you_need != "save") //если клиент хочет только с�
 		$server_changes[$i]['position']=($sql['position']);
 		$server_changes[$i]['node_icon']=($sql['node_icon']);
 		$server_changes[$i]['remind']=($sql['remind']);
-		$server_changes[$i]['changetime']=((integer)$sql['changetime']-$time_dif);
+		$server_changes[$i]['changetime']=($sql['changetime']);
 		$server_changes[$i]['tab']=($sql['tab_order']);
 		$server_changes[$i]['old_id']=($sql['old_id']);
 		$server_changes[$i]['user_id']=($sql['user_id']);
@@ -538,7 +538,10 @@ if($display) echo "SAVE CHANGES<br>";
 
 		for($iii=0;$iii<count($fields);$iii++) //меняем в базе только те поля, которые изменились и присланы из клиента
 			{
-			if(array_key_exists($fields[$iii], $changes[$i])) 			
+			$fieldname = $fields[$iii];
+			echo $fieldname;
+			if($fieldname == "node_icon") $fieldname = "icon";
+			if(array_key_exists($fieldname, $changes[$i])) 			
 				{
 				$sqlnews2 .= " ".$fields[$iii]." = :".$fields[$iii].", ";
 				}
@@ -549,7 +552,7 @@ if($display) echo "SAVE CHANGES<br>";
 			}
 		
 		$sqlnews2 .= "changetime = :changetime, lsync = :lsync  WHERE  `tree`.`id` = :id; ";
-   		if($display) echo "<font style='font-size:9px'>".$sqlnews2."</font><br>";
+   		if(true) echo "<font style='font-size:9px'>".$sqlnews2."</font><br>";
 
 		$date1=$changes[$i]['date1'];
 		$date2=$changes[$i]['date2'];
@@ -565,7 +568,7 @@ if($display) echo "SAVE CHANGES<br>";
 		if($changes[$i]['del']==1) $del=1; //флаг удаления дела
 		else $del = 0;
    		
-   		$changetime = $changes[$i]['time']+$time_dif;
+   		$changetime = $changes[$i]['time']+$time_dif; //???
 
 		$values = array( ":id" => $changes[$i]['id'],
 				":parent_id" =>  $changes[$i]['parent_id'],
@@ -575,16 +578,16 @@ if($display) echo "SAVE CHANGES<br>";
 				":text" => $note,
 				":date1" =>  $date1,
 				":date2" =>  $date2,
-				":lsync" =>  $now_time,
+				":lsync" =>  $now_time+$time_dif,
 				":remind" => $changes[$i]['remind'],
 				":did" =>  $did,
 				":s" => $changes[$i]['s'],
 				":fav" =>  $changes[$i]['fav'],
 				":changetime" => $changetime,
 				":del" => $del,
-				":node_icon" => $changes[$i]['node_icon']);
+				":node_icon" => $changes[$i]['icon']);
 
-		if($display) print_r($values);
+		if(true) print_r($values);
 
 		$query = $db2->prepare($sqlnews2);
 		$query->execute($values);
