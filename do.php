@@ -355,6 +355,7 @@ return date("Y-m-d <b>H:i:s</b>",($now/1000+60*60));
 
 if (isset($HTTP_GET_VARS['sync_new'])) 
 {
+$now = now();
 $what_you_need = $HTTP_GET_VARS['what_you_need'];
 $sync_id = $HTTP_GET_VARS['sync_new']; //индентификатор клиента
 $client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['time'];  //время последней синхронизации  
@@ -364,11 +365,12 @@ $ch = $HTTP_GET_VARS['changes']; //POST
 $ch = stripslashes($ch);
 $changes =  json_decode( $ch , true );  
 
-$now = now();
 $confirm = $HTTP_POST_VARS['confirm'];
 $confirms =  json_decode( $confirm , true );  
 
 $time_dif = $now - $now_time;
+
+$now_time = $now_time + $time_dif;
 
 $confirm_id = "";
 $display = false; ///////////!!!!!!!!!!!!!!
@@ -401,7 +403,7 @@ for ($i=0; $i<$countlines; $i++)
 		   		$result5 = mysql_query_my($sqlnews5); 
 		   		if($display) if(mysql_affected_rows()>0) echo "Удалил дублирующую запись (".mysql_affected_rows()." шт)<br>";
 		   		
-		   		$sqlnews="INSERT INTO `tree` (old_id,user_id,changetime,title) VALUES ('".$id."','".$GLOBALS['user_id']."','".($now_time+$time_dif)."','".$changes[$i]['title']." (new)');";
+		   		$sqlnews="INSERT INTO `tree` (old_id,user_id,changetime,title) VALUES ('".$id."','".$GLOBALS['user_id']."','".($now_time)."','".$changes[$i]['title']." (new)');";
 		   		$result = mysql_query_my($sqlnews); 
 		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
 		   		$id = mysql_insert_id();
@@ -437,7 +439,7 @@ for ($i=0; $i<$countlines; $i++)
    		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
    		if($display) echo "Элемент в базе найден: <b>".$sql['title']."</b> (родитель: ".$sql['parent_id'].")<br>";
 
-  		$change_time = (integer)$changes[$i]['time']+$time_dif; //время изменения заметки на клиенте
+  		$change_time = (integer)$changes[$i]['time']; //время изменения заметки на клиенте
   		$fromdb_time = $sql['changetime'];
    		$dif = $fromdb_time - $change_time;
 
@@ -475,7 +477,7 @@ if( count($confirm_saved_id["saved"])>0 )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if($what_you_need != "save") //если клиент хочет только сохраниться, то не загружаю новые данные (для ускорения процесса)
 	{
-	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( user_id=".$GLOBALS['user_id']." AND (changetime > '".($client_time+$time_dif)."' OR lsync>'".($client_time+$time_dif)."') AND ($dont_send_ids true))";
+	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( user_id=".$GLOBALS['user_id']." AND (changetime > '".($client_time)."' OR lsync>'".($client_time)."') AND ($dont_send_ids true))";
 	if($display) echo $sqlnews;
 	//все объекты у которых дата изменения позже последней синхронизации или
 	//которые синхронизировались позже последней синхронизации
@@ -519,6 +521,7 @@ if($what_you_need != "save") //если клиент хочет только с�
 	} //end of LOAD_DATA
 
 $confirm_saved_id["lsync"] = $now_time;
+$confirm_saved_id["time_dif"] = $time_dif;
 $confirm_saved_id["server_changes"] = $server_changes;
 echo json_encode($confirm_saved_id);
 
@@ -567,7 +570,7 @@ if($display) echo "SAVE CHANGES<br>";
 		if($changes[$i]['del']==1) $del=1; //флаг удаления дела
 		else $del = 0;
    		
-   		$changetime = $changes[$i]['time']+$time_dif; //???
+   		$changetime = $changes[$i]['time']; //???
 
 		$values = array( ":id" => $changes[$i]['id'],
 				":parent_id" =>  $changes[$i]['parent_id'],
@@ -577,7 +580,7 @@ if($display) echo "SAVE CHANGES<br>";
 				":text" => $note,
 				":date1" =>  $date1,
 				":date2" =>  $date2,
-				":lsync" =>  $now_time+$time_dif,
+				":lsync" =>  $now_time,
 				":remind" => $changes[$i]['remind'],
 				":did" =>  $did,
 				":s" => $changes[$i]['s'],
@@ -1303,7 +1306,11 @@ return date("Y-m-d H:i:s",($date/1000));
 
 if (isset($HTTP_GET_VARS['get_all_data2'])) 
 {
+$now = now();
 $now_time = $HTTP_GET_VARS['get_all_data2'];
+
+$time_dif = $now - $now_time;
+
 
 $share_ids = get_all_share_children($GLOBALS['user_id']); //все дочерние элементы, которые есть в таблице tree_share
 
@@ -1316,14 +1323,6 @@ $r_time = $_SERVER['REQUEST_TIME'];
 $browser_info = $ip."\n".$browser."\n".$r_time;
 
 
-$sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR id IN (".$share_ids.")) AND del=0 ORDER by parent_id, position";
-
-  $result = mysql_query_my($sqlnews); 
-  $i=0;
-  $sqlnews2 = "";
-  while (@$sql = mysql_fetch_array($result))
-    {
-    
 		$sqlnews2 .= "INSERT INTO  `h116`.`tree_sync` (
 				`iid` ,
 				`id` ,
@@ -1339,12 +1338,20 @@ $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR id IN (
 				`text`
 				)
 				VALUES (
-				'',  '".$sql['id']."',  '".$GLOBALS['user_id']."', '".$sql['user_id']."',  '".$sync_id."',  '".$now_time."', '".sqldate($now_time)."',  '".$sql['changetime']."', '".sqldate( $sql['changetime'] )."',  '".$sql['title']."', '1', '".$browser_info."'
+				'',  '-1',  '".$GLOBALS['user_id']."', '',  '".$sync_id."',  '".$now_time."', '".sqldate($now_time)."',  '', '".sqldate( $sql['changetime'] )."',  'Новый клиент', '1', '".$browser_info."'
 				); ";
 
-	if($i>100) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; } 
+		$result2 = mysql_query($sqlnews2);
 
-        
+
+
+$sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR id IN (".$share_ids.")) AND del=0 ORDER by parent_id, position";
+
+  $result = mysql_query_my($sqlnews); 
+  $i=0;
+  $sqlnews2 = "";
+  while (@$sql = mysql_fetch_array($result))
+    {
 	$len = strlen( strip_tags($sql['text']) );
     $br_count = (integer)($len/150); //длина текста
 
@@ -1415,7 +1422,9 @@ if(true) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; }
 //	echo $sqlnews2;
 //  print_r( $answer );
 	
-	echo json_encode($answer);
+	$res["time_dif"] = $time_dif;
+	$res["all_data"] = $answer;
+	echo json_encode($res);
 }
 
 

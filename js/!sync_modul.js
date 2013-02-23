@@ -51,7 +51,7 @@ function jsSync()
 	confirm_ids = JSON.stringify( myconfirms ); //высушиваю данные и превращаю в JSON строку
 	changes = 'changes='+encodeURIComponent(changes)+'&confirm='+encodeURIComponent(confirm_ids);
 	//what_you_need = save,load,all
-	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow()+"&do=save";
+	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&do=save";
 	my_console("Отправляю серверу запрос:",lnk);
 	$.getJSON(lnk,changes,function(data,j,k){
 		 if(j=="success")
@@ -89,6 +89,7 @@ function jsSync()
 			 	    	   }
 			 	
 			 	localStorage.setItem("last_sync_time",data.lsync); //сохраняю время успешной синхронизации
+			 	localStorage.setItem("time_dif",data.time_dif); //сохраняю время успешной синхронизации
 			 	    	
 			 	  
 			 }

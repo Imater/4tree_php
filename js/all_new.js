@@ -2741,9 +2741,17 @@ $("#add_do").keyup();
 }
 
 	
-function jsNow() //определение текущего времени
+function jsNow(dont_need_dif) //определение текущего времени
 {
-return parseInt( (new Date()).getTime() ); 
+time_dif = localStorage.getItem("time_dif");
+if(!time_dif) time_dif = 0;
+if(!dont_need_dif)
+	now_time = ( parseInt( (new Date()).getTime() ) + parseInt(time_dif)  );
+else
+	now_time = ( parseInt( (new Date()).getTime() ) );
+
+
+return now_time; 
 }	
 
 var sync_idle_timer1;
@@ -3975,16 +3983,18 @@ if ( (!localStorage.getItem("d_length")) || (load_from_server) )
 	lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id; //передаю время, чтобы заполнить время последней синхронизации
 	
 	$.getJSON(lnk,function(data){
-		if(!data) 
+		if(!data.all_data) 
 			{
 			localStorage.clear();
 			document.location.href="./4tree.php";
 			}
 		jsTitle('Данные загружены с сервера');
 		localStorage.clear();
+		if(data.time_dif) localStorage.setItem("time_dif",data.time_dif);
+		localStorage.setItem("last_sync_time",jsNow());
 		localStorage.setItem("sync_time_server",jsNow());
 		localStorage.setItem("sync_id",sync_id);
-		my_all_data = $.map(data, function (value, key) { return value; });
+		my_all_data = $.map(data.all_data, function (value, key) { return value; });
 		jsSaveData();
 		preloader.trigger('hide');
 		
