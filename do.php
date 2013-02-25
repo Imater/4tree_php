@@ -403,7 +403,7 @@ for ($i=0; $i<$countlines; $i++)
 		   		$result5 = mysql_query_my($sqlnews5); 
 		   		if($display) if(mysql_affected_rows()>0) echo "Удалил дублирующую запись (".mysql_affected_rows()." шт)<br>";
 		   		
-		   		$sqlnews="INSERT INTO `tree` (old_id,user_id,changetime,title) VALUES ('".$id."','".$GLOBALS['user_id']."','".($now_time)."','".$changes[$i]['title']." (new)');";
+		   		$sqlnews="INSERT INTO `tree` (old_id,user_id,changetime,title) VALUES ('".$id."','".$GLOBALS['user_id']."','".ConvertFutureDate($now_time)."','".$changes[$i]['title']." (new)');";
 		   		$result = mysql_query_my($sqlnews); 
 		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
 		   		$id = mysql_insert_id();
@@ -439,11 +439,13 @@ for ($i=0; $i<$countlines; $i++)
    		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
    		if($display) echo "Элемент в базе найден: <b>".$sql['title']."</b> (родитель: ".$sql['parent_id'].")<br>";
 
-  		$change_time = (integer)$changes[$i]['time']; //время изменения заметки на клиенте
-  		$fromdb_time = $sql['changetime'];
+  		$change_time = ConvertFutureDate( (integer)$changes[$i]['time'] ); //время изменения заметки на клиенте
+  		$fromdb_time = ConvertFutureDate( $sql['changetime'] );
    		$dif = $fromdb_time - $change_time;
 
    		if($display) echo "Время изменения на клиенте: ".sqltime($change_time)." — время изменения на сервере: ".sqltime($fromdb_time).") = ".$dif."; ".@$changes[$i]['old_id']."<br>";
+
+//		if($changes[$i]['del']==1) sync_check_to_delete($changes,$i,$sql,$display,$now_time);
 
    		if($dif<0 OR @$changes[$i]['old_id']<0)
    			{
@@ -474,10 +476,12 @@ if( count($confirm_saved_id["saved"])>0 )
         
 	push(array($GLOBALS['user_id']),$message);
 	}
+	
+	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if($what_you_need != "save") //если клиент хочет только сохраниться, то не загружаю новые данные (для ускорения процесса)
 	{
-	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( user_id=".$GLOBALS['user_id']." AND (changetime > '".($client_time)."' OR lsync>'".($client_time)."') AND ($dont_send_ids true))";
+	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( user_id=".$GLOBALS['user_id']." AND (changetime > '".ConvertFutureDate($client_time)."' OR lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids true))";
 	if($display) echo $sqlnews;
 	//все объекты у которых дата изменения позже последней синхронизации или
 	//которые синхронизировались позже последней синхронизации
@@ -507,11 +511,11 @@ if($what_you_need != "save") //если клиент хочет только с�
 		$server_changes[$i]['position']=($sql['position']);
 		$server_changes[$i]['node_icon']=($sql['node_icon']);
 		$server_changes[$i]['remind']=($sql['remind']);
-		$server_changes[$i]['changetime']=($sql['changetime']);
+		$server_changes[$i]['changetime']=ConvertFutureDate($sql['changetime']);
 		$server_changes[$i]['tab']=($sql['tab_order']);
 		$server_changes[$i]['old_id']=($sql['old_id']);
 		$server_changes[$i]['user_id']=($sql['user_id']);
-		$server_changes[$i]['lsync']=($now_time);
+		$server_changes[$i]['lsync']=ConvertFutureDate($now_time);
 		$server_changes[$i]['s']=($sql['s']);
 		$server_changes[$i]['del']=($sql['del']);
 		$i++;
@@ -527,6 +531,14 @@ echo json_encode($confirm_saved_id);
 
 
 exit;
+}
+
+
+function ConvertFutureDate($mydate) //привожу все будущие даты к сегодняшнему времени
+{
+$mydate = (integer)$mydate;
+if($mydate>now()) $mydate = now();
+return $mydate;
 }
 
 function sync_save_changes($changes,$i,$sql,$display,$now_time,$time_dif)
@@ -594,7 +606,40 @@ if($display) echo "SAVE CHANGES<br>";
 		$query = $db2->prepare($sqlnews2);
 		$query->execute($values);
 
+
 					 
+
+}
+
+function sync_check_to_delete($changes,$i,$sql,$display,$now_time)
+{
+			echo "<hr>";
+			$sqlnews5 = "SELECT sync_id FROM `tree_sync` GROUP by sync_id";
+			$result5 = mysql_query_my($sqlnews5); 
+			while(@$sql5 = mysql_fetch_array($result5))
+				{
+				$my_sync_id = $sql5["sync_id"];
+				echo $my_sync_id."<br>";
+				$sqlnews6 = "INSERT INTO  `h116`.`tree_sync` (
+						`iid` ,
+						`id` ,
+						`del`,
+						`user_id` ,
+						`host_id` ,
+						`sync_id` ,
+						`lsync` ,
+						`lsync_d` ,
+						`changetime` ,
+						`changetime_d` ,
+						`title` ,
+						`text`
+						)
+						VALUES (
+						'',  '".$changes[$i]['id']."', '1',  '".$GLOBALS['user_id']."', '',  '".$my_sync_id."', '0', '0',  '0', '0',  '".$changes[$i]['title']."',  '".$browser_info."'
+						);";
+//			    $result6 = mysql_query_my($sqlnews6); 
+			    }
+				
 
 }
 
