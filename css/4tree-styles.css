@@ -3817,6 +3817,7 @@ cursor: pointer;
 
 .sync_console
 {
+display: none;
 position: absolute;
 font-size: 10px;
 padding: 5px;

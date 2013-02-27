@@ -1,5 +1,7 @@
 function my_console(text,text2) //вывод лога в консоль
 {
+	if(!$(".sync_console:visible").length) return true;
+
 	if(!text2) text2 = "";
 	$(".sync_console > ul").append("<li><font color='lightgray'>"+ (new Date).toLocaleTimeString() + "</font> — " + text+" <b>"+text2+"</b></li>");
 	$(".sync_console").scrollTop(50000);
@@ -13,6 +15,9 @@ function my_console(text,text2) //вывод лога в консоль
 
 function jsSync()
 {
+    preloader.trigger('show');
+    $(".icon-cd").css("color","#517c5d");
+	
 	my_console("clean");
 
 	sync_id = jsGetSyncId();
@@ -83,17 +88,38 @@ function jsSync()
 			 	    	my_console("Пришли новые данные с сервера: "+d.id);
 			 	    	});
 			 	
-			 	    	if(countit==1) 
-			 	    	   {
-				 	    	jsRefreshTree();
-			 	    	   }
-			 	
+			 //удаление дела
+		     if(data.need_del)
+		       $.each(data.need_del,function(ii,dd)
+		     	{
+		     	console.info("need_del",dd);
+		     	if(dd.command == 'del') 
+		     		{
+		     		my_console("По комманде сервера, удаляю №",dd.id);
+		     		jsDelId(dd.id);
+		     		}
+		     	if(dd.command == 'sync_all') 
+		     		{ 
+		     	  	localStorage.clear();
+		     		document.location.href="./index.php";
+		     		}
+		     	countit=1;
+		     	});
+
+	 	    	if(countit==1) 
+	 	    	   {
+	     	    	jsRefreshTree();
+	 	    	   }
+			 	    	   
 			 	localStorage.setItem("last_sync_time",data.lsync); //сохраняю время успешной синхронизации
 			 	localStorage.setItem("time_dif",data.time_dif); //сохраняю время успешной синхронизации
 			 	    	
 			 	  
 			 }
 		my_console("Получен ответ от сервера:",j);
+        $(".icon-cd").css("color","#888");
+        preloader.trigger('hide');
+
 		});
 
 }

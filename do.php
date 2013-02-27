@@ -481,7 +481,7 @@ if( count($confirm_saved_id["saved"])>0 )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if($what_you_need != "save") //если клиент хочет только сохраниться, то не загружаю новые данные (для ускорения процесса)
 	{
-	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( user_id=".$GLOBALS['user_id']." AND (changetime > '".ConvertFutureDate($client_time)."' OR lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids true))";
+	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( user_id=".$GLOBALS['user_id']." AND (changetime > '".ConvertFutureDate($client_time)."' OR lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids true) AND tree.del!=1)";
 	if($display) echo $sqlnews;
 	//все объекты у которых дата изменения позже последней синхронизации или
 	//которые синхронизировались позже последней синхронизации
@@ -524,9 +524,33 @@ if($what_you_need != "save") //если клиент хочет только с�
 	
 	} //end of LOAD_DATA
 
+	//все объекты, которые удалены, но ещё ни разу не синхронизированны
+	$sqlnews = "SELECT tree.id, tree.user_id,tree.title FROM `tree` LEFT JOIN tree_sync ON tree_sync.id = tree.id AND tree_sync.user_id='".$sync_id."' WHERE tree.del=1 AND tree.user_id=".$GLOBALS['user_id']." AND tree_sync.id IS NULL";
+//	echo $sqlnews;
+	$result = mysql_query_my($sqlnews); 
+	$i = 0;
+	$k = 0;
+	while(@$sql = mysql_fetch_array($result))
+		{
+		if($display) echo "<li>Нужно удалить: ".$sql["id"]."</li>";
+
+		$confirm_saved_id["need_del"][$k]["id"] = $sql["id"];
+		$confirm_saved_id["need_del"][$k]["command"] = "del";
+		$k++;
+
+		$sqlnews2 = "INSERT INTO `tree_sync` SET
+	    	`id` = '".$sql["id"]."',
+	    	`del` = 1,
+	    	`title` = '".$sql['title']."',
+	    	`user_id` = '".$sql['user_id']."',
+	    	`sync_id` = '".$sync_id."' ";
+	    $result2 = mysql_query_my($sqlnews2); 
+		}
+
 $confirm_saved_id["lsync"] = $now_time;
 $confirm_saved_id["time_dif"] = $time_dif;
 $confirm_saved_id["server_changes"] = $server_changes;
+
 echo json_encode($confirm_saved_id);
 
 

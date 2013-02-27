@@ -2876,7 +2876,9 @@ var sync_now_timer,myrefreshtimer;
 //синхронизация - отправка изменений на сервер//////////////////////////////////////
 function jsRefreshDo()
 {
+//jsSync();
 return true;
+
 clearTimeout(sync_idle_timer1);
 clearTimeout(sync_idle_timer2); //обнуляю таймер long
 
@@ -2893,6 +2895,7 @@ if(sync_now) return false; //если синхронизация уже идёт
 sync_now = true; //нужно перенести этот параметр в LocalStorage, чтобы другие окна тоже не синхронизировались одновременно
 clearTimeout(sync_now_timer);
 sync_now_timer = setTimeout(function(){ sync_now = false; },90000);
+
 preloader.trigger('show');
 
 if(!$.cookie("4tree_email_md")) return false; //если пользователь не зарегистрирован отмена синхронизации
