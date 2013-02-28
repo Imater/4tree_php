@@ -2552,7 +2552,7 @@ return id;
       if (eventMessage != '') {
 //        var values = $.parseJSON(eventMessage);
         console.info("mymessage-type",eventMessage);
-        if( eventMessage.type == "need_refresh_now" ) { jsRefreshDo(); alert("Пришло новое письмо!"); }
+        if( eventMessage.type == "need_refresh_now" ) { jsSync(); setTimeout(function(){ alert("Пришло новое письмо!");},800); }
         if( eventMessage.type == "need_refresh_id" ) //сообщение о изменившихся данных от do.php
         	{ 
         	mysync_id = jsGetSyncId();
