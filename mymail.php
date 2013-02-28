@@ -211,12 +211,13 @@ global $db2;
 
   if($parent_id)
   	{
-	  $sql11 = "INSERT INTO `h116`.`tree` SET user_id = :user_id, title = :title, text = :text, parent_id = :parent_id";
+	  $sql11 = "INSERT INTO `h116`.`tree` SET user_id = :user_id, title = :title, text = :text, parent_id = :parent_id, lsync = :lsync";
 	
 	
 	  $values11 = array( ":user_id" => $userid,
 	      	":title" =>  "[@] ".$txt["title"],
 	      	":parent_id" =>  $parent_id,
+	      	":lsync" => (integer)(microtime(true)*1000),
 	      	":text" => $html
 	          );
 	          
