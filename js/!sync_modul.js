@@ -58,7 +58,7 @@ function jsSync()
 	//what_you_need = save,load,all
 	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&do=save";
 	my_console("Отправляю серверу запрос:",lnk);
-	$.getJSON(lnk,changes,function(data,j,k){
+	$.postJSON(lnk,changes,function(data,j,k){
 		 if(j=="success")
 		 	{
 		 	if(data.saved)

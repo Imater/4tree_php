@@ -360,7 +360,7 @@ $what_you_need = $HTTP_GET_VARS['what_you_need'];
 $sync_id = $HTTP_GET_VARS['sync_new']; //индентификатор клиента
 $client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['time'];  //время последней синхронизации  
 $now_time = $HTTP_GET_VARS['now_time'];  //сколько сейчас времени на клиенте
-$ch = $HTTP_GET_VARS['changes']; //POST
+$ch = $HTTP_POST_VARS['changes']; //POST
 //if($_SERVER["HTTP_HOST"]=="localhost") 
 $ch = stripslashes($ch);
 $changes =  json_decode( $ch , true );  
@@ -525,7 +525,7 @@ if($what_you_need != "save") //если клиент хочет только с�
 	} //end of LOAD_DATA
 
 	//все объекты, которые удалены, но ещё ни разу не синхронизированны
-	$sqlnews = "SELECT tree.id, tree.user_id,tree.title FROM `tree` LEFT JOIN tree_sync ON tree_sync.id = tree.id AND tree_sync.user_id='".$sync_id."' WHERE tree.del=1 AND tree.user_id=".$GLOBALS['user_id']." AND tree_sync.id IS NULL";
+	$sqlnews = "SELECT tree.id, tree.user_id,tree.title FROM `tree` LEFT JOIN tree_sync ON tree_sync.id = tree.id AND tree_sync.sync_id='".$sync_id."' WHERE tree.del=1 AND tree.user_id=".$GLOBALS['user_id']." AND tree_sync.id IS NULL";
 //	echo $sqlnews;
 	$result = mysql_query_my($sqlnews); 
 	$i = 0;
