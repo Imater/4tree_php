@@ -13,8 +13,27 @@ function my_console(text,text2) //вывод лога в консоль
 	
 }
 
+
+function jsStartSyncNew(when_need_sync)
+{
+soon = 15*1000; //сколько секунд до синхронизации
+
+if(when_need_sync=="soon")
+	{
+	setTimeout(function(){}, soon)
+	}
+
+}
+
+
 function jsSync()
 {
+    if(sync_now) return true; //если синхронизация уже идёт
+    sync_now = true;
+    clearTimeout(sync_now_timer);
+    sync_now_timer = setTimeout(function(){ sync_now = false; start_sync_when_idle=false; }, 60000);
+	start_sync_when_idle=false;
+ 
     preloader.trigger('show');
     $(".icon-cd").css("color","#517c5d");
 	
@@ -119,7 +138,7 @@ function jsSync()
 		my_console("Получен ответ от сервера:",j);
         $(".icon-cd").css("color","#888");
         preloader.trigger('hide');
-
+        sync_now = false;
 		});
 
 }

@@ -9,7 +9,7 @@ var mytimer = new Array;
 var mymetaKey = false, diaryrewind=0,old_before_diary=0;
 var autosave_timer,mypomidor,endtime,my_min,old_title,widthpanel,RestMin, show_hidden=false,show_childdate=true;
 var is_rendering_now,last_input_click;
-var timestamp=new Date().getTime();
+var timestamp=new Date().getTime(),start_sync_when_idle=false;
 
 function jsTestDate() //тестирование парсера даты
 {
@@ -1338,24 +1338,15 @@ function jsRegAllKey() //все общие delegate и регистрация к
 
 
 //	setInterval(function() { jsRefreshDo(); },5000 );
-  $.idleTimer(1*60*1000);
+  $.idleTimer(5*1000);
 
 	$(document).bind("active.idleTimer", function(){
-	  if( (jsNow() - last_blur_sync_time) > 60000 ) //запускать синхронизацию не чаще 60 секунд
-		{
-   		jsStartSync("soon","from idleTimer ACTIVE");
-		last_blur_sync_time = jsNow();
-   		}
 		console.info("WakeUp!!!");
 	});
 
 	$(document).bind("idle.idleTimer", function(){
-	  if( (jsNow() - last_blur_sync_time) > 60000 ) //запускать синхронизацию не чаще 60 секунд
-		{
-   		jsStartSync("soon","from idleTimer IDLE");
-		last_blur_sync_time = jsNow();
-   		}
 		console.info("Sleeping…");
+		if(start_sync_when_idle) jsSync();
 	});
 	
 platform = window.navigator.platform; //что за устройство?
@@ -3880,9 +3871,9 @@ for(i=0;i<my_all_data.length;i++)
 
 function jsSaveData(id_one,old_id,dontsync)
 {
-last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
-
-if(!dontsync) jsStartSync("soon","SAVED DATA"); //запущу синхронизацию примерно через 15 секунд
+//last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
+start_sync_when_idle = true;
+//if(!dontsync) jsStartSync("soon","SAVED DATA"); //запущу синхронизацию примерно через 15 секунд
 
 //console.info("old_id",old_id);
 
