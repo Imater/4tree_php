@@ -361,8 +361,12 @@ $sync_id = $HTTP_GET_VARS['sync_new']; //индентификатор клиен
 $client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['time'];  //время последней синхронизации  
 $now_time = $HTTP_GET_VARS['now_time'];  //сколько сейчас времени на клиенте
 $ch = $HTTP_POST_VARS['changes']; //POST
-//if($_SERVER["HTTP_HOST"]=="localhost") 
-$ch = stripslashes($ch);
+
+$share_ids = get_all_share_children($GLOBALS['user_id']); //все дочерние элементы, которые есть в таблице tree_share
+//echo $share_ids;
+
+if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru")) $ch = stripslashes($ch);
+
 $changes =  json_decode( $ch , true );  
 
 $confirm = $HTTP_POST_VARS['confirm'];
@@ -481,7 +485,7 @@ if( count($confirm_saved_id["saved"])>0 )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if($what_you_need != "save") //если клиент хочет только сохраниться, то не загружаю новые данные (для ускорения процесса)
 	{
-	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( user_id=".$GLOBALS['user_id']." AND (changetime > '".ConvertFutureDate($client_time)."' OR lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids true) AND tree.del!=1)";
+	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( (user_id=".$GLOBALS['user_id']." OR ".$share_ids.") AND (changetime > '".ConvertFutureDate($client_time)."' OR lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids true) AND tree.del!=1)";
 	if($display) echo $sqlnews;
 	//все объекты у которых дата изменения позже последней синхронизации или
 	//которые синхронизировались позже последней синхронизации
@@ -1338,6 +1342,7 @@ function get_all_share_children($user_id)
 {
 global $main_array,$all_tree_id;
 
+
   $sqlnews = "SELECT id,parent_id FROM tree";
   $result = mysql_query_my($sqlnews); 
   while (@$sql = mysql_fetch_array($result))
@@ -1360,7 +1365,7 @@ global $main_array,$all_tree_id;
   	
 	get_all_guest_nodes($user_id);
 
-  $answerme = implode( ",",$main_array );
+  $answerme = " id = '".implode( "' OR id = '",$main_array )."'";
   
   if($answerme=="") $answerme = "false";
 
@@ -1414,7 +1419,7 @@ $browser_info = $ip."\n".$browser."\n".$r_time;
 
 
 
-$sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR id IN (".$share_ids.")) AND del=0 ORDER by parent_id, position";
+$sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR ".$share_ids.") AND del=0 ORDER by parent_id, position";
 
   $result = mysql_query_my($sqlnews); 
   $i=0;
@@ -3416,7 +3421,7 @@ if (isset($HTTP_GET_VARS['history']))
 		   
 		   $result = mysql_query_my($sqlnews); 
 
-			 $sqlnews2 = "SELECT * FROM h116.tree WHERE id = '$h' AND ( ('".$GLOBALS['user_id']."'=11) OR (user_id='".$GLOBALS['user_id']."' OR id IN ($share_ids) ) )";
+			 $sqlnews2 = "SELECT * FROM h116.tree WHERE id = '$h' AND ( ('".$GLOBALS['user_id']."'=11) OR (user_id='".$GLOBALS['user_id']."' OR ($share_ids) ) )";
 			 
 //			 echo $sqlnews2;
 			 			 	
