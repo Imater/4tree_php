@@ -1369,13 +1369,8 @@ if(platform == "iPad")
 		document.addEventListener("focus",function()
 			{
 		  	jsLocalSync();
-		
-			if( (jsNow() - last_blur_sync_time) > 10000 ) //запускать синхронизацию не чаще 10 секунд
-				{
-				setTimeout(function(){ jsStartSync("soon","FOCUS iPad") }, 2000);  
-				jsTitle("Синхронизируюсь…",2000);
-				last_blur_sync_time = jsNow();
-				}
+		  	if(start_sync_when_idle) jsSync();
+		  	
 			},false);
 	}
 else
