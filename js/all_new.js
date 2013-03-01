@@ -4123,10 +4123,25 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 	
 	is_changed=false;
 	$.each(fields, function(namefield,newvalue) 
-		{ 
-		if(namefield=="date1")
+		{ 		
+		if(answer[0][namefield] != newvalue) 
+			{
+			if( (namefield!="new") )
+				{ 
+				if(changed_fields.indexOf(namefield+",")==-1) changed_fields = changed_fields + namefield + ","; 
+				}
+			else changed_fields = "UPS"; //сохраняю список полей, которые были изменены, если есть new, то обнуляю
+			is_changed=true; //фиксирую, что произошли изменения
+			
+			answer[0][namefield] = newvalue; //присваиваю новое значение
+			}
+
+			if(namefield=="date1")
 			{
 				old_date1 = answer[0]["date1"];
+
+			if(old_date1!="")
+				{
 				if(answer[0]["date2"]=="")
 					{
 					mydate1 = Date.createFromMysql( old_date1 );
@@ -4142,20 +4157,14 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 				answer[0]["date2"] = newdate.toMysqlFormat();
 				if(changed_fields.indexOf("date2,")==-1) changed_fields = changed_fields + "date2,";
 				console.info("newdate2=",answer[0]["date2"],"dif-minutes = ",(dif/60/1000),changed_fields);
-			}
-		
-		if(answer[0][namefield] != newvalue) 
-			{
-			if( (namefield!="new") )
-				{ 
-				if(changed_fields.indexOf(namefield+",")==-1) changed_fields = changed_fields + namefield + ","; 
 				}
-			else changed_fields = "UPS"; //сохраняю список полей, которые были изменены, если есть new, то обнуляю
-			is_changed=true; //фиксирую, что произошли изменения
-			
-			answer[0][namefield] = newvalue; //присваиваю новое значение
+			if(answer[0]["date2"]=="NaN-NaN-NaN NaN:NaN:NaN") answer[0]["date2"] = "";
+			if(answer[0]["date1"]=="NaN-NaN-NaN NaN:NaN:NaN") answer[0]["date1"] = "";
 			}
-		} );	
+
+		} );
+			
+
 	answer[0]["new"] = changed_fields;
 	if(is_changed) 
 		{
