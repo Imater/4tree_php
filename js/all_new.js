@@ -1351,7 +1351,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 
 
 //	setInterval(function() { jsRefreshDo(); },5000 );
-  $.idleTimer(5000000000*1000);
+  $.idleTimer(5*1000);
 
 	$(document).bind("active.idleTimer", function(){
 		console.info("WakeUp!!!");
@@ -4168,7 +4168,7 @@ if(!filtercache[id] || true)
 				}
 			} );
 		if(!answer) return false;
-		if(answer.length>=1) filtercache[id] = answer;
+//		if(answer.length>=1) filtercache[id] = answer;
 	}
 else
 	{
