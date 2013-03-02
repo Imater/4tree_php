@@ -3357,7 +3357,8 @@ else
 			}
 		}
 	jsSaveData(new_id);
-	jsRefreshTreeFast(new_id,arrow);
+	jsRefreshTreeFast(new_id,arrow,date1);	
+	$('#calendar').fullCalendar( 'refetchEvents' ); 	
 		li = $("#mypanel #node_"+new_id);
 		ntitle = li.find(".n_title");
 
@@ -4930,7 +4931,7 @@ return answer;
 
 var last_refresh;
 /* !Быстрое обновление дерева  */
-function jsRefreshTreeFast(myid,arrow)
+function jsRefreshTreeFast(myid,arrow,date1)
 {
 var all_data_changed = my_all_data.filter(function(el) 
    {
@@ -4948,8 +4949,8 @@ var element = jsFind(myid);
 if(element)
 	{
 		id = node_to_id( $("li.selected").attr(id) );
-		console.info("I GOING TO ADD:",id,element.parent_id,element);
-		if(arrow == "right") //если я добавляю к родителю
+//		console.info("I GOING TO ADD:",id,element.parent_id,element,arrow);
+		if(arrow == "right" || date1) //если я добавляю к родителю
 			{
 				where_to_add = $("#panel_"+element.parent_id).find("ul");
 				iii = $("#panel_"+element.parent_id+" li").length;
