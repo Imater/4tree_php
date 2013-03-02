@@ -2562,6 +2562,7 @@ id = 3761;
 return id;
 }
 
+	var last_message_sync_time = 0;
 
     function _manageEvent(eventMessage) {
       var chat = $("#chat");
@@ -2574,8 +2575,15 @@ return id;
         	mysync_id = jsGetSyncId();
         	if(mysync_id!=eventMessage.sync_id) //не нужно обновлять, если сообщение пришло благодаря этому клиенту
         		{
-	        		setTimeout(function(){ jsSync(); },1000); 
-	        		jsTitle("Ваши данные изменились на другом комьютере. Обновляю.",5000); 
+	        		if( jsNow() - last_message_sync_time > 10000 )
+	        			{
+	        			 setTimeout(function()
+	        			 	{ 
+		        			last_message_sync_time = jsNow();
+	        			 	if($("#mypanel .n_title[contenteditable=true]").length == 0) jsSync(); 
+	        			 	},300); 
+	        			 jsTitle("Ваши данные изменились на другом комьютере. Обновляю.",5000); 
+	        			}
 	        		console.info(eventMessage.sync_id,eventMessage.txt);
         		}
         	}
