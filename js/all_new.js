@@ -4155,7 +4155,7 @@ function jsFind(id,fields)
 element = jsIsThereElement(id);
 if(element) return element;
 
-if(!filtercache[id])
+if(!filtercache[id] || true)
 	{
 		answer = my_all_data.filter(function(el,i) 
 			{ 
