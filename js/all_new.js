@@ -4148,13 +4148,15 @@ Date.createFromMysql = function(mysql_string)
 //tt = jsFind(4676,{title:"hello",text:"myfrend_text"});
 //ar = new Object; ar["text"] = "hi2!"; jsFind(4697,ar);
 
-var filtercache = new Object;
+var filtercache = new Array;
 
 function jsFind(id,fields)
 {
 element = jsIsThereElement(id);
 if(element) return element;
 
+
+var my_id_for_cache;
 if(!filtercache[id] || true)
 	{
 		answer = my_all_data.filter(function(el,i) 
@@ -4163,16 +4165,17 @@ if(!filtercache[id] || true)
 				{
 				if( el.id==id ) 
 					{
+					my_id_for_cache = i;
 					return true; 
 					}
 				}
 			} );
 		if(!answer) return false;
-//		if(answer.length>=1) filtercache[id] = answer;
+//		if(my_id_for_cache) filtercache[id] = my_id_for_cache;
 	}
 else
 	{
-	answer = filtercache[id];
+	answer[0] = my_all_data[ filtercache[id] ];
 	}
 
 if(answer.length>0 && fields) //если нужно присваивать значения
@@ -4192,13 +4195,7 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 			else changed_fields = "UPS"; //сохраняю список полей, которые были изменены, если есть new, то обнуляю
 			is_changed=true; //фиксирую, что произошли изменения
 			
-			answer[0][namefield] = newvalue; //присваиваю новое значение
-			}
-
-			if(namefield=="date1")
-			{
-				old_date1 = answer[0]["date1"];
-
+			old_date1 = answer[0]["date1"];
 			if(old_date1!="")
 				{
 				if(answer[0]["date2"]=="")
@@ -4216,10 +4213,23 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 				answer[0]["date2"] = newdate.toMysqlFormat();
 				if(changed_fields.indexOf("date2,")==-1) changed_fields = changed_fields + "date2,";
 				console.info("newdate2=",answer[0]["date2"],"dif-minutes = ",(dif/60/1000),changed_fields);
+				if( answer[0]["date1"].indexOf("00:00:00")!=-1 ) 
+					{
+					console.info("dif=",dif);
+					if(answer[0]["date2"]!="") 
+						{
+						var mysplit = answer[0]["date2"].split(" ");
+						answer[0]["date2"]=mysplit[0]+" 00:00:00";
+						}
+					}
 				}
 			if(answer[0]["date2"]=="NaN-NaN-NaN NaN:NaN:NaN") answer[0]["date2"] = "";
 			if(answer[0]["date1"]=="NaN-NaN-NaN NaN:NaN:NaN") answer[0]["date1"] = "";
+			
+			
+			answer[0][namefield] = newvalue; //присваиваю новое значение
 			}
+
 
 		} );
 			
@@ -4848,7 +4858,7 @@ function jsPath(element)
 		parent_id = element.parent_id;
 		if(parent_id!=0) 
 			{
-			path[i] = parent_id.toString();
+			if(parent_id) path[i] = parent_id.toString();
 			i=i+1;
 			}
 		old_element = element;
