@@ -4195,6 +4195,8 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 			else changed_fields = "UPS"; //сохраняю список полей, которые были изменены, если есть new, то обнуляю
 			is_changed=true; //фиксирую, что произошли изменения
 			
+			if( (namefield=="date1") || (namefield=="date2"))
+			{
 			old_date1 = answer[0]["date1"];
 			if(old_date1!="")
 				{
@@ -4225,7 +4227,7 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 				}
 			if(answer[0]["date2"]=="NaN-NaN-NaN NaN:NaN:NaN") answer[0]["date2"] = "";
 			if(answer[0]["date1"]=="NaN-NaN-NaN NaN:NaN:NaN") answer[0]["date1"] = "";
-			
+			}
 			
 			answer[0][namefield] = newvalue; //присваиваю новое значение
 			}
