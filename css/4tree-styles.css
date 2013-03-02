@@ -1270,6 +1270,17 @@ display: inline;
 	word-wrap: break-word;      /* IE 5+ */
 }
 
+li.ui-can-recieve
+{
+padding-top: 0px !important;
+padding-bottom: 0px !important;
+}
+
+.ui-can-recieve.divider_li
+{
+height: 6px;
+}
+
 .panel_type2 .panel
 {
 width:99% !important;
@@ -1754,7 +1765,7 @@ list-style: none;
 .all_screen_click
 {
 position: absolute;
-background-image: url(../img/opacity.png);
+/* background-image: url(../img/opacity.png); */
 z-index: 6;
 width: 100%;
 height: 100%;
@@ -1768,8 +1779,8 @@ left: 0px;
 {
 z-index: 4;
 position: absolute;
-bottom: -17px;
-font-size: 11px;
+bottom: -20px;
+font-size: 10px;
 width: 100%;
 }
 
@@ -1790,14 +1801,14 @@ white-space: nowrap;
 border-bottom-right-radius: 3px;
 border-bottom-left-radius: 3px;
 
-        -webkit-transition: all 600ms ease-in-out;
-        -moz-transition: all 600ms ease-in-out;
-        -o-transition: all 600ms ease-in-out;
-        -ms-transition: all 600ms ease-in-out;
+-webkit-transition: color 600ms ease-in-out;
+-moz-transition: color 600ms ease-in-out;
+-o-transition: color 600ms ease-in-out;
+-ms-transition: color 600ms ease-in-out;
 
 display: inline-block;
-padding-left: 10px;
-padding-right: 10px;
+padding-left: 6px;
+padding-right: 6px;
 border-color: #888;
 border-left: 1px solid;
 border-bottom: 1px solid;
@@ -1809,13 +1820,11 @@ padding-top: 2px;
 padding-bottom:2px;
 color: #888;
 cursor: pointer;
-font-weight: bold;
 }
 
 .favorit_tabs:hover li
 {
 color:#000;
-border-color: #333;
 }
 
 .favorit_tabs li:last-child
@@ -2287,7 +2296,7 @@ display: none;
 	background: white;
 }
 
-.divider
+.divider_li
 {
 height: 2px;
 }
@@ -2496,7 +2505,7 @@ box-shadow: 2px 2px 8px #444;
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 }
 
-.basket_panel .icon-play-div, .basket_panel .divider
+.basket_panel .icon-play-div, .basket_panel .divider_li
 {
 display: none;
 }
@@ -3648,12 +3657,6 @@ padding-right: 0px;
 text-align: center;
 }
 
-
-.ui-can-hover
-{
-background: red !important;
-}
-
 #left_panel_opener
 {
 width: 13px;
@@ -3849,4 +3852,14 @@ margin-left: 20px;
 .sync_console li
 {
 padding: 2px;
+}
+
+.ui-can-hover
+{
+-moz-transition: all 0.1s; 
+-webkit-transition: all 0.1s;  
+-ms-transition: all 0.1s;  
+-o-transition: all 0.1s;  
+transition: all 0.1s;  
+background: red !important;
 }

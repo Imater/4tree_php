@@ -1378,6 +1378,13 @@ if($date==0) return "";
 return date("Y-m-d H:i:s",($date/1000));
 }
 
+
+function create_start_database_if_need($user_id)
+{
+}
+
+
+
 if (isset($HTTP_GET_VARS['get_all_data2'])) 
 {
 $now = now();
@@ -1418,8 +1425,12 @@ $browser_info = $ip."\n".$browser."\n".$r_time;
 		$result2 = mysql_query($sqlnews2);
 
 
+if($GLOBALS['user_id']) 
+	{ //проверяем, есть ли данные у этого пользователя, если нет, то он новый
+	create_start_database_if_need($GLOBALS['user_id']);
+	}
 
-$sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR ".$share_ids.") AND del=0 ORDER by parent_id, position";
+  $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR ".$share_ids.") AND del=0 ORDER by parent_id, position";
 
   $result = mysql_query_my($sqlnews); 
   $i=0;

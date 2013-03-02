@@ -750,7 +750,9 @@ function jsMakeTabs() //создаю закладки из всех дел на�
 		    { 
 		      if(el.did==0) 
 		      	if(el.del==0) 
+		      	  if(el.user_id==$.cookie("4tree_user_id"))
 		      		if(el.title) 
+		      		  if(el.title.indexOf("[@]")==-1)
 		      			if(el.parent_id>0) 
 		      				{
 		      				shablon = /[a-z]|[а-я]+/; 
@@ -780,7 +782,7 @@ function jsMakeTabs() //создаю закладки из всех дел на�
 		{
 		if(data[i].title.length>10) title = data[i].title;
 		else title = "";
-		alltabs = alltabs + "<li title='"+title+"' myid='"+data[i].id+"'>"+jsShortText(data[i].title,10)+"</li>";
+		alltabs = alltabs + "<li title='"+title+"' myid='"+data[i].id+"'>"+jsShortText(data[i].title,20)+"</li>";
 		}
 	alltabs= alltabs+ "</ul>";
 		
@@ -807,9 +809,20 @@ function jsShowBasket() //показать список избранных, по
 	   else $(".basket").removeClass("basket_empty");
 }
 
+function node_to_id(id)
+{
+if(id) return id.replace("node_", "");
+}
+
+function id_to_node(id)
+{
+if(id) return id.replace("node_", "");
+}
+
+
 function jsPlaceMakedone(id) //размещаю makedone там, где галочка tcheckbox
 {
-	tcheckbox = $("#mypanel li[myid='"+id+"']").find(".tcheckbox");
+	tcheckbox = $("#mypanel #node_"+id).find(".tcheckbox");
 	left = tcheckbox.offset().left-23;
 	mytop = tcheckbox.offset().top+25;
 	$(".makedone").attr("isnew","false");
@@ -872,7 +885,7 @@ function jsMakeDid(id) //выполняю одно дело
 	   jsFind(id,{ did:mydatenow.toMysqlFormat(), fav:0 });
 	   
 	   jsMakeDidInside(id); //выполняю рекурсивно всех детей
-	   li = $("#mypanel li[myid='"+id+"']");
+	   li = $("#mypanel #node_"+id);
 	   li.find(".n_title").addClass("do_did");
 	   clearTimeout(did_timeout);
 	   if(!show_hidden) 
@@ -1338,7 +1351,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 
 
 //	setInterval(function() { jsRefreshDo(); },5000 );
-  $.idleTimer(5*1000);
+  $.idleTimer(5000000000*1000);
 
 	$(document).bind("active.idleTimer", function(){
 		console.info("WakeUp!!!");
@@ -1427,11 +1440,11 @@ else
 		
 	 $('*').delegate(".red_new_window","click", function ()
 	   {
-	   id = $(".selected").attr('myid');
+	   id = node_to_id( $(".selected").attr('id') );
 	   if(id<0)
 	   	{
 		 alert("Синхронизируюсь, попробуйте через 2 секунды…");
-		 jsStartSync("now","NEW WINDOW");
+		 jsSync();
 		 return false;
 	   	}
 	   open_in_new_tab(document.location.origin+document.location.pathname+"#edit/"+id);
@@ -1751,9 +1764,9 @@ setTimeout(function(){
 	   	is_rendering_now = true;
 //	   	setTimeout(function(){ is_rendering_now = false; },100);
 	   	
-	   id = $(this).parents("li").attr("myid");
+	   id = node_to_id( $(this).parents("li").attr("id") );
 	   	   
-	   if(!$("#mypanel li[myid='"+id+"']").hasClass("selected")) $("#mypanel li[myid='"+id+"']").click();
+	   if(!$("#mypanel #node_"+id).hasClass("selected")) $("#mypanel #node_"+id).click();
 	   		   
 	   if( $(this).parents("#mypanel").length || $(this).parents(".search_panel_result").length )
 	   	   {
@@ -2005,12 +2018,14 @@ setTimeout(function(){
 		return false;
 		})
 
+	//клик в быстрые табы
 	$('.basket_panel,#fav_tabs,#fav_tabs + .favorit_menu,.tree_history,.search_panel_result').delegate("li","click", function () {
 		jsOpenPath( $(this).attr("myid") );
 		return false;
 		});
 
-	$('#fav_red').delegate("li","click", function () {
+    //клик в табы под редактором
+	$('#fav_red,#fav_red_mini').delegate("li","click", function () {
 		
 		id = $(this).attr("myid");
 		if(id==-1) id = jsOpenDiary(); //если нужно открыть дневник
@@ -2051,17 +2066,19 @@ setTimeout(function(){
 		if(isTree)
 		  if( (nowtime-lastclick)<150 ) 
 			{
+			id = node_to_id( $(this).attr("id") );
 			$(".panel li").removeClass("selected");
-			jsSelectNode( $(this).attr("myid") ,'tree');
-			jsOpenNode($(this).attr("myid")); //открываю панель
+			jsSelectNode( id ,'tree');
+			jsOpenNode( id ); //открываю панель
 			return false;
 			}
 
 		
 		if( $(this).hasClass('tree-closed') ) 
 			{
-			jsOpenNode($(this).attr("myid")); //открываю панель
-			jsSelectNode( $(this).attr("myid") ,'tree');
+			id = node_to_id( $(this).attr("id") );
+			jsOpenNode( id ); //открываю панель
+			jsSelectNode( id ,'tree');
 			$(this).removeClass("tree-closed").addClass("tree-open");
 	
 			if( isTree && ($(this).find(".folder_closed").length!=0) )
@@ -2083,8 +2100,9 @@ setTimeout(function(){
 			else
 				{
 				$(this).removeClass("tree-open").addClass("tree-closed");
-				jsOpenNode($(this).attr("myid")); //открываю панель
-				jsSelectNode( $(this).attr("myid") ,'tree');
+				id = node_to_id( $(this).attr("id") );
+				jsOpenNode( id ); //открываю панель
+				jsSelectNode( id ,'tree');
 				$(this).removeClass("tree-closed").addClass("tree-open");
 				}
 			}
@@ -2361,7 +2379,7 @@ $('#tree_back').bind("contextmenu",function(e){
   $("*").delegate(".makedel","click", function () {
   	   id = $(".makedone").attr("myid");
 	   title = jsFind(id).title;
-	   id_element = $("#mypanel li[myid='"+id+"']");
+	   id_element = $("#mypanel #node_"+id);
 	   
 	   childrens = jsFindByParent(id,true).length;
 	   if(childrens > 0) child_text = "\r\rСодержимое папки ("+childrens+" шт.), тоже будет удалено.";
@@ -2473,11 +2491,14 @@ $('#tree_back').bind("contextmenu",function(e){
      
      
   $("*").delegate(".n_title","blur", function () {
-	jsSaveTitle( $(this), 1 ); //сохраняю заметку
+  	console.info("blur_title",$(this).attr("contenteditable"));
+	if($(this).attr("contenteditable")) jsSaveTitle( $(this), 1 ); //сохраняю заметку
   	return false;
   	});
 
   $("*").delegate(".n_title","keydown", function (e) {
+  	
+  	if(!$(this).attr("contenteditable")) return true;
   	
 	if(e.keyCode==13) 
 		{
@@ -3023,7 +3044,7 @@ for(ij=0;ij<localStorage.getItem("d_length");ij++)
 
 			if( $(".divider_red[myid='"+element.id+"']").length == 0 )
 			    {
-				if($("#mypanel .selected").attr("myid")==element.id) 
+				if( node_to_id( $("#mypanel .selected").attr("id") )==element.id ) 
 					setTimeout(function(){ $("#mypanel .selected").click(); },1000);
 				}
 			else
@@ -3084,7 +3105,7 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
    		$('.redactor_editor').attr("myid", d.id);
 		if( $('.divider_red[myid="'+d.old_id+'"]').length == 1) $('.divider_red[myid="'+d.old_id+'"]').attr('myid',d.id);
 		$(".makedone[myid="+d.old_id+"]").attr("myid",d.id); //заменяю индексы makedone
-		$("li[myid='"+d.old_id+"']").attr("myid",d.id);
+		$("#node_"+d.old_id).attr("id", id_to_node(d.id) );
 
 		all_children = jsFindByParent(d.old_id);
 		$.each(all_children,function(i,ddd)
@@ -3221,7 +3242,7 @@ function jsDeleteDo(current)
 {
 	preloader.trigger('show');
 	
-	id = current.attr('myid');
+	id = node_to_id( current.attr('id') );
 	next = current.nextAll("li:first");
 	jsFind(id,{ del:1 });
 	nowid = id;
@@ -3231,7 +3252,7 @@ function jsDeleteDo(current)
 	current.slideUp(300,function()
 		{ 
 		current.parent(".panel").nextAll(".panel:first").remove();
-		current.next(".divider").remove(); current.remove(); next.click(); 
+		current.next(".divider_li").remove(); current.remove(); next.click(); 
 		jsTitle("Элемент перемещён в корзину",5000);
 		preloader.trigger('hide');
 		jsRefreshTree();
@@ -3239,22 +3260,26 @@ function jsDeleteDo(current)
 
 }
 
+/* !Добавление нового дела */
 function jsAddDo(arrow, myparent, mytitle, date1, date2)
 {
  $.Menu.closeAll();
 
  localStorage.setItem('sync_time_server', jsNow()); 
  
+ sender = $(".selected");
+ if(!sender) return true;
+ 
  if(arrow == 'down')
  	{
- 	panel = $(".selected").parents(".panel").attr('id').replace("panel_","");
+ 	panel = sender.parents(".panel").attr('id').replace("panel_","");
  	}
  if(arrow == 'right')
  	{
- 	panel = $(".selected").attr('myid');
- 	$(".selected").parents(".panel").nextAll(".panel").remove();
- 	$(".selected .node_img").addClass('folder_closed');
- 	iii = $("#panel_"+panel+" ul").length; 
+ 	panel = node_to_id( sender.attr('id') );
+ 	sender.parents(".panel").nextAll(".panel").not("#panel_"+panel).remove();
+ 	sender.find(".node_img").addClass('folder_closed');
+ 	iii = $("#panel_"+panel+" li").length; 
 	if(iii==0) $("#mypanel").append("<div id='panel_"+panel+"' class='panel'><ul></ul></div>");
  	}
 
@@ -3267,6 +3292,7 @@ function jsAddDo(arrow, myparent, mytitle, date1, date2)
 	if( (panel==-3) || (panel.toString().indexOf("user_")!=-1) ) { alert("Не могу создать дело в этой папке"); return true; }
 
 	$("#panel_"+panel).nextAll(".panel").remove();
+
  	if(mytitle) title = strip_tags( mytitle );
  	else
 	 	title = "Новая заметка";
@@ -3276,10 +3302,9 @@ function jsAddDo(arrow, myparent, mytitle, date1, date2)
  
 if(arrow != "new")	
 	{
-	sender = $(".selected");
 	parent = sender.parents(".panel").attr("id").replace("panel_","");
 	count = sender.parents(".panel ul").children("li").length;
-	newposition = $(".selected").next(".divider").attr("pos");
+	newposition = $(".selected").next(".divider_li").attr("pos");
 	}
 else
 	{
@@ -3287,7 +3312,7 @@ else
 	newposition = 0;
 	}
 	
-	if(arrow=="right") { newposition = iii; $(".selected").addClass("old_selected"); }
+	if(arrow=="right") { newposition = iii; sender.addClass("old_selected"); }
 	
 	new_line = my_all_data.length;
 	my_all_data[new_line]=new Object(); element = my_all_data[new_line];
@@ -3324,8 +3349,8 @@ else
 			}
 		}
 	jsSaveData(new_id);
-	jsRefreshTree();
-		li = $("li[myid='"+new_id+"']");
+	jsRefreshTreeFast(new_id,arrow);
+		li = $("#mypanel #node_"+new_id);
 		ntitle = li.find(".n_title");
 
 		jsRedactorOpen([new_id],"adddo");		
@@ -3491,7 +3516,7 @@ function jsSaveTitle( sender, needsave )
 	  if ( sender.html() != sender.attr("old_title") ) //если текст изменился
 	  		{
 	  		sender.attr("old_title",sender.html());
-	  		id = sender.parents("li").attr('myid');
+	  		id = node_to_id( sender.parents("li").attr('id') );
 	  		
 	  		jsFind(id,{ title : strip_tags(sender.html().replace("<br>","")) });
 	  		jsRefreshTree();
@@ -3730,13 +3755,13 @@ function jsOpenNode(id,nohash,iamfrom) //открыть заметку с ном
 			{ 
 			ignorehashchange = true; //делаю так, чтобы изменение хэша не привело к переходу на заметку
 			setTimeout( function() { ignorehashchange=false; }, 100 );
-			if(window.location.hash.indexOf("edit")==-1) window.location.hash = num_id.toString(36); 
+			if(window.location.hash.indexOf("edit")==-1) if(num_id) window.location.hash = num_id.toString(36); 
 			},1000);
 		}
 		
 		isTree = $("#top_panel").hasClass("panel_type1");
 		
-		myli = $("#top_panel li[myid='"+id+"']");
+		myli = $("#top_panel #node_"+id);
 		
 		var mypanel = myli.parents(".panel");
 		
@@ -3759,15 +3784,15 @@ function jsOpenNode(id,nohash,iamfrom) //открыть заметку с ном
 		path = myli.attr('path');
 		
 		$(".header_text").html( title );
-		
+			
+		mytitle = myli.find(".n_title").html();
+
+if(mytitle && !nohash)
+		{
 		d = new Date;
 		k = d.toTimeString().split(':');
 		mytime = k[0] + ':' + k[1];
-	
-		mytitle = myli.find(".n_title").html();
 
-if(mytitle || !nohash)
-		{
 		document.title = "4tree.ru: "+jsShortText( strip_tags(mytitle), 150 );
 		shorttitle = jsShortText( mytitle , 30 );
 
@@ -3830,22 +3855,26 @@ else
 
 function jsOpenPath( id, iamfrom )
 {
-				
 		path1 = jsFindPath( id );
+		console.info("path1",path1);
+		if(path1.length<1) return false;
 				     
 				     for(ik=0; ik<path1.length; ik=ik+1)
 				     	{
 				     	toopen = path1[ik];
 				     	if(ik==path1.length-1) jsOpenNode(toopen);
 				     	else jsOpenNode(toopen,'nohash');
-						$('#top_panel li[myid='+toopen+']').removeClass("tree-closed").addClass("tree-open");
-						$('#top_panel li[myid='+toopen+'] ul:first').show();
+				     	var findli = $('#top_panel #node_'+toopen);
+						findli.removeClass("tree-closed").addClass("tree-open");
+						findli.find('ul:first').show();
 				     	}
 
 		jsOpenNode(id, false,iamfrom);
 		if(iamfrom!="divider_click") jsSelectNode( id , false,iamfrom);
-		$('#top_panel li[myid='+id+']').removeClass("tree-closed").addClass("tree-open");
-		$('#top_panel li[myid='+id+'] ul:first').show();
+		
+		findli = $('#top_panel #node_'+id);
+		findli.removeClass("tree-closed").addClass("tree-open");
+		findli.find('ul:first').show();
 
 		jsFixScroll(2); //делаю так, чтобы видно было все selected и old_selected
 
@@ -3975,7 +4004,8 @@ if ( (!localStorage.getItem("d_length")) || (load_from_server) )
 		if(!data.all_data) 
 			{
 			localStorage.clear();
-			document.location.href="./4tree.php";
+//			document.location.href="./4tree.php";
+			alert("Данных нет");
 			}
 		jsTitle('Данные загружены с сервера');
 		localStorage.clear();
@@ -4109,12 +4139,33 @@ Date.createFromMysql = function(mysql_string)
 
 //tt = jsFind(4676,{title:"hello",text:"myfrend_text"});
 //ar = new Object; ar["text"] = "hi2!"; jsFind(4697,ar);
+
+var filtercache = new Object;
+
 function jsFind(id,fields)
 {
 element = jsIsThereElement(id);
 if(element) return element;
 
-answer = my_all_data.filter(function(el,i) { if(el.parent_id) return el.id==id; } );
+if(!filtercache[id])
+	{
+		answer = my_all_data.filter(function(el,i) 
+			{ 
+			if(el) if(el.parent_id) 
+				{
+				if( el.id==id ) 
+					{
+					return true; 
+					}
+				}
+			} );
+		if(!answer) return false;
+		filtercache[id] = answer;
+	}
+else
+	{
+	answer = filtercache[id];
+	}
 
 if(answer.length>0 && fields) //если нужно присваивать значения
 	{
@@ -4185,7 +4236,7 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 		    	{ 
 		    	if( localStorage.getItem("d_length") ) jsSaveData(need_to_save_id); 
 		    	else jsSaveData(1);
-		    	if(changed_fields!="s,") $("li[myid='"+id+"'] .sync_it_i").removeClass("hideit");
+		    	if(changed_fields!="s," && changed_fields!="position," ) $("#node_"+id+" .sync_it_i").removeClass("hideit");
 		    	},80); //сохряню этот элемент в localStorage через 80 миллисекунд
 
 		}
@@ -4206,7 +4257,7 @@ if(is_need_save)
 	if(is_need_save!=2)
 		{
 		if(answer[0]) answer[0].time = jsNow();
-		$("li[myid='"+id+"'] .sync_it_i").removeClass("hideit");
+		$("#node_"+id+" .sync_it_i").removeClass("hideit");
 		}
 	else
 		{
@@ -4221,7 +4272,7 @@ if(is_need_save)
 		{ 
 		if( localStorage.getItem("d_length") ) jsSaveData(need_to_save_id); 
 		else jsSaveData(1);
-		$("li[myid='"+id+"'] .sync_it_i").removeClass("hideit");
+		$("#node_"+id+" .sync_it_i").removeClass("hideit");
 		},80); //сохряню этот элемент в localStorage через 80 миллисекунд
 	}
 
@@ -4538,6 +4589,7 @@ var last_load_frends_time=0;
 
 function jsFindByParent(parent_id,need_did,need_add_line)
 {
+if(!jsFind(parent_id)) return false;
 if(parent_id==0) return false;
 if(!parent_id) return false;	
 
@@ -4856,10 +4908,53 @@ if(length+findstart<text.length) answer = answer+'…';
 return answer;
 }
 
+var last_refresh;
+/* !Быстрое обновление дерева  */
+function jsRefreshTreeFast(myid,arrow)
+{
+var all_data_changed = my_all_data.filter(function(el) 
+   {
+   return ( (el.time>last_refresh) ); 
+   });
+   
+console.info("Изменилось с последнего раза:",all_data_changed,myid);
+
+$.each(all_data_changed,function(i,data)
+	{
+	console.info("Нужно обновить на экране:",data.id);
+	});
+
+var element = jsFind(myid);
+if(element)
+	{
+		id = node_to_id( $("li.selected").attr(id) );
+		console.info("I GOING TO ADD:",id,element.parent_id,element);
+		if(arrow == "right") //если я добавляю к родителю
+			{
+				where_to_add = $("#panel_"+element.parent_id).find("ul");
+				iii = $("#panel_"+element.parent_id+" li").length;
+				where_to_add.find(".divider_li:last").remove();
+				var divider = "<div class='divider_li' pos='"+(iii+0.2)+"' myid='"+element.parent_id+"'></div>";
+				where_to_add.append( jsRenderOneElement(element,iii) + divider );
+			}
+		else
+			{
+				iii = element.position;
+				var divider = "<div class='divider_li' pos='"+(element.position+0.2)+"' myid='"+element.parent_id+"'></div>";
+				$( jsRenderOneElement(element,iii) + divider ).insertAfter( $("li.selected") );
+			}
+	}
+
+last_refresh = jsNow();
+}
+
+
 var need_to_re_refresh;
 //обновление дерева
 function jsRefreshTree()
 {
+last_refresh = jsNow();
+
 //если открыто редактирование дерева, то запрет на обновление и повтор через 5 секунд
 if ( ($("#mypanel .n_title[contenteditable=true]").length > 0) || ($("#mypanel #minicalendar").length > 0) ) 
 	{
@@ -4875,13 +4970,13 @@ $(".panel").each( function()
 	{ 
 	if( $(this).attr('id') )
 		{
-		myselected = $(this).find(".selected").attr('myid'); 
-		myold_selected = $(this).find(".old_selected").attr('myid'); 
+		myselected = node_to_id( $(this).find(".selected").attr('id') ); 
+		myold_selected = node_to_id( $(this).find(".old_selected").attr('id') ); 
 		old_scroll = $(this).scrollTop();
 		jsShowTreeNode( $(this).attr("id").replace("panel_","") ); 
 		$(this).scrollTop(old_scroll);
-		$("li[myid='"+myselected+"']").addClass("selected").removeClass("tree-closed").addClass("tree-open"); 
-		$("li[myid='"+myold_selected+"']").addClass("old_selected").removeClass("tree-closed").addClass("tree-open"); 
+		$("#node_"+myselected).addClass("selected").removeClass("tree-closed").addClass("tree-open"); 
+		$("#node_"+myold_selected).addClass("old_selected").removeClass("tree-closed").addClass("tree-open"); 
 		
 		}
 	});
@@ -4912,7 +5007,7 @@ function jsReorder(dropto)
 						{ 
 						if(parseInt(dd.position) != i) 
 							{
-							jsFind(dd.id).position = i;
+							jsFind(dd.id,{position : i});
 							}
 						});
 }
@@ -4992,7 +5087,7 @@ function compare2(a,b) {
 		  	if(isTree)  // если это дерево
 		  		{
 		  		if( $(".ul_childrens[myid="+parent_node+"]").length==0 )
-		  			$("#top_panel li[myid="+parent_node+"]").append("<ul class='ul_childrens' myid="+parent_node+"></ul>");
+		  			$("#top_panel #node_"+parent_node).append("<ul class='ul_childrens' myid="+parent_node+"></ul>");
 		  		else
 		  			{
 		  			return false;
@@ -5104,8 +5199,8 @@ function compare2(a,b) {
 		  icon_share = "";		 
 		  	
 		  	  		 
-		  myli = "<div class='divider' pos='"+(iii-0.2)+"' myid='"+parent_node+"'></div>"+
-		  		 "<li myid='"+data.id+"' class='tree-closed "+isFolder+"'>" +checkbox+icon_share+
+		  myli = "<div class='divider_li' pos='"+(iii-0.2)+"' myid='"+parent_node+"'></div>"+
+		  		 "<li id='node_"+data.id+"' class='tree-closed "+isFolder+"'>" +checkbox+icon_share+
 		  		 "<div myid='"+childdate[1]+"' childdate='"+childdate[0]+"' title='"+data.date1+childdate[2]+"' class='date1'></div>"+remind+
 		  		  triangle+
 		  		  countdiv+img+needsync+
@@ -5120,7 +5215,7 @@ function compare2(a,b) {
 		  
 		  iii=iii+1;
 	  	});
-	myli = "<div class='divider' pos='"+iii+"' myid='"+parent_node+"'></div>";
+	myli = "<div class='divider_li' pos='"+iii+"' myid='"+parent_node+"'></div>";
  	where_to_add.append(myli);
 	  	
 	  	
@@ -5152,28 +5247,30 @@ function compare2(a,b) {
 
 function jsRefreshOneElement(myid)
 {
-   el = $("li[myid="+id+"]");
+   el = $("#node_"+id);
    make_class="";
    if (el.hasClass("selected")) make_class = "selected";
    if (el.hasClass("old_selected")) make_class = "old_selected";
-   el.prev(".divider").remove();
+   el.prev(".divider_li").remove();
    el.replaceWith( jsRenderOneElement( jsFind(myid) ) );
    if(make_class!="") 
    		{
-	    $("li[myid="+id+"]").addClass();
+	    $("#node_"+id).addClass();
    		}
    jsPrepareDate();
    
 }
 
+
+/* !Обновление одного элемента */
 function jsRenderOneElement(data,iii,parent_node)
 {
 		  childdate = jsShowMaxDate(data.id);
 
 		  info = jsInfoFolder(data,parent_node);
 		  
-		  myli = "<div class='divider' pos='"+(data.position-0.9)+"' myid='"+data.parent_id+"'></div>"; //разделитель
-		  myli +=  "<li myid='"+data.id+"' class='tree-closed "+info.isFolder+"'>";
+		  myli = "<div class='divider_li' pos='"+(data.position-0.9)+"' myid='"+data.parent_id+"'></div>"; //разделитель
+		  myli +=  "<li id='node_"+data.id+"' myid='"+data.id+"' class='tree-closed "+info.isFolder+"'>";
 		  myli += "<div class='tcheckbox' title='"+data.id+"'></div>" + info.icon_share;
 		  myli += "<div myid='"+childdate[1]+"' childdate='"+childdate[0]+"' title='"+data.date1+childdate[2]+
 		  		  "' class='date1'></div>";
@@ -5213,11 +5310,10 @@ function jsInfoFolder(data,parent_node)
 		  	}
 
 ////////////
-		  if( (data.lsync - data.time) > 0 )
+		  if( ((data.lsync - data.time) > 0) || (data.new=="position,"))
 			  hideit = " hideit";
 		  else
 			  hideit = "";
-
 
 		  needsync = "<div class='syncit'><i class='icon-arrows-cw sync_it_i"+hideit+"'></i></div>";
 
@@ -5313,18 +5409,21 @@ function jsMakeDrop()
 //return true;
 		$("body").unbind("mousemove");
 		$("body").unbind("mouseup");
-
-	$("#mypanel .n_title").draggable({
+		
+	$("#mypanel li").not("ui-draggable").draggable({
 				zIndex: 999,
 				revert: false,      // will cause the event to go back to its
 				helper:"clone",
-				appendTo: "body"
+				appendTo: "#content1"
 //				revertDuration: 500  //  original position after the drag
 			});
 			
-	$( "#mypanel .n_title,.divider" ).droppable({
+	$( "#mypanel li,.divider_li" ).not("ui-droppable").droppable({
 			activeClass: "ui-can-recieve",
 			hoverClass: "ui-can-hover",
+			over: function (event, ui) {
+				//$(this).click();
+				},
             drop: function( event, ui ) {
             	console.info("drop-all",usedOverlays,ui,ui.draggable[0] );
             	
@@ -5340,19 +5439,13 @@ function jsMakeDrop()
 
 	            	console.info("drop=",dropto,dropto_pos,draggable);
 
-					jsReorder( jsFind(dropto).parent_id );
+	            	el = jsFind(dropto);
+					if(el) jsReorder( el.parent_id );
+					else return true;
 
 					jsFind(draggable,{ position:dropto_pos, parent_id : dropto_parent_id });
 
 					jsRefreshTree();
-
-//	           		dataString="operation=move_node&copy=0&position="+dropto_pos+"&id="+draggable+"&ref="+dropto;
-	           		if(false)
-					var $txt = $.ajax({type: "POST",url: "server.php", data: dataString, success: function(t) 
-				       {
-			    	    jsTitle("Объект пересортирован",5000);
-			           }});
-
             		}
             	else //если уронили на другой элемент
             		{
@@ -6177,7 +6270,7 @@ var openredactor;
 function jsSelectNode(id,nohash,iamfrom) //открыть заметку во всех панелях
 {
 //	i_am_from - кто вызвал: redactor, calendar, tree, diary
-	$("#top_panel li[myid='"+id+"']").addClass("selected");
+	$("#top_panel #node_"+id).addClass("selected");
 //	console.info(id);
 	clearTimeout(openredactor);
 	openredactor = setTimeout(function(){ 	jsRedactorOpen([id],iamfrom); },70 );
@@ -6252,7 +6345,9 @@ if((mytitle) && (iamfrom!="fav_red") && (ids.length==1)) //устанавлив�
 var removeraretabs;
 function jsAddFavRed(mytitle,id)
 {
-  mytitle = strip_tags( jsFind(id).title );
+  var myel = jsFind(id);
+  if(!myel) return true;
+  mytitle = strip_tags( myel.title );
   elel = $("#fav_red li[myid='"+id+"']");
   if(elel.length>0)
   	{
@@ -6304,14 +6399,14 @@ clearTimeout(my_autosave);
 	    	if(iii==0) 
 	    		{
 	    		textlength = jsMakeIconText(id_node,text);
-		    	$("li[myid="+id_node+"]").find(".node_img").attr("class", "node_img "+textlength.myclass );
+		    	$("#node_"+id_node).find(".node_img").attr("class", "node_img "+textlength.myclass );
 		    	if(textlength.mylength>0) 
 		    		{
-		    		$("li[myid="+id_node+"]").find(".folder_closed").addClass("full");
+		    		$("#node_"+id_node).find(".folder_closed").addClass("full");
 		    		}
 		    	else
 		    		{
-		    		$("li[myid="+id_node+"]").find(".folder_closed").removeClass("full");
+		    		$("#node_"+id_node).find(".folder_closed").removeClass("full");
 		    		}
 		    	}
 		    	
@@ -6340,14 +6435,14 @@ clearTimeout(my_autosave);
 	    	if(id_node) 
 	    		{
 	    		textlength = jsMakeIconText(id_node,text);
-		    	$("li[myid="+id_node+"]").find(".node_img").attr("class", "node_img "+textlength.myclass );
+		    	$("#node_"+id_node).find(".node_img").attr("class", "node_img "+textlength.myclass );
 		    	if(textlength.mylength>0) 
 		    		{
-		    		$("li[myid="+id_node+"]").find(".folder_closed").addClass("full");
+		    		$("#node_"+id_node).find(".folder_closed").addClass("full");
 		    		}
 		    	else
 		    		{
-		    		$("li[myid="+id_node+"]").find(".folder_closed").removeClass("full");
+		    		$("#node_"+id_node).find(".folder_closed").removeClass("full");
 		    		}
 		    	}
 		    	
@@ -6419,7 +6514,7 @@ function jsSendText(id_node,text,dont)
     	if($(".redactor_editor").find("img:first").length) 
     		{
     		imgsrc = $(".redactor_editor").find("img:first").attr("src");
-    		$("li[myid='"+id_node+"'] .node_img").css("background-image", "url("+imgsrc+")");
+    		$("#node_"+id_node+" .node_img").css("background-image", "url("+imgsrc+")");
     		icon = imgsrc;
 	    	}
 	    else

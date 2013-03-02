@@ -29,6 +29,36 @@ if(true )echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',
 
 
 ?>
+<? 
+
+//	$db = mysql_connect ($config[mysql_host], $config[mysql_user], $config[mysql_password]);
+//	mysql_query_my("SET NAMES utf8");
+//	mysql_select_db('h116',$db);   
+//	if (!$db) { echo "Ошибка подключения к SQL :("; exit();}
+    
+
+if(isset($_GET['confirm']))
+   {	
+
+		require_once('db.php');
+		
+		$confirm = $_GET['confirm'];
+
+		$sqlnews="SELECT count(*) cnt FROM `tree_users` WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
+		$result = mysql_query_my($sqlnews); 
+		@$sql = mysql_fetch_object ($result);
+
+		if($sql->cnt>0) 
+		  {
+		  $sqlnews="UPDATE `tree_users` SET confirm_email='' WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
+		  $result = mysql_query_my($sqlnews); 
+		  @$sql = mysql_fetch_object ($result);
+		  echo '<script>alert("Спасибо за подтверждение электронной почты. Удачи в ваших делах.");</script>';
+		  }
+		
+	}
+
+?>
 
 	<link rel="stylesheet" href="jsredactor/redactor/redactor.css" />
 	<link rel="stylesheet" type="text/css" href="css/4tree-styles.css">
@@ -64,6 +94,9 @@ if(true )echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 
+
+if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
+
 </script>
 </head>
 
@@ -322,7 +355,7 @@ $(document).ready(jsDoFirst);
 						<li fix=0></li>
 						</ul>
 					</div>
-					<div class="favorit_menu" style="bottom:10px;"><i class="icon-right-open"></i>
+					<div class="favorit_menu" id="fav_red_mini" style="bottom:10px;"><i class="icon-right-open"></i>
 						<ul>
 						</ul>
 					</div>
@@ -573,34 +606,3 @@ $(document).ready(jsDoFirst);
 
 </body>
 </html>
-
-
-<? 
-	require_once('db.php');
-
-//	$db = mysql_connect ($config[mysql_host], $config[mysql_user], $config[mysql_password]);
-//	mysql_query_my("SET NAMES utf8");
-//	mysql_select_db('h116',$db);   
-//	if (!$db) { echo "Ошибка подключения к SQL :("; exit();}
-    
-
-if(isset($_GET['confirm']))
-   {	
-
-		$confirm = $_GET['confirm'];
-
-		$sqlnews="SELECT count(*) cnt FROM `tree_users` WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
-		$result = mysql_query_my($sqlnews); 
-		@$sql = mysql_fetch_object ($result);
-
-		if($sql->cnt>0) 
-		  {
-		$sqlnews="UPDATE `tree_users` SET confirm_email='' WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
-		$result = mysql_query_my($sqlnews); 
-		@$sql = mysql_fetch_object ($result);
-		echo '<script>alert("Спасибо за подтверждение электронной почты. Удачи в ваших делах.");</script>';
-		  }
-		
-	}
-
-?>
