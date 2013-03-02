@@ -2567,7 +2567,7 @@ return id;
       var chat = $("#chat");
       if (eventMessage != '') {
 //        var values = $.parseJSON(eventMessage);
-        console.info("mymessage-type",eventMessage);
+//        console.info("mymessage-type",eventMessage);
         if( eventMessage.type == "need_refresh_now" ) { jsSync(); setTimeout(function(){ alert("Пришло новое письмо!");},800); }
         if( eventMessage.type == "need_refresh_id" ) //сообщение о изменившихся данных от do.php
         	{ 
@@ -4589,7 +4589,7 @@ var last_load_frends_time=0;
 
 function jsFindByParent(parent_id,need_did,need_add_line)
 {
-if(!jsFind(parent_id)) return false;
+if(!jsFind(parent_id) && parent_id!=1) return false;
 if(parent_id==0) return false;
 if(!parent_id) return false;	
 
@@ -5005,9 +5005,9 @@ function jsReorder(dropto)
 //	console.info("reorder = "+dropto);
 					$.each( jsFindByParent(dropto), function(i,dd) 
 						{ 
-						if(parseInt(dd.position) != i) 
+						if(parseInt(dd.position) != (i+1) ) 
 							{
-							jsFind(dd.id,{position : i});
+							jsFind(dd.id,{position : (i+1)});
 							}
 						});
 }
