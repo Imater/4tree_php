@@ -204,6 +204,7 @@ function jsSaveElement(d)
 		}
 				
 	myelement = jsFind(d.id);
+	if(!myelement) return false;
 	myelement.title = d.title;
 	myelement.parent_id = d.parent_id;
 	myelement.did = d.did;

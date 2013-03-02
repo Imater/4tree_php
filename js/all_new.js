@@ -4160,7 +4160,7 @@ if(!filtercache[id])
 				}
 			} );
 		if(!answer) return false;
-		filtercache[id] = answer;
+		if(answer.length>=1) filtercache[id] = answer;
 	}
 else
 	{
