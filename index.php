@@ -496,7 +496,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
     				<ul>
     					<li id="tab_find"><i class="icon-search"></i> Поиск</li><li class="active" id="tab_calendar">
     					<i class="icon-calendar"></i> Календарь</li><li id="tab_comments">
-    					<i class="icon-comment-1"></i> Комментарии (0)</li>
+    					<i class="icon-comment-1"></i> Комментарии (6)</li>
     					<!--<li style="display:none">
     					Параметры</li><li style="display:none">
     					Мой сайт</li><li style="display:none">

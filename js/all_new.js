@@ -1124,6 +1124,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		if( tab_name == "tab_calendar" )
 			{
 			$("#calendar").show();
+			onResize();
 			}
 		else
 			{
