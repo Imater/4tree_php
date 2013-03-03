@@ -322,24 +322,192 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 	  <div id="bottom_panel">
 	  		<div class="bottom_left">
 
-				<div class="search_panel_result panel_type3"><div id="result_close" title="Закрыть панель поиска"><i class="icon-cancel"></i></div><ul></ul></div>
+				<div id="tree_comments"><br>
+					<div class="comment_box" id="comment_1">
+						<div class="comment_foto">
+							<img src="image.php?width=40&amp;height=40&amp;cropratio=1:1&amp;image=/img/faces/john.png" height="40px" width="40px" class="comment_foto_img">
+						</div>
+						<div class="comment_text_box">
+
+							<div class="comment_footer">
+								<div class="comment_name">Вецель Евгений</div>
+								<div class="comment_like">1 <i class="icon-thumbs-up-1"></i></div>
+								<div class="comment_time">
+									12 часов назад
+								</div>
+							</div>
+
+							<div class="comment_text">
+								Нашел гениальное изобретение Российских ученых - "ТЕЛЕПОРТАТОР". Депутат ГД проголосовал в Москве, а через 15 минут утонул за тысячи км в реке Дон. http://vk.com/esquire?w=wall-4829_15984 Только это изобретение держится в тайне.
+							</div>
+							
+							<div class="comment_reply">ответить</div>
+							
+						</div>
+					</div>
+
+
+					<div class="comment_box" id="comment_1" style="margin-left:56px">
+						<div class="comment_foto">
+							<img src="image.php?width=40&amp;height=40&amp;cropratio=1:1&amp;image=/img/faces/0.jpeg" height="40px" width="40px" class="comment_foto_img">
+						</div>
+						<div class="comment_text_box">
+
+							<div class="comment_footer">
+								<div class="comment_name">Вецель Валентина</div>
+								<div class="comment_like">3 <i class="icon-thumbs-up-1"></i></div>
+								<div class="comment_time">
+									37 минут назад
+								</div>
+							</div>
+
+							<div class="comment_text">
+								Телепортатор? Звучит странно.
+							</div>
+
+							<div class="comment_reply">ответить</div>
+
+						</div>
+					</div>
+
+
+
+					<div class="comment_box" id="comment_1" style="margin-left:56px">
+						<div class="comment_foto">
+							<img src="image.php?width=40&amp;height=40&amp;cropratio=1:1&amp;image=/img/faces/john.png" height="40px" width="40px" class="comment_foto_img">
+						</div>
+						<div class="comment_text_box">
+
+							<div class="comment_footer">
+								<div class="comment_name">Вецель Евгений</div>
+								<div class="comment_like">3 <i class="icon-thumbs-up-1"></i></div>
+								<div class="comment_time">
+									37 минут назад
+								</div>
+							</div>
+
+							<div class="comment_text">
+								Валь, это просто шутка с Хабрахабры. Хочешь Анекдот?<br>
+Стоит пьяный мужик на остановке в обнимку со столбом. К нему подходит другой пьяный и спрашивает: <br>
+- Чей-то ты тут делаешь? <br>
+- Автобус жду. <br>
+- Дурень, кто ж тебя в автобус с таким торшером-то пустит?
+							</div>
+
+							<div class="comment_reply">ответить</div>
+
+						</div>
+					</div>
+
+
+
+					<div class="comment_box" id="comment_1" style="margin-left:112px">
+						<div class="comment_foto">
+							<img src="image.php?width=40&amp;height=40&amp;cropratio=1:1&amp;image=/img/faces/4.jpeg" height="40px" width="40px" class="comment_foto_img">
+						</div>
+						<div class="comment_text_box">
+
+							<div class="comment_footer">
+								<div class="comment_name">Сергеева Альбина</div>
+								<div class="comment_like"><i class="icon-thumbs-up-1"></i></div>
+								<div class="comment_time">
+									2 минуты назад
+								</div>
+							</div>
+
+							<div class="comment_text">
+							Гы :)
+							</div>
+
+							<div class="comment_reply">ответить</div>
+
+						</div>
+					</div>
+
+
+
+					<div class="comment_box" id="comment_1">
+						<div class="comment_foto">
+							<img src="image.php?width=40&amp;height=40&amp;cropratio=1:1&amp;image=/img/faces/1.jpeg" height="40px" width="40px" class="comment_foto_img">
+						</div>
+						<div class="comment_text_box">
+
+							<div class="comment_footer">
+								<div class="comment_name">Кузьминых Ольга</div>
+								<div class="comment_like"><i class="icon-thumbs-up-1"></i></div>
+								<div class="comment_time">
+									4 минуты назад
+								</div>
+							</div>
+
+							<div class="comment_text">
+Однако же, это издевательство над пользователем не спасает от случая, когда выбрана неправильная раскладка. Кроме того, если пользователь хочет куда-то сохранить введённый аж два раза пароль, он не может этого сделать.
+Обычно, если я желаю куда-то сохранить пароль, я сперва его записываю в файлик, потом оттуда копирую и вставляю в форму два раза. Так и от неправильной раскладки можно защититься. Хотя иногда бывает риск зацепить лишний пробел.
+
+Кстати, если в password pattern написать русские буквы, они воспринимаются как символы :-)
+
+Вообще библиотечка нужная, спасибо!
+							</div>
+
+							<div class="comment_reply">ответить</div>
+
+						</div>
+					</div>
+
+
+
+					<div class="comment_box" id="comment_1">
+						<div class="comment_foto">
+							<img src="image.php?width=40&amp;height=40&amp;cropratio=1:1&amp;image=/img/faces/4.jpeg" height="40px" width="40px" class="comment_foto_img">
+						</div>
+						<div class="comment_text_box">
+
+							<div class="comment_footer">
+								<div class="comment_name">Сергеева Альбина</div>
+								<div class="comment_like"><i class="icon-thumbs-up-1"></i></div>
+								<div class="comment_time">
+									4 минуты назад
+								</div>
+							</div>
+
+							<div class="comment_text">
+Чем же нас не устраивает input?
+
+Ваш •••••• всегда скрыт. Это раздражает. Раздражает тем больше, что нельзя просто так взять и поменять тип поля с password на text, поэтому приходится что-то изобретать. Времени на такую мелочь, как пароль, редко когда выделяют много, поэтому изобретается чаще всего велосипед.
+
+В случае формы логина, пароль, возможно, и нет смысла показывать. С регистрацией же всё сложнее. Не все используют хранилки паролей, многие вводят пароль «руками». Его можно ввести неправильно, для этого обычно добавляют второе поле с паролем. Однако же, это издевательство над пользователем не спасает от случая, когда выбрана неправильная раскладка. Кроме того, если пользователь хочет куда-то сохранить введённый аж два раза пароль, он не может этого сделать. Некоторые вообще после проверки пароля очищают его (предполагая, что пользователь введёт его снова и на этот раз уж точно придумает такой, как надо)							</div>
+
+							<div class="comment_reply">ответить</div>
+
+						</div>
+					<br><br><br><br><br>
+					</div>
+
+
+
+				</div>
+				<div class="search_panel_result panel_type3"><ul></ul></div>
 	  			<div class="search_arrow"></div>
 				
 			    <div id="calendar" class="noselectable1">
-					<div class="favorit_tabs" id="fav_calendar">
-						<ul>
-							<li>Календарь</li><!--<li style="display:none">
-							Параметры</li><li style="display:none">
-							Мой сайт</li><li style="display:none">
-							Файлы</li><li style="display:none">
-							По датам</li>-->
-						</ul>
-					</div>
-					<div class="favorit_menu" style="bottom:10px;"><i class="icon-right-open"></i>
-						<ul>
-						</ul>
-					</div>
 				</div>	
+
+				<div class="favorit_tabs" id="fav_calendar">
+    				<ul>
+    					<li id="tab_find"><i class="icon-search"></i> Поиск</li><li class="active" id="tab_calendar">
+    					<i class="icon-calendar"></i> Календарь</li><li id="tab_comments">
+    					<i class="icon-comment-1"></i> Комментарии (0)</li>
+    					<!--<li style="display:none">
+    					Параметры</li><li style="display:none">
+    					Мой сайт</li><li style="display:none">
+    					Файлы</li><li style="display:none">
+    					По датам</li>-->
+    				</ul>
+    			</div>
+    			<div class="favorit_menu" style="bottom:10px;"><i class="icon-right-open"></i>
+    				<ul>
+    				</ul>
+    			</div>
 
 	  		</div>
 	  		<div class="resize_me"></div>

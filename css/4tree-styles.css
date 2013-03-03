@@ -1084,9 +1084,9 @@ margin-right: 7px;
 .node_box
 {
 border: 1px solid #FFF;
--moz-box-shadow: 1px 1px 2px #111;
--webkit-box-shadow: 1px 1px 2px #111;
-box-shadow: 0px 0px 2px #111;
+/*-moz-box-shadow: 1px 1px 1px #DDD;
+-webkit-box-shadow: 1px 1px 1px #DDD;
+box-shadow: 0px 1px 1px #DDD;*/
 }
 
 .note-1
@@ -1849,6 +1849,21 @@ position: relative;
 bottom: -1px;
 }
 
+#fav_calendar li
+{
+font-size: 11px;
+padding-left: 8px;
+padding-right: 15px;
+padding-bottom: 2px;
+}
+
+#fav_calendar li.active
+{
+background: #e7e7e7;
+color: black;
+}
+
+
 #fav_red
 {
 margin-left: 15px;
@@ -2012,16 +2027,11 @@ color: white;
 .search_panel_result
 {
 display: none;
-position: absolute;
-bottom:29px;
-right: 0px;
-left: 0px;
-top:34px;
 width: auto;
 height: auto;
+margin-top: 33px;
 background: #FFF;
 padding-left: 10px;
-padding-right: 10px;
 overflow-y: auto;
 background: white;
 z-index: 9999999;
@@ -2040,29 +2050,34 @@ display:none;
 .search_panel_result ul
 {
 margin: 0px;
-list-style: decimal;
+list-style: none;
 padding: 10px;
-margin-left: 20px;
 }
 
 .search_panel_result li
 {
-padding-bottom: 5px;
 cursor: pointer;
+padding: 5px;
 }
 
+.search_panel_result li:hover
+{
+background: #ededed;
+}
 
 .search_path
 {
-font-size: 0.8em;
-color: #999;
-padding-bottom: 3px;
+display: block;
+font-size: 0.7em;
+color: #CCC;
+padding-top: 2px;
+line-height: 1em;
 font-weight: normal;
 }
 
 .search_panel_result .n_title
 {
-font-size: 0.9em;
+font-size: 1em;
 font-weight: bold;
 padding-left: 0px;
 }
@@ -2074,7 +2089,8 @@ background: yellow;
 
 .search_sample
 {
-font-size: 0.8em;
+font-size: 0.7em;
+line-height: 1.2em;
 color: black;
 padding-top: 3px;
 font-weight: normal;
@@ -2096,9 +2112,9 @@ text-decoration: underline;
 
 .search_panel_result .node_img
 {
-background-size: 100px 100px;
-width: 100px;
-height: 100px;
+background-size: 50px 50px;
+width: 50px;
+height: 50px;
 float: right;
 clear: right;
 margin: 3px;
@@ -2913,7 +2929,8 @@ opacity: 0.5;
 .do_did
 {
 text-decoration: line-through;
-color: #AAA;
+color: #888;
+font-weight: normal;
 }
 
 .syncit
@@ -2944,16 +2961,6 @@ margin-right: 0px !important;
 .hideit
 {
 display: none;
-}
-
-#result_close
-{
-float: right;
-margin-top: 5px;
-margin-right: -8px;
-font-size: 26px;
-color: gray;
-cursor: pointer;
 }
 
 .web
@@ -3862,4 +3869,112 @@ padding: 2px;
 -o-transition: all 0.1s;  
 transition: all 0.1s;  
 background: red !important;
+}
+
+#tree_comments
+{
+display: none;
+width: auto;
+height: auto;
+margin-top: 33px;
+background: #FFF;
+padding-left: 10px;
+overflow-y: auto;
+background: white;
+z-index: 9999999;
+-moz-box-shadow: 2px 2px 8px #444;
+-webkit-box-shadow: 2px 2px 8px #444;
+box-shadow: 2px 2px 8px #444;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+font-size: 0.8em;
+}
+
+.comment_box
+{
+padding: 10px;
+padding-bottom: 5px;
+padding-top: 5px;
+}
+
+.comment_text_box
+{
+margin-left: 55px;
+}
+
+.comment_foto
+{
+position: relative;
+margin-bottom: -42px;
+margin-top: 2px;
+cursor: pointer;
+}
+
+.comment_name
+{
+display: inline-block;
+color: #1055cd;
+cursor: pointer;
+font-weight: bold;
+}
+
+.comment_time
+{
+margin-left: 5px;
+color: #ece9e9;
+display: inline-block;
+font-size: 0.95em;
+}
+
+.comment_text
+{
+padding-top: 4px;
+line-height: 1.4em;
+}
+
+.comment_footer
+{
+}
+
+.comment_like
+{
+color: #ece9e9;
+float: right;
+font-weight: bold;
+font-size: 1em;
+cursor: pointer;
+}
+
+.comment_like:hover
+{
+-moz-transition: all 0.5s; 
+-webkit-transition: all 0.5s;  
+-ms-transition: all 0.5s;  
+-o-transition: all 0.5s;  
+transition: all 0.5s;  
+color: #888;
+float: right;
+font-weight: bold;
+font-size: 1em;
+cursor: pointer;
+}
+
+.comment_reply
+{
+margin-top: -3px;
+display: inline-block;
+color: white;
+cursor: pointer;
+border-bottom: 1px dotted transparent;
+}
+
+.comment_box:hover .comment_reply
+{
+-moz-transition: all 0.5s; 
+-webkit-transition: all 0.5s;  
+-ms-transition: all 0.5s;  
+-o-transition: all 0.5s;  
+transition: all 0.5s;  
+color: #1055cd;
+border-bottom: 1px dashed #1055cd;
 }

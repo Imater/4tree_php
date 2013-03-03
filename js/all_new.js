@@ -1111,9 +1111,50 @@ var mytimer6;
 function jsRegAllKey() //все общие delegate и регистрация кнопок. Нужно указать точнее родительские элементы.
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
-//	setTimeout(function(){ $("#left_panel_opener").click(); }, 1000);
 
-	setTimeout(function(){ jsSync(); }, 1000);
+//	setTimeout(function(){ $("#tab_comments").click(); }, 1000);
+
+
+	$('#fav_calendar').delegate("li","click",function(){
+		$('#fav_calendar .active').removeClass("active");
+		$(this).addClass("active");
+		
+		var tab_name = $(this).attr("id");
+		
+		if( tab_name == "tab_calendar" )
+			{
+			$("#calendar").show();
+			}
+		else
+			{
+			$("#calendar").hide();
+			}
+
+		if( tab_name == "tab_find" )
+			{
+			$(".search_panel_result").show();
+			}
+		else
+			{
+			$(".search_panel_result").hide();
+			}
+
+		if( tab_name == "tab_comments" )
+			{
+			$("#tree_comments").show();
+			}
+		else
+			{
+			$("#tree_comments").hide();
+			}
+		
+		
+		
+		return false;
+		});
+	
+
+	setTimeout(function(){ jsSync(); }, 2000);
 
 	$('#left_panel').delegate("h1","click",function(){
 		$(this).next("ul").slideToggle(200,function(){
@@ -2154,7 +2195,6 @@ setTimeout(function(){
 									    	if(tt!='') 
 									    		{ 
 									    		jsTitle(tt,100000); 
-									    		$(".search_panel_result,.search_arrow").hide();  
 									    		return true; 
 									    		}
 									    	
@@ -2169,10 +2209,13 @@ setTimeout(function(){
 									    	jsShowTreeNode(-1,false,data);
 											setTimeout( function() { jsPrepareDate(); },50 );
 									    	
-					         if(searchstring=='') $(".search_panel_result,.search_arrow").hide();
-					         else { $(".search_panel_result,.search_arrow").show(); $("#search_empty").fadeIn(200); }
+					         if(searchstring!='') 
+					         	{ 
+					         	$("#tab_find").click();
+					         	$("#search_empty").fadeIn(200); 
+					         	}
 					         
-					         }, 100);
+					         }, 300);
 
 			return false;
 		
@@ -2412,11 +2455,6 @@ $('#tree_back').bind("contextmenu",function(e){
   	$(this).find("ul:first").slideDown(200);
   	return false;
   	});
-
-	$("#result_close").bind("click",function() {   	
-  		$(".search_panel_result,.search_arrow").slideUp(200);
-  		return false;
-  		});
 
   	//закрываю всё, если клик в экран
 	$("#wrap").bind("click",function() {   	
@@ -5098,7 +5136,7 @@ function compare2(a,b) {
 		  else 
 		  	{
 		  	icon = data.icon.replace("mini/","");
-		  	icon = "image.php?width=50&height=50&cropratio=1.1:1&image=/"+icon;
+		  	icon = "image.php?width=25&height=25&cropratio=1:1&image=/"+icon;
 		  	img = "<div class='node_img node_box' style='background-image:url("+icon+")'>"+"</div>";
 		  	}
 		  	
@@ -5171,7 +5209,7 @@ function compare2(a,b) {
 			  	add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
 			else add_text = '';
 		  	
-		  	length = $(".search_panel_result").width();
+		  	length = $(".search_panel_result").width()*4;
 		  	
 		  	findtext = $('#textfilter').val();
 		  	
@@ -5313,7 +5351,7 @@ function jsInfoFolder(data,parent_node)
 		  	if(ans)
 			  	add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
 			else add_text = '';
-		  	length = $(".search_panel_result").width();
+		  	length = $(".search_panel_result").width()*2.3;
 		  	findtext = $('#textfilter').val();
 		  	text = jsFindText(data.text,findtext,length);
 		  	mytitle = mytitle.replace(findtext,"<b>"+findtext+"</b>");
@@ -5669,6 +5707,9 @@ function onResize()
 			
 			newheight=$('#calendar').parent("div").height()-62;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
+			$(".search_panel_result").height(newheight);
+			$("#tree_comments").height(newheight);
+
 
 			jsSetTimeNow(); //обновляю указатель текущего времени
 			
