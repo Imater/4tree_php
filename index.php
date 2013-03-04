@@ -11,7 +11,7 @@
 <meta name="description" content="Сайт для ведения дел, заметок, календаря и так далее. Инструмент таймменеджмента, где всё нужное собранно в одном месте."/>
 <meta name="keywords" content="gtd, 4tree.ru, заметки, задачи, гтд, таймменеджмент, хранение заметок, календарь"/>
 
-<link rel="search" type="application/opensearchdescription+xml" title="4tree.ru Search" href="/SearchEngineInfo.xml" />
+<link rel="search" type="application/opensearchdescription+xml" title="4tree.ru Добавление дел" href="/SearchEngineInfo.xml" />
 
 
 <link rel="shortcut icon" href="favicon1.png" type="image/x-icon" />
