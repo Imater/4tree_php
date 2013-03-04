@@ -86,7 +86,7 @@ body .redactor_box_fullscreen {
 .redactor_editor blockquote
 	 {
 	font-size: 15px !important;
-	line-height: 1.4em !important;
+	line-height: 1.3em !important;
 }
 
 .redactor_editor table
@@ -725,3 +725,7 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
     border-color: #e0e5d6;
 }
 
+.redactor_editor li
+{
+margin-bottom: 7px !important;
+}
