@@ -3779,6 +3779,8 @@ function jsSethash()
 {
 			if(ignorehashchange) return false;
 		
+			check_hash_add_do();
+			
 	  		id = parseInt(window.location.hash.replace("#",""),36);
 	  		
 	  		if(("#"+id!=window.location.hash) && (id))
