@@ -1423,6 +1423,7 @@ if(platform == "iPad")
 		
 		document.addEventListener("focus",function()
 			{
+		  	jsLocalSync();
 		  	if(start_sync_when_idle) jsSync();
 		  	
 			},false);

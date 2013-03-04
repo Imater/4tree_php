@@ -34,8 +34,6 @@ function jsSync()
     sync_now_timer = setTimeout(function(){ sync_now = false; start_sync_when_idle=false; }, 60000);
 	start_sync_when_idle=false;
  
-	jsLocalSync(); 
- 
     preloader.trigger('show');
     $(".icon-cd").css("color","#517c5d");
 	
