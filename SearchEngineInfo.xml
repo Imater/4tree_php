@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
- <ShortName>4tree.ru search</ShortName>
- <Description>4tree.ru поиск</Description>
- <InputEncoding>UTF-8</InputEncoding>
- <Image type="image/x-icon" width="16" height="16">4tree.ru/favicon1.png</Image>
- <Url type="application/opensearchdescription+xml" rel="self" template="http://4tree.ru/SearchEngineInfo.xml" />
- <Url type="application/atom+xml" template="http://4tree.ru/search?q={searchTerms}&p={startPage?}" />
- <Url type="text/html" template="http://4tree.ru/search?q={searchTerms}&p={startPage?}" />
- <moz:SearchForm>4tree.ru/search</moz:SearchForm>
+<ShortName>4tree.ru Search</ShortName>
+<Description>
+Поиск в моих делах 4tree.ru
+</Description>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="16" height="16" type="image/x-icon">/favicon1.png</Image>
+<Url type="text/html" method="get" template="https://4tree.ru/search?q={searchTerms}"/>
 </OpenSearchDescription>
