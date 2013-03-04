@@ -204,6 +204,12 @@ $phone='none';
 		{
 		$phone="79068948888";
 		}		
+	if($sql['user_id']=='131')
+		{
+		$phone="79068677635";
+		}		
+		
+		
     echo $phone;
 		
 	$tim = str_replace(" 00:"," 09:",$sql['dateremind']); //тут есть косяк с 00ч до 01ч
