@@ -611,6 +611,7 @@ function jsCreate_or_open(path) //открывает если есть или с
 		console.info("path=",id,path[i]);
 		}
 	sync_now = false;
+	jsRefreshTree();
 	
 	return id;	
 }
@@ -4651,7 +4652,8 @@ var last_load_frends_time=0;
 
 function jsFindByParent(parent_id,need_did,need_add_line)
 {
-if(!jsFind(parent_id) && parent_id!=1) return false;
+// && parent_id!=1
+if(!jsFind(parent_id)) return false;
 if(parent_id==0) return false;
 if(!parent_id) return false;	
 

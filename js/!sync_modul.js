@@ -228,6 +228,14 @@ function jsSaveElement(d)
 
 function jsChangeNewId(d) //заменяет отрицательный id на положительный
 {
+    all_children = jsFindByParent(d.old_id);
+    $.each(all_children,function(i,ddd)
+     	{ 
+     	ddd.parent_id=d.id; 
+     	jsSaveData(ddd.id);
+     	});		//заменяю всех отрицательных родителей на положительных
+
+
 	jsFind(d.old_id).id = d.id;
 	jsSaveData(d.id);
 
@@ -235,14 +243,8 @@ function jsChangeNewId(d) //заменяет отрицательный id на 
 	$('.redactor_editor[myid='+d.old_id+']').attr("myid", d.id);
     $('.divider_red[myid="'+d.old_id+'"]').attr('myid',d.id);
     $(".makedone[myid="+d.old_id+"]").attr("myid",d.id); //заменяю индексы makedone
-    $("li[myid='"+d.old_id+"']").attr("myid",d.id).find(".tcheckbox").attr("title",d.id);
+    $("#node_"+d.old_id).attr("id","node_"+d.id).find(".tcheckbox").attr("title",d.id);
 
-    all_children = jsFindByParent(d.old_id);
-    $.each(all_children,function(i,ddd)
-     	{ 
-     	ddd.parent_id=d.id; 
-     	jsSaveData(ddd.id);
-     	});		//заменяю всех отрицательных родителей на положительных
 	
 	
 }
