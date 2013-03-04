@@ -1105,16 +1105,21 @@ $.postJSON(lnk,mynote,function(data,j,k){
 }
 
 
+
+
+
+
 var scrolltimer;
 var last_blur_sync_time = 0;
 var mytimer6;
+var QueryString;
+
 
 function jsRegAllKey() //все общие delegate и регистрация кнопок. Нужно указать точнее родительские элементы.
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 
 //	setTimeout(function(){ $("#tab_comments").click(); }, 1000);
-
 
 	$('#fav_calendar').delegate("li","click",function(){
 		$('#fav_calendar .active').removeClass("active");
@@ -2759,6 +2764,8 @@ last_local_sync = jsNow()+5000;
 
   jsRegAllKey(); //регистрирую все клавиши выполняется 1,7 секунд (нужно проверить, почему долго)
 
+  
+
   current_tab = 1;
 
   jsShowTreePanel(); //показываю панель с деревом
@@ -4087,6 +4094,15 @@ for(i=0;i<localStorage.getItem("d_length");i++)
 
 preloader.trigger('hide');
 jsTitle('Использую локальные данные');
+
+var add_do = window.location.hash;
+if(add_do.indexOf("add_do:")!=-1)
+	{
+	var text_of_do = decodeURIComponent(add_do).replace("#add_do:","").replace("+"," ");
+	setTimeout(function() { jsAddDo( "new", 599, text_of_do ); }, 500);
+	}
+
+
 setTimeout(function (){ //jsShowBasket(); 
 	jsFindByParent(-3);
 	jsFindByParent("user_"+$.cookie("4tree_user_id"));
