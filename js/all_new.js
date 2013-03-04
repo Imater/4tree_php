@@ -4114,7 +4114,7 @@ var add_do = window.location.hash;
 if(add_do.indexOf("add_do:")!=-1)
 	{
 	var text_of_do = decodeURIComponent(add_do).replace("#add_do:","").replace("+"," ");
-	setTimeout(function() { jsAddDo( "new", 599, text_of_do ); alert("Добавил новое дело: "+text_of_do); }, 1500);
+	setTimeout(function() { jsAddDo( "new", 599, text_of_do ); alert("Добавил новое дело: "+text_of_do); }, 500);
 	}
 
 }
