@@ -4677,7 +4677,7 @@ var last_load_frends_time=0;
 function jsFindByParent(parent_id,need_did,need_add_line)
 {
 // && parent_id!=1
-if(!jsFind(parent_id)) return false;
+if(!jsFind(parent_id) && parent_id!=1) return false;
 if(parent_id==0) return false;
 if(!parent_id) return false;	
 
