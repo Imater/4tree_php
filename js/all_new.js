@@ -1,5 +1,5 @@
 //v1.01
-var note_saved=false,myr,t1,t2,my_all_data,my_all_share,my_all_frends,remember_old_panel="top_panel";
+var note_saved=false,myr,t1,t2,my_all_data,my_all_comments,my_all_share,my_all_frends,remember_old_panel="top_panel";
 var main_x = 50; //ширина левой панели в процентах
 var main_y = 250;//высота верхней панели в пикселях
 var preloader,tree_font = 1,clicknow,add_menu;
@@ -3968,6 +3968,7 @@ start_sync_when_idle = true;
 
 //console.info("old_id",old_id);
 
+
 for(ik=0;ik<my_all_data.length;ik++)
 	{
 	if(id_one) 
@@ -3993,8 +3994,50 @@ for(ik=0;ik<my_all_data.length;ik++)
 	}
 	
 localStorage.setItem("d_length",my_all_data.length);
+
+
+//сохраняю комментарии
+
 preloader.trigger('hide');
 }
+
+
+function jsSaveDataComments(id_one,old_id,dontsync)
+{
+//last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
+start_sync_when_idle = true;
+//if(!dontsync) jsStartSync("soon","SAVED DATA"); //запущу синхронизацию примерно через 15 секунд
+
+//console.info("old_id",old_id);
+
+for(ik=0;ik<my_all_comments.length;ik++)
+	{
+	if(id_one) 
+	  {
+	  if(my_all_comments[ik].id == old_id)
+	  	{
+	  	localStorage.removeItem("c_"+ik);
+	  	console.info("remove:","c_"+ik);
+	  	}
+	  if(my_all_comments[ik].id == id_one) 
+		{
+		localStorage.setItem("c_"+ik,JSON.stringify(my_all_comments[ik]));
+		localStorage.setItem("c_length",my_all_comments.length);
+//		console.info("savedata = ",ik,id_one);
+		return false;
+		}
+	  }
+	else
+	  {
+		   localStorage.setItem("c_"+ik,JSON.stringify(my_all_comments[ik]));
+	  }
+	}
+
+localStorage.setItem("c_length",my_all_comments.length);
+
+}
+
+
 
 var db;
 
@@ -4082,9 +4125,12 @@ if ( (!localStorage.getItem("d_length")) || (load_from_server) )
 		localStorage.setItem("sync_id",sync_id);
 		my_all_data = $.map(data.all_data, function (value, key) { return value; });
 		jsSaveData();
+		my_all_comments = $.map(data.comments, function (value, key) { return value; });
+		jsSaveDataComments();
 		preloader.trigger('hide');
 		
-		console.info(my_all_data);
+		console.info("my_all_data:",my_all_data);
+		console.info("my_all_comments:",my_all_comments);
 		});
 	
 	$.ajaxSetup({async: true});
@@ -4100,6 +4146,13 @@ for(i=0;i<localStorage.getItem("d_length");i++)
 	{
 	my_all_data[i] = JSON.parse( localStorage.getItem("d_"+i) );
 	}
+
+my_all_comments = new Array; //загружаю комментарии
+for(i=0;i<localStorage.getItem("c_length");i++)
+	{
+	my_all_comments[i] = JSON.parse( localStorage.getItem("c_"+i) );
+	}
+
 
 preloader.trigger('hide');
 jsTitle('Использую локальные данные');

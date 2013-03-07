@@ -1506,8 +1506,30 @@ if(true) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; }
 	
 //	echo $sqlnews2;
 //  print_r( $answer );
+
+	
+  $share_ids_tree_id = str_replace("id = ","tree_id = ",$share_ids);
+	
+  $sqlnews = "SELECT tree_comments.*, tree.user_id tree_user_id FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE (tree_comments.user_id=".$GLOBALS['user_id']." OR ".$share_ids_tree_id." OR tree.user_id = ".$GLOBALS['user_id'].") AND tree_comments.del=0 ORDER by parent_id, time";
+  
+
+  $result = mysql_query_my($sqlnews); 
+  $i=0;
+  $sqlnews2 = "";
+  while (@$sql = mysql_fetch_array($result))
+    {
+    $comments[$i]["text"] = $sql["text"];
+    $comments[$i]["parent_id"] = $sql["parent_id"];
+    $comments[$i]["del"] = $sql["del"];
+    $comments[$i]["tree_id"] = $sql["tree_id"];
+    $comments[$i]["tree_user_id"] = $sql["tree_user_id"];
+    $comments[$i]["user_id"] = $sql["user_id"];
+    $comments[$i]["likes"] = 1;
+    $i++;
+	}
 	
 	$res["time_dif"] = $time_dif;
+	$res["comments"] = $comments;
 	$res["all_data"] = $answer;
 	echo json_encode($res);
 }
