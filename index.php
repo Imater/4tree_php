@@ -325,7 +325,9 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 	  <div id="bottom_panel">
 	  		<div class="bottom_left">
 
-				<div id="tree_comments"><br>
+			<div id="tree_comments">
+				<div id="tree_comments_container">
+				
 					<div class="comment_box" id="comment_1">
 						<div class="comment_foto">
 							<img src="image.php?width=40&amp;height=40&amp;cropratio=1:1&amp;image=/img/faces/john.png" height="40px" width="40px" class="comment_foto_img">
@@ -489,6 +491,24 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 
 
 				</div>
+				<div>
+					<div id="comment_enter">
+						<div id="comment_enter_foto">
+							<img src="image.php?width=40&amp;height=40&amp;cropratio=1:1&amp;image=/img/faces/john.png" height="40px" width="40px" class="comment_enter_img">
+						<div class="comment_enter_arrow"></div>
+						<div class="comment_enter_arrow_shadow"></div>
+						</div>
+						
+						<div class="comment_enter_input" contenteditable="true">
+						Тут будет написан текст
+						</div>
+						
+					</div>
+				</div>
+				
+			</div>
+				
+				
 				<div class="search_panel_result panel_type3"><ul></ul></div>
 	  			<div class="search_arrow"></div>
 				

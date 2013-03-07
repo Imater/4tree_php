@@ -3879,7 +3879,6 @@ height: auto;
 margin-top: 33px;
 background: #FFF;
 padding-left: 10px;
-overflow-y: auto;
 background: white;
 z-index: 9999999;
 -moz-box-shadow: 2px 2px 8px #444;
@@ -3888,6 +3887,11 @@ box-shadow: 2px 2px 8px #444;
 -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 font-size: 0.8em;
+}
+
+#tree_comments_container
+{
+overflow-y: auto;
 }
 
 .comment_box
@@ -3978,3 +3982,70 @@ transition: all 0.5s;
 color: #1055cd;
 border-bottom: 1px dashed #1055cd;
 }
+
+
+#comment_enter
+{
+width: 100%;
+margin-left: -10px;
+position: absolute;
+bottom: 29px;
+background: #f1f4f6;
+border-top: 1px solid #d3d6e0;
+}
+
+.comment_enter_img
+{
+margin: 5px;
+margin-left: 15px;
+}
+
+.comment_enter_input
+{
+margin: 5px;
+margin-left: 75px;
+margin-right: 15px;
+min-height: 16px;
+max-height: 200px;
+padding: 2px;
+padding-left: 5px;
+padding-bottom: 20px;
+background: white;
+border: 1px solid #d3d6e0;
+overflow-y: auto;
+}
+
+.comment_enter_input:focus
+{
+outline:none;
+border: 1px solid #a9aebe;
+}
+
+#comment_enter_foto
+{
+float: left;
+}
+
+.comment_enter_arrow {
+width: 0px;
+border-top: 10px solid rgba(255, 241, 190, 0);
+border-bottom: 10px solid rgba(255, 241, 190, 0);
+border-right: 10px solid white;
+position: absolute;
+z-index: 8;
+top:15px;
+left: 67px;
+}
+
+.comment_enter_arrow_shadow {
+width: 0px;
+border-top: 10px solid rgba(255, 241, 190, 0);
+border-bottom: 10px solid rgba(255, 241, 190, 0);
+border-right: 10px solid #a9aebe;
+position: absolute;
+z-index: 7;
+top:15px;
+left: 66px;
+}
+
+

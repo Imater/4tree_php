@@ -1120,7 +1120,13 @@ function jsRegAllKey() //все общие delegate и регистрация к
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 
-//	setTimeout(function(){ $("#tab_comments").click(); }, 1000);
+	$("*").delegate(".comment_enter_input","keyup",function(){
+		clearTimeout(scrolltimer);
+		scrolltimer = setTimeout(function(){ onResize(); }, 300);
+		return true;
+		});
+
+	setTimeout(function(){ $("#tab_comments").click(); }, 1000);
 
 	$('#fav_calendar').delegate("li","click",function(){
 		$('#fav_calendar .active').removeClass("active");
@@ -2365,7 +2371,7 @@ setTimeout(function(){
   	   
   	   
   	   
-  if( (!($("input").is(":focus"))) && (!($(".redactor_editor").is(":focus"))) && (!($("#redactor").is(":focus"))) && ($(".n_title[contenteditable='true']").length==0) ) //если мы не в редакторе
+  if( (!($("input").is(":focus"))) && (!($(".redactor_editor").is(":focus"))) && (!($("#redactor").is(":focus"))) && ($(".n_title[contenteditable='true']").length==0) && ($(".comment_enter_input[contenteditable='true']").length==0) ) //если мы не в редакторе
   	{
      if( (e.altKey==false) && (e.keyCode==13) )
        {
@@ -5739,6 +5745,7 @@ function onResize()
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight);
 			$("#tree_comments").height(newheight);
+			$("#tree_comments_container").height( newheight - parseInt( $("#comment_enter").height() ) );
 
 
 			jsSetTimeNow(); //обновляю указатель текущего времени
