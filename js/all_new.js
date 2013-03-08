@@ -3353,9 +3353,53 @@ function jsDeleteDo(current)
 
 }
 
-function jsShowComments(tree_id)
+var myhtml="";
+
+function jsShowAllComments(tree_id)
 {
+	myhtml = "";
+	jsShowComments(tree_id, 0);	
+	myhtml += "<br><br><br>";
+	$("#tree_comments_container").html(myhtml);
+	onResize();
 	
+}
+
+function jsShowComments(tree_id, parent_id)
+{
+	var source = $("#comment_template").html();
+	var template = Handlebars.compile(source);
+	
+	var chat = jsFindByTreeId(tree_id,parent_id);
+	var html = "";
+	$.each(chat, function(i,d)
+		{
+		console.info(d);
+		var frend = jsFrendById(d.user_id);
+		d.foto = frend.foto;
+		d.name = frend.fio;
+		myhtml += template(d);
+		
+		if(jsFindByParentComments(d.id).length>0)
+		  {
+		  myhtml +="<ul>";
+		  jsShowComments(tree_id, d.id);
+		  myhtml +="</ul>";
+		  }
+		
+		});
+		
+	
+}
+
+function jsFrendById(user_id)
+{	
+	var answer = my_all_frends.filter(function(el,i) 
+			{ 
+			return el.user_id == user_id;
+			});
+	return answer[0];
+
 }
 
 function jsAddComment(tree_id,parent_id,text)
@@ -4851,14 +4895,14 @@ if(id)
 
 }
 
-function jsFindByTreeId(tree_id,need_did,need_add_line)
+function jsFindByTreeId(tree_id,parent_id)
 {
 if(!tree_id) return false;	
 
 data = my_all_comments.filter(function(el) 
    {
    if(el.del == 1) return false;
-   return ( (el.tree_id==tree_id) ); 
+   return ( (el.tree_id==tree_id) && (el.parent_id==parent_id)); 
    });
    
 return data;
@@ -6571,7 +6615,11 @@ function jsSelectNode(id,nohash,iamfrom) //открыть заметку во в
 	$("#top_panel #node_"+id).addClass("selected");
 //	console.info(id);
 	clearTimeout(openredactor);
-	openredactor = setTimeout(function(){ 	jsRedactorOpen([id],iamfrom); },70 );
+	openredactor = setTimeout(function()
+		{
+	 	jsRedactorOpen([id],iamfrom); 
+	 	jsShowAllComments(id);
+	 	},70 );
 	jsCalendarNode(id);
 
 }
