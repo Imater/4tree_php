@@ -2921,6 +2921,35 @@ function jsDry(data) //убираем все данные, кроме измен
 	return answer1;
 }
 
+function jsDryComments(data) //убираем все данные, кроме изменённых, чтобы экономить трафик в POST
+{
+	answer1 = new Array();
+	
+	$.each(data, function(i,node){
+		changed_fields = node['new'];
+		element = new Object;
+		element.id = node.id;
+		if((node.id<0) || (node.new=="") )  
+			{
+			element = jsFindComment(node.id);
+			answer1.push(element);
+			changed_fields = "";
+			}
+		else
+		$.each(node, function(keyname, keyvalue)
+			{
+			if(changed_fields)
+			  if(( changed_fields.indexOf(keyname+',') != -1 ) || keyname=="time" || keyname=="lsync1" )
+				{
+				element[keyname] = keyvalue;
+				}
+			});
+		if(changed_fields) answer1.push(element);
+		});
+	
+	return answer1;
+}
+
 
 function jsGetSyncId()
 {
@@ -3321,6 +3350,32 @@ function jsDeleteDo(current)
 		preloader.trigger('hide');
 		jsRefreshTree();
 		});
+
+}
+
+function jsShowComments(tree_id)
+{
+	
+}
+
+function jsAddComment(tree_id,parent_id,text)
+{
+	var new_id = -parseInt(1000000+Math.random()*10000000);
+
+	new_line = my_all_comments.length;
+	my_all_comments[new_line]=new Object(); element = my_all_comments[new_line];
+
+	element.id = new_id;
+	element.parent_id = parent_id;
+	element.tree_id = tree_id;
+	element.text = text;
+	element.del = 0;
+	element.new = "";
+	element.time = jsNow();
+	element.lsync = jsNow()-1;
+	element.user_id = $.cookie("4tree_user_id");
+	
+	jsSaveDataComment(new_id);
 
 }
 
@@ -4796,7 +4851,32 @@ if(id)
 
 }
 
+function jsFindByTreeId(tree_id,need_did,need_add_line)
+{
+if(!tree_id) return false;	
 
+data = my_all_comments.filter(function(el) 
+   {
+   if(el.del == 1) return false;
+   return ( (el.tree_id==tree_id) ); 
+   });
+   
+return data;
+}
+
+
+function jsFindByParentComments(parent_id,need_did,need_add_line)
+{
+if(!parent_id) return false;	
+
+data = my_all_comments.filter(function(el) 
+   {
+   if(el.del == 1) return false;
+   return ( (el.parent_id==parent_id) ); 
+   });
+   
+return data;
+}
 
 var last_load_frends_time=0;
 

@@ -80,7 +80,7 @@ function jsSync()
 			if(el) 
 				return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>=el.lsync) || ((el.new!="") && (el.new)) ); } );
 	
-	changes_comments = JSON.stringify( jsDry(data_comments) ); //высушиваю данные и превращаю в JSON строку
+	changes_comments = JSON.stringify( jsDryComments(data_comments) ); //высушиваю данные и превращаю в JSON строку
 	
 	changes = 'changes='+encodeURIComponent(changes)+'&confirm='+encodeURIComponent(confirm_ids);
 	changes = changes + '&changes_comments='+encodeURIComponent(changes_comments);
@@ -317,26 +317,20 @@ function jsChangeNewId(d) //заменяет отрицательный id на 
 	
 }
 
-function jsChangeNewIdComment(d) //заменяет отрицательный id на положительный
+function jsChangeNewIdComments(d) //заменяет отрицательный id на положительный
 {
-return true;
-    all_children = jsFindByParent(d.old_id);
+    all_children = jsFindByParentComments(d.old_id);
     $.each(all_children,function(i,ddd)
      	{ 
      	ddd.parent_id=d.id; 
-     	jsSaveData(ddd.id);
+     	jsSaveDataComments(ddd.id);
      	});		//заменяю всех отрицательных родителей на положительных
 
 
-	jsFind(d.old_id).id = d.id;
-	jsSaveData(d.id);
+	jsFindComment(d.old_id).id = d.id;
+	jsSaveDataComment(d.id);
 
-	$("#panel_"+d.old_id).attr("id","panel_"+d.id); //заменяю индексы видимых панелей
-	$('.redactor_editor[myid='+d.old_id+']').attr("myid", d.id);
-    $('.divider_red[myid="'+d.old_id+'"]').attr('myid',d.id);
-    $(".makedone[myid="+d.old_id+"]").attr("myid",d.id); //заменяю индексы makedone
-    $("#node_"+d.old_id).attr("id","node_"+d.id).find(".tcheckbox").attr("title",d.id);
-
+	//тут нужно поменять всё визуальное
 	
 	
 }

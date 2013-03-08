@@ -492,7 +492,7 @@ for ($i=0; $i<$countlines; $i++)
 		   		$result5 = mysql_query_my($sqlnews5); 
 		   		if($display) if(mysql_affected_rows()>0) echo "Удалил дублирующую запись (".mysql_affected_rows()." шт)<br>";
 		   		
-		   		$sqlnews="INSERT INTO `tree_comments` (old_id,user_id,changetime,title) VALUES ('".$id."','".$GLOBALS['user_id']."','".ConvertFutureDate($now_time)."','".$changes_comments[$i]['text']." (new)');";
+		   		$sqlnews="INSERT INTO `tree_comments` (old_id,user_id,changetime,text) VALUES ('".$id."','".$GLOBALS['user_id']."','".ConvertFutureDate($now_time)."','".$changes_comments[$i]['text']." (new)');";
 		   		$result = mysql_query_my($sqlnews); 
 		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
 		   		$id = mysql_insert_id();
@@ -509,7 +509,7 @@ for ($i=0; $i<$countlines; $i++)
 			   		    if($display) echo "Заменил индекс родителя у дела: ".$changes[$j]['id']." — (".$changes[$j]['title'].") на ".$id."<br>";
 		   		    	}
 		   		    }
-		   		$changes_comments[$i]['old_id'] = $changes[$i]['id'];
+		   		$changes_comments[$i]['old_id'] = $changes_comments[$i]['id'];
 		   		$changes_comments[$i]['id']=$id;
 		   }
     } //first for_i
@@ -547,7 +547,7 @@ for ($i=0; $i<$countlines; $i++)
    			//если этот коммент уже кто-то менял, ничего не делаю
    			}
 	   		$confirm_saved_id["saved_comments"][$i]["id"] = "".$id;
-	   		if(@$changes_comments[$i]['old_id']) $confirm_saved_id["saved_comments"][$i]["old_id"] = "".@$changes[$i]['old_id'];
+	   		if(@$changes_comments[$i]['old_id']) $confirm_saved_id["saved_comments"][$i]["old_id"] = "".@$changes_comments[$i]['old_id'];
 
 	}
 
@@ -758,6 +758,7 @@ if($display) echo "SAVE CHANGES<br>";
 		$values = array( ":id" => $changes[$i]['id'],
 				":parent_id" =>  $changes[$i]['parent_id'],
 				":text" =>  $changes[$i]['text'],
+				":tree_id" =>  $changes[$i]['tree_id'],
 				":user_id" =>  $changes[$i]['user_id'],
 				":lsync" =>  $now_time,
 				":changetime" => $changetime,
