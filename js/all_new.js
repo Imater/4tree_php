@@ -4002,7 +4002,7 @@ preloader.trigger('hide');
 }
 
 
-function jsSaveDataComments(id_one,old_id,dontsync)
+function jsSaveDataComment(id_one,old_id,dontsync)
 {
 //last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
 start_sync_when_idle = true;
@@ -4126,7 +4126,7 @@ if ( (!localStorage.getItem("d_length")) || (load_from_server) )
 		my_all_data = $.map(data.all_data, function (value, key) { return value; });
 		jsSaveData();
 		my_all_comments = $.map(data.comments, function (value, key) { return value; });
-		jsSaveDataComments();
+		jsSaveDataComment();
 		preloader.trigger('hide');
 		
 		console.info("my_all_data:",my_all_data);
@@ -4392,6 +4392,72 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 	
 return answer[0];
 }
+
+
+
+function jsFindComment(id,fields)
+{
+		answer = my_all_comments.filter(function(el,i) 
+			{ 
+			if(el)
+				if( el.id==id ) 
+					return true; 
+			} );
+		if(!answer) return false;
+
+if(answer.length>0 && fields) //если нужно присваивать значения
+	{
+	if(answer[0]["new"]) changed_fields = answer[0]["new"]; //беру список изменённых полей
+	else changed_fields = "";
+	
+	is_changed=false;
+	$.each(fields, function(namefield,newvalue) 
+		{ 		
+		if(answer[0][namefield] != newvalue) 
+			{
+			if( (namefield!="new") )
+				{ 
+				if(changed_fields.indexOf(namefield+",")==-1) changed_fields = changed_fields + namefield + ","; 
+				}
+			else changed_fields = "UPS"; //сохраняю список полей, которые были изменены, если есть new, то обнуляю
+			is_changed=true; //фиксирую, что произошли изменения
+						
+			answer[0][namefield] = newvalue; //присваиваю новое значение
+			}
+
+		} );
+
+	answer[0]["new"] = changed_fields;
+	if(is_changed) 
+		{
+		if( changed_fields.indexOf("time,")==-1 ) //если не меняли время вручную
+			{
+			if(answer[0]) answer[0].time = parseInt(jsNow()); //ставлю время изменения (для синхронизации)
+		    var need_to_save_id=id;
+		    }
+		else
+			{
+			answer[0].new = "";
+			}
+			
+		    clearTimeout(mytimer[need_to_save_id]);
+		    
+		    mytimer[need_to_save_id] =
+		    setTimeout(function() 
+		    	{ 
+		    	if( localStorage.getItem("c_length") ) jsSaveDataComment(need_to_save_id); 
+		    	else jsSaveDataComment(1);
+		    	},80); //сохряню этот элемент в localStorage через 80 миллисекунд
+
+		}
+	}
+
+	
+return answer[0];
+}
+
+
+
 
 //главная функция получения и изменения данных
 // jsFind(12,1,"text","hello!");

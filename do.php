@@ -362,12 +362,19 @@ $client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['
 $now_time = $HTTP_GET_VARS['now_time'];  //сколько сейчас времени на клиенте
 $ch = $HTTP_POST_VARS['changes']; //POST
 
+$ch_comments = $HTTP_GET_VARS['changes_comments']; //POST
+
 $share_ids = get_all_share_children($GLOBALS['user_id']); //все дочерние элементы, которые есть в таблице tree_share
 //echo $share_ids;
 
-if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru")) $ch = stripslashes($ch);
+if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru")) 
+	{
+	$ch = stripslashes($ch);
+	$ch_comments = stripslashes($ch_comments);
+	}
 
 $changes =  json_decode( $ch , true );  
+$changes_comments =  json_decode( $ch_comments , true );  
 
 $confirm = $HTTP_POST_VARS['confirm'];
 $confirms =  json_decode( $confirm , true );  
@@ -466,6 +473,84 @@ for ($i=0; $i<$countlines; $i++)
 	   		if(@$changes[$i]['old_id']) $confirm_saved_id["saved"][$i]["old_id"] = "".@$changes[$i]['old_id'];
 
 	}
+	
+///делаю то же самое для комментариев
+$countlines = count($changes_comments);
+
+for ($i=0; $i<$countlines; $i++)
+	{
+		$id = $changes_comments[$i]['id'];
+		if($id=="") continue;
+		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
+		if($id<0)
+		   {
+		   		$old_id = $id; //сохраняю старый отрицательный id
+		   		
+		   		if($display) echo "Необходимо добавить элемент ".$id." (".$changes[$i]['title'].")<br>";
+		   		
+		   		$sqlnews5="DELETE FROM tree_comments WHERE old_id='".$id."'";
+		   		$result5 = mysql_query_my($sqlnews5); 
+		   		if($display) if(mysql_affected_rows()>0) echo "Удалил дублирующую запись (".mysql_affected_rows()." шт)<br>";
+		   		
+		   		$sqlnews="INSERT INTO `tree_comments` (old_id,user_id,changetime,title) VALUES ('".$id."','".$GLOBALS['user_id']."','".ConvertFutureDate($now_time)."','".$changes_comments[$i]['text']." (new)');";
+		   		$result = mysql_query_my($sqlnews); 
+		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
+		   		$id = mysql_insert_id();
+		   		if($display) echo "<b>Новый id</b> = ".$id."<br>";
+		   		
+		   		$sqlnews = "UPDATE tree_comments SET parent_id =".$id." WHERE parent_id = '".$old_id."'";	
+		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
+		   		
+		   		for($j=0; $j<$countlines;$j++) //заменяю parent_id где он отрицательный в самом массиве изменений
+		   		    {
+		   		    if( @$changes_comments[$j]['parent_id'] == $old_id ) 
+		   		    	{ 
+		   		    	$changes_comments[$j]['parent_id'] = $id; 
+			   		    if($display) echo "Заменил индекс родителя у дела: ".$changes[$j]['id']." — (".$changes[$j]['title'].") на ".$id."<br>";
+		   		    	}
+		   		    }
+		   		$changes_comments[$i]['old_id'] = $changes[$i]['id'];
+		   		$changes_comments[$i]['id']=$id;
+		   }
+    } //first for_i
+if($display) echo "<hr><hr>Начинаю второй проход<br>";
+$dont_send_ids = "";
+//второй проход, с учётом добавленных элементов
+for ($i=0; $i<$countlines; $i++)
+	{
+		$id = $changes_comments[$i]['id'];
+		if($id=="") continue;
+		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
+
+		$sqlnews = "SELECT id,text,parent_id,changetime FROM tree_comments WHERE id = '".$id."'";
+		$result = mysql_query_my($sqlnews); 
+		@$sql = mysql_fetch_array($result);
+   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
+   		if($display) echo "Элемент в базе найден: <b>".$sql['text']."</b> (родитель: ".$sql['parent_id'].")<br>";
+
+  		$change_time = ConvertFutureDate( (integer)$changes_comments[$i]['time'] ); //время изменения заметки на клиенте
+  		$fromdb_time = ConvertFutureDate( $sql['changetime'] );
+   		$dif = $fromdb_time - $change_time;
+
+   		if($display) echo "Время изменения на клиенте: ".sqltime($change_time)." — время изменения на сервере: ".sqltime($fromdb_time).") = ".$dif."; ".@$changes_comments[$i]['old_id']."<br>";
+
+//		if($changes[$i]['del']==1) sync_check_to_delete($changes,$i,$sql,$display,$now_time);
+
+   		if($dif<0 OR @$changes_comments[$i]['old_id']<0)
+   			{
+	   		if($display) echo "<span style='color:green'><b>Сохраняю этот элемент в базе данных</b></span><br>";
+	   		sync_save_changes_comments($changes_comments,$i,$sql,$display,$now_time,$time_dif);
+	   		$dont_send_ids_comments .= " `id` != ".$id." AND ";
+   			}
+   		else
+   			{
+   			//если этот коммент уже кто-то менял, ничего не делаю
+   			}
+	   		$confirm_saved_id["saved_comments"][$i]["id"] = "".$id;
+	   		if(@$changes_comments[$i]['old_id']) $confirm_saved_id["saved_comments"][$i]["old_id"] = "".@$changes[$i]['old_id'];
+
+	}
+
 
 //сообщаю всем слушателям о том, что данные изменились
 if( count($confirm_saved_id["saved"])>0 )
@@ -638,6 +723,61 @@ if($display) echo "SAVE CHANGES<br>";
 					 
 
 }
+
+function sync_save_changes_comments($changes,$i,$sql,$display,$now_time,$time_dif)
+{
+global $db2;
+if($display) echo "SAVE CHANGES<br>";
+
+	$fields = array ("parent_id","tree_id","text","user_id", "del", "add_time");
+
+		$sqlnews2 = "UPDATE  `tree_comments` SET ";
+
+		for($iii=0;$iii<count($fields);$iii++) //меняем в базе только те поля, которые изменились и присланы из клиента
+			{
+			$fieldname = $fields[$iii];
+			if($fieldname == "node_icon") $fieldname = "icon";
+			if(array_key_exists($fieldname, $changes[$i])) 			
+				{
+				$sqlnews2 .= " ".$fields[$iii]." = :".$fields[$iii].", ";
+				}
+			else
+				{
+				$sqlnews2 .= " `tmp` = :".$fields[$iii].", ";
+				}
+			}
+		
+		$sqlnews2 .= "changetime = :changetime, lsync = :lsync  WHERE  `tree_comments`.`id` = :id; ";
+   		if($display) echo "<font style='font-size:9px'>".$sqlnews2."</font><br>";
+   		
+		if($changes[$i]['del']==1) $del=1; //флаг удаления дела
+		else $del = 0;
+   		
+   		$changetime = $changes[$i]['time']; //???
+
+		$values = array( ":id" => $changes[$i]['id'],
+				":parent_id" =>  $changes[$i]['parent_id'],
+				":text" =>  $changes[$i]['text'],
+				":user_id" =>  $changes[$i]['user_id'],
+				":lsync" =>  $now_time,
+				":changetime" => $changetime,
+				":add_time" => $changes[$i]['add_time'],
+				":del" => $del
+				);
+
+		if($display) print_r($values);
+		
+//		echo $sqlnews2;
+
+		$query = $db2->prepare($sqlnews2);
+		$query->execute($values);
+
+
+					 
+
+}
+
+
 
 function sync_check_to_delete($changes,$i,$sql,$display,$now_time)
 {
@@ -1507,23 +1647,26 @@ if(true) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; }
 //	echo $sqlnews2;
 //  print_r( $answer );
 
-	
+  //Вывожу комментарии
+  	
   $share_ids_tree_id = str_replace("id = ","tree_id = ",$share_ids);
-	
-  $sqlnews = "SELECT tree_comments.*, tree.user_id tree_user_id FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE (tree_comments.user_id=".$GLOBALS['user_id']." OR ".$share_ids_tree_id." OR tree.user_id = ".$GLOBALS['user_id'].") AND tree_comments.del=0 ORDER by parent_id, time";
-  
 
+  $sqlnews = "SELECT tree_comments.*, tree.user_id tree_user_id FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE (tree_comments.user_id=".$GLOBALS['user_id']." OR ".$share_ids_tree_id." OR tree.user_id = ".$GLOBALS['user_id'].") AND tree_comments.del=0 ORDER by parent_id, changetime";
+  
   $result = mysql_query_my($sqlnews); 
   $i=0;
   $sqlnews2 = "";
   while (@$sql = mysql_fetch_array($result))
     {
+    $comments[$i]["id"] = $sql["id"];
     $comments[$i]["text"] = $sql["text"];
     $comments[$i]["parent_id"] = $sql["parent_id"];
     $comments[$i]["del"] = $sql["del"];
+    $comments[$i]["time"] = $sql["changetime"];
     $comments[$i]["tree_id"] = $sql["tree_id"];
     $comments[$i]["tree_user_id"] = $sql["tree_user_id"];
     $comments[$i]["user_id"] = $sql["user_id"];
+    $comments[$i]["add_time"] = $sql["add_time"];
     $comments[$i]["likes"] = 1;
     $i++;
 	}

@@ -502,6 +502,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 						<div class="comment_enter_input" contenteditable="true">
 						Тут будет написан текст
 						</div>
+						<div class="comment_send_button" title="alt+enter">отправить</div>
 						
 					</div>
 				</div>

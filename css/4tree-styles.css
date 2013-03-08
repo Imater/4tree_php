@@ -4048,4 +4048,16 @@ top:15px;
 left: 66px;
 }
 
+.comment_send_button
+{
+border: 1px solid #d3d6e0;
+color: #d3d6e0;
+border-radius: 3px;
+position: absolute;
+right: 19px;
+bottom: 8px;
+cursor: pointer;
+font-size: 9px;
+padding: 1px 5px 1px 5px;
 
+}
