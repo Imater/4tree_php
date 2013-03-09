@@ -333,9 +333,10 @@ function jsChangeNewIdComments(d) //заменяет отрицательный 
     $.each(all_children,function(i,ddd)
      	{ 
      	ddd.parent_id=d.id; 
-     	jsSaveDataComments(ddd.id);
+     	jsSaveDataComment(ddd.id);
      	});		//заменяю всех отрицательных родителей на положительных
 
+    $("#comment_"+d.old_id).attr("id","comment_"+d.id);
 
 	jsFindComment(d.old_id).id = d.id;
 	jsSaveDataComment(d.id);

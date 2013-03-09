@@ -1120,13 +1120,28 @@ function jsRegAllKey() //все общие delegate и регистрация к
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 
+	$("#tree_comments").delegate(".comment_reply","click",function(){
+		$(this).parents(".comment_box:first").append( $("#comment_enter") );
+		onResize();
+		return false;
+		});
 
 	$('#comment_enter').delegate(".comment_send_button","click",function(){
 	    var id = node_to_id( $(".selected").attr('id') );
-	    if(!id) return false;
-		jsAddComment( id , 0, $(".comment_enter_input").html() );
-		$(".comment_enter_input").html("");
+	    if( (!id) ) return false;
+	    if(myr_comment.getCode()=="") return false;
+
+		var comment_id = $(this).parents(".comment_box:first").attr("id");
+		if(comment_id) comment_id = comment_id.replace("comment_","");
+		else comment_id = 0;
+		console.info( id , comment_id, myr_comment.getCode() );
+		jsAddComment( id , comment_id, myr_comment.getCode() );
+		$("#comment_enter_place").append( $("#comment_enter") );
+		myr_comment.setCode("");
+		if(comment_id!=0) var old_scroll = $("#tree_comments_container").scrollTop()+150;
 		jsShowAllComments(id);
+		if(comment_id==0) $("#tree_comments_container").scrollTop(999999999);
+		else $("#tree_comments_container").scrollTop(old_scroll);
 		return false;
 		});
 
@@ -3382,7 +3397,8 @@ var myhtml="";
 
 function jsShowAllComments(tree_id)
 {
-	myhtml = '<h3>Комментарии ('+jsFindByTreeId(tree_id).length+') к заметке "'+jsFind(tree_id).title+'"</h3>';
+	$("#comment_enter_place").append( $("#comment_enter") );
+	myhtml = '<h3>Комментарии ('+jsFindByTreeId(tree_id,-1).length+') к заметке "'+jsFind(tree_id).title+'"</h3>';
 	jsShowComments(tree_id, 0);	
 	myhtml += "<br><br><br>";
 	$("#tree_comments_container").html(myhtml);
@@ -4935,7 +4951,7 @@ if(!tree_id) return false;
 data = my_all_comments.filter(function(el) 
    {
    if(el.del == 1) return false;
-   return ( (el.tree_id==tree_id) && ( (el.parent_id==parent_id) || (!parent_id) )); 
+   return ( (el.tree_id==tree_id) && ( (el.parent_id==parent_id) || (parent_id==-1) )); 
    });
    
 return data;
@@ -6021,7 +6037,17 @@ function onResize()
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight);
 			$("#tree_comments").height(newheight);
-			$("#tree_comments_container").height( newheight - parseInt( $("#comment_enter").height() ) );
+			
+			if( $("#comment_enter").parents(".comment_box").length ) 
+				{
+				var reply_height = 0;
+				}
+			else 
+				{
+				var reply_height = parseInt( $("#comment_enter").height() );
+				}
+			
+			$("#tree_comments_container").height( newheight - reply_height );
 
 
 			jsSetTimeNow(); //обновляю указатель текущего времени

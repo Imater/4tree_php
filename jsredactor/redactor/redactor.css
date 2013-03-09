@@ -518,7 +518,7 @@ body .redactor_toolbar li a.redactor_btn_alignment	 		{ background-position: -62
 	left: 50%;
 	box-shadow: 0px 5px 60px #000;
   	border-radius: 3px;
-  	z-index: 50001;
+  	z-index: 9999999999990001;
 	font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif;
 	font-size: 12px !important;
 	color: #000;

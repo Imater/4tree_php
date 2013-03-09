@@ -329,11 +329,11 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 			<div id="tree_comments">
 				<div id="tree_comments_container">
 				</div>
-				<div>
+				<div id="comment_enter_place">
 					<div id="comment_enter">
+						<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>					
 						<div class="comment_enter_input"></div>
 						<div class="comment_send_button" title="alt+enter"><i class="icon-comment-1"></i> написать</div>
-						<div class="comment_clear_button"><i class="icon-docs-landscape"></i> очистить</div>
 					</div>
 				</div>
 				

@@ -1897,10 +1897,11 @@ display: none;
 {
 	display: inline-block;
 	position: absolute;
-	right: 35px;
+	right: 12px;
 	top: 13px;
 	color: gray;
 	cursor: pointer;
+	z-index: 10;
 }
 
 .fullscreen_button:hover
@@ -1913,7 +1914,7 @@ display: none;
 {
 	display: inline-block;
 	position: absolute;
-	right: 10px;
+	right: 35px;
 	top: 13px;
 	color: gray;
 	cursor: pointer;
@@ -3879,7 +3880,6 @@ width: auto;
 height: auto;
 margin-top: 33px;
 background: #FFF;
-padding-left: 10px;
 background: white;
 z-index: 9999999;
 -moz-box-shadow: 2px 2px 8px #444;
@@ -3900,22 +3900,23 @@ overflow-y: auto;
 padding: 10px;
 padding-bottom: 5px;
 padding-top: 5px;
--moz-transition: all 0.1s; 
--webkit-transition: all 0.1s;  
--ms-transition: all 0.1s;  
--o-transition: all 0.1s;  
-transition: all 0.1s;  
+margin-left: 10px;
+-moz-transition: all 0.3s; 
+-webkit-transition: all 0.3s;  
+-ms-transition: all 0.3s;  
+-o-transition: all 0.3s;  
+transition: all 0.3s;  
 background: white;
 }
 
 .comment_box:hover
 {
-background: #f4f3f6;
--moz-transition: all 0.1s; 
--webkit-transition: all 0.1s;  
--ms-transition: all 0.1s;  
--o-transition: all 0.1s;  
-transition: all 0.1s;  
+background: #f9f9f9;
+-moz-transition: all 0.3s; 
+-webkit-transition: all 0.3s;  
+-ms-transition: all 0.3s;  
+-o-transition: all 0.3s;  
+transition: all 0.3s;  
 }
 
 .comment_text_box
@@ -3926,6 +3927,8 @@ margin-top: 5px;
 .comment_header
 {
 font-size: 0.8em;
+color: gray;
+font-family: tahoma, sans-serif;
 }
 
 .comment_foto
@@ -3939,7 +3942,6 @@ cursor: pointer;
 .comment_name
 {
 display: inline-block;
-color: #333;
 cursor: pointer;
 font-weight: bold;
 border-bottom: 1px solid lightgray;
@@ -3948,7 +3950,6 @@ border-bottom: 1px solid lightgray;
 .comment_time
 {
 margin-left: 10px;
-color: #adadad;
 display: inline-block;
 font-size: 0.95em;
 }
@@ -3966,11 +3967,16 @@ padding-left: 30px;
 
 .comment_like
 {
-color: #adadad;
 float: right;
 font-weight: bold;
-font-size: 10px;
+font-size: 12px;
 cursor: pointer;
+color: white;
+}
+
+.comment_box:hover .comment_like
+{
+color:gray;
 }
 
 .comment_like:hover
@@ -3983,7 +3989,7 @@ transition: all 0.5s;
 color: #000;
 float: right;
 font-weight: bold;
-font-size: 1em;
+font-size: 20px;
 cursor: pointer;
 }
 
@@ -4001,7 +4007,6 @@ cursor: pointer;
 #comment_enter
 {
 width: 100%;
-margin-left: -10px;
 position: absolute;
 bottom: 29px;
 background: #f1f4f6;
@@ -4021,7 +4026,6 @@ margin: 5px;
 margin-left: 0px;
 margin-right: 15px;
 min-height: 16px;
-max-height: 200px;
 padding: 2px;
 padding-left: 5px;
 background: white;
@@ -4047,12 +4051,24 @@ border: 1px solid #d3d6e0;
 color: #d3d6e0;
 border-radius: 3px;
 position: absolute;
-left: 15px;
-bottom: 5px;
+right: 18px;
+bottom: 19px;
 cursor: pointer;
 font-size: 12px;
-padding: 2px 5px 2px 5px;
+padding: 2px 10px 2px 10px;
 }
+
+.comment_send_button:hover
+{
+-moz-transition: all 0.5s; 
+-webkit-transition: all 0.5s;  
+-ms-transition: all 0.5s;  
+-o-transition: all 0.5s;  
+transition: all 0.5s;  
+background: #e2ffeb;
+color: green;
+}
+
 .comment_clear_button
 {
 border: 1px solid #d3d6e0;
@@ -4072,6 +4088,8 @@ padding: 2px 5px 2px 5px;
 	padding: 3px !important;
 	margin: 0px !important;
 	height: auto !important;
+	bottom: 15px !important;
+	top: 30px !important;
 	
 }
 
@@ -4090,7 +4108,7 @@ left:5px;
 #comment_enter .redactor_editor dl,
 #comment_enter .redactor_editor blockquote
 	 {
-	font-size: 12px !important;
+	font-size: 13px !important;
 	line-height: 1.1em !important;
 }
 
@@ -4124,4 +4142,28 @@ left:5px;
 {
 max-width: 90%;
 max-height: 100%;
+}
+
+#tree_comments h3
+{
+margin-left: 10px;
+margin-right: 10px;
+}
+
+.comment_box #comment_enter
+{
+position: relative;
+bottom: auto;
+margin-top: 10px;
+border: 1px solid #d3d6e0;
+}
+
+#comment_enter.fullscreen
+{
+position: absolute;
+bottom: 0px !important;
+top:0px !important;
+left: 0px !important;
+right: 0px !important;
+margin: 0px !important;
 }
