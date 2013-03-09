@@ -640,8 +640,8 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 							<div class="comment_footer">
 								<div class="comment_name">{{name}}</div>
 								<div class="comment_like">{{likes}}<i class="icon-thumbs-up-1"></i></div>
-								<div class="comment_time">
-									{{time}}
+								<div class="comment_time" time="{{add_time}}">
+									{{add_time_txt}}
 								</div>
 							</div>
 

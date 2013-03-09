@@ -3378,6 +3378,10 @@ function jsShowComments(tree_id, parent_id)
 		var frend = jsFrendById(d.user_id);
 		d.foto = frend.foto;
 		d.name = frend.fio;
+		if(d.add_time=="0")  d.add_time_txt = "";
+		else
+			d.add_time_txt = jsMakeDate(sqldate( parseInt(d.add_time) )).mydays;
+		
 		myhtml += template(d);
 		
 		if(jsFindByParentComments(d.id).length>0)
