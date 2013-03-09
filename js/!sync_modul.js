@@ -75,6 +75,7 @@ function jsSync()
 	confirm_ids = JSON.stringify( myconfirms ); //высушиваю данные и превращаю в JSON строку
 	
 	//отправляю изменившиеся комментарии
+	if(my_all_comments)
 	data_comments = my_all_comments.filter(function(el) 
 			{ 
 			if(el) 
@@ -87,7 +88,7 @@ function jsSync()
 	//what_you_need = save,load,all
 	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&do=save";
 	my_console("Отправляю серверу запрос:",lnk);
-	$.getJSON(lnk,changes,function(data,j,k){
+	$.postJSON(lnk,changes,function(data,j,k){
 		 if(j=="success")
 		 	{
 		 	if(data.saved)
@@ -303,6 +304,15 @@ function jsChangeNewId(d) //заменяет отрицательный id на 
      	jsSaveData(ddd.id);
      	});		//заменяю всех отрицательных родителей на положительных
 
+     $.each(my_all_comments,function(i,ddd)
+     	{ 
+     	if(d.old_id==ddd.tree_id) 
+     		{
+     		ddd.tree_id=d.id; 
+     		jsSaveDataComment(ddd.id);
+     		}
+     	});		//заменяю всех отрицательных родителей на положительных
+   
 
 	jsFind(d.old_id).id = d.id;
 	jsSaveData(d.id);

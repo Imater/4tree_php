@@ -103,10 +103,10 @@ body .redactor_box_fullscreen {
 
 
 .redactor_editor, .redactor_editor:focus {
-	position: relative;
+/*	position: relative;*/
 	outline: none;
 /*	box-shadow: none !important;*/
-	padding: 15px !important;
+	padding: 15px;
 	margin: 0 !important;
 	background: none;
 	background: #fff !important;

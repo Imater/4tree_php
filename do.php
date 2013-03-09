@@ -362,7 +362,7 @@ $client_time = $HTTP_GET_VARS['time']; $last_sync_client_time = $HTTP_GET_VARS['
 $now_time = $HTTP_GET_VARS['now_time'];  //сколько сейчас времени на клиенте
 $ch = $HTTP_POST_VARS['changes']; //POST
 
-$ch_comments = $HTTP_GET_VARS['changes_comments']; //POST
+$ch_comments = $HTTP_POST_VARS['changes_comments']; //POST
 
 $share_ids = get_all_share_children($GLOBALS['user_id']); //все дочерние элементы, которые есть в таблице tree_share
 //echo $share_ids;

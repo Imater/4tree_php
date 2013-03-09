@@ -331,17 +331,9 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 				</div>
 				<div>
 					<div id="comment_enter">
-						<div id="comment_enter_foto">
-							<img src="image.php?width=40&amp;height=40&amp;cropratio=1:1&amp;image=/img/faces/john.png" height="40px" width="40px" class="comment_enter_img">
-						<div class="comment_enter_arrow"></div>
-						<div class="comment_enter_arrow_shadow"></div>
-						</div>
-						
-						<div class="comment_enter_input" contenteditable="true">
-						Тут будет написан текст
-						</div>
-						<div class="comment_send_button" title="alt+enter">отправить</div>
-						
+						<div class="comment_enter_input"></div>
+						<div class="comment_send_button" title="alt+enter"><i class="icon-comment-1"></i> написать</div>
+						<div class="comment_clear_button"><i class="icon-docs-landscape"></i> очистить</div>
 					</div>
 				</div>
 				
@@ -632,20 +624,20 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 					<!-- Шаблоны -->
 				<div id="comment_template" style="display:none">
 					<div class="comment_box" id="comment_{{id}}">
-						<div class="comment_foto">
-							<img src="image.php?width=40&height=40&cropratio=1:1&image=/{{foto}}" height="40px" width="40px" class="comment_foto_img">
-						</div>
 						<div class="comment_text_box">
 
-							<div class="comment_footer">
+							<div class="comment_header">
+								<div class="comment_foto">
+								    <img src="image.php?width=20&height=20&cropratio=1:1&image=/{{foto}}" height="20px" width="20px" class="comment_foto_img">
+								</div>
 								<div class="comment_name">{{name}}</div>
-								<div class="comment_like">{{likes}}<i class="icon-thumbs-up-1"></i></div>
+								<div class="comment_like">{{likes}}<i class="icon-heart"></i></div>
 								<div class="comment_time" time="{{add_time}}">
 									{{add_time_txt}}
 								</div>
 							</div>
 
-							<div class="comment_text">{{text}}</div>
+							<div class="comment_text">{{{text}}}</div>
 							
 							<div class="comment_reply">ответить</div>
 							

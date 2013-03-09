@@ -1120,6 +1120,27 @@ function jsRegAllKey() //все общие delegate и регистрация к
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 
+
+	$('#comment_enter').delegate(".comment_send_button","click",function(){
+	    var id = node_to_id( $(".selected").attr('id') );
+	    if(!id) return false;
+		jsAddComment( id , 0, $(".comment_enter_input").html() );
+		$(".comment_enter_input").html("");
+		jsShowAllComments(id);
+		return false;
+		});
+
+	$('.comment_box').delegate(".comment_like","click",function(){
+	    var id = $(this).attr("id").replace("");
+	    if(!id) return false;
+		jsAddComment( id , 0, $(".comment_enter_input").html() );
+		$(".comment_enter_input").html("");
+		jsShowAllComments(id);
+		return false;
+		});
+
+
+
 	$("*").delegate(".comment_enter_input","keyup",function(){
 		clearTimeout(scrolltimer);
 		scrolltimer = setTimeout(function(){ onResize(); }, 300);
@@ -2738,6 +2759,10 @@ last_local_sync = jsNow()+5000;
             }
      });
 
+  myr_comment = $('.comment_enter_input').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+$.cookie("4tree_user_id"), lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+$.cookie("4tree_user_id"), autoresize:false,  
+  			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
+     });
+
 	
 	  num=13; //кол-во дней в календаре
 
@@ -3357,7 +3382,7 @@ var myhtml="";
 
 function jsShowAllComments(tree_id)
 {
-	myhtml = "";
+	myhtml = '<h3>Комментарии ('+jsFindByTreeId(tree_id).length+') к заметке "'+jsFind(tree_id).title+'"</h3>';
 	jsShowComments(tree_id, 0);	
 	myhtml += "<br><br><br>";
 	$("#tree_comments_container").html(myhtml);
@@ -3380,7 +3405,10 @@ function jsShowComments(tree_id, parent_id)
 		d.name = frend.fio;
 		if(d.add_time=="0")  d.add_time_txt = "";
 		else
-			d.add_time_txt = jsMakeDate(sqldate( parseInt(d.add_time) )).mydays;
+			{
+			var add_time = new Date( parseInt(d.add_time) );
+			d.add_time_txt = add_time.jsDateTitleFull();
+			}
 		
 		myhtml += template(d);
 		
@@ -3420,6 +3448,7 @@ function jsAddComment(tree_id,parent_id,text)
 	element.del = 0;
 	element.new = "";
 	element.time = jsNow();
+	element.add_time = jsNow();
 	element.lsync = jsNow()-1;
 	element.user_id = $.cookie("4tree_user_id");
 	
@@ -4906,7 +4935,7 @@ if(!tree_id) return false;
 data = my_all_comments.filter(function(el) 
    {
    if(el.del == 1) return false;
-   return ( (el.tree_id==tree_id) && (el.parent_id==parent_id)); 
+   return ( (el.tree_id==tree_id) && ( (el.parent_id==parent_id) || (!parent_id) )); 
    });
    
 return data;
@@ -6526,7 +6555,7 @@ if(true)
   $("body").mouseup( function()
      { 
 		$("body").unbind("mousemove");
-	    $('#left').removeClass('noselectable');
+	    $('.bottom_left,.resize_me i').removeClass('noselectable');
 
 		$.cookie('main_x',main_x,{ expires: 300 });			
 		$.cookie('main_y',main_y,{ expires: 300 });	
