@@ -1133,6 +1133,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 	$("#tree_comments").delegate(".comment_reply","click",function(){
 		$(this).parents(".comment_box:first").append( $("#comment_enter") );
 		onResize();
+		$(".comment_enter_input").focus();
 		return false;
 		});
 
@@ -1148,10 +1149,11 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		jsAddComment( id , comment_id, myr_comment.getCode() );
 		$("#comment_enter_place").append( $("#comment_enter") );
 		myr_comment.setCode("");
-		if(comment_id!=0) var old_scroll = $("#tree_comments_container").scrollTop()+150;
+		if(comment_id!=0) var old_scroll = $("#tree_comments_container").scrollTop();
 		jsShowAllComments(id);
 		if(comment_id==0) $("#tree_comments_container").scrollTop(999999999);
 		else $("#tree_comments_container").scrollTop(old_scroll);
+		$(".comment_enter_input").focus();
 		return false;
 		});
 
@@ -1166,8 +1168,15 @@ function jsRegAllKey() //все общие delegate и регистрация к
 
 
 
-	$("*").delegate(".comment_enter_input","keyup",function(){
+	$("*").delegate(".comment_enter_input","keydown",function(event){
 		clearTimeout(scrolltimer);
+//		console.info(event.keyCode, event);
+		if( (event.keyCode == 13) && ( event.altKey || event.ctrlKey || event.metaKey ) )
+			{
+			event.preventDefault();
+			$(".comment_send_button").click();
+	   	 	}
+
 		scrolltimer = setTimeout(function(){ onResize(); }, 300);
 		return true;
 		});
@@ -3441,7 +3450,7 @@ function jsShowComments(tree_id, parent_id)
 		else
 			{
 			var add_time = new Date( parseInt(d.add_time) );
-			d.add_time_txt = add_time.jsDateTitleFull();
+			d.add_time_txt = add_time.jsDateTitleFull("need_short_format");
 			}
 		
 		myhtml += template(d);
@@ -7022,10 +7031,18 @@ Object.size = function(obj) {
 };
 
 Date.prototype.jsDateTitleFull = jsDateTitleFull;
-function jsDateTitleFull()
+function jsDateTitleFull(shortit)
 {
-var months = [" января", " февраля", " марта", " апреля", " мая", " июня", " июля", " августа", " сентября", " октября", " ноября", " декабря"];
-var days = ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "Суббота"];
+if(!shortit) 
+	{
+	var months = [" января", " февраля", " марта", " апреля", " мая", " июня", " июля", " августа", " сентября", " октября", " ноября", " декабря"];
+	var days = ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"];
+	}
+else 
+	{
+	var months = [" янв", " фев", " мар", " апр", " мая", " июня", " июля", " авг", " сент", " окт", " нояб", " дек"];
+	var days = ["вc", "пн", "вт", "ср", "чт", "пт", "сб"];
+	}
 var n = this.getDate() + months[this.getMonth()] + " " + this.getFullYear() + ", " + days[this.getDay()] + " — " + (this.getHours()<10?"0":"") +this.getHours()+":"+(this.getMinutes()<10?"0":"")+this.getMinutes();
 return n;
 }
