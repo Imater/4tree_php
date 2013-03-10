@@ -542,13 +542,15 @@ for ($i=0; $i<$countlines; $i++)
 	   		sync_save_changes_comments($changes_comments,$i,$sql,$display,$now_time,$time_dif);
 	   		$dont_send_ids_comments .= " tree_comments.id != ".$id." AND ";
 
-	   		$sqlnews8 = "SELECT user_id FROM tree WHERE id = '".$changes_comments[$i]['tree_id']."'";
+	   		$sqlnews8 = "SELECT user_id FROM tree_comments WHERE tree_id = '".$changes_comments[$i]['tree_id']."'";
 	   		$result8 = mysql_query_my($sqlnews8); 
-	   		@$sql8 = mysql_fetch_array($result8);
-	   		if($sql8["user_id"]!=$GLOBALS['user_id'])
-   				{
-	   			$push_users_from_comments[] = $sql8["user_id"];
-	   			}
+	   		while(@$sql8 = mysql_fetch_array($result8);)
+	   			{
+		   			if($sql8["user_id"]!=$GLOBALS['user_id'])
+		   			    {
+		   			    $push_users_from_comments[] = $sql8["user_id"];
+		   			    }
+		   		}
 
    			}
    		else
