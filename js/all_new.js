@@ -3399,6 +3399,22 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
 	
 }
 
+
+var del_timer;
+
+function jsDelCom(id) //удаление из базы определённого id и удаление его же в LocalStorage
+{
+		sync_now = true;
+		$.each(my_all_comments, function(i,el){
+    		if(el) if(el.id == id) { my_all_comments.splice(i,1); }
+    		});
+
+    	clearTimeout(del_timer);
+    	del_timer = setTimeout(function(){ jsSaveData(); },5000);
+    	
+		sync_now = false;
+}
+
 var del_timer;
 
 function jsDelId(id) //удаление из базы определённого id и удаление его же в LocalStorage

@@ -169,7 +169,7 @@ function jsSync()
 		     	if(dd.command == 'del') 
 		     		{
 		     		my_console("По комманде сервера, удаляю №",dd.id);
-		     		jsDelComment(dd.id);
+		     		jsDelCom(dd.id);
 		     		}
 		     	countit=1;
 		     	});

@@ -672,7 +672,7 @@ if($what_you_need != "save") //если клиент хочет только с�
 
 if(true)	
 {	//все объекты, которые удалены, но ещё ни разу не синхронизированны
-	$sqlnews = "SELECT tree_comments.id, tree_comments.user_id FROM `tree_comments` LEFT JOIN tree_sync ON tree_sync.id = tree_comments.id AND tree_sync.sync_id='comment1_".$sync_id."'  LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE tree_comments.del=1 AND (tree_comments.user_id=".$GLOBALS['user_id']." OR tree.user_id=".$GLOBALS['user_id']." OR $share_ids_tree_id) AND tree_sync.id IS NULL";
+	$sqlnews = "SELECT tree_comments.id, tree_comments.user_id FROM `tree_comments` LEFT JOIN tree_sync ON tree_sync.id = tree_comments.id AND tree_sync.sync_id='comment_".$sync_id."'  LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE tree_comments.del=1 AND (tree_comments.user_id=".$GLOBALS['user_id']." OR tree.user_id=".$GLOBALS['user_id']." OR $share_ids_tree_id) AND tree_sync.id IS NULL";
 //	echo $sqlnews;
 	$result = mysql_query_my($sqlnews); 
 	$i = 0;
