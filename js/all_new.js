@@ -3491,7 +3491,9 @@ function jsDelComment(comment_id)
 function jsShowAllComments(tree_id)
 {
 	$("#comment_enter_place").append( $("#comment_enter") );
-	myhtml = '<h3>Комментарии ('+jsFindByTreeId(tree_id,-1).length+') к заметке "'+jsFind(tree_id).title+'"</h3>';
+	element = jsFind(tree_id);
+	if(!element) return false;
+	myhtml = '<h3>Комментарии ('+jsFindByTreeId(tree_id,-1).length+') к заметке "'+element.title+'"</h3>';
 	jsShowComments(tree_id, 0);	
 	myhtml += "<br><br><br>";
 	$("#tree_comments_container").html(myhtml);
