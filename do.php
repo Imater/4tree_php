@@ -637,11 +637,11 @@ if($what_you_need != "save") //если клиент хочет только с�
 		}
 ////то же самое делаю с комментариями
 
-	$share_ids_tree_id = str_replace("id = ","tree_just_id = ",$share_ids);
+	$share_ids_tree_id = str_replace("id = ","tree.id = ",$share_ids);
 	
-	$sqlnews = "SELECT tree_comments.*, tree.user_id tree_user_id, tree.id tree_just_id FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE ( (tree_user_id=".$GLOBALS['user_id']." OR ".$share_ids_tree_id." OR tree_comments.user_id = ".$GLOBALS['user_id']." ) AND (tree_comments.changetime > '".ConvertFutureDate($client_time)."' OR tree_comments.lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids_comments true) AND tree_comments.del!=1)";
+	$sqlnews = "SELECT tree_comments.*, tree.user_id tree_user_id, tree.id tree_just_id FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE ( (tree.user_id=".$GLOBALS['user_id']." OR ".$share_ids_tree_id." OR tree_comments.user_id = ".$GLOBALS['user_id']." ) AND (tree_comments.changetime > '".ConvertFutureDate($client_time)."' OR tree_comments.lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids_comments true) AND tree_comments.del!=1)";
 	if($display) echo $sqlnews;
-	echo $sqlnews;
+//	echo $sqlnews;
 	//все объекты у которых дата изменения позже последней синхронизации или
 	//которые синхронизировались позже последней синхронизации
 	//и исключаю те данные, которые только что обновлял $dont_send_ids
@@ -658,32 +658,20 @@ if($what_you_need != "save") //если клиент хочет только с�
 		$did = $sql['did'];
 		if($did=="0000-00-00 00:00:00") $did="";
 		
-		$server_changes[$i]['id']=($sql['id']);
-		$server_changes[$i]['title']=($sql['title']);
-		$server_changes[$i]['text']=($sql['text']);
-		$server_changes[$i]['date1']=$date1;
-		$server_changes[$i]['date2']=$date2;
-		$server_changes[$i]['fav']=$sql['fav'];
-		$server_changes[$i]['tab']=$sql['tab_order'];
-		$server_changes[$i]['parent_id']=($sql['parent_id']);
-		$server_changes[$i]['did']=($did);
-		$server_changes[$i]['position']=($sql['position']);
-		$server_changes[$i]['node_icon']=($sql['node_icon']);
-		$server_changes[$i]['remind']=($sql['remind']);
-		$server_changes[$i]['changetime']=ConvertFutureDate($sql['changetime']);
-		$server_changes[$i]['tab']=($sql['tab_order']);
-		$server_changes[$i]['old_id']=($sql['old_id']);
-		$server_changes[$i]['user_id']=($sql['user_id']);
-		$server_changes[$i]['lsync']=ConvertFutureDate($now_time);
-		$server_changes[$i]['s']=($sql['s']);
-		$server_changes[$i]['del']=($sql['del']);
+		$server_changes_comments[$i]['id']=($sql['id']);
+		$server_changes_comments[$i]['tree_id']=($sql['tree_id']);
+		$server_changes_comments[$i]['text']=($sql['text']);
+		$server_changes_comments[$i]['changetime']=ConvertFutureDate($sql['changetime']);
+		$server_changes_comments[$i]['parent_id']=($sql['parent_id']);
+		$server_changes_comments[$i]['user_id']=($sql['user_id']);
+		$server_changes_comments[$i]['del']=($sql['del']);
+		$server_changes_comments[$i]['lsync']=ConvertFutureDate($now_time);
+		$server_changes_comments[$i]['add_time']=(integer)($sql['add_time']);
 		$i++;
 		}
-	
-	
-	} //end of LOAD_DATA
 
-	//все объекты, которые удалены, но ещё ни разу не синхронизированны
+if(false)	
+{	//все объекты, которые удалены, но ещё ни разу не синхронизированны
 	$sqlnews = "SELECT tree.id, tree.user_id,tree.title FROM `tree` LEFT JOIN tree_sync ON tree_sync.id = tree.id AND tree_sync.sync_id='".$sync_id."' WHERE tree.del=1 AND tree.user_id=".$GLOBALS['user_id']." AND tree_sync.id IS NULL";
 //	echo $sqlnews;
 	$result = mysql_query_my($sqlnews); 
@@ -705,12 +693,13 @@ if($what_you_need != "save") //если клиент хочет только с�
 	    	`sync_id` = '".$sync_id."' ";
 	    $result2 = mysql_query_my($sqlnews2); 
 		}
-
+}
 
 //////////////////////////////////////
 $confirm_saved_id["lsync"] = $now_time;
 $confirm_saved_id["time_dif"] = $time_dif;
 $confirm_saved_id["server_changes"] = $server_changes;
+$confirm_saved_id["server_changes_comments"] = $server_changes_comments;
 
 echo json_encode($confirm_saved_id);
 

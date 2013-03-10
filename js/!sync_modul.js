@@ -131,11 +131,14 @@ function jsSync()
 			 	    	my_console("Пришли новые данные с сервера: "+d.id);
 			 	    	});
 
+			var myselected = node_to_id( $(".selected").attr('id') ); 
 		 	if(data.server_changes_comments)
 			 	$.each(data.server_changes_comments,function(i,d) //эти данные сохранены на сервере, можно отметить lsync = now()
 			 	    	{
 			 	    	console.info(d);
 			 	    	jsSaveElementComment(d);
+			 	    	if(myselected == d.tree_id) 
+			 	    		jsRefreshComments(d.tree_id);
 			 	    	//обновить панель комментариев
 			 	    	my_console("Пришли новые комментарии с сервера: "+d.id);
 			 	    	});
@@ -271,6 +274,8 @@ function jsSaveElementComment(d)
 			element = my_all_comments[new_line];
 			element.id = d.id;
 			element.parent_id = d.parent_id;
+			element.tree_id = d.tree_id;
+			element.add_time = d.add_time;
 			element.text = "";
 			element.time = parseInt(d.changetime);
 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
@@ -285,6 +290,8 @@ function jsSaveElementComment(d)
 	myelement.new = ""; //обнуляю new, чтобы скрыть иконку синхронизации
 	myelement.lsync = parseInt(d.lsync);
 	myelement.user_id = d.user_id;
+	myelement.add_time = d.add_time;
+	myelement.tree_id = d.tree_id;
 	myelement.del = d.del;
 	myelement.text = d.text;
 

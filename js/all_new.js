@@ -3395,6 +3395,14 @@ function jsDeleteDo(current)
 
 var myhtml="";
 
+
+function jsRefreshComments(tree_id)
+{
+	var old_scroll = $("#tree_comments_container").scrollTop();
+	jsShowAllComments(tree_id);
+	$("#tree_comments_container").scrollTop(old_scroll);
+}
+
 function jsShowAllComments(tree_id)
 {
 	$("#comment_enter_place").append( $("#comment_enter") );
