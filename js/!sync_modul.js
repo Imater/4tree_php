@@ -81,7 +81,11 @@ function jsSync()
 			if(el) 
 				return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>=el.lsync) || ((el.new!="") && (el.new)) ); } );
 	
-	changes_comments = JSON.stringify( jsDryComments(data_comments) ); //высушиваю данные и превращаю в JSON строку
+	
+	if(my_all_comments)
+		changes_comments = JSON.stringify( jsDryComments(data_comments) ); //высушиваю данные и превращаю в JSON строку
+	else
+		changes_comments = "";
 	
 	changes = 'changes='+encodeURIComponent(changes)+'&confirm='+encodeURIComponent(confirm_ids);
 	changes = changes + '&changes_comments='+encodeURIComponent(changes_comments);
