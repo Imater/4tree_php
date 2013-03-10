@@ -553,7 +553,7 @@ for ($i=0; $i<$countlines; $i++)
 
 
 //сообщаю всем слушателям о том, что данные изменились
-if( count($confirm_saved_id["saved"])>0 )
+if( (count($confirm_saved_id["saved"])>0) OR (count($confirm_saved_id["saved_comments"])>0) )
 	{
     $message = array(
         'time' => now(), 
@@ -670,9 +670,9 @@ if($what_you_need != "save") //если клиент хочет только с�
 		$i++;
 		}
 
-if(false)	
+if(true)	
 {	//все объекты, которые удалены, но ещё ни разу не синхронизированны
-	$sqlnews = "SELECT tree.id, tree.user_id,tree.title FROM `tree` LEFT JOIN tree_sync ON tree_sync.id = tree.id AND tree_sync.sync_id='".$sync_id."' WHERE tree.del=1 AND tree.user_id=".$GLOBALS['user_id']." AND tree_sync.id IS NULL";
+	$sqlnews = "SELECT tree_comments.id, tree_comments.user_id FROM `tree_comments` LEFT JOIN tree_sync ON tree_sync.id = tree_comments.id AND tree_sync.sync_id='comment1_".$sync_id."'  LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE tree_comments.del=1 AND (tree_comments.user_id=".$GLOBALS['user_id']." OR tree.user_id=".$GLOBALS['user_id']." OR $share_ids_tree_id) AND tree_sync.id IS NULL";
 //	echo $sqlnews;
 	$result = mysql_query_my($sqlnews); 
 	$i = 0;
@@ -681,8 +681,8 @@ if(false)
 		{
 		if($display) echo "<li>Нужно удалить: ".$sql["id"]."</li>";
 
-		$confirm_saved_id["need_del"][$k]["id"] = $sql["id"];
-		$confirm_saved_id["need_del"][$k]["command"] = "del";
+		$confirm_saved_id["need_del_comment"][$k]["id"] = $sql["id"];
+		$confirm_saved_id["need_del_comment"][$k]["command"] = "del";
 		$k++;
 
 		$sqlnews2 = "INSERT INTO `tree_sync` SET
@@ -690,7 +690,7 @@ if(false)
 	    	`del` = 1,
 	    	`title` = '".$sql['title']."',
 	    	`user_id` = '".$sql['user_id']."',
-	    	`sync_id` = '".$sync_id."' ";
+	    	`sync_id` = 'comment_".$sync_id."' ";
 	    $result2 = mysql_query_my($sqlnews2); 
 		}
 }

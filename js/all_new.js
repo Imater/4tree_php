@@ -928,6 +928,7 @@ function jsFindLastSync()  //нахожу время последней синх
 {
 maxt = 0; mint = parseInt(99999999999999999); 
 
+if(my_all_data)
 for(i=0;i<my_all_data.length;i++) 
 	{ 
 	lsync = my_all_data[i].lsync; 
@@ -937,6 +938,7 @@ for(i=0;i<my_all_data.length;i++)
 		if( mint>changetime ) mint=parseInt(changetime); 
 	}
 
+if(my_all_comments)
 for(i=0;i<my_all_comments.length;i++) 
 	{ 
 	lsync = my_all_comments[i].lsync; 
@@ -1139,7 +1141,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		
 	$("#tree_comments").delegate(".comment_del","click",function(){
 	    if (!confirm('Удалить комментарий?')) return false;
-
+		$(".comment_edit_now").removeClass("comment_edit_now");
 		$("#comment_enter_place").append( $("#comment_enter") );
 		var comment_id = $(this).parents(".comment_box:first").attr("id");
 		if(comment_id) comment_id = comment_id.replace("comment_","");
@@ -1149,18 +1151,40 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		onResize();
 		return false;
 		});
+
+	$("#tree_comments").delegate(".comment_edit","click",function(){
+		$(this).parents(".comment_box:first").append( $("#comment_enter") );
+		$(".comment_edit_now").removeClass("comment_edit_now");
+		$(this).parents(".comment_box:first").addClass("comment_edit_now");
+		var comment_id = $(this).parents(".comment_box:first").attr("id");
+		if(comment_id) comment_id = comment_id.replace("comment_","");
+	    if(!comment_id) return false;
+	    var this_comment = jsFindComment(comment_id);
+	    myr_comment.setCode(this_comment.text);
+		onResize();
+		return false;
+		});
 		
 
 	$('#comment_enter').delegate(".comment_send_button","click",function(){
 	    var id = node_to_id( $(".selected").attr('id') );
 	    if( (!id) ) return false;
 	    if(myr_comment.getCode()=="") return false;
-
-		var comment_id = $(this).parents(".comment_box:first").attr("id");
-		if(comment_id) comment_id = comment_id.replace("comment_","");
-		else comment_id = 0;
-		console.info( id , comment_id, myr_comment.getCode() );
-		jsAddComment( id , comment_id, myr_comment.getCode() );
+	    
+	   	if($(".comment_edit_now").length) 
+	   		{
+		   		var comment_id = $(".comment_edit_now").attr("id");
+		   		if(comment_id) comment_id = comment_id.replace("comment_","");
+		   		console.info(comment_id,{text:myr_comment.getCode()});
+		   		jsFindComment(comment_id,{text:myr_comment.getCode()});
+	   		}
+	   	else
+	   		{
+		   		var comment_id = $(this).parents(".comment_box:first").attr("id");
+		   		if(comment_id) comment_id = comment_id.replace("comment_","");
+		   		else comment_id = 0;
+		   		jsAddComment( id , comment_id, myr_comment.getCode() );
+		   	}
 		$("#comment_enter_place").append( $("#comment_enter") );
 		myr_comment.setCode("");
 		if(comment_id!=0) var old_scroll = $("#tree_comments_container").scrollTop();
@@ -1403,7 +1427,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		return false;
 		});
 		
-	$(".redactor_box").delegate("a","click",function()
+	$(".redactor_box,#tree_comments_container").delegate("a","click",function()
 		{ 
 		href = ( $(this).attr("href") );
 		console.info("href=",href);
@@ -2440,7 +2464,7 @@ setTimeout(function(){
   	   
   	   
   	   
-  if( (!($("input").is(":focus"))) && (!($(".redactor_editor").is(":focus"))) && (!($("#redactor").is(":focus"))) && ($(".n_title[contenteditable='true']").length==0) && ($(".comment_enter_input[contenteditable='true']").length==0) ) //если мы не в редакторе
+  if( (!($("input").is(":focus"))) && (!($(".redactor_editor").is(":focus"))) && (!($("#redactor").is(":focus"))) && ($(".n_title[contenteditable='true']").length==0) && (!$(".comment_enter_input").is(":focus")) ) //если мы не в редакторе
   	{
      if( (e.altKey==false) && (e.keyCode==13) )
        {
@@ -2807,7 +2831,7 @@ last_local_sync = jsNow()+5000;
             }
      });
 
-  myr_comment = $('.comment_enter_input').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+$.cookie("4tree_user_id"), lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+$.cookie("4tree_user_id"), autoresize:false,  
+  myr_comment = $('.comment_enter_input').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+$.cookie("4tree_user_id"), lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+$.cookie("4tree_user_id"), autoresize:true,  
   			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
      });
 
@@ -4206,7 +4230,8 @@ preloader.trigger('hide');
 function jsSaveDataComment(id_one,old_id,dontsync)
 {
 //last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
-start_sync_when_idle = true;
+start_sync_when_idle = false;
+jsSync();
 //if(!dontsync) jsStartSync("soon","SAVED DATA"); //запущу синхронизацию примерно через 15 секунд
 
 //console.info("old_id",old_id);

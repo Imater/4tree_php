@@ -161,6 +161,19 @@ function jsSync()
 		     	countit=1;
 		     	});
 
+
+		     if(data.need_del_comment)
+		       $.each(data.need_del_comment,function(ii,dd)
+		     	{
+		     	console.info("need_del_comment",dd);
+		     	if(dd.command == 'del') 
+		     		{
+		     		my_console("По комманде сервера, удаляю №",dd.id);
+		     		jsDelComment(dd.id);
+		     		}
+		     	countit=1;
+		     	});
+
 	 	    	if(countit==1) 
 	 	    	   {
 	     	    	jsRefreshTree();

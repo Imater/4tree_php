@@ -3965,6 +3965,13 @@ display: inline-block;
 cursor: pointer;
 }
 
+.comment_edit_now
+{
+border: 1px dotted green;
+padding: 15px;
+margin-right: 10px;
+}
+
 .comment_edit:hover
 {
 color: green;
