@@ -552,7 +552,7 @@ for ($i=0; $i<$countlines; $i++)
 
 	   		$sqlnews8 = "SELECT user_id FROM tree_comments WHERE tree_id = '".$changes_comments[$i]['tree_id']."'";
 	   		$result8 = mysql_query_my($sqlnews8); 
-	   		while(@$sql8 = mysql_fetch_array($result8);)
+	   		while(@$sql8 = mysql_fetch_array($result8))
 	   			{
 		   			if($sql8["user_id"]!=$GLOBALS['user_id'])
 		   			    {
