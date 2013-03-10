@@ -174,6 +174,8 @@ function jsSync()
 		     		{
 		     		my_console("По комманде сервера, удаляю №",dd.id);
 		     		jsDelCom(dd.id);
+		     		var myselected = node_to_id( $(".selected").attr('id') ); 
+		     		jsShowAllComments(myselected);
 		     		}
 		     	countit=1;
 		     	});
