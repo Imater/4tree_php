@@ -936,16 +936,6 @@ for(i=0;i<my_all_data.length;i++)
 	if(changetime>lsync) 
 		if( mint>changetime ) mint=parseInt(changetime); 
 	}
-
-for(i=0;i<my_all_comments.length;i++) 
-	{ 
-	lsync = my_all_comments[i].lsync; 
-	changetime = my_all_comments[i].time; 
-	if(lsync>maxt) maxt=lsync; 
-	if(changetime>lsync) 
-		if( mint>changetime ) mint=parseInt(changetime); 
-	}
-
 if(mint<maxt) return mint;
 else return maxt;
 }

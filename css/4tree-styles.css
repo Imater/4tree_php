@@ -3897,7 +3897,9 @@ overflow-y: auto;
 
 .comment_box
 {
-padding: 5px;
+padding: 10px;
+padding-bottom: 5px;
+padding-top: 5px;
 margin-left: 10px;
 -moz-transition: all 0.3s; 
 -webkit-transition: all 0.3s;  
@@ -3905,34 +3907,36 @@ margin-left: 10px;
 -o-transition: all 0.3s;  
 transition: all 0.3s;  
 background: white;
-border-bottom: 1px solid #EEE;
 }
 
-.comment_footer
+.comment_box:hover
 {
-width: 100%;
-text-align: right;
-display: inline-block;
-font-size: 0.7em;
-color: #888;
+background: #f9f9f9;
+-moz-transition: all 0.3s; 
+-webkit-transition: all 0.3s;  
+-ms-transition: all 0.3s;  
+-o-transition: all 0.3s;  
+transition: all 0.3s;  
 }
 
 .comment_text_box
 {
+margin-top: 5px;
 }
 
 .comment_header
 {
-display: none;
-position: absolute;
-width: 50px;
-text-align: right;
-height: 100%;
-right: 0px;
-top:0px;
-font-size: 1em;
+font-size: 0.8em;
 color: gray;
 font-family: tahoma, sans-serif;
+}
+
+.comment_foto
+{
+vertical-align: middle;
+margin-right: 5px;
+display: inline-block;
+cursor: pointer;
 }
 
 .comment_name
@@ -3947,42 +3951,18 @@ border-bottom: 1px solid lightgray;
 {
 margin-left: 10px;
 display: inline-block;
-}
-
-.comment_block
-{
-position: relative;
-}
-
-.comment_foto
-{
-opacity: 0.5;
-position: absolute;
-vertical-align: middle;
-cursor: pointer;
-display: block;
-}
-.comment_box:hover .comment_foto
-{
--moz-transition: all 0.3s; 
--webkit-transition: all 0.3s;  
--ms-transition: all 0.3s;  
--o-transition: all 0.3s;  
-transition: all 0.3s;  
-opacity: 1;
+font-size: 0.95em;
 }
 
 .comment_text
 {
-display: inline-block;
-margin-left: 40px;
+margin-top: 10px;
 line-height: 1.2em;
-min-height: 30px;
 }
 
 #tree_comments ul
 {
-padding-left: 15px;
+padding-left: 30px;
 margin: 0px;
 }
 
@@ -4000,9 +3980,24 @@ color: white;
 color:gray;
 }
 
+.comment_like:hover
+{
+-moz-transition: all 0.5s; 
+-webkit-transition: all 0.5s;  
+-ms-transition: all 0.5s;  
+-o-transition: all 0.5s;  
+transition: all 0.5s;  
+color: #000;
+float: right;
+font-weight: bold;
+font-size: 20px;
+cursor: pointer;
+}
+
 .comment_reply
 {
-font-size: 0.8em;
+margin-top: 10px;
+font-size: 10px;
 display: inline-block;
 color: #1055cd;
 border-bottom: 1px dashed #adadad;
@@ -4060,8 +4055,8 @@ position: absolute;
 right: 18px;
 bottom: 19px;
 cursor: pointer;
-font-size: 9px;
-padding: 0px 5px 0px 5px;
+font-size: 12px;
+padding: 2px 10px 2px 10px;
 }
 
 .comment_send_button:hover
