@@ -5756,13 +5756,15 @@ function jsRenderOneElement(data,iii,parent_node)
 		  
 		  myli = "<div class='divider_li' pos='"+(data.position-0.9)+"' myid='"+data.parent_id+"'></div>"; //разделитель
 		  myli +=  "<li id='node_"+data.id+"' myid='"+data.id+"' class='tree-closed "+info.isFolder+"'>";
-		  myli += "<div class='tcheckbox' title='"+data.id+"'></div>" + info.icon_share;
+		  myli += "<div class='tcheckbox' title='"+data.id+"'>"+info.comment_count+"</div>" + info.icon_share;
 		  myli += "<div myid='"+childdate[1]+"' childdate='"+childdate[0]+"' title='"+data.date1+childdate[2]+
 		  		  "' class='date1'></div>";
 		  myli += info.remind + info.triangle + info.countdiv + info.img + info.needsync;
 		  myli += "<div class='n_title"+info.crossline+"' myid='"+data.id+"'>";
 		  myli += info.mytitle + info.add_text + info.search_sample; 
-		  myli += "</div><div class='note_part'></div></li>";
+		  myli += "</div>";
+		  myli += "";
+		  myli += "<div class='note_part'></div></li>";
 
   return myli;
 }
@@ -5882,10 +5884,10 @@ function jsInfoFolder(data,parent_node)
 		  		icon_share = "<div title='"+frend_share[0].fio+" ("+frend_share[0].email+")\nделится с вами СВОЕЙ веткой' class='share_img'><img src='"+frend_share[0].foto+"'></div>";
 		  		}
 		    
+		var comment_count = jsFindByTreeId(data.id,-1).length;
+		if(comment_count==0) comment_count="";
 		    
-		    
-		    
-return {countdiv:countdiv, isFolder:isFolder, img: img, triangle:triangle, icon_share:icon_share, add_text:add_text, search_sample:search_sample, mytitle:mytitle, remind:remind, crossline:crossline, needsync:needsync};
+return {comment_count:comment_count,countdiv:countdiv, isFolder:isFolder, img: img, triangle:triangle, icon_share:icon_share, add_text:add_text, search_sample:search_sample, mytitle:mytitle, remind:remind, crossline:crossline, needsync:needsync};
 }
 
 

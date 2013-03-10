@@ -2424,25 +2424,17 @@ height: 0.9em;
 width: 0.9em;
 background: white;
 display: inline-block;
-opacity: 0.8;
+opacity: 1;
 float: right;
 margin-top: 0.3em;
 margin-right: 2px;
 clear: right;
 border-radius: 3px;
 border: 2px solid #EEE;
-font-size: 0.6em;
+font-size: 0.5em;
+font-weight: bold;
+color: black !important;
 text-align: center;
-}
-
-.tcheckbox:hover
-{
--moz-transition: all 0.5s; 
--webkit-transition: all 0.5s;  
--ms-transition: all 0.5s;  
--o-transition: all 0.5s;  
-transition: all 0.5s;  
-background: #EEE;
 }
 
 .tcheckbox.chdid
