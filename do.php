@@ -522,7 +522,7 @@ for ($i=0; $i<$countlines; $i++)
 		if($id=="") continue;
 		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
 
-		$sqlnews = "SELECT id,text,parent_id,changetime FROM tree_comments WHERE id = '".$id."'";
+		$sqlnews = "SELECT tree_comments.id,tree_comments.text,tree_comments.parent_id,tree_comments.changetime,tree.user_id user_id_host FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE tree_comments.id = '".$id."'";
 		$result = mysql_query_my($sqlnews); 
 		@$sql = mysql_fetch_array($result);
    		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
@@ -531,7 +531,7 @@ for ($i=0; $i<$countlines; $i++)
   		$change_time = ConvertFutureDate( (integer)$changes_comments[$i]['time'] ); //время изменения заметки на клиенте
   		$fromdb_time = ConvertFutureDate( $sql['changetime'] );
    		$dif = $fromdb_time - $change_time;
-
+   		
    		if($display) echo "Время изменения на клиенте: ".sqltime($change_time)." — время изменения на сервере: ".sqltime($fromdb_time).") = ".$dif."; ".@$changes_comments[$i]['old_id']."<br>";
 
 //		if($changes[$i]['del']==1) sync_check_to_delete($changes,$i,$sql,$display,$now_time);
@@ -541,6 +541,15 @@ for ($i=0; $i<$countlines; $i++)
 	   		if($display) echo "<span style='color:green'><b>Сохраняю этот элемент в базе данных</b></span><br>";
 	   		sync_save_changes_comments($changes_comments,$i,$sql,$display,$now_time,$time_dif);
 	   		$dont_send_ids_comments .= " tree_comments.id != ".$id." AND ";
+
+	   		$sqlnews8 = "SELECT user_id FROM tree WHERE id = '".$changes_comments[$i]['tree_id']."'";
+	   		$result8 = mysql_query_my($sqlnews8); 
+	   		@$sql8 = mysql_fetch_array($result8);
+	   		if($sql8["user_id"]!=$GLOBALS['user_id'])
+   				{
+	   			$push_users_from_comments[] = $sql8["user_id"];
+	   			}
+
    			}
    		else
    			{
@@ -564,8 +573,14 @@ if( (count($confirm_saved_id["saved"])>0) OR (count($confirm_saved_id["saved_com
         );
         
 	push(array($GLOBALS['user_id']),$message);
-	}
 	
+	for($w=0;$w<count($push_users_from_comments);$w++) //PUSH остальным пользователям
+		{
+		push(array($push_users_from_comments[$w]),$message);
+		}
+	
+	}
+		
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if($what_you_need != "save") //если клиент хочет только сохраниться, то не загружаю новые данные (для ускорения процесса)

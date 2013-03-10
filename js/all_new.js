@@ -5483,7 +5483,9 @@ function jsPresize() //удаляю и добавляю узкие полоск�
 
 function jsReorder(dropto)
 {
-//	console.info("reorder = "+dropto);
+	if((dropto<0) || (dropto.toString().indexOf("user")!=-1)) return true;
+	
+	console.info("reorder = "+dropto);
 					$.each( jsFindByParent(dropto), function(i,dd) 
 						{ 
 						if(parseInt(dd.position) != (i+1) ) 
