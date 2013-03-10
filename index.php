@@ -636,6 +636,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 									{{add_time_txt}}
 								</div>
 								<div class="comment_del" title="удалить комментарий"><i class="icon-cancel"></i></div>
+								<div class="comment_edit" title="редактировать комментарий"><i class="icon-pencil-1"></i></div>
 							</div>
 
 							<div class="comment_text">{{{text}}}</div>

@@ -722,7 +722,7 @@ who.onpaste = function (e) {
            xhr.responseType = "text";
            xhr.onload = function(e,t) 
               { 
-              myr.insertHtml('<img title="Загружено из буфера обмена '+Date()+'"'+" src="+xhr.response+">"); 
+              myr_comment.insertHtml('<img title="Загружено из буфера обмена '+Date()+'"'+" src="+xhr.response+">"); 
 			  clearTimeout(my_autosave);
               note_saved=false;
               savetext(1);

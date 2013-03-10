@@ -3957,6 +3957,19 @@ cursor: pointer;
 color: red;
 }
 
+.comment_edit
+{
+margin-left: 5px;
+color: lightgray;
+display: inline-block;
+cursor: pointer;
+}
+
+.comment_edit:hover
+{
+color: green;
+}
+
 .comment_name
 {
 display: inline-block;
@@ -4060,8 +4073,8 @@ position: absolute;
 right: 18px;
 bottom: 19px;
 cursor: pointer;
-font-size: 12px;
-padding: 2px 10px 2px 10px;
+font-size: 10px;
+padding: 1px 5px 1px 5px;
 }
 
 .comment_send_button:hover

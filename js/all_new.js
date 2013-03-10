@@ -1136,6 +1136,20 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		$(".comment_enter_input").focus();
 		return false;
 		});
+		
+	$("#tree_comments").delegate(".comment_del","click",function(){
+	    if (!confirm('Удалить комментарий?')) return false;
+
+		$("#comment_enter_place").append( $("#comment_enter") );
+		var comment_id = $(this).parents(".comment_box:first").attr("id");
+		if(comment_id) comment_id = comment_id.replace("comment_","");
+	    if(!comment_id) return false;
+		jsDelComment( comment_id );
+		jsShowAllComments(id);
+		onResize();
+		return false;
+		});
+		
 
 	$('#comment_enter').delegate(".comment_send_button","click",function(){
 	    var id = node_to_id( $(".selected").attr('id') );
@@ -3420,6 +3434,18 @@ function jsRefreshComments(tree_id)
 	var old_scroll = $("#tree_comments_container").scrollTop();
 	jsShowAllComments(tree_id);
 	$("#tree_comments_container").scrollTop(old_scroll);
+}
+
+function jsDelComment(comment_id)
+{
+	if(jsFindByParentComments(comment_id).length>0) 
+		{
+		jsFindComment(comment_id,{text:"<font color='lightgray'>комментарий удалён</font>"});
+		}
+	else
+		{
+		jsFindComment(comment_id,{del:1});
+		}
 }
 
 function jsShowAllComments(tree_id)

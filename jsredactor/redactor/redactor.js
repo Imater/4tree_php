@@ -914,7 +914,15 @@ if(!need_text)
            xhr.onload = function(e) 
               { 
 	          preloader.trigger('hide');
-              myr.insertHtml('<img title="Загружено из буфера обмена '+Date()+'"'+" src="+xhr.response+">"); 
+	          if($(".redactor_editor:focus").hasClass("comment_enter_input"))
+	          	{
+	          	var insert_red = myr_comment;
+	          	}
+	          else
+	          	{
+	          	var insert_red = myr;
+	          	}
+              insert_red.insertHtml('<img title="Загружено из буфера обмена '+Date()+'"'+" src="+xhr.response+">"); 
 			  clearTimeout(my_autosave);
               note_saved=false;
 			  my_autosave = setTimeout( function() { savetext(1); }, 100 );
