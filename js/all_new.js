@@ -6603,7 +6603,7 @@ function jsMakeLeftRightPanelResizable()
   $("body").bind("touchend", function()
      { 
 		$("body").unbind("touchmove");
-	    $('#left').removeClass('noselectable');
+	    $('.bottom_left,.resize_me i').removeClass('noselectable');
 
 		$.cookie('main_x',main_x,{ expires: 300 });			
 		$.cookie('main_y',main_y,{ expires: 300 });			
