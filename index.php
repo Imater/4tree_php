@@ -625,21 +625,20 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 				<div id="comment_template" style="display:none">
 					<div class="comment_box" id="comment_{{id}}">
 						<div class="comment_text_box">
-
+						 <div class="comment_block">
 							<div class="comment_header">
-								<div class="comment_foto">
-								    <img src="image.php?width=20&height=20&cropratio=1:1&image=/{{foto}}" height="20px" width="20px" class="comment_foto_img">
-								</div>
-								<div class="comment_name">{{name}}</div>
 								<div class="comment_like">{{likes}}<i class="icon-heart"></i></div>
-								<div class="comment_time" time="{{add_time}}">
-									{{add_time_txt}}
+								
+							</div>
+							<div class="comment_foto" title="{{name}} ({{add_time_txt}})"><img src="image.php?width=30&height=30&cropratio=1:1&image=/{{foto}}" height="30px" width="30px" class="comment_foto_img"></div>
+							<div class="comment_text">{{{text}}}
+								<div class="comment_footer">
+									<div class="comment_reply">ответить</div>
+									<div class="comment_time">{{add_time_txt}}</div>
 								</div>
 							</div>
-
-							<div class="comment_text">{{{text}}}</div>
+						 </div>
 							
-							<div class="comment_reply">ответить</div>
 							
 						</div>
 					</div>
