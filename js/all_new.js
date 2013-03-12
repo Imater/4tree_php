@@ -1219,7 +1219,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		return true;
 		});
 
-	setTimeout(function(){ $("#tab_comments").click(); }, 1000);
+//	setTimeout(function(){ $("#tab_comments").click(); }, 1000);
 
 	$('#fav_calendar').delegate("li","click",function(){
 		$('#fav_calendar .active').removeClass("active");
@@ -1252,7 +1252,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 			}
 		else
 			{
-			$("#tree_comments").hide();
+//			$("#tree_comments").hide();
 			}
 		
 		
@@ -2831,6 +2831,7 @@ last_local_sync = jsNow()+5000;
             }
      });
    $(".redactor_toolbar").insertBefore(".redactor_box");
+   $(".comment_in").append( $("#tree_comments") );
 
   myr_comment = $('.comment_enter_input').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+$.cookie("4tree_user_id"), lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+$.cookie("4tree_user_id"), autoresize:true,  
   			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
@@ -3494,9 +3495,9 @@ function jsShowAllComments(tree_id)
 	$("#comment_enter_place").append( $("#comment_enter") );
 	element = jsFind(tree_id);
 	if(!element) return false;
-	myhtml = '<h3>Комментарии ('+jsFindByTreeId(tree_id,-1).length+') к заметке "'+element.title+'"</h3>';
+	myhtml = '<h3><i class="icon-comment"></i> Комментарии ('+jsFindByTreeId(tree_id,-1).length+')</h3>';
 	jsShowComments(tree_id, 0);	
-	myhtml += "<br><br><br>";
+	myhtml += "<br>";
 	$("#tree_comments_container").html(myhtml);
 	onResize();
 	
@@ -6137,7 +6138,7 @@ function onResize()
 			newheight=$('#calendar').parent("div").height()-62;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight);
-			$("#tree_comments").height(newheight);
+//			$("#tree_comments").height(newheight);
 			
 			if( $("#comment_enter").parents(".comment_box").length ) 
 				{
@@ -6148,7 +6149,7 @@ function onResize()
 				var reply_height = parseInt( $("#comment_enter").height() );
 				}
 			
-			$("#tree_comments_container").height( newheight - reply_height );
+//			$("#tree_comments_container").height( newheight - reply_height );
 
 
 			jsSetTimeNow(); //обновляю указатель текущего времени

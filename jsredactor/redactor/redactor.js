@@ -1190,7 +1190,7 @@ if(!need_text)
 					html = this.$el.val();
 					html = this.savePreCode(html);
 
-					this.$box.insertAfter(this.$el).append(this.$content).append(this.$el).append('<div class="comment_in">КОММЕНТАРИИ</div>');
+					this.$box.insertAfter(this.$el).append(this.$content).append(this.$el).append('<div class="comment_in"></div>');
 				}
 				else
 				{

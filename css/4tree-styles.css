@@ -546,12 +546,12 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 
 .bottom_right .redactor_editor,.bottom_right .fc-content
 {
-
+/*
     -webkit-box-shadow:0px 1px 6px #000;
        -moz-box-shadow:0px 1px 6px #000;
             box-shadow:0px 1px 6px #000;
 -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');*/
 }
 .fc-content
 {
@@ -777,11 +777,6 @@ color: white !important;
     position: absolute;
     left: 10px;
     right: 10px;
-    -webkit-box-shadow:0px 1px 13px #000;
-       -moz-box-shadow:0px 1px 13px #000;
-            box-shadow:0px 1px 13px #000;
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 }
 
 #calendar
@@ -3867,18 +3862,10 @@ background: red !important;
 
 #tree_comments
 {
-display: none;
 width: auto;
 height: auto;
-margin-top: 33px;
 background: #FFF;
-background: white;
 z-index: 9999999;
--moz-box-shadow: 2px 2px 8px #444;
--webkit-box-shadow: 2px 2px 8px #444;
-box-shadow: 2px 2px 8px #444;
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 font-size: 0.8em;
 }
 
@@ -4016,10 +4003,10 @@ cursor: pointer;
 {
 width: 100%;
 position: absolute;
-bottom: 29px;
 background: #f1f4f6;
 border-top: 1px solid #d3d6e0;
-height: 100px;
+border-bottom: 1px solid #d3d6e0;
+height: 110px;
 }
 
 .comment_enter_img
@@ -4099,11 +4086,6 @@ padding: 2px 5px 2px 5px;
 	bottom: 15px !important;
 	top: 30px !important;
 	
-}
-
-#comment_enter .redactor_box
-{
-left:5px;
 }
 
 
@@ -4188,6 +4170,7 @@ width: auto;
 {
 overflow-y: none !important;
 position: static !important;
+min-height: 100px;
 }
 
 .bottom_right .redactor_box
@@ -4198,4 +4181,15 @@ bottom:27px !important;
 left:17px !important;
 height: auto !important;
 background: white;
+}
+
+#comment_enter .redactor_box,#comment_enter .redactor_box:focus
+{
+left:5px;
+overflow-y: auto !important;
+top:0px !important;
+bottom:0px !important;
+left:0px !important;
+height: auto !important;
+background: none !important;
 }
