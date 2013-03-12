@@ -908,6 +908,17 @@ function jsMakeDid(id) //выполняю одно дело
 	   		}
 }
 
+function jsHighlightText()
+{
+		searchstring = $('#textfilter').val();
+		if(!(searchstring.length>2)) return true;
+		$(".highlight").contents().unwrap();
+		$(".search_panel_result").highlight(searchstring,"highlight"); 
+		$(".comment_text").highlight(searchstring,"highlight"); 
+		$(".redactor_").highlight(searchstring,"highlight"); 
+		$("#mypanel").highlight(searchstring,"highlight"); 
+}
+
 function jsMakeUnDid(id) //снимаю выполнение
 {
 	   clearTimeout(did_timeout);
@@ -1160,7 +1171,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		if(comment_id) comment_id = comment_id.replace("comment_","");
 	    if(!comment_id) return false;
 	    var this_comment = jsFindComment(comment_id);
-	    myr_comment.setCode(this_comment.text);
+	    $(".comment_enter_input").setCode(this_comment.text);
 		onResize();
 		return false;
 		});
@@ -1169,24 +1180,30 @@ function jsRegAllKey() //все общие delegate и регистрация к
 	$('#comment_enter').delegate(".comment_send_button","click",function(){
 	    var id = node_to_id( $(".selected").attr('id') );
 	    if( (!id) ) return false;
-	    if(myr_comment.getCode()=="") return false;
+	    txt = $(".comment_enter_input").getCode();
+	    if(txt=="")	
+	    	{
+	    	if($(".comment_enter_input").html()=="") return false;
+	    	else txt = $(".comment_enter_input").getCode();
+	    	}
+	    
 	    
 	   	if($(".comment_edit_now").length) 
 	   		{
 		   		var comment_id = $(".comment_edit_now").attr("id");
 		   		if(comment_id) comment_id = comment_id.replace("comment_","");
-		   		console.info(comment_id,{text:myr_comment.getCode()});
-		   		jsFindComment(comment_id,{text:myr_comment.getCode()});
+		   		console.info(comment_id,{text:txt});
+		   		jsFindComment(comment_id,{text:txt});
 	   		}
 	   	else
 	   		{
 		   		var comment_id = $(this).parents(".comment_box:first").attr("id");
 		   		if(comment_id) comment_id = comment_id.replace("comment_","");
 		   		else comment_id = 0;
-		   		jsAddComment( id , comment_id, myr_comment.getCode() );
+		   		jsAddComment( id , comment_id, txt );
 		   	}
 		$("#comment_enter_place").append( $("#comment_enter") );
-		myr_comment.setCode("");
+		$(".comment_enter_input").setCode("");
 		if(comment_id!=0) var old_scroll = $("#tree_comments_container").scrollTop();
 		jsShowAllComments(id);
 		if(comment_id==0) $("#tree_comments_container").scrollTop(999999999);
@@ -1207,15 +1224,12 @@ function jsRegAllKey() //все общие delegate и регистрация к
 
 
 	$("*").delegate(".comment_enter_input","keydown",function(event){
-		clearTimeout(scrolltimer);
 //		console.info(event.keyCode, event);
 		if( (event.keyCode == 13) && ( event.altKey || event.ctrlKey || event.metaKey ) )
 			{
 			event.preventDefault();
 			$(".comment_send_button").click();
 	   	 	}
-
-		scrolltimer = setTimeout(function(){ onResize(); }, 300);
 		return true;
 		});
 
@@ -2169,6 +2183,7 @@ setTimeout(function(){
 	//клик в быстрые табы
 	$('.basket_panel,#fav_tabs,#fav_tabs + .favorit_menu,.tree_history,.search_panel_result').delegate("li","click", function () {
 		jsOpenPath( $(this).attr("myid") );
+		setTimeout(function(){ jsHighlightText() },1000);
 		return false;
 		});
 
@@ -2205,6 +2220,7 @@ setTimeout(function(){
 	//Клик в LI открывает детей этого объекта LILILI
 	$('#mypanel').delegate("li","click", function () {
 		if($(this).find("#minicalendar").length) return true;
+		$(".highlight").contents().unwrap();
 
 //		console.info("liclick");
 		isTree = $("#top_panel").hasClass("panel_type1");
@@ -2305,16 +2321,29 @@ setTimeout(function(){
 									    		return true; 
 									    		}
 									    	
+					var comment_ids_found=new Array;		
+					data = my_all_comments.filter(function(el)
+						{
+						if( el.text.toLowerCase().indexOf(searchstring.toLowerCase())!=-1 )
+							if(comment_ids_found.indexOf(el.tree_id)==-1) comment_ids_found.push( el.tree_id );
+						});				
+					console.info("FOUND COMMENT=",comment_ids_found);
 									    	
 			    	data = my_all_data.filter(function(el) //поиск удовлетворяющих поисковой строке условий
 		        		{ 
 		        		if(!(!el.title)) 
 		        		  return ( (el.title.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ||
-		        		   		   (el.text.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ); 
-		        		} );
+		        		   		   (el.text.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ||
+		        		   		   comment_ids_found.indexOf(el.id)!=-1 ); 
+		        		});
 
 									    	jsShowTreeNode(-1,false,data);
-											setTimeout( function() { jsPrepareDate(); },50 );
+									    	
+											setTimeout( function() 
+												{ 
+												jsPrepareDate(); 
+												jsHighlightText(); 
+												},50 );
 									    	
 					         if(searchstring!='') 
 					         	{ 
@@ -3495,18 +3524,21 @@ function jsShowAllComments(tree_id)
 	$("#comment_enter_place").append( $("#comment_enter") );
 	element = jsFind(tree_id);
 	if(!element) return false;
-	myhtml = '<h3><i class="icon-comment"></i> Комментарии ('+jsFindByTreeId(tree_id,-1).length+')</h3>';
+	var comments_count = jsFindByTreeId(tree_id,-1).length;
+	myhtml = '<h3><i class="icon-comment"></i> Комментарии ('+comments_count+')</h3>';
 	jsShowComments(tree_id, 0);	
-	myhtml += "<br>";
+	if(comments_count==0) comments_count = "";
+	$("#node_"+tree_id).find(".tcheckbox").html(comments_count);
+
+	myhtml += "";
 	$("#tree_comments_container").html(myhtml);
 	onResize();
 	
 }
-
 function jsShowComments(tree_id, parent_id)
 {
 	var source = $("#comment_template").html();
-	var template = Handlebars.compile(source);
+	template = Handlebars.compile(source);
 	
 	var chat = jsFindByTreeId(tree_id,parent_id);
 	var html = "";
@@ -5385,7 +5417,7 @@ for(i=findstart;i>0;i=i-1)
 if(i<50) i=0;
 answer = text.substr(i,length+(findstart-i));
 
-answer = answer.replace(findtext.toLowerCase(),"<b>"+findtext.toLowerCase()+"</b>");
+//answer = answer.replace(findtext.toLowerCase(),"<b>"+findtext.toLowerCase()+"</b>");
 
 if(i>0) answer = '…'+answer;
 if(length+findstart<text.length) answer = answer+'…';
@@ -5629,7 +5661,7 @@ function compare2(a,b) {
 		  
 		  mytitle = data.title;
 
-		  if(parent_node==-1)
+		  if(parent_node==-1) //функция отображения результатов поиска//
 		  	{
 		  	where_to_add = $(".search_panel_result ul");
 		  	ans = jsFindPath(data.id);
@@ -5637,14 +5669,26 @@ function compare2(a,b) {
 			  	add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
 			else add_text = '';
 		  	
-		  	length = $(".search_panel_result").width()*4;
+		  	length = $(".search_panel_result").width()*3;
 		  	
 		  	findtext = $('#textfilter').val();
 		  	
 		  	text = jsFindText(data.text,findtext,length);
+		  	
+		  	var temp_data = jsFindByTreeId(data.id,-1);
+		  	if(temp_data.length>0) 
+		  		{
+		  		findcomment = temp_data.filter(function(el){
+		  			return el.text.toLowerCase().indexOf(findtext.toLowerCase())!=-1;
+		  			});
+		  		if(findcomment[0])
+		  			{
+			  			console.info("FIND_SAMPLE = ",findcomment[0]);
+			  			text = text + "<br>" + findcomment[0].text + "(комментарий от "+findcomment[0].name+")";
+		  			}
+		  		}
 
 		  	mytitle = mytitle.replace(findtext,"<b>"+findtext+"</b>");
-			
 		  	
 		  	search_sample = '<div class="search_sample">'+text+'</div>';
 		  	}
@@ -5771,6 +5815,15 @@ function jsRenderOneElement(data,iii,parent_node)
   return myli;
 }
 
+jQuery.fn.highlight = function (str, className) {
+    var regex = new RegExp(str, "gi");
+    return this.each(function () {
+        this.innerHTML = this.innerHTML.replace(regex, function(matched) {
+            return "<span class=\"" + className + "\">" + matched + "</span>";
+        });
+    });
+};
+
 function jsInfoFolder(data,parent_node)
 {
 
@@ -5784,8 +5837,26 @@ function jsInfoFolder(data,parent_node)
 		  	length = $(".search_panel_result").width()*2.3;
 		  	findtext = $('#textfilter').val();
 		  	text = jsFindText(data.text,findtext,length);
-		  	mytitle = mytitle.replace(findtext,"<b>"+findtext+"</b>");
-		  	search_sample = '<div class="search_sample">'+text+'</div>';
+		  	
+//		  	mytitle = mytitle.replace(findtext,"<b>"+findtext+"</b>");
+		  	
+		  	var temp_data = jsFindByTreeId(data.id,-1);
+		  	if(temp_data.length>0) 
+		  		{
+		  		findcomment = temp_data.filter(function(el){
+		  			return el.text.toLowerCase().indexOf(findtext.toLowerCase())!=-1;
+		  			});
+		  		if(findcomment[0])
+		  			{
+			  			console.info("FIND_SAMPLE = ",findcomment[0]);
+			  			if(text) text_comment = '<br>';
+			  			else text_comment = "";
+			  			text_comment = text_comment + '<div class="comment_foto"><img src="image.php?width=15&height=15&cropratio=1:1&image=/'+findcomment[0].foto+'" height="15px" width="15px" class="comment_foto_img"></div> <u>'+findcomment[0].name+'</u>: <i>'+strip_tags(findcomment[0].text)+'</i>';
+		  			}
+		  		}
+		  	else text_comment = "";
+		  	
+		  	search_sample = '<div class="search_sample">'+text+text_comment+'</div>';
 		  	}
 		  else { add_text = ''; search_sample = ''; }
 
@@ -6891,7 +6962,9 @@ note_saved = false;
 
 clearTimeout(my_autosave);
 
+		$(".highlight").contents().unwrap();
 		var html = myr.getCode();
+		jsHighlightText();
 		text = html;	
 		
 		$("<div>"+html+"</div>").find(".divider_red").each(function(iii,el){

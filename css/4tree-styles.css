@@ -3984,13 +3984,12 @@ color: white;
 
 .comment_box:hover .comment_like
 {
-color:gray;
+color:white;
 }
 
 .comment_reply
 {
 opacity: 0.3;
-margin-top: 2px;
 font-size: 10px;
 display: inline-block;
 color: #1055cd;
@@ -4004,8 +4003,7 @@ cursor: pointer;
 width: 100%;
 position: absolute;
 background: #f1f4f6;
-border-top: 1px solid #d3d6e0;
-border-bottom: 1px solid #d3d6e0;
+border: 1px solid #d3d6e0;
 height: 110px;
 }
 
@@ -4034,6 +4032,15 @@ outline:none;
 border: 1px solid #a9aebe;
 }
 
+#comment_enter_place
+{
+left:10px;
+right: 10px;
+position: absolute;
+height: 150px;
+margin-top: 10px;
+}
+
 #comment_enter_foto
 {
 float: left;
@@ -4050,7 +4057,7 @@ right: 18px;
 bottom: 19px;
 cursor: pointer;
 font-size: 10px;
-padding: 1px 5px 1px 5px;
+padding: 2px 5px 2px 5px;
 }
 
 .comment_send_button:hover
@@ -4136,15 +4143,14 @@ max-height: 100%;
 
 #tree_comments h3
 {
-margin-left: 19px;
-margin-right: 15px;
+margin: 10px 15px 5px 19px;
 }
 
 .comment_box #comment_enter
 {
 position: relative;
 bottom: auto;
-margin-top: 10px;
+margin-top: 5px;
 border: 1px solid #d3d6e0;
 }
 
@@ -4170,7 +4176,7 @@ width: auto;
 {
 overflow-y: none !important;
 position: static !important;
-min-height: 100px;
+min-height: 60px;
 }
 
 .bottom_right .redactor_box
@@ -4185,11 +4191,21 @@ background: white;
 
 #comment_enter .redactor_box,#comment_enter .redactor_box:focus
 {
-left:5px;
 overflow-y: auto !important;
 top:0px !important;
 bottom:0px !important;
 left:0px !important;
+right: 0px;
 height: auto !important;
 background: none !important;
+}
+
+.highlight
+{
+background-color: #ff2;
+}
+
+.selected .highlight
+{
+color:black;
 }
