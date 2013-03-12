@@ -1570,7 +1570,7 @@ else
 	  	});
     }
 
-  $(".redactor_editor").scroll(function()
+  $(".bottom_right>.redactor_box").scroll(function()
   		{
   		clearTimeout(scrolltimer);
   		
@@ -1583,7 +1583,7 @@ else
 			
   			if(id)
   				{
-	  			scroll = $(".redactor_editor").scrollTop();
+	  			scroll = $(".bottom_right>.redactor_box").scrollTop();
 	  			delta = scroll-jsFind(id).s;
 	  			if( Math.abs(delta) > 100  ) jsFind(id, { s:scroll });
   				}
@@ -3409,18 +3409,18 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
 					
 					if( (id_node==d.id) && ( $.md5(d.text) != md5text )) //если с сервера прислали новый текст, то обновляю редактор. Нужно дописать, если открыто несколько заметок. bug. никогда не запускается.
 					  {
-					  old_scroll = $(".redactor_editor").scrollTop();
+					  old_scroll = $(".bottom_right>.redactor_box").scrollTop();
 					  clearTimeout(scrolltimer);
 					  jsRedactorOpen([d.id],"FROM SYNC EDITOR");		
-					  $(".redactor_editor").scrollTop(old_scroll);
+					  $(".bottom_right>.redactor_box").scrollTop(old_scroll);
 					  }
 				}
 			else
 				{				//если открыто несколько заметок
-					  old_scroll = $(".redactor_editor").scrollTop();
+					  old_scroll = $(".bottom_right>.redactor_box").scrollTop();
 					  clearTimeout(scrolltimer);
 					  if(myelement) divider.next(".edit_text").html(myelement.text);
-					  $(".redactor_editor").scrollTop(old_scroll);
+					  $(".bottom_right>.redactor_box").scrollTop(old_scroll);
 				}
 		
 		
@@ -6902,7 +6902,7 @@ $.each(ids,function(ii,id1)
    clearTimeout(scrolltimer);
 
    if(element1)
-     $(".redactor_editor").scrollTop(element1.s); //вспоминаю старый скроллинг
+     $(".bottom_right>.redactor_box").scrollTop(element1.s); //вспоминаю старый скроллинг
    
    if(ids.length == 1) $(".divider_red").hide();
 
