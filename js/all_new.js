@@ -2830,6 +2830,7 @@ last_local_sync = jsNow()+5000;
                 }
             }
      });
+   $(".redactor_toolbar").insertBefore(".redactor_box");
 
   myr_comment = $('.comment_enter_input').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+$.cookie("4tree_user_id"), lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+$.cookie("4tree_user_id"), autoresize:true,  
   			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']

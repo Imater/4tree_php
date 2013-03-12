@@ -4175,3 +4175,27 @@ left: 0px !important;
 right: 0px !important;
 margin: 0px !important;
 }
+
+.bottom_right .comment_in
+{
+border-top: 1px solid lightgray;
+height: 200px;
+background: white;
+width: auto;
+}
+
+.bottom_right .redactor_
+{
+overflow-y: none !important;
+position: static !important;
+}
+
+.bottom_right .redactor_box
+{
+overflow-y: auto !important;
+top:34px !important;
+bottom:27px !important;
+left:17px !important;
+height: auto !important;
+background: white;
+}
