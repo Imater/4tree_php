@@ -911,12 +911,12 @@ function jsMakeDid(id) //выполняю одно дело
 function jsHighlightText()
 {
 		searchstring = $('#textfilter').val();
-		if(!(searchstring.length>2)) return true;
+		if(!(searchstring.length>3)) return true;
 		$(".highlight").contents().unwrap();
 		$(".search_panel_result").highlight(searchstring,"highlight"); 
 		$(".comment_text").highlight(searchstring,"highlight"); 
 		$(".redactor_").highlight(searchstring,"highlight"); 
-		$("#mypanel").highlight(searchstring,"highlight"); 
+		$("#mypanel .n_title").highlight(searchstring,"highlight"); 
 }
 
 function jsMakeUnDid(id) //снимаю выполнение
