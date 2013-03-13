@@ -719,6 +719,7 @@ var RLANG = {
 						{
 							this.saveScroll = this.document.body.scrollTop;
 							this.saveScroll2 = this.$editor.scrollTop();
+							this.saveScroll3 = this.$box.scrollTop();
 						}
 						else
 						{
@@ -738,6 +739,7 @@ var RLANG = {
 							this.pasteCleanUp(html);
 							this.pasteRunning = false;
 							this.$editor.scrollTop( this.saveScroll2 );
+							this.$box.scrollTop( this.saveScroll3 );
 
 						}, this), 1);
 
@@ -1314,6 +1316,7 @@ if(!need_text)
 
 		pasteHtmlAtCaret: function (html)
 		{
+			console.info("OOOOPS!!!!");
 			var sel, range;
 			if (this.document.getSelection)
 			{
