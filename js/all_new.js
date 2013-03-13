@@ -3541,7 +3541,7 @@ function jsShowAllComments(tree_id)
 	myhtml += "";
 	$("#tree_comments_container").html(myhtml);
 	onResize();
-	jsShowNews(0);
+	if( $("#tree_news").is(":visible") ) jsShowNews(0);
 	
 }
 function jsShowComments(tree_id, parent_id)
