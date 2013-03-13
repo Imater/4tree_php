@@ -7469,7 +7469,6 @@ if(type==0)
 	var myhtml = "<h3>Новые комментарии:</h3>";
 	$.each(chat, function(i,d)
 		{
-		console.info(d);
 		var frend = jsFrendById(d.user_id);
 		d.foto = frend.foto;
 		d.name = frend.fio;

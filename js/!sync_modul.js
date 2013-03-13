@@ -358,11 +358,15 @@ function jsChangeNewIdComments(d) //заменяет отрицательный 
     all_children = jsFindByParentComments(d.old_id);
     $.each(all_children,function(i,ddd)
      	{ 
+     	jsFindComment(ddd.id,{parent_id:d.id});
      	ddd.parent_id=d.id; 
      	jsSaveDataComment(ddd.id);
      	});		//заменяю всех отрицательных родителей на положительных
 
-    $("#comment_"+d.old_id).attr("id","comment_"+d.id);
+	$(".comment_box[id=comment_"+d.old_id+"]").each(function()
+    	{ 
+    	$(this).attr("id","comment_"+d.id); 
+    	});
 
 	jsFindComment(d.old_id,{id:d.id});
 	jsSaveDataComment(d.id);
