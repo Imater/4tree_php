@@ -7481,6 +7481,7 @@ if(type==0)
 			}
 		
 		myhtml += template(d);
+		if(i>100) return true;
 		});
 	
 	$("#tree_news").append(myhtml);
