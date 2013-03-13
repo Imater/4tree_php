@@ -7473,7 +7473,7 @@ if(type==0)
 		var frend = jsFrendById(d.user_id);
 		d.foto = frend.foto;
 		d.name = frend.fio;
-		d.tree_title = "<b>["+jsShortText( jsFind(d.tree_id).title, 50 )+"]</b>";
+		if(jsFind(d.tree_id)) d.tree_title = "<b>["+jsShortText( jsFind(d.tree_id).title, 50 )+"]</b>";
 		if(d.add_time=="0")  d.add_time_txt = "";
 		else
 			{
