@@ -364,7 +364,7 @@ function jsChangeNewIdComments(d) //заменяет отрицательный 
 
     $("#comment_"+d.old_id).attr("id","comment_"+d.id);
 
-	jsFindComment(d.old_id).id = d.id;
+	jsFindComment(d.old_id,{id:d.id});
 	jsSaveDataComment(d.id);
 
 	//тут нужно поменять всё визуальное
