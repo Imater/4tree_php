@@ -1240,7 +1240,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		return true;
 		});
 
-	setTimeout(function(){ $("#tab_news").click(); }, 1000);
+//	setTimeout(function(){ $("#tab_news").click(); }, 1000);
 
 	$('#fav_calendar').delegate("li","click",function(){
 		$('#fav_calendar .active').removeClass("active");
