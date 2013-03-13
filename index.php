@@ -342,6 +342,13 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 				
 				<div class="search_panel_result panel_type3"><ul></ul></div>
 	  			<div class="search_arrow"></div>
+
+	  			<div id="tree_news">
+	  				<div id="news_header">
+		  				Заметки | Все комментарии | Мои комментарии
+		  			</div>
+		  		</div>
+
 				
 			    <div id="calendar" class="noselectable1">
 				</div>	
@@ -349,8 +356,8 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 				<div class="favorit_tabs" id="fav_calendar">
     				<ul>
     					<li id="tab_find"><i class="icon-search"></i> Поиск</li><li class="active" id="tab_calendar">
-    					<i class="icon-calendar"></i> Календарь</li><li id="tab_comments">
-    					<i class="icon-comment-1"></i> Комментарии (6)</li>
+    					<i class="icon-calendar"></i> Календарь</li><li id="tab_news">
+    					<i class="icon-clock"></i> Мои новости</li>
     					<!--<li style="display:none">
     					Параметры</li><li style="display:none">
     					Мой сайт</li><li style="display:none">
@@ -633,7 +640,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 								<div class="comment_name">{{name}}</div>
 								<div class="comment_like">{{likes}}<i class="icon-heart"></i></div>
 								<div class="comment_time" time="{{add_time}}">
-									{{add_time_txt}}
+									{{add_time_txt}} {{{tree_title}}}
 								</div>
 								<div class="comment_del" title="удалить комментарий"><i class="icon-cancel"></i></div>
 								<div class="comment_edit" title="редактировать комментарий"><i class="icon-pencil-1"></i></div>
@@ -647,7 +654,6 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 					</div>
 				 </div>
 				</div>
-				
 				
 
 

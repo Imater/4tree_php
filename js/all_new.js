@@ -1143,6 +1143,13 @@ function jsRegAllKey() //все общие delegate и регистрация к
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 
+	$("#tree_news").delegate(".comment_box","click",function(){
+		var comment_id = $(this).attr("id");
+		if(comment_id) comment_id = comment_id.replace("comment_","");
+		jsOpenPath( jsFindComment(comment_id).tree_id );
+		return false;
+		});
+
 	$("#tree_comments").delegate(".comment_reply","click",function(){
 		$(this).parents(".comment_box:first").append( $("#comment_enter") );
 		onResize();
@@ -1233,7 +1240,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		return true;
 		});
 
-//	setTimeout(function(){ $("#tab_comments").click(); }, 1000);
+	setTimeout(function(){ $("#tab_news").click(); }, 1000);
 
 	$('#fav_calendar').delegate("li","click",function(){
 		$('#fav_calendar .active').removeClass("active");
@@ -1260,13 +1267,14 @@ function jsRegAllKey() //все общие delegate и регистрация к
 			$(".search_panel_result").hide();
 			}
 
-		if( tab_name == "tab_comments" )
+		if( tab_name == "tab_news" )
 			{
-			$("#tree_comments").show();
+			$("#tree_news").show();
+			jsShowNews(0);
 			}
 		else
 			{
-//			$("#tree_comments").hide();
+			$("#tree_news").hide();
 			}
 		
 		
@@ -3533,6 +3541,7 @@ function jsShowAllComments(tree_id)
 	myhtml += "";
 	$("#tree_comments_container").html(myhtml);
 	onResize();
+	jsShowNews(0);
 	
 }
 function jsShowComments(tree_id, parent_id)
@@ -3548,6 +3557,8 @@ function jsShowComments(tree_id, parent_id)
 		var frend = jsFrendById(d.user_id);
 		d.foto = frend.foto;
 		d.name = frend.fio;
+		d.tree_title = "";
+
 		if(d.add_time=="0")  d.add_time_txt = "";
 		else
 			{
@@ -6209,6 +6220,8 @@ function onResize()
 			newheight=$('#calendar').parent("div").height()-62;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight);
+			$("#tree_news").height(newheight);
+			
 //			$("#tree_comments").height(newheight);
 			
 			if( $("#comment_enter").parents(".comment_box").length ) 
@@ -7426,6 +7439,57 @@ mypomidor =
 		return this.bind('mouseenter',handleHover).bind('mouseleave',handleHover);
 	};
 })(jQuery);
+
+
+function jsShowNews(type)
+{
+$("#tree_news").html("");
+if(type==0)
+	{
+	var source = $("#comment_template").html();
+	template = Handlebars.compile(source);
+	
+	   var data = my_all_comments.filter(function(el) //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
+		    { 
+		    return el.del==0;
+		    } );
+
+		function compare(a,b) {
+		  if (parseFloat(a.add_time) < parseFloat(b.add_time))
+		     return 1;
+		  if (parseFloat(a.add_time) > parseFloat(b.add_time))
+		    return -1;
+		  return 0;
+		}
+
+		chat = data.sort(compare); //сортирую табы по полю tab
+
+	var i;
+	var txt="";
+	var myhtml = "<h3>Новые комментарии:</h3>";
+	$.each(chat, function(i,d)
+		{
+		console.info(d);
+		var frend = jsFrendById(d.user_id);
+		d.foto = frend.foto;
+		d.name = frend.fio;
+		d.tree_title = "<b>["+jsShortText( jsFind(d.tree_id).title, 50 )+"]</b>";
+		if(d.add_time=="0")  d.add_time_txt = "";
+		else
+			{
+			var add_time = new Date( parseInt(d.add_time) );
+			d.add_time_txt = add_time.jsDateTitleFull("need_short_format");
+			}
+		
+		myhtml += template(d);
+		});
+	
+	$("#tree_news").append(myhtml);
+	}
+}
+
+
+
 
 var myadd=0;
 var dots=":";

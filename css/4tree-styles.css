@@ -4228,3 +4228,50 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');*/
 }
 
+#tree_news
+{
+display: none;
+width: auto;
+height: auto;
+margin-top: 33px;
+background: #FFF;
+padding-left: 10px;
+overflow-y: auto;
+background: white;
+z-index: 9999999;
+-moz-box-shadow: 2px 2px 8px #444;
+-webkit-box-shadow: 2px 2px 8px #444;
+box-shadow: 2px 2px 8px #444;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+font-size: 13px;
+}
+
+#news_header
+{
+position: absolute;
+top:10px;
+}
+
+#tree_news .comment_reply
+{
+display: none;
+}
+#tree_news .comment_del
+{
+display: none;
+}
+#tree_news .comment_edit
+{
+display: none;
+}
+
+#tree_news .comment_box
+{
+cursor: pointer;
+}
+#tree_news .comment_box:hover
+{
+background: #f5f4f8;
+}
+
