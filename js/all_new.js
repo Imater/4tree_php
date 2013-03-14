@@ -12,6 +12,52 @@ var autosave_timer,mypomidor,endtime,my_min,old_title,widthpanel,RestMin, show_h
 var is_rendering_now,last_input_click;
 var timestamp=new Date().getTime(),start_sync_when_idle=false;
 
+
+function jsZipTree()
+{
+  var zip = new JSZip();
+  
+  $.each(my_all_data,function(i,el){
+	  
+	var d=new Date; 
+	var today_date = d.jsDateTitleFull();  
+	  
+	var path = jsTextPath(jsPath(jsFind(el.id)));
+	path = path.replace(" → ","/").replace(" → ","/").replace("→","/");
+	path = strip_tags(path);
+
+  	var text = el.text;
+  	text = text.replace('data/','http://4tree.ru/data/');
+  	text = text.replace('.upload/','http://4tree.ru/upload/');
+  	text = text.replace('"upload/','"http://4tree.ru/upload/');
+  	text = text.replace('"data/','"http://4tree.ru/data/');
+  	
+  	text = "<h2>"+el.title+"</h2>"+text;
+  	
+  	mytitle = el.title;
+  	if(mytitle) 
+  		{
+  		mytitle = strip_tags( mytitle.replace("/","|").replace("→","/") );
+  		}
+  	
+  	if(text.length>1)
+  		{
+  	  	zip.file("4tree-Архив ("+today_date+")/"+path+mytitle+".html", text);
+  	  	}
+  	})
+
+  // data URI
+  $('#zip-archive').attr("href", "data:application/zip;base64," + zip.generate() );
+  // Blob
+  var blobLink = document.getElementById('blob-archive');
+  try {
+    blobLink.download = "4tree_archive_"+sqldate(jsNow())+".zip";
+    blobLink.href = window.URL.createObjectURL(zip.generate({type:"blob"}));
+  } catch(e) {
+    blobLink.innerHTML += " (not supported on this browser)";
+  }
+}
+
 function jsTestDate() //тестирование парсера даты
 {
 test = [
@@ -915,7 +961,7 @@ function jsHighlightText()
 		$(".highlight").contents().unwrap();
 		$(".search_panel_result").highlight(searchstring,"highlight"); 
 		$(".comment_text").highlight(searchstring,"highlight"); 
-		$(".redactor_").highlight(searchstring,"highlight"); 
+//		$(".redactor_").highlight(searchstring,"highlight"); 
 		$("#mypanel .n_title").highlight(searchstring,"highlight"); 
 }
 
@@ -6975,7 +7021,7 @@ note_saved = false;
 
 clearTimeout(my_autosave);
 
-		$(".highlight").contents().unwrap();
+//		$(".highlight").contents().unwrap();
 		var html = myr.getCode();
 		jsHighlightText();
 		text = html;	

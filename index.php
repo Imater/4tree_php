@@ -95,6 +95,7 @@ if(isset($_GET['confirm']))
 	<script src="js/all_new.js"></script>
 	<script src="js/!test.js"></script>
 	<script src="js/!sync_modul.js"></script>
+	<script src="js/jszip.js"></script>
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 
@@ -306,6 +307,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 			  </div>
 		&nbsp;
 		&nbsp;
+		<a id="blob-archive" style="display:none" href="">blob</a>
 			  
 	<div class='tree_history'><ul></ul></div>			  
 			  
