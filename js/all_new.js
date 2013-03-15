@@ -1629,6 +1629,7 @@ else
 		if( (jsNow() - last_blur_sync_time) > 10000 ) //запускать синхронизацию не чаще 10 секунд
 			{
 			jsStartSync("soon","FOCUS");  	
+			jsSync();
 			last_blur_sync_time = jsNow();
 			}
 	
