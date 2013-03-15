@@ -11,7 +11,7 @@ var mymetaKey = false, diaryrewind=0,old_before_diary=0;
 var autosave_timer,mypomidor,endtime,my_min,old_title,widthpanel,RestMin, show_hidden=false,show_childdate=true;
 var is_rendering_now,last_input_click;
 var timestamp=new Date().getTime(),start_sync_when_idle=false,there_was_message_about_change=false;
-
+var hoverListener;
 
 function jsZipTree()
 {
@@ -1625,11 +1625,12 @@ else
   {
 	  $(window).focus(function(){
 	  	jsLocalSync();
+
+		if(there_was_message_about_change) { jsSync(); there_was_message_about_change = false; }
 	
 		if( (jsNow() - last_blur_sync_time) > 10000 ) //запускать синхронизацию не чаще 10 секунд
 			{
 			jsStartSync("soon","FOCUS");  	
-			if(there_was_message_about_change) { jsSync(); there_was_message_about_change = false; }
 			last_blur_sync_time = jsNow();
 			}
 	

@@ -1,3 +1,5 @@
+	var hoverListener;
+
 /**
  * @preserve
  * FullCalendar v1.5.3
@@ -2199,7 +2201,6 @@ function BasicView(element, calendar, viewName) {
 	
 	var rowCnt, colCnt;
 	var coordinateGrid;
-	var hoverListener;
 	var colContentPositions;
 	
 	var rtl, dis, dit;
