@@ -141,8 +141,9 @@ function jsSync()
 			 	    	{
 			 	    	console.info(d);
 			 	    	jsSaveElementComment(d);
-			 	    	if(myselected == d.tree_id) 
+			 	    	if(myselected == d.tree_id)
 			 	    		jsRefreshComments(d.tree_id);
+			 	    	if( $("#tree_news").is(":visible") ) jsShowNews(0);
 			 	    	//обновить панель комментариев
 			 	    	my_console("Пришли новые комментарии с сервера: "+d.id);
 			 	    	});

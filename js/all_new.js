@@ -1191,7 +1191,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 
 	$("*").delegate(".fav_icon","click",function(){
 		var fav = $(this).find("i").attr("class");
-	    var id = node_to_id( $(".selected").attr('id') );
+		var id = $(".makedone").attr("myid");
 	    var title = jsFind(id).title;
 	    title = strip_tags(title).trim();
 	    title = "<i class='"+fav+"'></i> "+title;
@@ -1202,7 +1202,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 
 	$("*").delegate(".fav_color","click",function(){
 		var fav = $(this).attr("fav");
-	    var id = node_to_id( $(".selected").attr('id') );
+		var id = $(".makedone").attr("myid");
 		if(id) { jsFind(id, {fav:fav}); jsRefreshOneElement(id); }
 		console.info(fav,id);
 		return false;
