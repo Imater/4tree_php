@@ -5873,7 +5873,7 @@ function jsRefreshOneElement(myid)
 	    $("#node_"+id).addClass(make_class);
    		}
    jsPrepareDate();
-   
+   jsMakeDrop();
 }
 
 
