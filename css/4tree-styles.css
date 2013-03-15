@@ -4338,3 +4338,8 @@ position: absolute;
 bottom: 5px;
 display: block;
 }
+
+.fc-event-hori .fc-event-inner
+{
+max-height: 3.3em;
+}
