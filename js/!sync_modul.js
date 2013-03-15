@@ -33,6 +33,7 @@ function jsSync()
     clearTimeout(sync_now_timer);
     sync_now_timer = setTimeout(function(){ sync_now = false; start_sync_when_idle=false; }, 60000);
 	start_sync_when_idle=false;
+   	there_was_message_about_change = false;
  
     preloader.trigger('show');
     $(".icon-cd").css("color","#517c5d");
