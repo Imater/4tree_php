@@ -1189,6 +1189,25 @@ function jsRegAllKey() //все общие delegate и регистрация к
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 
+	$("*").delegate(".fav_icon","click",function(){
+		var fav = $(this).find("i").attr("class");
+	    var id = node_to_id( $(".selected").attr('id') );
+	    var title = jsFind(id).title;
+	    title = strip_tags(title).trim();
+	    title = "<i class='"+fav+"'></i> "+title;
+		if(id) if(fav) { jsFind(id, {title:title}); jsRefreshOneElement(id); }
+		console.info("icon=",fav,id);
+		return false;
+		});
+
+	$("*").delegate(".fav_color","click",function(){
+		var fav = $(this).attr("fav");
+	    var id = node_to_id( $(".selected").attr('id') );
+		if(id) { jsFind(id, {fav:fav}); jsRefreshOneElement(id); }
+		console.info(fav,id);
+		return false;
+		});
+
 	$("#tree_news").delegate(".comment_box","click",function(){
 		var comment_id = $(this).attr("id");
 		if(comment_id) comment_id = comment_id.replace("comment_","");
@@ -3917,8 +3936,14 @@ function jsSaveTitle( sender, needsave )
 	  		sender.attr("old_title",sender.html());
 	  		id = node_to_id( sender.parents("li").attr('id') );
 	  		
-	  		jsFind(id,{ title : strip_tags(sender.html().replace("<br>","")) });
-	  		jsRefreshTree();
+		var fav = $("<div>"+sender.html()+"</div>").find("i").attr("class");
+	    var title=sender.html();
+	    title = strip_tags(title).trim().replace("<br>","");
+	    title = "<i class='"+fav+"'></i> "+title;
+
+	  		
+	  		jsFind(id,{ title : title });
+	  		jsRefreshOneElement(id);
 			jsSetTitleBack();
 			jsMakeTabs();	
 //			if(id<0) jsStartSync("soon","IF NEW ELEMENT");
@@ -5843,7 +5868,7 @@ function jsRefreshOneElement(myid)
    el.replaceWith( jsRenderOneElement( jsFind(myid) ) );
    if(make_class!="") 
    		{
-	    $("#node_"+id).addClass();
+	    $("#node_"+id).addClass(make_class);
    		}
    jsPrepareDate();
    
@@ -5859,7 +5884,7 @@ function jsRenderOneElement(data,iii,parent_node)
 		  
 		  myli = "<div class='divider_li' pos='"+(data.position-0.9)+"' myid='"+data.parent_id+"'></div>"; //разделитель
 		  myli +=  "<li id='node_"+data.id+"' myid='"+data.id+"' class='tree-closed "+info.isFolder+"'>";
-		  myli += "<div class='tcheckbox' title='"+data.id+"'>"+info.comment_count+"</div>" + info.icon_share;
+		  myli += "<div class='tcheckbox fav_color_"+data.fav+"' title='"+data.id+"'>"+info.comment_count+"</div>" + info.icon_share;
 		  myli += "<div myid='"+childdate[1]+"' childdate='"+childdate[0]+"' title='"+data.date1+childdate[2]+
 		  		  "' class='date1'></div>";
 		  myli += info.remind + info.triangle + info.countdiv + info.img + info.needsync;

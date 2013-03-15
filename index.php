@@ -493,6 +493,100 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 					<li><a class="show_mindmap"><i class='icon-leaf'></i> Показать карту ума</a></li>
 					<li></li>
 					<li><a class="send_by_mail"><i class='icon-mail-2'></i> Отправить заметку по эл.почте</a></li>
+					<li></li>
+					<li><i class="icon-stop" style="color:red"></i> Цвет ярлычка
+						<ul>
+							<li><a class="fav_color fav_red" fav="1"><b>красный</b></a></li>
+							<li><a class="fav_color fav_yellow" fav="2"><b>жёлтый</b></a></li>
+							<li><a class="fav_color fav_green" fav="3"><b>зелёный</b></a></li>
+							<li></li>
+							<li><a class="fav_color fav_cyan" fav="4"><b>салатовый</b></a></li>
+							<li><a class="fav_color fav_blue" fav="5"><b>синий</b></a></li>
+							<li><a class="fav_color fav_orange" fav="6"><b>оранжевый</b></a></li>
+							<li><a class="fav_color fav_magenta" fav="7"><b>фиолетовый</b></a></li>
+							<li></li>
+							<li><a class="fav_color fav_no" fav="0"><b>без цвета</b></a></li>
+						</ul>
+					</li>
+					<li><i class="icon-camera"></i> Иконка
+						<ul>
+							<li><a class="fav_icon"><i class="icon-progress-0"></i><b>прогресс 0%</b></a></li>
+							<li><a class="fav_icon"><i class="icon-progress-1"></i><b>прогресс 30%</b></a></li>
+							<li><a class="fav_icon"><i class="icon-progress-2"></i><b>прогресс 70%</b></a></li>
+							<li><a class="fav_icon"><i class="icon-progress-3"></i><b>прогресс 100%</b></a></li>
+							<li></li>
+							<li><a class="fav_icon"><i class="icon-info"></i><b>информация</b></a></li>
+							<li><a class="fav_icon"><i class="icon-phone"></i><b>телефон</b></a></li>
+							<li><a class="fav_icon"><i class="icon-home"></i><b>дом</b></a></li>
+							<li><a class="fav_icon"><i class="icon-pause"></i><b>ожидание</b></a></li>
+							<li><a class="fav_icon"><i class="icon-star"></i><b>важное</b></a></li>
+							<li><a class="fav_icon"><i class="icon-heart"></i><b>нравится</b></a></li>
+							<li><a class="fav_icon"><i class="icon-flag"></i><b>флажок</b></a></li>
+							<li><a class="fav_icon"><i class="icon-flight"></i><b>путешествие</b></a></li>
+							<li><a class="fav_icon"><i class="icon-mail-2"></i><b>почта</b></a></li>
+							<li><a class="fav_icon"><i class="icon-ok"></i><b>сделано</b></a></li>
+							<li><a class="fav_icon"><i class="icon-help"></i><b>узнать</b></a></li>
+							<li><a class="fav_icon"><i class="icon-eye"></i><b>посмотреть</b></a></li>
+							<li><a class="fav_icon"><i class="icon-article-alt"></i><b>статьи</b></a></li>
+							<li><a class="fav_icon"><i class="icon-archive"></i><b>архив</b></a></li>
+							<li><a class="fav_icon"><i class="icon-pencil-neg"></i><b>писать</b></a></li>
+							<li><a class="fav_icon"><i class="icon-basket-1"></i><b>купить</b></a></li>
+							<li>Ещё
+								<ul>
+									<li><a class="fav_icon"><i class="icon-dot"></i><b>приоритет высокий</b></a></li>
+									<li><a class="fav_icon"><i class="icon-dot-2"></i><b>приоритет средний</b></a></li>
+									<li><a class="fav_icon"><i class="icon-dot-3"></i><b>приоритет низкий</b></a></li>
+									<li></li>
+									<li><a class="fav_icon"><i class="icon-inbox"></i><b>входящие</b></a></li>
+									<li><a class="fav_icon"><i class="icon-steering-wheel"></i><b>автомобиль</b></a></li>
+									<li><a class="fav_icon"><i class="icon-chart-pie"></i><b>диаграммы</b></a></li>
+									<li><a class="fav_icon"><i class="icon-terminal"></i><b>терминал</b></a></li>
+									<li><a class="fav_icon"><i class="icon-youtube"></i><b>видеоролики</b></a></li>
+									<li><a class="fav_icon"><i class="icon-picture"></i><b>картинки</b></a></li>
+									<li><a class="fav_icon"><i class="icon-leaf-1"></i><b>листок</b></a></li>
+									<li><a class="fav_icon"><i class="icon-glass"></i><b>праздник</b></a></li>
+									<li><a class="fav_icon"><i class="icon-gift"></i><b>подарок</b></a></li>
+									<li><a class="fav_icon"><i class="icon-mic"></i><b>записи</b></a></li>
+									<li><a class="fav_icon"><i class="icon-target"></i><b>цели</b></a></li>
+									<li><a class="fav_icon"><i class="icon-top-list"></i><b>награды</b></a></li>
+									<li><a class="fav_icon"><i class="icon-address"></i><b>адреса</b></a></li>
+									<li><a class="fav_icon"><i class="icon-print-1"></i><b>печатать</b></a></li>
+									<li><a class="fav_icon"><i class="icon-trash"></i><b>мусор</b></a></li>
+									<li><a class="fav_icon"><i class="icon-clock-1"></i><b>время</b></a></li>
+									<li><a class="fav_icon"><i class="icon-list"></i><b>список</b></a></li>
+									<li><a class="fav_icon"><i class="icon-moon"></i><b>ночь</b></a></li>
+									<li><a class="fav_icon"><i class="icon-light-up"></i><b>день</b></a></li>
+								</ul>
+							</li>
+							<li>И ещё
+								<ul>
+									<li><a class="fav_icon"><i class="icon-thumbs-up-1"></i><b>супер</b></a></li>
+									<li><a class="fav_icon"><i class="icon-thumbs-down"></i><b>отвратительно</b></a></li>
+									<li></li>
+									<li><a class="fav_icon"><i class="icon-lock"></i><b>закрыто</b></a></li>
+									<li><a class="fav_icon"><i class="icon-lock-open"></i><b>открыто</b></a></li>
+									<li></li>
+									<li><a class="fav_icon"><i class="icon-user"></i><b>человек</b></a></li>
+									<li><a class="fav_icon"><i class="icon-users-1"></i><b>люди</b></a></li>
+									<li><a class="fav_icon"><i class="icon-lamp"></i><b>идея</b></a></li>
+									<li><a class="fav_icon"><i class="icon-monitor"></i><b>телевизор</b></a></li>
+									<li><a class="fav_icon"><i class="icon-pin"></i><b>запомнить</b></a></li>
+									<li><a class="fav_icon"><i class="icon-attach"></i><b>вложения</b></a></li>
+									<li><a class="fav_icon"><i class="icon-book"></i><b>прочитано</b></a></li>
+									<li><a class="fav_icon"><i class="icon-book-open"></i><b>читать</b></a></li>
+									<li><a class="fav_icon"><i class="icon-upload"></i><b>отправить</b></a></li>
+									<li><a class="fav_icon"><i class="icon-camera"></i><b>фотографии</b></a></li>
+									<li><a class="fav_icon"><i class="icon-at"></i><b>собака</b></a></li>
+									<li><a class="fav_icon"><i class="icon-aperture-alt"></i><b>апертура</b></a></li>
+									<li><a class="fav_icon"><i class="icon-shuffle"></i><b>всячина</b></a></li>
+									<li><a class="fav_icon"><i class="icon-bookmark"></i><b>закладки</b></a></li>
+									<li><a class="fav_icon"><i class="icon-wrench"></i><b>настроить</b></a></li>
+									<li><a class="fav_icon"><i class="icon-plus-circle"></i><b>плюс</b></a></li>
+									<li><a class="fav_icon"><i class="icon-minus-circle"></i><b>минус</b></a></li>
+								</ul>
+							</li>
+						</ul>
+					</li>
 				</ul>
    </div>
    <div class="makelabel"> выполнено <i class="icon-ok-1"></i>:</div><div id="makedatebutton"> <input type="checkbox" class="on_off" id="on_off_did"></div><br>
