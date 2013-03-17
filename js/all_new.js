@@ -758,7 +758,7 @@ function jsCreateDo(whereadd,title) // ищу элемент по названи
 	if(answer.length) newposition = answer.length;
 	else newposition = 0;
 	
-	answer = answer.filter(function(el,i) { if(el.title) return ( (el.title.indexOf(title.substr(0,13))!=-1) && (el.del!=1) ); } );	
+	answer = answer.filter(function(el,i) { if(el.title) return ( (strip_tags(el.title).indexOf(title.substr(0,13))!=-1) && (el.del!=1) ); } );	
 		
 	
 	if(answer!="") return answer[0].id; //если элемент с таким именем уже найден возвращаю id и прерываюсь
