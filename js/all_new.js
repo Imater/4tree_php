@@ -3942,7 +3942,7 @@ function jsSaveTitle( sender, needsave )
 		var fav = $("<div>"+sender.html()+"</div>").find("i").attr("class");
 	    var title=sender.html();
 	    title = strip_tags(title).trim().replace("<br>","");
-	    title = "<i class='"+fav+"'></i> "+title;
+	    if(fav) title = "<i class='"+fav+"'></i> "+title;
 
 	  		
 	  		jsFind(id,{ title : title });
