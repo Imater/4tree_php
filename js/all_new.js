@@ -440,7 +440,7 @@ function open_in_new_tab(url )  //открывает ссылку в новом 
 
 function jsFindRecur(date)  //поиск повторяющихся дел
 {
-recur_dates = my_all_data.filter(function(el,i) 
+var recur_dates = my_all_data.filter(function(el,i) 
 	{ 
 	if(el.date1) 
 		if ((el.del!=1) && (el.date1!="")) 
@@ -458,7 +458,7 @@ w - дни недели: 1,2,3,4,5,6,7. 0 - если все дни */
 
 //  $sqlnews .= "( SELECT * FROM tree_recurring WHERE ((`day`=$day AND `month`=$month AND `year`=$year) OR (recur_mode = '2' AND WEEKDAY(CONCAT(`year`,'-',`month`,'-',`day`)) = WEEKDAY('$dd')) ) AND user_id=".$GLOBALS['user_id']." AND  DATEDIFF( CONCAT('$year','-','$month','-','$day') , CONCAT(`year`,'-',`month`,'-',`day`) )>0 )";
 
-week_dates = recur_dates.filter(function(el,i) 
+var week_dates = recur_dates.filter(function(el,i) 
 	{ 
 	if(el.date1.split(" ")[0]==date.split(" ")[0]) return true; //если это тот-же день
 
@@ -689,14 +689,14 @@ function jsDiaryFindDateNote(date)  //поиск всех заметок на э
 {
 if(!my_all_data || !allmynotes) return false;
 
-today = date;
-year = today.getFullYear();
-month = today.getMonth()+1; if(month<10) month = "0"+month;
-day = today.getDate(); if(day<10) day = "0"+day;
+var today = date;
+var year = today.getFullYear();
+var month = today.getMonth()+1; if(month<10) month = "0"+month;
+var day = today.getDate(); if(day<10) day = "0"+day;
 
-finddate = day +"."+ (month) + "."+year+" - ";
+var finddate = day +"."+ (month) + "."+year+" - ";
 
-answer = allmynotes.filter(function(el,i) 
+var answer = allmynotes.filter(function(el,i) 
 	{ 
 	if(el.parent_id) return (el.title.indexOf(finddate)!=-1); 
 	});	
@@ -704,12 +704,12 @@ answer = allmynotes.filter(function(el,i)
 
 if(answer.length!=0) 
 	{ 
-	text = answer[0].text;
+	var text = answer[0].text;
 	text = text.replace("</p>"," ");
 	text = text.replace("</div>"," ");
 	text = text.replace("<br>"," ");
 	text = text.replace("</li>"," ");
-	mytext = strip_tags(text); 
+	var mytext = strip_tags(text); 
 //	mytext = mytext.replace("@@@","___\r");
 	return [true,mytext]; 
 	}
@@ -722,14 +722,14 @@ function jsDiaryFindDateDate(date)  //поиск всех событий наз�
 {
 if(!my_all_data || !allmydates) return false;
 
-today = date;
-year = today.getFullYear();
-month = today.getMonth()+1; if(month<10) month = "0"+month;
-day = today.getDate(); if(day<10) day = "0"+day;
+var today = date;
+var year = today.getFullYear();
+var month = today.getMonth()+1; if(month<10) month = "0"+month;
+var day = today.getDate(); if(day<10) day = "0"+day;
 
-finddate = year +"-"+ (month) + "-"+ day +" ";
+var finddate = year +"-"+ (month) + "-"+ day +" ";
 
-answer = allmydates.filter(function(el,i) 
+var answer = allmydates.filter(function(el,i) 
 	{ 
 	if(el.parent_id) return (el.date1.indexOf(finddate)!=-1); 
 	});	
@@ -753,22 +753,23 @@ else return [false,""];
 
 function jsCreateDo(whereadd,title) // ищу элемент по названию у указанного родителя, если не нахожу, создаю новый. Нужно для календаря, чтобы не создавать дату, если она уже есть. Поиск только по первым 13 символам jsCreateDo(4296,"Новое поле"); Проверить, сохраняется ли информация в localStorage
 {
-	parent = whereadd; //номер родителя
+	var parent = whereadd; //номер родителя
+	var newposition;
 	
-	
-	answer = my_all_data.filter(function(el,i) { if(el.parent_id) return ((el.parent_id==whereadd) && (el.del!=1)); } );	
+	var answer = my_all_data.filter(function(el,i) { if(el.parent_id) return ((el.parent_id==whereadd) && (el.del!=1)); } );	
 	if(answer.length) newposition = answer.length;
 	else newposition = 0;
 	
-	answer = answer.filter(function(el,i) { if(el.title) return ( (strip_tags(el.title).indexOf(title.substr(0,13))!=-1) && (el.del!=1) ); } );	
+	var answer = answer.filter(function(el,i) { if(el.title) return ( (strip_tags(el.title).indexOf(title.substr(0,13))!=-1) && (el.del!=1) ); } );	
 		
 	
 	if(answer!="") return answer[0].id; //если элемент с таким именем уже найден возвращаю id и прерываюсь
 	
 	var new_id = -parseInt(1000000+Math.random()*10000000,10);
 		
-	new_line = my_all_data.length;
-	my_all_data[new_line]=new Object(); element = my_all_data[new_line];
+	var new_line = my_all_data.length;
+	my_all_data[new_line]=new Object(); 
+	var element = my_all_data[new_line];
 	element.date1 = "";
 	element.date2 = "";
 	element.icon = "";
@@ -796,7 +797,7 @@ function jsCreateDo(whereadd,title) // ищу элемент по названи
 
 function jsMakeTabs() //создаю закладки из всех дел написанных большими буквами
 {
-	   data = my_all_data.filter(function(el) //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
+	   var data = my_all_data.filter(function(el) //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
 		    { 
 		      if(el.did==0) 
 		      	if(el.del==0) 
@@ -805,11 +806,11 @@ function jsMakeTabs() //создаю закладки из всех дел на�
 		      		  if(el.title.indexOf("[@]")==-1)
 		      			if(el.parent_id>0) 
 		      				{
-		      				shablon = /[a-z]|[а-я]+/; 
-							matches = el.title.match(shablon);
+		      				var shablon = /[a-z]|[а-я]+/; 
+							var matches = el.title.match(shablon);
 
 		      				shablon = /(^\d{1,100})/; 
-							matches2 = el.title.match(shablon);
+							var matches2 = el.title.match(shablon);
 							
 		      				if( !matches && !matches2 ) 
 		      					return ( el.title==el.title.toUpperCase() ); 
@@ -826,7 +827,7 @@ function jsMakeTabs() //создаю закладки из всех дел на�
 
 		data = data.sort(compare); //сортирую табы по полю tab
 		
-	alltabs="<ul>";
+	var alltabs="<ul>";
 	
 	for(i=0; i<data.length; i=i+1)
 		{
@@ -844,13 +845,13 @@ function jsMakeTabs() //создаю закладки из всех дел на�
 
 function jsShowBasket() //показать список избранных, пока не используется. Отбор по полю .fav
 {
-	   data = my_all_data.filter(function(el) //поиск удовлетворяющих поисковой строке условий
+	   var data = my_all_data.filter(function(el) //поиск удовлетворяющих поисковой строке условий
 		    { 
 		    if(!(!el.fav)) 
 		      return ( el.fav==1 ); 
 		    } );
 
-	   cnt_check = data.length;
+	   var cnt_check = data.length;
 	   $(".basket_panel ul:first").html("");
 	   jsShowTreeNode(-2,false,data);
 	   
@@ -872,12 +873,12 @@ if(id) return id.replace("node_", "");
 
 function jsPlaceMakedone(id) //размещаю makedone там, где галочка tcheckbox
 {
-	tcheckbox = $("#mypanel #node_"+id).find(".tcheckbox");
-	left = tcheckbox.offset().left-23;
-	mytop = tcheckbox.offset().top+25;
+	var tcheckbox = $("#mypanel #node_"+id).find(".tcheckbox");
+	var left = tcheckbox.offset().left-23;
+	var mytop = tcheckbox.offset().top+25;
 	$(".makedone").attr("isnew","false");
 
-  box_left=left;  
+  var box_left=left;  
   
   if(left>$("#wrap").width()-70) 
   	   { 
@@ -899,7 +900,7 @@ function jsPlaceMakedone(id) //размещаю makedone там, где гало
 
 function jsMakeUnDidInside(id) //снимаю выполнение у всех детей - рекурсивная функция
 {
-	mychildrens = jsFindByParent(id,true);
+	var mychildrens = jsFindByParent(id,true);
 	
 	if( mychildrens.length > 0 )
 		{
@@ -913,14 +914,14 @@ function jsMakeUnDidInside(id) //снимаю выполнение у всех �
 
 function jsMakeDidInside(id) //ставлю выполнение у всех детей - рекурсивная функция
 {
-	mychildrens = jsFindByParent(id);
+	var mychildrens = jsFindByParent(id);
 	
 	if( mychildrens.length > 0 )
 		{
 		$.each(mychildrens,function(i,dd)
 		   {
 		   jsMakeDidInside(dd.id);
-		   mydatenow = new Date();
+		   var mydatenow = new Date();
 		   jsFind(dd.id,{ did:mydatenow.toMysqlFormat() });
 		   });
 		}
@@ -931,11 +932,11 @@ var did_timeout;
 
 function jsMakeDid(id) //выполняю одно дело
 {
-	   mydatenow = new Date();
+	   var mydatenow = new Date();
 	   jsFind(id,{ did:mydatenow.toMysqlFormat(), fav:0 });
 	   
 	   jsMakeDidInside(id); //выполняю рекурсивно всех детей
-	   li = $("#mypanel #node_"+id);
+	   var li = $("#mypanel #node_"+id);
 	   li.find(".n_title").addClass("do_did");
 	   clearTimeout(did_timeout);
 	   if(!show_hidden) 
@@ -958,7 +959,7 @@ function jsMakeDid(id) //выполняю одно дело
 
 function jsHighlightText()
 {
-		searchstring = $('#textfilter').val();
+		var searchstring = $('#textfilter').val();
 		if(!(searchstring.length>3)) return true;
 		$(".highlight").contents().unwrap();
 		$(".search_panel_result").highlight(searchstring,"highlight"); 
@@ -985,13 +986,13 @@ function jsMakeUnDid(id) //снимаю выполнение
 
 function jsFindLastSync()  //нахожу время последней синхронизации, ориентируюсь на поле .time и .lsync
 {
-maxt = 0; mint = parseInt(99999999999999999); 
+var maxt = 0; var mint = parseInt(99999999999999999); 
 
 if(my_all_data)
 for(i=0;i<my_all_data.length;i++) 
 	{ 
-	lsync = my_all_data[i].lsync; 
-	changetime = my_all_data[i].time; 
+	var lsync = my_all_data[i].lsync; 
+	var changetime = my_all_data[i].time; 
 	if(lsync>maxt) maxt=lsync; 
 	if(changetime>lsync) 
 		if( mint>changetime ) mint=parseInt(changetime,10); 
@@ -1000,8 +1001,8 @@ for(i=0;i<my_all_data.length;i++)
 if(my_all_comments)
 for(i=0;i<my_all_comments.length;i++) 
 	{ 
-	lsync = my_all_comments[i].lsync; 
-	changetime = my_all_comments[i].time; 
+	var lsync = my_all_comments[i].lsync; 
+	var changetime = my_all_comments[i].time; 
 	if(lsync>maxt) maxt=lsync; 
 	if(changetime>lsync) 
 		if( mint>changetime ) mint=parseInt(changetime,10); 
@@ -1036,7 +1037,7 @@ function jsTitleClick(ntitle) //клик по Названию дела. ntitle 
 {
 	if (ntitle.attr("contenteditable")==true) return true;
 	
-	nowtime = new Date();
+	var nowtime = new Date();
 	if(((nowtime-lastclick)<1000) && (lastclickelement == ntitle.html())) needtoedit = true;
 	else 
 		{
@@ -1083,7 +1084,7 @@ if (navigator.onLine == false) //если интернета нет
 
 if(need_to_off==0 || need_to_off==1)
 	{ //выключаю ссылку
-	lnk = "do.php?onLink="+id+"&is_on="+need_to_off+"&shortlink="+$("#makeshare").val().split("/")[1];
+	var lnk = "do.php?onLink="+id+"&is_on="+need_to_off+"&shortlink="+$("#makeshare").val().split("/")[1];
 	
 	$.getJSON(lnk,function(data){
 			$("#makesharestat_count").hide();
@@ -1097,7 +1098,7 @@ if(need_to_off==0 || need_to_off==1)
 	return true;
 	}
 
-lnk = "do.php?getLink="+id;
+var lnk = "do.php?getLink="+id;
 $.getJSON(lnk,function(data){
 	console.info(data);
 	$("#makesharestat_count span").text("0");
@@ -1147,8 +1148,8 @@ function jsOpenRedactorRecursive(id)  //открываю в редакторе �
 		    recursivedata=[];
 		    recursivedata.push( jsFind(id) );
 		    jsRecursive( id );
-			amount = parseInt(recursivedata.length,10);
-	   		need_open = [];
+			var amount = parseInt(recursivedata.length,10);
+	   		var need_open = [];
 	   		$.each(recursivedata,function(i,el)
 	   			{ 
 	   			need_open.push(el.id);
@@ -1162,13 +1163,13 @@ function jsOpenRedactorRecursive(id)  //открываю в редакторе �
 
 function jsSendMail(mytitle, mailto)
 {
-mynote = myr.getCode();
+var mynote = myr.getCode();
 mynote = 'changes='+encodeURIComponent(mynote);
 
-mailto_uri = encodeURIComponent(mailto);
-mytitle_uri = encodeURIComponent(mytitle);
+var mailto_uri = encodeURIComponent(mailto);
+var mytitle_uri = encodeURIComponent(mytitle);
 
-lnk = "do.php?send_mail_to="+mailto_uri+"&mytitle="+mytitle_uri;
+var lnk = "do.php?send_mail_to="+mailto_uri+"&mytitle="+mytitle_uri;
 $.postJSON(lnk,mynote,function(data,j,k){
 	alert('Письмо "'+mytitle+'" для '+"\r"+mailto+"\rуспешно отправлено.");
 	});
@@ -1464,7 +1465,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		
 	if(myfilter.length>3)
 		mytimer6 = setTimeout(function(){
-		data = my_all_data.filter(function(el)
+		var data = my_all_data.filter(function(el)
 			{
 			if(el.did!="") return false;
 			if(el.del==1) return false;
@@ -1484,13 +1485,13 @@ function jsRegAllKey() //все общие delegate и регистрация к
 		year = $(this).parents(".ui-datepicker-group").find(".ui-datepicker-year").html();
 		week = $(this).html();
 		
-		dd = my_all_data.filter(function(el){ return el.title==year+" год"; });
+		var dd = my_all_data.filter(function(el){ return el.title==year+" год"; });
 		if(!dd) return false;
 		
 		recursivedata=[];
 		jsRecursive(dd[0].id);
 		
-		dd = recursivedata.filter(function(el){ return el.title==week+" неделя"; });
+		var dd = recursivedata.filter(function(el){ return el.title==week+" неделя"; });
 		if(!recursivedata) return false;
 
 		recursivedata=[];
@@ -2399,14 +2400,14 @@ setTimeout(function(){
 									    		}
 									    	
 					var comment_ids_found=new Array;		
-					data = my_all_comments.filter(function(el)
+					var data = my_all_comments.filter(function(el)
 						{
 						if( el.text.toLowerCase().indexOf(searchstring.toLowerCase())!=-1 )
 							if(comment_ids_found.indexOf(el.tree_id)==-1) comment_ids_found.push( el.tree_id );
 						});				
 					console.info("FOUND COMMENT=",comment_ids_found);
 									    	
-			    	data = my_all_data.filter(function(el) //поиск удовлетворяющих поисковой строке условий
+			    	var data = my_all_data.filter(function(el) //поиск удовлетворяющих поисковой строке условий
 		        		{ 
 		        		if(!(!el.title)) 
 		        		  return ( (el.title.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ||
@@ -3091,7 +3092,7 @@ function jsStartSync(how_urgent,iamfrom) //how_urgent = now - если синх�
 
 function jsUnNew() //убираем список изменённых полей после синхронизации. Лучше убирать их по мере синхронизации! Перенести в jsRefreshDo!
 {
-	data = my_all_data.filter(function(el,i) { if(el.new) return el.new!=""; } );
+	var data = my_all_data.filter(function(el,i) { if(el.new) return el.new!=""; } );
 	$.each(data, function(i,node){
 		node.new="";
 		});
@@ -3211,7 +3212,7 @@ sync_id = jsGetSyncId();
 //Что изменилось после последней синхронизации//////////////////////////////////
 lastsync_time_client = jsFindLastSync();
 
-data = my_all_data.filter(function(el) { if(el) return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>el.lsync) || ((el.new!="") && (el.new)) ); } );
+var data = my_all_data.filter(function(el) { if(el) return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>el.lsync) || ((el.new!="") && (el.new)) ); } );
 
 console.info("@@@@@@@@_need_to_sync = ",data);
 
@@ -3623,7 +3624,6 @@ function jsShowComments(tree_id, parent_id)
 	var html = "";
 	$.each(chat, function(i,d)
 		{
-		console.info(d);
 		var frend = jsFrendById(d.user_id);
 		d.foto = frend.foto;
 		d.name = frend.fio;
@@ -4644,14 +4644,15 @@ var filtercache = new Array;
 
 function jsFind(id,fields)
 {
+id=parseInt(id);
 element = jsIsThereElement(id);
 if(element) return element;
 
-
 var my_id_for_cache;
-if(!filtercache[id] || true)
+if(!filtercache[id])
 	{
-		answer = my_all_data.filter(function(el,i) 
+//		console.info("SLOW",id);
+		var answer = my_all_data.filter(function(el,i) 
 			{ 
 			if(el) if(el.parent_id) 
 				{
@@ -4663,11 +4664,17 @@ if(!filtercache[id] || true)
 				}
 			} );
 		if(!answer) return false;
-//		if(my_id_for_cache) filtercache[id] = my_id_for_cache;
+		if(my_id_for_cache) filtercache[id] = my_id_for_cache;
 	}
 else
 	{
-	answer[0] = my_all_data[ filtercache[id] ];
+	var this_element = my_all_data[ filtercache[id] ];
+	if(this_element) 
+		{
+		var answer=[];
+		answer[0] = my_all_data[ filtercache[id] ];
+//		console.info("FAST",id);
+		}
 	}
 
 if(answer.length>0 && fields) //если нужно присваивать значения
@@ -4762,7 +4769,7 @@ return answer[0];
 
 function jsFindComment(id,fields)
 {
-		answer = my_all_comments.filter(function(el,i) 
+		var answer = my_all_comments.filter(function(el,i) 
 			{ 
 			if(el)
 				if( el.id==id ) 
@@ -4828,7 +4835,7 @@ return answer[0];
 // jsFind(12,1,"text","hello!");
 function jsFindOLD(id,is_need_save,field,value)
 {
-answer = my_all_data.filter(function(el,i) { if(el.parent_id) return el.id==id; } );
+var answer = my_all_data.filter(function(el,i) { if(el.parent_id) return el.id==id; } );
 
 if(is_need_save)
 	{
@@ -5165,7 +5172,7 @@ function jsFindByTreeId(tree_id,parent_id)
 {
 if(!tree_id) return false;	
 
-data = my_all_comments.filter(function(el) 
+var data = my_all_comments.filter(function(el) 
    {
    if(el.del == 1) return false;
    return ( (el.tree_id==tree_id) && ( (el.parent_id==parent_id) || (parent_id==-1) )); 
@@ -5179,7 +5186,7 @@ function jsFindByParentComments(parent_id,need_did,need_add_line)
 {
 if(!parent_id) return false;	
 
-data = my_all_comments.filter(function(el) 
+var data = my_all_comments.filter(function(el) 
    {
    if(el.del == 1) return false;
    return ( (el.parent_id==parent_id) ); 
@@ -5197,7 +5204,7 @@ if(!jsFind(parent_id) && parent_id!=1) return false;
 if(parent_id==0) return false;
 if(!parent_id) return false;	
 
-data = my_all_data.filter(function(el) 
+var data = my_all_data.filter(function(el) 
    {
    if(!show_hidden && !need_did)
 	   if(el.did != "") return false; 
@@ -5246,7 +5253,7 @@ if(need_add_line)
 		mydata2 = mydata1.sort(compare5); //сортировка отключена
 
 		jj=0;
-		mydata3 = mydata2.filter(function(el) 
+		var mydata3 = mydata2.filter(function(el) 
 		   {
 		   if(!show_hidden && !need_did)
 			   if(el.did != "") return false; 
@@ -5278,7 +5285,7 @@ if(need_add_line)
 		mydata1 = mydata.sort(compare3); //сортировка отключена
 
 		jj=0;
-		mydata2 = mydata1.filter(function(el) 
+		var mydata2 = mydata1.filter(function(el) 
 		   {
 		   if(!show_hidden && !need_did)
 			   if(el.did != "") return false; 
@@ -5333,7 +5340,7 @@ if(need_add_line)
 		mydata1 = mydata.sort(compare6); //сортировка отключена
 
 		jj=0;
-		mydata2 = mydata1.filter(function(el) 
+		var mydata2 = mydata1.filter(function(el) 
 		   {
 		   if(!show_hidden && !need_did)
 			   if(el.did != "") return false; 
@@ -5628,21 +5635,21 @@ function jsShowTreeNode(parent_node,isTree,other_data)
 	else
 	  {
 	  jsReorder(parent_node);
-	  data = my_all_data[parent_node];
+	  var data = my_all_data[parent_node];
 	  }
 
-	  data = jsFindByParent(parent_node,null,true);
+	  var data = jsFindByParent(parent_node,null,true);
 	  
 	
 //	console.info(parent_node,data)
 	
-	if(parent_node==0) mydata = data;
-	else mydata = data;
+	if(parent_node==0) var mydata = data;
+	else var mydata = data;
 	
 	iii=0;
 
 	if( (parent_node==-1) || (parent_node==-2) )
-	      mydata = other_data;
+	      var mydata = other_data;
 
 	  $.ajaxSetup({async: true});
 	  
@@ -5765,7 +5772,7 @@ function compare2(a,b) {
 		  	var temp_data = jsFindByTreeId(data.id,-1);
 		  	if(temp_data.length>0) 
 		  		{
-		  		findcomment = temp_data.filter(function(el){
+		  		var findcomment = temp_data.filter(function(el){
 		  			return el.text.toLowerCase().indexOf(findtext.toLowerCase())!=-1;
 		  			});
 		  		if(findcomment[0])
@@ -5930,7 +5937,7 @@ function jsInfoFolder(data,parent_node)
 		  	var temp_data = jsFindByTreeId(data.id,-1);
 		  	if(temp_data.length>0) 
 		  		{
-		  		findcomment = temp_data.filter(function(el){
+		  		var findcomment = temp_data.filter(function(el){
 		  			return el.text.toLowerCase().indexOf(findtext.toLowerCase())!=-1;
 		  			});
 		  		if(findcomment[0])
@@ -6025,7 +6032,7 @@ function jsInfoFolder(data,parent_node)
 		  	else
 		  		{
 		  		if(my_all_share)
-		  		  ddd =my_all_share.filter(function(el){ return (el.host_user==$.cookie("4tree_user_id") && (el.tree_id==data.id)); });
+		  		  var ddd =my_all_share.filter(function(el){ return (el.host_user==$.cookie("4tree_user_id") && (el.tree_id==data.id)); });
 		  		icons_share = "";
 		  		$.each(ddd,function(j,myfrend){
 			  		frend_share = my_all_frends.filter(function(el){ return el.user_id == myfrend.delegate_user; });
@@ -6125,7 +6132,7 @@ var recursivedata = new Array();
 function jsRecursive(id)
 {
 
-mychildrens = my_all_data.filter(function(el) 
+var mychildrens = my_all_data.filter(function(el) 
    {
    if(el.del == 1) return false;
    return ( (el.parent_id==id) ); 
@@ -6380,7 +6387,7 @@ setTimeout(function()
 	{
 	caldata2=[];
 	
-	caldata = my_all_data.filter(function(el) 
+	var caldata = my_all_data.filter(function(el) 
 			{ 
 			if(el.date1!="" && el.del!=1 ) return true; 
 			else return false;

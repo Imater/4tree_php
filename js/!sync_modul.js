@@ -28,6 +28,9 @@ if(when_need_sync=="soon")
 
 function jsSync()
 {
+	if (navigator.onLine == false) //если интернета нет
+		{ jsTitle("Интернет отсутствует, попробуйте синхронизироваться позже", 5000); }
+
     if(sync_now) return true; //если синхронизация уже идёт
     sync_now = true;
     clearTimeout(sync_now_timer);
