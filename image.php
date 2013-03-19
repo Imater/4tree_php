@@ -15,8 +15,8 @@
 // to send me an email. Smart Image Resizer is released under a Creative Commons
 // Attribution-Share Alike 3.0 United States license
 // (http://creativecommons.org/licenses/by-sa/3.0/us/). All I ask is that you include a link
-// back to Shifting Pixel (either this page or shiftingpixel.com), but don’t worry about
-// including a big link on each page if you don’t want to–one will do just nicely. Feel
+// back to Shifting Pixel (either this page or shiftingpixel.com), but don�t worry about
+// including a big link on each page if you don�t want to�one will do just nicely. Feel
 // free to contact me to discuss any specifics (joe@shiftingpixel.com).
 
 /////////////////////
@@ -166,7 +166,7 @@ if ((!$maxWidth && !$maxHeight) || (!$color && $maxWidth >= $width && $maxHeight
 	$etag				= md5($data);
 	
 	doConditionalGet($etag, $lastModifiedString);
-//тут поставить кэш
+	
 	header("Content-type: $mime");
 	header('Content-Length: ' . strlen($data));
 	echo $data;
@@ -250,7 +250,6 @@ if (!isset($_GET['nocache']) && file_exists($resized))
 		
 		doConditionalGet($etag, $lastModifiedString);
 		
-		echo "HELLO";
 		header("Content-type: $mime");
 		header('Content-Length: ' . strlen($data));
 		echo $data;
@@ -425,5 +424,5 @@ function doConditionalGet($etag, $lastModified)
 // a frog jumps
 // the sound of water
 
-// —Matsuo Basho
+// �Matsuo Basho
 ?>
