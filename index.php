@@ -83,19 +83,22 @@ if(isset($_GET['confirm']))
 	<script src="b_menu/jquery.dimensions.min.js"></script>
 	<script src="b_menu/jquery.menu.js"></script>
 	<script src="./js/jquery-ui.multidatespicker.js"></script>
-    <script type="text/javascript" src="./js/jquery.idle-timer.js"></script> -->
+    <script type="text/javascript" src="./js/jquery.idle-timer.js"></script> 
+    
 	<script src="./js/jquery-ui.multidatespicker.js"></script>
 	<script src="./js/iphone-style-checkboxes.js"></script>
 	<script src="./js/handlebars.js"></script>
+    
+	<script src="fullcalendar/fullcalendar/fullcalendar.js"></script>
+	<script src="js/!test.js"></script>
+	<script src="js/jszip.js"></script>
+    -->
 
 
 	<script src="jsredactor/redactor/redactor.js"></script>
-	<script src="fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="js/pushstream.js" type="text/javascript" language="javascript" charset="utf-8"></script>
 	<script src="js/all_new.js"></script>
-	<script src="js/!test.js"></script>
 	<script src="js/!sync_modul.js"></script>
-	<script src="js/jszip.js"></script>
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 
@@ -188,6 +191,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 		<h1><i class="icon-down-dir"></i> КОНТАКТЫ</h1>
 		  <ul>
 		  <div class="left_contacts">
+			<!--
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/0.jpeg" title="Вецель Валентина">
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/katya.png">
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/sergey.png">
@@ -204,6 +208,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/7.jpeg">
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/8.jpeg">
 			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/9.jpeg">
+			-->
 		  </div>
 		  </ul>
 		<div class="horizont_line"></div>

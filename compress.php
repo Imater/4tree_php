@@ -1,4 +1,6 @@
 <?php
+ini_set('memory_limit', '-1');
+set_time_limit (4000);
 /*
 *
 * Name: compress.php 
@@ -163,7 +165,13 @@ file_compress('all.js',array('js/jquery.min.js',
 	'js/loader.js',
 	'b_menu/jquery.dimensions.min.js',
 	'b_menu/jquery.menu.js',
-	'js/jquery.idle-timer.js'
+	'js/jquery.idle-timer.js',
+	'js/jquery-ui.multidatespicker.js',
+	'js/iphone-style-checkboxes.js',
+	'js/handlebars.js',
+	'fullcalendar/fullcalendar/fullcalendar.js',
+	'js/pushstream.js',
+	'js/jszip.js'
 	));
 
 //'jstree/jquery.jstree.js',
