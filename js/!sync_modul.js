@@ -2,7 +2,7 @@ function my_console(text,text2) //вывод лога в консоль
 {
 	if(!$(".sync_console:visible").length) return true;
 
-	if(!text2) text2 = "";
+	if(!text2) var text2 = "";
 	$(".sync_console > ul").append("<li><font color='lightgray'>"+ (new Date).toLocaleTimeString() + "</font> — " + text+" <b>"+text2+"</b></li>");
 	$(".sync_console").scrollTop(50000);
 	
@@ -16,7 +16,7 @@ function my_console(text,text2) //вывод лога в консоль
 
 function jsStartSyncNew(when_need_sync)
 {
-soon = 15*1000; //сколько секунд до синхронизации
+var soon = 15*1000; //сколько секунд до синхронизации
 
 if(when_need_sync=="soon")
 	{
@@ -40,23 +40,23 @@ function jsSync()
 	
 	my_console("clean");
 
-	sync_id = jsGetSyncId();
+	var sync_id = jsGetSyncId();
 	my_console("Начинаю синхронизацию. Клиент:",sync_id);
 
-	mytime = parseInt(localStorage.getItem("last_sync_time"));
-	timedif = jsNow() - mytime;
+	var mytime = parseInt(localStorage.getItem("last_sync_time"));
+	var timedif = jsNow() - mytime;
 	my_console("Синхронизировался последний раз:",sqldate(mytime) + " ("+ parseInt(timedif/1000) +" сек.назад)");
 	
-	lastsync_time_client = jsFindLastSync();
+	var lastsync_time_client = jsFindLastSync();
 	my_console("Время последней синхронизации из дел:",sqldate(lastsync_time_client));
 
 	//данные, которые буду отправлять на сервер
-	data = my_all_data.filter(function(el) 
+	var data = my_all_data.filter(function(el) 
 			{ 
 			if(el) 
 				return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>=el.lsync) || ((el.new!="") && (el.new)) ); } );
 	
-	title_txt = "<ul style='font-size:0.7em'>";
+	var title_txt = "<ul style='font-size:0.7em'>";
 	$.each(data,function(i,d)
 		{ 
 		title_txt = title_txt + "<li><b>"+ d.id +" - " +d.title+ "</b> (изменились: "+ d.new +")</li>"; 
@@ -66,32 +66,32 @@ function jsSync()
 
 	my_console("Отправляю на сервер <b>"+data.length+"</b> изменившихся элементов:", title_txt);
 	
-	changes = JSON.stringify( jsDry(data) ); //высушиваю данные и превращаю в JSON строку
+	var changes = JSON.stringify( jsDry(data) ); //высушиваю данные и превращаю в JSON строку
 	my_console("Высушил данные в JSON и добавил в консоль. Длина:" + changes.length + " байт");
 	console.info(changes);
 
-	myconfirms = JSON.parse(localStorage.getItem("need_to_confirm"));
+	var myconfirms = JSON.parse(localStorage.getItem("need_to_confirm"));
 	my_console("Подтверждаю успешное обновление прошлых данных:",localStorage.getItem("need_to_confirm"));
 
-	confirm_ids = JSON.stringify( myconfirms ); //высушиваю данные и превращаю в JSON строку
+	var confirm_ids = JSON.stringify( myconfirms ); //высушиваю данные и превращаю в JSON строку
 	
 	//отправляю изменившиеся комментарии
 	if(my_all_comments)
-	data_comments = my_all_comments.filter(function(el) 
+	var data_comments = my_all_comments.filter(function(el) 
 			{ 
 			if(el) 
 				return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>=el.lsync) || ((el.new!="") && (el.new)) ); } );
 	
 	
 	if(my_all_comments)
-		changes_comments = JSON.stringify( jsDryComments(data_comments) ); //высушиваю данные и превращаю в JSON строку
+		var changes_comments = JSON.stringify( jsDryComments(data_comments) ); //высушиваю данные и превращаю в JSON строку
 	else
-		changes_comments = "";
+		var changes_comments = "";
 	
-	changes = 'changes='+encodeURIComponent(changes)+'&confirm='+encodeURIComponent(confirm_ids);
+	var changes = 'changes='+encodeURIComponent(changes)+'&confirm='+encodeURIComponent(confirm_ids);
 	changes = changes + '&changes_comments='+encodeURIComponent(changes_comments);
 	//what_you_need = save,load,all
-	lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&do=save";
+	var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&do=save";
 	my_console("Отправляю серверу запрос:",lnk);
 	$.postJSON(lnk,changes,function(data,j,k){
 		 if(j=="success")
@@ -119,7 +119,7 @@ function jsSync()
 			 	    		jsChangeNewIdComments(d); //заменяет отрицательный id на положительный
 			 	    		}
 
-			 	    	myelement1=jsFindComment(d.id);
+			 	    	var myelement1=jsFindComment(d.id);
 		 	    		myelement1.lsync = parseInt(data.lsync);
 		 	    		myelement1.new = "";
 		 	    		jsSaveDataComment(d.id);
@@ -202,16 +202,16 @@ function jsSync()
 
 function jsRefreshRedactor(d)
 {
-	divider = $(".divider_red[myid='"+d.id+"']");
+	var divider = $(".divider_red[myid='"+d.id+"']");
 	
 	if(divider.length==0)	//если открыта одна заметка
 	    {
-	    	id_node = $('.redactor_editor').attr("myid");
-	    	md5text = $('.redactor_editor').attr("md5");
+	    	var id_node = $('.redactor_editor').attr("myid");
+	    	var md5text = $('.redactor_editor').attr("md5");
 	    	
 	    	if( (id_node==d.id) && ( $.md5(d.text) != md5text )) //если с сервера прислали новый текст, то обновляю редактор. Нужно дописать, если открыто несколько заметок. bug. никогда не запускается.
 	    	  {
-	    	  old_scroll = $(".redactor_editor").scrollTop();
+	    	  var old_scroll = $(".redactor_editor").scrollTop();
 	    	  clearTimeout(scrolltimer);
 	    	  jsRedactorOpen([d.id],"FROM SYNC EDITOR");		
 	    	  $(".redactor_editor").scrollTop(old_scroll);
@@ -219,7 +219,7 @@ function jsRefreshRedactor(d)
 	    }
 	else
 	    {				//если открыто несколько заметок
-	    	  old_scroll = $(".redactor_editor").scrollTop();
+	    	  var old_scroll = $(".redactor_editor").scrollTop();
 	    	  clearTimeout(scrolltimer);
 	    	  if(myelement) divider.next(".edit_text").html(myelement.text);
 	    	  $(".redactor_editor").scrollTop(old_scroll);
@@ -235,9 +235,9 @@ function jsSaveElement(d)
 	
 	if( (!jsFind(d.id)) && (d.id>0) )  //если такого id нет, то создаю (создан в другом месте)
 		{
-			new_line = my_all_data.length;
+			var new_line = my_all_data.length;
 			my_all_data[new_line]=new Object(); 
-			element = my_all_data[new_line];
+			var element = my_all_data[new_line];
 			element.date1 = "";
 			element.date2 = "";
 			element.icon = "";
@@ -260,7 +260,7 @@ function jsSaveElement(d)
 			console.info("new-element",element);
 		}
 				
-	myelement = jsFind(d.id);
+	var myelement = jsFind(d.id);
 	if(!myelement) return false;
 	myelement.title = d.title;
 	myelement.parent_id = d.parent_id;
@@ -290,9 +290,9 @@ function jsSaveElementComment(d)
 	
 	if( (!jsFindComment(d.id)) && (d.id>0) )  //если такого id нет, то создаю (создан в другом месте)
 		{
-			new_line = my_all_comments.length;
+			var new_line = my_all_comments.length;
 			my_all_comments[new_line]=new Object(); 
-			element = my_all_comments[new_line];
+			var element = my_all_comments[new_line];
 			element.id = d.id;
 			element.parent_id = d.parent_id;
 			element.tree_id = d.tree_id;
@@ -305,7 +305,7 @@ function jsSaveElementComment(d)
 			console.info("new-element-comment",element);
 		}
 				
-	myelement = jsFindComment(d.id);
+	var myelement = jsFindComment(d.id);
 	if(!myelement) return false;
 	myelement.parent_id = d.parent_id;
 	myelement.new = ""; //обнуляю new, чтобы скрыть иконку синхронизации
@@ -325,7 +325,7 @@ function jsSaveElementComment(d)
 
 function jsChangeNewId(d) //заменяет отрицательный id на положительный
 {
-    all_children = jsFindByParent(d.old_id);
+    var all_children = jsFindByParent(d.old_id);
     $.each(all_children,function(i,ddd)
      	{ 
      	ddd.parent_id=d.id; 
@@ -357,7 +357,7 @@ function jsChangeNewId(d) //заменяет отрицательный id на 
 
 function jsChangeNewIdComments(d) //заменяет отрицательный id на положительный
 {
-    all_children = jsFindByParentComments(d.old_id);
+    var all_children = jsFindByParentComments(d.old_id);
     $.each(all_children,function(i,ddd)
      	{ 
      	jsFindComment(ddd.id,{parent_id:d.id});

@@ -60,7 +60,7 @@ function jsZipTree()
 
 function jsTestDate() //тестирование парсера даты
 {
-test = [
+var test = [
 		"02.05.2012 12:30",
 		"02 05 2012 12:30",
 		"2 мая 16:00",
@@ -119,13 +119,13 @@ $.each(test,function(i,el)
 
 function jsParseDate(title) //парсер даты (позвонить послезавтра)
 {
-answer = "";
-did = false;
-mytime = "";
-mydate = new Date();
-newdate = new Date();
+var answer = "";
+var did = false;
+var mytime = "";
+var mydate = new Date();
+var newdate = new Date();
 
-d = new Object;
+var d = new Object;
 
 d.myhours = 0;
 d.myminutes = 0;
@@ -135,13 +135,13 @@ d.myyears = 0;
 d.myweek = 0;
 
 
-shablon = /(\d{1,2}.\d{1,2}.\d{4})/g; 
-matches = title.match(shablon);
+var shablon = /(\d{1,2}.\d{1,2}.\d{4})/g; 
+var matches = title.match(shablon);
 
 if(matches)
   {
 	shablon = /(\d{1,4})/g; 
-	matches2 = matches[0].match(shablon);
+	var matches2 = matches[0].match(shablon);
     newdate.setDate(matches2[0]);
     newdate.setMonth(matches2[1]-1);
     newdate.setFullYear(matches2[2]);
@@ -164,19 +164,19 @@ if(matches)
 	shablon = /(\d{1,2})/g; 
 	matches4 = matches[0].match(shablon); //найти дату
 
-	if(matches3[0]=="янв") mymonth = 1;
-	if(matches3[0]=="фев") mymonth = 2;
-	if(matches3[0]=="мар") mymonth = 3;
-	if(matches3[0]=="апр") mymonth = 4;
-	if(matches3[0]=="мая") mymonth = 5;
-	if(matches3[0]=="май") mymonth = 5;
-	if(matches3[0]=="июн") mymonth = 6;
-	if(matches3[0]=="июл") mymonth = 7;
-	if(matches3[0]=="авг") mymonth = 8;
-	if(matches3[0]=="сен") mymonth = 9;
-	if(matches3[0]=="окт") mymonth = 10;
-	if(matches3[0]=="ноя") mymonth = 11;
-	if(matches3[0]=="дек") mymonth = 12;
+	if(matches3[0]=="янв") var mymonth = 1;
+	if(matches3[0]=="фев") var mymonth = 2;
+	if(matches3[0]=="мар") var mymonth = 3;
+	if(matches3[0]=="апр") var mymonth = 4;
+	if(matches3[0]=="мая") var mymonth = 5;
+	if(matches3[0]=="май") var mymonth = 5;
+	if(matches3[0]=="июн") var mymonth = 6;
+	if(matches3[0]=="июл") var mymonth = 7;
+	if(matches3[0]=="авг") var mymonth = 8;
+	if(matches3[0]=="сен") var mymonth = 9;
+	if(matches3[0]=="окт") var mymonth = 10;
+	if(matches3[0]=="ноя") var mymonth = 11;
+	if(matches3[0]=="дек") var mymonth = 12;
 	
     newdate.setDate(matches4[0]);
     newdate.setMonth(mymonth-1);
@@ -192,11 +192,11 @@ shablon = /(вчера)|(позавчера)|(сегодня)|(завтра)|(п
 matches = title.match(shablon);
 if(matches)
   {
-	if(matches[0]=="позавчера") add_days = -2;
-	if(matches[0]=="вчера") add_days = -1;
-	if(matches[0]=="сегодня") add_days = 0;
-	if(matches[0]=="завтра") add_days = +1;
-	if(matches[0]=="послезавтра") add_days = +2;
+	if(matches[0]=="позавчера") var add_days = -2;
+	if(matches[0]=="вчера") var add_days = -1;
+	if(matches[0]=="сегодня") var add_days = 0;
+	if(matches[0]=="завтра") var add_days = +1;
+	if(matches[0]=="послезавтра") var add_days = +2;
 	
 	newdate.setDate( newdate.getDate() + add_days );
     answer=" + " + matches[0];
@@ -226,6 +226,8 @@ if(false)
 	if(matches2.length==1) answer = matches2;
 	else answer = matches2.join(":");
  }
+
+var plus;
 
 shablon = /(дней|лет|нед|год|мес|день|дня|час|мин|\d{1,2}м|\d{1,2} м)/g;
 matches = title.match(shablon);
@@ -335,8 +337,8 @@ if( (mytime!="") )
 	if(mytime.toString().match(/\d{1,2}:\d{1,2}/g))
 		{
 		newtime = mytime.toString().split(":");
-		mydate.setHours(parseInt(newtime[0]) );
-		mydate.setMinutes(parseInt(newtime[1]) );
+		mydate.setHours(parseInt(newtime[0]),10 );
+		mydate.setMinutes(parseInt(newtime[1],10) );
 		mydate.setSeconds(0);
 		}
 	else
@@ -350,23 +352,23 @@ if( (mytime!="") )
 
 if(did) 
 	{
-	newdate.setHours( mydate.getHours() + parseInt(d.myhours) );
-	newdate.setMinutes( mydate.getMinutes() + parseInt(d.myminutes) );
+	newdate.setHours( mydate.getHours() + parseInt(d.myhours,10) );
+	newdate.setMinutes( mydate.getMinutes() + parseInt(d.myminutes,10) );
 	newdate.setSeconds(0);
 	mydate = newdate;
 	}
 else
 	{
-	mydate.setHours( mydate.getHours() + parseInt(d.myhours) );
-	mydate.setMinutes( mydate.getMinutes() + parseInt(d.myminutes) );
+	mydate.setHours( mydate.getHours() + parseInt(d.myhours,10) );
+	mydate.setMinutes( mydate.getMinutes() + parseInt(d.myminutes,10) );
 	mydate.setSeconds(0);
 	}
 
 
 
-mydate.setDate( mydate.getDate() + parseInt(d.mydays) + parseInt(d.myweek*7));
-mydate.setMonth( mydate.getMonth() + parseInt(d.mymonth) );
-mydate.setYear( mydate.getFullYear() + parseInt(d.myyears) );
+mydate.setDate( mydate.getDate() + parseInt(d.mydays,10) + parseInt(d.myweek*7,10));
+mydate.setMonth( mydate.getMonth() + parseInt(d.mymonth,10) );
+mydate.setYear( mydate.getFullYear() + parseInt(d.myyears,10) );
 
 shablon = /(понед)|(вторн)|(сред)|(четв)|(пятн)|(субб)|(воскр)/g; 
 matches = title.match(shablon);
@@ -411,11 +413,11 @@ sync_now = true;
 		var weekNoToday = d1.getWeek();
 		var weeksInTheFuture = eval( weekNo - weekNoToday );
 
-		startDate = d1.setDate(d1.getDate() + eval( 7 * weeksInTheFuture ));
+		var startDate = d1.setDate(d1.getDate() + eval( 7 * weeksInTheFuture ));
 		
 		d1.setDate(d1.getDate() + 6);		
 		
-		for(ik=0; ik < 7; ik+=1)
+		for(var ik=0; ik < 7; ik+=1)
 			{
 			cur_date = d1.setDate( d1.getDate() + 1 );
 			console.info("d=", sqldate( cur_date ) );
@@ -763,7 +765,7 @@ function jsCreateDo(whereadd,title) // ищу элемент по названи
 	
 	if(answer!="") return answer[0].id; //если элемент с таким именем уже найден возвращаю id и прерываюсь
 	
-	var new_id = -parseInt(1000000+Math.random()*10000000);
+	var new_id = -parseInt(1000000+Math.random()*10000000,10);
 		
 	new_line = my_all_data.length;
 	my_all_data[new_line]=new Object(); element = my_all_data[new_line];
@@ -992,7 +994,7 @@ for(i=0;i<my_all_data.length;i++)
 	changetime = my_all_data[i].time; 
 	if(lsync>maxt) maxt=lsync; 
 	if(changetime>lsync) 
-		if( mint>changetime ) mint=parseInt(changetime); 
+		if( mint>changetime ) mint=parseInt(changetime,10); 
 	}
 
 if(my_all_comments)
@@ -1002,7 +1004,7 @@ for(i=0;i<my_all_comments.length;i++)
 	changetime = my_all_comments[i].time; 
 	if(lsync>maxt) maxt=lsync; 
 	if(changetime>lsync) 
-		if( mint>changetime ) mint=parseInt(changetime); 
+		if( mint>changetime ) mint=parseInt(changetime,10); 
 	}
 
 if(mint<maxt) return mint;
@@ -1145,7 +1147,7 @@ function jsOpenRedactorRecursive(id)  //открываю в редакторе �
 		    recursivedata=[];
 		    recursivedata.push( jsFind(id) );
 		    jsRecursive( id );
-			amount = parseInt(recursivedata.length);
+			amount = parseInt(recursivedata.length,10);
 	   		need_open = [];
 	   		$.each(recursivedata,function(i,el)
 	   			{ 
@@ -1908,7 +1910,7 @@ if(false)
           	   {
           	   if(value) 
           	   		{
-          	   		$(".makesharediv").slideDown(200,function(){ if( parseInt($("#makesharestat_count span").text())>0 ) $("#makesharestat_count").show(); });
+          	   		$(".makesharediv").slideDown(200,function(){ if( parseInt($("#makesharestat_count span").text(),10)>0 ) $("#makesharestat_count").show(); });
           	   		$("#makeshare").focus().select();
 					jsStartShare(id,1);
           	   		console.info("share_on!!!",is_rendering_now);
@@ -2062,7 +2064,7 @@ setTimeout(function(){
 				}
 		  }
 
-	   if(parseInt(element.remind)==0)  //устанавливаю переключатель SMS напоминалки
+	   if(parseInt(element.remind,10)==0)  //устанавливаю переключатель SMS напоминалки
 	   	  { 
 		  if($("#on_off_sms").prop("checked")==true) 
 		  		{ 
@@ -2086,7 +2088,7 @@ setTimeout(function(){
 
 	 $('*').delegate("#pomidoro_icon i","click", function ()
 	   {
-	    myid=parseInt($(this).attr('id').replace('pomidor',''));
+	    myid=parseInt($(this).attr('id').replace('pomidor',''),10);
 	    
 	    alert(myid);
 	    
@@ -2099,7 +2101,7 @@ setTimeout(function(){
 	    endtime = now;
 	    my_min = $(this).attr('time');
 	    
-	    new_x = parseInt(my_min*513/80);
+	    new_x = parseInt(my_min*513/80,10);
 	    $("#pomidor_scale").stop().animate({"margin-left":new_x-5},700);
 	    $("#pomidor_scale").animate({"margin-left":new_x},100);
 		clearInterval(mypomidor); 		
@@ -2126,7 +2128,7 @@ setTimeout(function(){
 	    my_min = $(this).attr('time');
 	    
 	    
-	    new_x = parseInt(my_min*513/80);
+	    new_x = parseInt(my_min*513/80,10);
 	    $("#pomidor_scale").stop().animate({"margin-left":new_x-5},700);
 	    $("#pomidor_scale").animate({"margin-left":new_x},100);
 		clearInterval(mypomidor); 		
@@ -2148,10 +2150,10 @@ setTimeout(function(){
 
 		$(window).mousemove(function(e){
 			  myX = e.pageX-startX+startPomidor;
-			  my_min = parseInt(parseFloat(myX)*80/513);
+			  my_min = parseInt(parseFloat(myX)*80/513,10);
 			  if (-my_min>85) my_min = -85;
 			  if (-my_min<0) my_min = 0;
-			  new_x = parseInt(my_min*513/80);
+			  new_x = parseInt(my_min*513/80,10);
 			  $("#pomidor_scale").stop().animate({"margin-left":new_x},20);
 			  
 		    });
@@ -2323,7 +2325,7 @@ setTimeout(function(){
 			if( isTree && ($(this).find(".folder_closed").length!=0) )
 				{
 				$(this).find(".date1").hide();
-				timelong = parseInt($(this).find(".countdiv").html())*25;
+				timelong = parseInt($(this).find(".countdiv").html(),10)*25;
 				if(timelong>1000) timelong=1000;
 				if(timelong<300) timelong=300;
 				$(this).find("ul:first").slideDown(timelong,function(){ $(this).find(".date1[title!='']").show(); });
@@ -3098,11 +3100,11 @@ function jsUnNew() //убираем список изменённых полей
 
 function jsDry(data) //убираем все данные, кроме изменённых, чтобы экономить трафик в POST
 {
-	answer1 = new Array();
+	var answer1 = new Array();
 	
 	$.each(data, function(i,node){
-		changed_fields = node['new'];
-		element = new Object;
+		var changed_fields = node['new'];
+		var element = new Object;
 		element.id = node.id;
 		if((node.id<0) || (node.new=="") )  
 			{
@@ -4177,8 +4179,8 @@ function jsOpenNode(id,nohash,iamfrom) //открыть заметку с ном
 	if(!nohash)
 		{
 		var num_id;
-		if(!parseInt(id)) num_id=id;
-		else num_id = parseInt(id);
+		if(!parseInt(id,10)) num_id=id;
+		else num_id = parseInt(id,10);
 		
 		show_help_timer = setTimeout(function()
 			{ 
@@ -4270,7 +4272,7 @@ function jsShortText(text, lng)
 if(!text) return "";
 if( text.length>(lng+3) )
 	{
-	f_l = parseInt(lng*0.7);
+	f_l = parseInt(lng*0.7,10);
 	f_r = lng-f_l;
 	
 	first = text.substr(0,f_l);
@@ -4731,7 +4733,7 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 		{
 		if( changed_fields.indexOf("time,")==-1 ) //если не меняли время вручную
 			{
-			if(answer[0]) answer[0].time = parseInt(jsNow()); //ставлю время изменения (для синхронизации)
+			if(answer[0]) answer[0].time = parseInt(jsNow(),10); //ставлю время изменения (для синхронизации)
 		    var need_to_save_id=id;
 		    }
 		else
@@ -4795,7 +4797,7 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 		{
 		if( changed_fields.indexOf("time,")==-1 ) //если не меняли время вручную
 			{
-			if(answer[0]) answer[0].time = parseInt(jsNow()); //ставлю время изменения (для синхронизации)
+			if(answer[0]) answer[0].time = parseInt(jsNow(),10); //ставлю время изменения (для синхронизации)
 		    var need_to_save_id=id;
 		    }
 		else
@@ -5487,7 +5489,7 @@ text = text.replace("</div>"," ");
 text = text.replace("<br>"," ");
 text = text.replace("</li>"," ");
 text = strip_tags(text);
-length = parseInt(length)/3;
+length = parseInt(length,10)/3;
 
 findstart = text.toLowerCase().indexOf(findtext.toLowerCase());
 
@@ -5609,7 +5611,7 @@ function jsReorder(dropto)
 	console.info("reorder = "+dropto);
 					$.each( jsFindByParent(dropto), function(i,dd) 
 						{ 
-						if(parseInt(dd.position) != (i+1) ) 
+						if(parseInt(dd.position,10) != (i+1) ) 
 							{
 							jsFind(dd.id,{position : (i+1)});
 							}
@@ -6304,7 +6306,7 @@ function onResize()
 				}
 			else 
 				{
-				var reply_height = parseInt( $("#comment_enter").height() );
+				var reply_height = parseInt( $("#comment_enter").height(),10 );
 				}
 			
 //			$("#tree_comments_container").height( newheight - reply_height );
@@ -6483,8 +6485,8 @@ function jsShowCalendar()
 
 		mydate = Date.createFromMysql( el.date2 );
 		
-		mydate.setMinutes( mydate.getMinutes() + parseInt(minuteDelta) );
-		mydate.setDate( mydate.getDate() + parseInt(dayDelta) );
+		mydate.setMinutes( mydate.getMinutes() + parseInt(minuteDelta,10) );
+		mydate.setDate( mydate.getDate() + parseInt(dayDelta,10) );
 		
 		mydate2 = mydate.toMysqlFormat();
 		jsFind(event.id,{date2:mydate2});
@@ -6752,7 +6754,7 @@ function jsMakeLeftRightPanelResizable()
 				newy = e.pageY-$("#header").height()-15;
 				main_y = newy;//высота верхней панели в пикселях
 				}
-			   procent = parseInt( 100*(parseFloat(neww)/parseFloat(w)*100) )/100;
+			   procent = parseInt( 100*(parseFloat(neww)/parseFloat(w)*100),10 )/100;
 			   main_x = procent;
 			   onResize();	
 		       });
@@ -6833,7 +6835,7 @@ if(true)
 				newy = e.pageY-$("#header").height()-15;
 				main_y = newy;//высота верхней панели в пикселях
 				}
-			   procent = parseInt( 100*(parseFloat(neww)/parseFloat(w)*100) )/100;
+			   procent = parseInt( 100*(parseFloat(neww)/parseFloat(w)*100),10 )/100;
 			   main_x = procent;
 			   onResize();	
 		       });
@@ -6885,7 +6887,7 @@ function jsCalendarNode(id)
 		  y = gotodate.getFullYear();
 
 		  h = gotodate.getHours();
-		  slot = parseInt((95/24)*h)-6;
+		  slot = parseInt((95/24)*h,10)-6;
 
 		  $('#calendar').fullCalendar('gotoDate',y,m,d);		  
 		  
@@ -7134,12 +7136,12 @@ clearTimeout(my_autosave);
 function jsMakeIconText(id,text)
 {
 		mylength = strip_tags(text).length;
-		i_size = parseInt( mylength/100 );
+		i_size = parseInt( mylength/100,10 );
 		if(i_size>6) i_size=6;
 		if(mylength<100) i_size = "1";				
 		if(mylength==0) { i_size = "clean"; }
 		
-		mylength1 = parseInt(mylength/30)/10;
+		mylength1 = parseInt(mylength/30,10)/10;
 		if(mylength>0 && mylength1==0) mylength1 = 0.1;
 		if(mylength1>1) mylength1 = 0.7;
 
@@ -7303,7 +7305,7 @@ $(".todayweek").html( "(" + today.getWeek() + " неделя)");
 function goPomidor()
 {
       var now = new Date().getTime();
-      finishtime = parseInt(endtime)+(-my_min*60*1000);
+      finishtime = parseInt(endtime,10)+(-my_min*60*1000);
       resttime = (finishtime-now)/1000;
 
       if(!resttime) { clearTimeout(mypomidor); return false; }
@@ -7326,7 +7328,7 @@ var snd = new Audio("img/bell.wav"); // buffers automatically when created
 	  //Сохраняю параметры, чтобы при перезагрузки сайта таймер тикал дальше
 	  if($(".pomidor_now").attr('id')) 
 	    {
-	    id = parseInt( $(".pomidor_now").attr('id').replace("p","") );
+	    id = parseInt( $(".pomidor_now").attr('id').replace("p",""),10 );
 	    localStorage.setItem("pomidor_id",id);
 	    }
 	  else
@@ -7342,20 +7344,20 @@ var snd = new Audio("img/bell.wav"); // buffers automatically when created
 mypomidor =
    setInterval(function(){
       var now = new Date().getTime();
-      finishtime = parseInt(endtime)+(-my_min*60*1000);
+      finishtime = parseInt(endtime,10)+(-my_min*60*1000);
       resttime = (finishtime-now)/1000;
 	  document.title=RestMin(resttime);
       
-	  $("#pomidor_scale").css("margin-left",parseInt(-resttime*513/80/60));
+	  $("#pomidor_scale").css("margin-left",parseInt(-resttime*513/80/60,10));
 
-	  if ((parseInt(resttime)==15)) snd3.play();
+	  if ((parseInt(resttime)==15),10) snd3.play();
 
 	  if (resttime<0) { 
 		 jsSetTitleBack();
 	     $("#pomidor_scale").css("margin-left",0); 
 	     my_min3 = -my_min;
 
-		 my_min2 = my_min3 - parseInt(my_min3/10)*10;
+		 my_min2 = my_min3 - parseInt(my_min3/10,10)*10;
 		 
 		 
 	     if((my_min2==2) || (my_min2==3) || (my_min2==4)) { word_end = 'ы'; word_end2 = 'у'; }
@@ -7365,12 +7367,12 @@ mypomidor =
 		 snd.play();
 	     if($("#pomidoro_icon i").hasClass("pomidor_now")) {
 
-		        id = parseInt( $(".pomidor_now").attr('id').replace("p","") );
+		        id = parseInt( $(".pomidor_now").attr('id').replace("p",""),10 );
 		        if (id==8) id=0;
 		        id = id+1;
 		        text = $("#p"+id).attr("text");
 		        
-		        joke_id = parseInt(Math.random()*pomidor_text.length);
+		        joke_id = parseInt(Math.random()*pomidor_text.length,10);
 		        
 		        if($("#p"+id).attr("time")!="-25") 
 		           { 
@@ -7550,7 +7552,7 @@ if(type==0)
 		if(d.add_time=="0")  d.add_time_txt = "";
 		else
 			{
-			var add_time = new Date( parseInt(d.add_time) );
+			var add_time = new Date( parseInt(d.add_time,10) );
 			d.add_time_txt = add_time.jsDateTitleFull("need_short_format");
 			}
 		
@@ -7570,9 +7572,9 @@ var dots=":";
 
 function RestMin(restsec)
 {
-min = parseInt(restsec/60);
+min = parseInt(restsec/60,10);
 
-sec = parseInt(restsec-min*60);
+sec = parseInt(restsec-min*60,10);
 
 	     if (sec<'10') my_nul = '0';
 	     else my_nul = '';
