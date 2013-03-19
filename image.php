@@ -74,6 +74,8 @@ $image			= preg_replace('/^(s?f|ht)tps?:\/\/[^\/]+/i', '', (string) $_GET['image
 
 $image = str_replace("/http://4tree.ru/","/",$image);
 $image = str_replace("/http://localhost/","/",$image);
+$image = str_replace("/https://4tree.ru/","/",$image);
+$image = str_replace("/https://localhost/","/",$image);
 
 // For security, directories cannot contain ':', images cannot contain '..' or '<', and
 // images must start with '/'
