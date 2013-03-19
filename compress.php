@@ -1,6 +1,8 @@
 <?php
+
+echo "START NOW";
 ini_set('memory_limit', '-1');
-set_time_limit (4000);
+//set_time_limit (4000);
 /*
 *
 * Name: compress.php 
@@ -106,6 +108,8 @@ $unix_timestamp = time();		//get unix time stamp added to all file names
 $adir = "min";			//directory to store output, must not be one of the source directories
 require_once('jsmin.php');		//load javascript minifier	
 require_once('cssmin.php');		//load css minifier	
+exit;
+
 
 //		Create target directory and write Apache htaccess file when no directory found 
 if (!file_exists($adir))
@@ -138,6 +142,7 @@ if (!file_exists($adir))
 //file_compress('js_schedule.js',array('../JS/Schedule.js','../JS/iCal.js','../JS/Findit.js','../JS/UlScroll.js','../ExternalConnect/External.js'));
 //file_compress('js_non_schedule.js',array('../JS/Findit.js','../JS/UlScroll.js','../ExternalConnect/External.js'));
 
+if(false)
 file_compress('styles.css',array('ui/css/smoothness/jquery-ui-1.8.21.custom.css','fullcalendar/fullcalendar/fullcalendar.css','fontello/css/fontello.css'));
 //'css/styles.css',
 /*
@@ -155,6 +160,7 @@ file_compress('styles.css',array('ui/css/smoothness/jquery-ui-1.8.21.custom.css'
 
 */
 
+if(false)
 file_compress('all.js',array('js/jquery.min.js',
 	'js/jquery.datetimeentry2.min.js',
 	'js/jquery.datetimeentry-ru.js',
@@ -176,7 +182,10 @@ file_compress('all.js',array('js/jquery.min.js',
 
 //'jstree/jquery.jstree.js',
 
+if(false)
 file_compress('4tree.js',array('js/jquery.js','js/4tree.js','jstree/_lib/jquery.cookie.js','js/pwdwidget.js'));
+
+if(false)
 file_compress('4tree.css',array('css/4tree.css','js/pwdwidget.css'));
 
 
