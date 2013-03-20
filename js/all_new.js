@@ -4669,11 +4669,7 @@ if(!filtercache[id])
 else
 	{
 	var this_element = my_all_data[ filtercache[id] ];
-	if(this_element) 
-		{
-		var answer=[];
-		answer[0] = my_all_data[ filtercache[id] ];
-		
+
 		if(my_all_data[ filtercache[id] ].id != id)
 			{
 				var answer = my_all_data.filter(function(el,i) 
@@ -4692,7 +4688,10 @@ else
 			}
 
 
-
+	if(this_element) 
+		{
+		var answer=[];
+		answer[0] = my_all_data[ filtercache[id] ];
 //		console.info("FAST",id);
 		}
 	}
