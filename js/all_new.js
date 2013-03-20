@@ -4673,6 +4673,26 @@ else
 		{
 		var answer=[];
 		answer[0] = my_all_data[ filtercache[id] ];
+		
+		if(my_all_data[ filtercache[id] ].id != id)
+			{
+				var answer = my_all_data.filter(function(el,i) 
+				    { 
+				    if(el) if(el.parent_id) 
+				    	{
+				    	if( el.id==id ) 
+				    		{
+				    		my_id_for_cache = i;
+				    		return true; 
+				    		}
+				    	}
+				    } );
+				if(!answer) return false;
+				if(my_id_for_cache) filtercache[id] = my_id_for_cache;
+			}
+
+
+
 //		console.info("FAST",id);
 		}
 	}
