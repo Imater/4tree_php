@@ -2375,6 +2375,7 @@ setTimeout(function(){
 			if(event.keyCode==13) //добавление нового дела
 				{
 				jsAddDo( "new", 599, $("#add_do").val() ); //почему 599?
+				jsRefreshTree();
   		   		return false;
   		   		};
   		   		
@@ -5567,7 +5568,7 @@ $.each(all_data_changed,function(i,data)
 var element = jsFind(myid);
 if(element)
 	{
-		id = node_to_id( $("li.selected").attr(id) );
+		id = node_to_id( $("li.selected").attr("id") );
 //		console.info("I GOING TO ADD:",id,element.parent_id,element,arrow);
 		if(arrow == "right" || date1) //если я добавляю к родителю
 			{
