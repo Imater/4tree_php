@@ -4649,7 +4649,7 @@ element = jsIsThereElement(id);
 if(element) return element;
 
 var my_id_for_cache;
-if(!filtercache[id] || id<0)
+if((!filtercache[id]) || (id<0) || (id.indexOf("user")!=-1))
 	{
 //		console.info("SLOW",id);
 		var answer = my_all_data.filter(function(el,i) 
