@@ -4644,9 +4644,10 @@ var filtercache = new Array;
 
 function jsFind(id,fields)
 {
-id=parseInt(id);
 element = jsIsThereElement(id);
 if(element) return element;
+
+id=parseInt(id);
 
 var my_id_for_cache;
 if((!filtercache[id]) || (id<0) || (id.toString().indexOf("user")!=-1))
