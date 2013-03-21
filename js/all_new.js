@@ -5697,7 +5697,7 @@ function compare2(a,b) {
 		{
 
 //		  add_class=data.img_class;
-		  
+		  if(!data)	return true;
 		  add_class = jsMakeIconText(data.id,data.text).myclass;
 		  textlength = jsMakeIconText(data.id,data.text).mylength; 
 		  
