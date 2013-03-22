@@ -328,8 +328,8 @@ if(mytime!="")
 	}
 
 
-if(mytime!="") add = "[" + mytime+"]";
-else add="";
+if(mytime!="") var add = "[" + mytime+"]";
+else var add="";
 
 if( (mytime!="") )
 	{
@@ -442,6 +442,7 @@ function jsFindRecur(date)  //поиск повторяющихся дел
 {
 var recur_dates = my_all_data.filter(function(el,i) 
 	{ 
+	if(!el) return false;
 	if(el.date1) 
 		if ((el.del!=1) && (el.date1!="")) 
 			if(el.r)
@@ -652,15 +653,15 @@ var my_week_num = "";
 function jsCreate_or_open(path) //открывает если есть или создаёт jsCreate_or_open(["Мужики","Блондины","Петя-блондин"])
 {
 	sync_now = true;
-	id=1;
-	for(i=0;i<path.length;i++)
+	var id=1;
+	for(var i=0;i<path.length;i++)
 		{
 		id = jsCreateDo(id,path[i]);
-		if(path[i].indexOf(" неделя")!=-1) my_week_num = id;
+		if(path[i].indexOf(" неделя")!=-1) var my_week_num = id;
 		console.info("path=",id,path[i]);
 		}
 	sync_now = false;
-	jsRefreshTree();
+	//jsRefreshTree();
 	
 	return id;	
 }
@@ -672,16 +673,18 @@ function jsGetAllMyNotes() //заполняю массив allmynotes,allmydates
 {
 allmynotes = my_all_data.filter(function(el,i)  //все заметки длиннее 3 символов (без тегов)
 	{ 
+    if(!el) return false;
 	if(el.title) 
 		if ((el.del!=1) && (el.title.indexOf(" - ")!=-1) && (el.title[el.title.length-1]==")"))
 			if((strip_tags(el.text).length>3)) return true;
 	});	
 allmydates = my_all_data.filter(function(el,i) //все дела с датами (нужно для календариков)
 	{ 
+    if(!el) return false;
 	if(el.date1) 
 		if ((el.del!=1) && (el.date1!="")) return true;
 	});	
-
+return allmynotes;
 }
 
 
@@ -799,6 +802,7 @@ function jsMakeTabs() //создаю закладки из всех дел на�
 {
 	   var data = my_all_data.filter(function(el) //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
 		    { 
+		    if(!el) return false;
 		      if(el.did==0) 
 		      	if(el.del==0) 
 		      	  if(el.user_id==$.cookie("4tree_user_id"))
@@ -867,7 +871,7 @@ if(id) return id.replace("node_", "");
 
 function id_to_node(id)
 {
-if(id) return id.replace("node_", "");
+if(id) return "node_"+id;
 }
 
 
@@ -895,7 +899,7 @@ function jsPlaceMakedone(id) //размещаю makedone там, где гало
   $(".makedone").css({ left: left, top: mytop  }).show().attr("myid",id);
   $(".makedone_arrow").css({ left: box_left+20, top: mytop-9  }).show();
   $(".makedone_arrow2").css({ left: box_left+20, top: mytop-10  }).show();
-
+  return left;
 }
 
 function jsMakeUnDidInside(id) //снимаю выполнение у всех детей - рекурсивная функция
@@ -960,7 +964,11 @@ function jsMakeDid(id) //выполняю одно дело
 function jsHighlightText()
 {
 		var searchstring = $('#textfilter').val();
-		if(!(searchstring.length>3)) return true;
+		if(!(searchstring.length>3)) 
+			{ 
+			$(".highlight").contents().unwrap();
+			return true; 
+			}
 		$(".highlight").contents().unwrap();
 		$(".search_panel_result").highlight(searchstring,"highlight"); 
 		$(".comment_text").highlight(searchstring,"highlight"); 
@@ -991,6 +999,7 @@ var maxt = 0; var mint = parseInt(99999999999999999);
 if(my_all_data)
 for(i=0;i<my_all_data.length;i++) 
 	{ 
+	if(!my_all_data[i]) continue;
 	var lsync = my_all_data[i].lsync; 
 	var changetime = my_all_data[i].time; 
 	if(lsync>maxt) maxt=lsync; 
@@ -1191,6 +1200,9 @@ var QueryString;
 function jsRegAllKey() //все общие delegate и регистрация кнопок. Нужно указать точнее родительские элементы.
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
+$("#test-div").draggable({appendTo: "body"});
+
+if(typeof(test)!="undefined") jsTestIt();
 
 	$("*").delegate(".fav_icon","click",function(){
 		var fav = $(this).find("i").attr("class");
@@ -2363,6 +2375,7 @@ setTimeout(function(){
 			if(event.keyCode==13) //добавление нового дела
 				{
 				jsAddDo( "new", 599, $("#add_do").val() ); //почему 599?
+				jsRefreshTree();
   		   		return false;
   		   		};
   		   		
@@ -2808,12 +2821,6 @@ $('#tree_back').bind("contextmenu",function(e){
 
 }
 
-function jsOpenDiary() //создаёт нужную заметку с сегодняшним днём и отдаёт её id
-{
-id = 3761;
-return id;
-}
-
 	var last_message_sync_time = 0;
 
     function _manageEvent(eventMessage) {
@@ -3162,10 +3169,10 @@ function jsGetSyncId()
 {
 ///////////////////////////////////////////////////////////////////////////////
 //Устанавливаю индентификационный код (емайл + текущее время + инфо о браузере)
-sync_id = localStorage.getItem("sync_id"); 
+var sync_id = localStorage.getItem("sync_id"); 
 if(!sync_id) 
 	{
-	time_id = $.cookie("4tree_email_md") + '-' + jsNow() + '-' + navigator.userAgent;
+	var time_id = $.cookie("4tree_email_md") + '-' + jsNow() + '-' + navigator.userAgent;
 	sync_id = $.md5(time_id).substr(0,5)+"@"+sqldate( jsNow() )+"";
 	localStorage.setItem("sync_id",sync_id);
 	sync_id = localStorage.getItem("sync_id");
@@ -3530,14 +3537,16 @@ var del_timer;
 function jsDelId(id) //удаление из базы определённого id и удаление его же в LocalStorage
 {
 		sync_now = true;
+		var answer = false;
 		$.each(my_all_data, function(i,el){
-    		if(el) if(el.id == id) { my_all_data.splice(i,1); }
+    		if(el) if(el.id == id) { answer=true; my_all_data.splice(i,1); }
     		});
 
     	clearTimeout(del_timer);
-    	del_timer = setTimeout(function(){ jsSaveData(); },5000);
+    	del_timer = setTimeout(function(){ jsSaveData(); },1000);
     	
 		sync_now = false;
+		return answer;
 }
 
 function jsDeleteInside(id) //рекурсивное удаление дочерних элементов
@@ -4650,7 +4659,7 @@ if(element) return element;
 id=parseInt(id);
 
 var my_id_for_cache;
-if((!filtercache[id]) || (id<0) || (id.toString().indexOf("user")!=-1))
+if((!filtercache[id]) || (id<0) || (id.toString().indexOf("user")!=-1) || !my_all_data[ filtercache[id] ])
 	{
 //		console.info("SLOW",id);
 		var answer = my_all_data.filter(function(el,i) 
@@ -4670,7 +4679,7 @@ if((!filtercache[id]) || (id<0) || (id.toString().indexOf("user")!=-1))
 else
 	{
 	var this_element = my_all_data[ filtercache[id] ];
-
+	
 		if(my_all_data[ filtercache[id] ].id != id)
 			{
 				var answer = my_all_data.filter(function(el,i) 
@@ -5226,9 +5235,10 @@ if(!parent_id) return false;
 
 var data = my_all_data.filter(function(el) 
    {
+   if(!el) return false;
    if(!show_hidden && !need_did)
 	   if(el.did != "") return false; 
-   if(el.del == 1) return false;
+     if(el.del == 1) return false;
    
    return ( (el.parent_id==parent_id) ); 
    });
@@ -5558,7 +5568,7 @@ $.each(all_data_changed,function(i,data)
 var element = jsFind(myid);
 if(element)
 	{
-		id = node_to_id( $("li.selected").attr(id) );
+		id = node_to_id( $("li.selected").attr("id") );
 //		console.info("I GOING TO ADD:",id,element.parent_id,element,arrow);
 		if(arrow == "right" || date1) //если я добавляю к родителю
 			{
@@ -5634,8 +5644,7 @@ function jsPresize() //удаляю и добавляю узкие полоск�
 function jsReorder(dropto)
 {
 	if((dropto<0) || (dropto.toString().indexOf("user")!=-1)) return true;
-	
-	console.info("reorder = "+dropto);
+
 					$.each( jsFindByParent(dropto), function(i,dd) 
 						{ 
 						if(parseInt(dd.position,10) != (i+1) ) 
@@ -6154,6 +6163,7 @@ function jsRecursive(id)
 
 var mychildrens = my_all_data.filter(function(el) 
    {
+   if(!el) return false;
    if(el.del == 1) return false;
    return ( (el.parent_id==id) ); 
    });
@@ -6409,6 +6419,7 @@ setTimeout(function()
 	
 	var caldata = my_all_data.filter(function(el) 
 			{ 
+		    if(!el) return false;
 			if(el.date1!="" && el.del!=1 ) return true; 
 			else return false;
 			} );
@@ -6537,6 +6548,7 @@ function jsShowCalendar()
 
 			     }
 			 else
+			 if(et.data)
  			   et.data.obj.each(function()
 			     { 
 			    mynode = this.id;

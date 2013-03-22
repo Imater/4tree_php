@@ -30,6 +30,14 @@ echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.
 if(true )echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 //echo '<script src="min/all1_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 
+if(isset($_GET['test']))
+	{
+	echo '
+	<link rel="stylesheet" href="js/qunit-1.11.0.css" type="text/css" media="screen">
+	<script type="text/javascript" src="js/qunit-1.11.0.js"></script>
+	<script src="js/!test.js"></script>
+	';
+	}
 
 ?>
 <? 
@@ -93,7 +101,6 @@ if(isset($_GET['confirm']))
 	<script src="fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="js/pushstream.js" type="text/javascript" language="javascript" charset="utf-8"></script>
 	<script src="js/all_new.js"></script>
-	<script src="js/!test.js"></script>
 	<script src="js/!sync_modul.js"></script>
 	<script src="js/jszip.js"></script>
 
@@ -108,6 +115,21 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 
 
 <body onResize="onResize();">
+
+
+<?
+if(isset($_GET['test']))
+	{
+	echo '
+<div id="test-div">
+	<h1 id="qunit-header">Комплект для тестов QUnit</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+</div>';
+	}
+?>
 
 
 <div id="wrap" class="">

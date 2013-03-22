@@ -820,6 +820,7 @@ var RLANG = {
 
 					clearTimeout(my_autosave);
 					note_saved=false;
+					console.info("note_saved=",note_saved);
 					my_autosave = setTimeout( function() { savetext(1); }, 500 );
 					last_editor_click_time = jsNow();
 
