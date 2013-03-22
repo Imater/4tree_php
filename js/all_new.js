@@ -3045,7 +3045,7 @@ var idle_timer_on2 = false;
 //jsStartSync("now") - ленивый запуск синхронизации
 function jsStartSync(how_urgent,iamfrom) //how_urgent = now - если синхронизировать срочно, soon - в ближайшее время
 {
- return true; 
+// return true; 
  soon = 1*15*1000; //15 секунд если что-то изменилось
  long = 1*60*1000; //5 минут, если ничего не менялось, вдруг на сервере изменения
 
