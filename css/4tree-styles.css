@@ -75,7 +75,7 @@ font-family: Arial,Verdana;
 margin: 0px;
 overflow-x: none;
 font-size: 1em;
-height: 100%;
+
 }
 
 #wrap {
@@ -4326,7 +4326,7 @@ border:2px solid #00eaff;
 {
 background: #eeeeee;
 }
-.fav_color_0
+..fav_color_0
 {
 }
 
@@ -4342,18 +4342,4 @@ display: block;
 .fc-event-hori .fc-event-inner
 {
 max-height: 3.3em;
-}
-
-#test-div
-{
-padding: 5px;
-position: relative;
-left: 25px;
-top:300px;
-background: black;
-height: auto;
-width: 93%;
-overflow: auto;
-right: 0px;
-z-index: 9999999;
 }
