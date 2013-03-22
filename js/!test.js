@@ -1,17 +1,16 @@
-	var new_id8;
+	var new_id8,id_of_new;
 
 function jsTestIt(){
 	$("#qunit-tests").html("");
 	
-	test('jsFind(599)', function() {
-		equal(jsFind(599).id,599, 'Элемент 599 найден');
+	id_of_new = jsCreateDo(1,"_НОВОЕ");
+	
+	test('jsFind('+id_of_new+')', function() {
+		equal(jsFind(id_of_new).id,id_of_new, 'Элемент '+id_of_new+' найден');
 	});
 	
 	test('jsCreate_or_open(_НОВОЕ)', function() {
-		equal(jsCreate_or_open(["_НОВОЕ"]),599, 'Элемент НОВОЕ найден');
-	});
-	test('jsCreate_or_open(ДНЕВНИК)', function() {
-		equal(jsCreate_or_open(["ДНЕВНИК"]),6410, 'Элемент ДНЕВНИК найден');
+		equal(jsCreate_or_open(["_НОВОЕ"]),id_of_new, 'Элемент НОВОЕ найден');
 	});
 	
 	test('jsTestDateParse', function() {
