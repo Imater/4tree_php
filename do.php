@@ -594,7 +594,7 @@ if( (count($confirm_saved_id["saved"])>0) OR (count($confirm_saved_id["saved_com
 		
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-if($what_you_need != "save") //если клиент хочет только сохраниться, то не загружаю новые данные (для ускорения процесса)
+if($what_you_need == "save_and_load") //если клиент хочет только сохраниться, то не загружаю новые данные (для ускорения процесса)
 	{
 	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( (user_id=".$GLOBALS['user_id']." OR ".$share_ids.") AND (changetime > '".ConvertFutureDate($client_time)."' OR lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids true) AND tree.del!=1)";
 	if($display) echo $sqlnews;
@@ -1533,14 +1533,21 @@ $sqlnews = "SELECT * FROM tree_users WHERE id=".$GLOBALS['user_id']." OR frends 
 }
 
 
+
+
+
+if(isset($HTTP_GET_VARS['test_it']))
+{
+$t1 = microtime();
+echo get_all_share_children($GLOBALS['user_id']);
+$t2 = microtime();
+$delta = ($t2-$t1)*1000;
+echo "<hr>".$delta;
+}
+
 function getAllChild($id)
 {
 global $main_array,$all_tree_id;
-//  print_r( $all_tree_id );
-
-//  $sqlnews = "SELECT * FROM tree WHERE parent_id=".$id;
-//  $result = mysql_query_my($sqlnews); 
-//  $share_id = "";
   
 if(true)
   if(isset($all_tree_id[$id]))
@@ -1550,34 +1557,44 @@ if(true)
 		  	getAllChild($val);
 	  		}
   
-//  while (@$sql = mysql_fetch_array($result))
-//  	{
-//  	$main_array[] = $sql["id"];
-//  	getAllChild($sql["id"]);
-//  	}
   return $main_array;
-}
-
-
-function get_all_guest_nodes($user_id)
-{
-global $main_array;
-//	$main_array[] = 4507;
-//	$main_array[] = 4508;
 }
 
 function get_all_share_children($user_id)
 {
+return set_all_share_children($user_id);
+  $sqlnews = "SELECT cookie FROM tree_users WHERE id=".$user_id;
+  $result = mysql_query_my($sqlnews); 
+  @$sql = mysql_fetch_array($result);
+  $answer = $sql["cookie"];
+  if(stristr($answer,"OR")) return $answer;
+  else return set_all_share_children($user_id);
+  
+}
+
+
+function set_all_share_children($user_id)
+{
 global $main_array,$all_tree_id;
 
 
-  $sqlnews = "SELECT id,parent_id FROM tree";
+  $sqlnews = "SELECT distinct(delegate_user) FROM tree_share WHERE host_user=".$user_id;
+  $result = mysql_query_my($sqlnews); 
+  $filter="";
+  while (@$sql = mysql_fetch_array($result))
+  	{
+  	$filter .= "user_id = ".$sql["delegate_user"]." OR ";
+	}
+	
+  $filter .= "FALSE";
+	
+  $sqlnews = "SELECT id,parent_id FROM tree WHERE user_id = ".$GLOBALS['user_id']." OR ".$filter;
+  
   $result = mysql_query_my($sqlnews); 
   while (@$sql = mysql_fetch_array($result))
   	{
   	$all_tree_id[$sql["parent_id"]][] = $sql["id"];
   	}
-
 
   $sqlnews = "SELECT * FROM tree_share WHERE host_user=".$user_id." OR delegate_user=".$user_id;
   $result = mysql_query_my($sqlnews); 
@@ -1591,11 +1608,14 @@ global $main_array,$all_tree_id;
   	getAllChild($sql["tree_id"]);
   	}
   	
-	get_all_guest_nodes($user_id);
-
   $answerme = " id = '".implode( "' OR id = '",$main_array )."'";
   
   if($answerme=="") $answerme = "false";
+  $main_array="";
+  $all_tree_id="";
+
+//  $sqlnews = 'UPDATE tree_users SET cookie="'.$answerme.'" WHERE id='.$user_id;
+//  $result = mysql_query_my($sqlnews); 
 
   return $answerme;
 }

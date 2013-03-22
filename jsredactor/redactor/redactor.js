@@ -819,10 +819,12 @@ var RLANG = {
 			{
 
 					clearTimeout(my_autosave);
-					note_saved=false;
-					console.info("note_saved=",note_saved);
-					my_autosave = setTimeout( function() { savetext(1); }, 500 );
-					last_editor_click_time = jsNow();
+					my_autosave = setTimeout( function() 
+						{ 
+						note_saved=false;
+					    last_editor_click_time = jsNow();
+						savetext(1); 
+						}, 500 );
 
 
 				var key = e.keyCode || e.which;

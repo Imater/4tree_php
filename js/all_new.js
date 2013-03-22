@@ -11,7 +11,7 @@ var mymetaKey = false, diaryrewind=0,old_before_diary=0;
 var autosave_timer,mypomidor,endtime,my_min,old_title,widthpanel,RestMin, show_hidden=false,show_childdate=true;
 var is_rendering_now,last_input_click;
 var timestamp=new Date().getTime(),start_sync_when_idle=false,there_was_message_about_change=false;
-var hoverListener;
+var hoverListener,is_changed,only_save=false;
 
 function jsZipTree()
 {
@@ -534,10 +534,10 @@ function jsMakeShortRecur() //обработка формы выбора пов�
 		{
 		my_col = $("select[name=SelectRemindInterval] option:selected").val();
 		if( my_col == 1 )
-			text = 'каждую неделю';
+			var text = 'каждую неделю';
 		else
 			{
-			text = 'кажд. '+my_col+' нед.';
+			var text = 'кажд. '+my_col+' нед.';
 			}
 		}
 	
@@ -617,29 +617,29 @@ return Math.ceil((this - onejan + 1) / 86400000);
 
 function jsDiaryPath(mydate,dontopen)  //определяет путь до дневника и переходит на эту дату jsDiaryPath(new Date())
 {
-quartil = new Array(1,1,1,2,2,2,3,3,3,4,4,4);
-weekname = new Array('воскресение','понедельник','вторник','среда','четверг','пятница','суббота');
-monthname = new Array('январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь');
-weather = new Array('зима','зима','весна','весна','весна','лето','лето','лето','осень','осень','осень','зима');
+var quartil = new Array(1,1,1,2,2,2,3,3,3,4,4,4);
+var weekname = new Array('воскресение','понедельник','вторник','среда','четверг','пятница','суббота');
+var monthname = new Array('январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь');
+var weather = new Array('зима','зима','весна','весна','весна','лето','лето','лето','осень','осень','осень','зима');
 
-today = new Date(mydate);
+var today = new Date(mydate);
 
-year = today.getFullYear();
-weathername_text = weather[today.getMonth()];
-monthname_text = monthname[today.getMonth()];
-month = today.getMonth()+1; if(month<10) month = "0"+month;
-quartilname_text = quartil[today.getMonth()];
-weekname_text = weekname[today.getDay()];
-weeknum = today.getWeek();
-day = today.getDate(); if(day<10) day = "0"+day;
+var year = today.getFullYear();
+var weathername_text = weather[today.getMonth()];
+var monthname_text = monthname[today.getMonth()];
+var month = today.getMonth()+1; if(month<10) month = "0"+month;
+var quartilname_text = quartil[today.getMonth()];
+var weekname_text = weekname[today.getDay()];
+var weeknum = today.getWeek();
+var day = today.getDate(); if(day<10) day = "0"+day;
 
       //when t[3], t[4] and t[5] are missing they defaults to zero
 if(false)      return new Date(t[0], t[1] - 1, t[2], t[3] || 0, t[4] || 0, t[5] || 0);          
 
 
-path = ["_ДНЕВНИК",year+" год", quartilname_text + " квартал" , monthname_text +" ("+weathername_text+")", weeknum + " неделя", day +"."+ (month) + "."+year+" - "+weekname_text+" ("+today.getDOY()+")"];
+var path = ["_ДНЕВНИК",year+" год", quartilname_text + " квартал" , monthname_text +" ("+weathername_text+")", weeknum + " неделя", day +"."+ (month) + "."+year+" - "+weekname_text+" ("+today.getDOY()+")"];
 
-id = jsCreate_or_open(path);
+var id = jsCreate_or_open(path);
 
 if(!dontopen) jsOpenPath( id );
 return path;
@@ -740,7 +740,7 @@ var answer = allmydates.filter(function(el,i)
 
 if(answer.length!=0) 
 	{ 
-	mytext = "";
+	var mytext = "";
 	for(i=0;i<answer.length;i=i+1)
 		{
 		mytext = mytext + "— "+answer[i].title;
@@ -880,14 +880,16 @@ function jsPlaceMakedone(id) //размещаю makedone там, где гало
 	var tcheckbox = $("#mypanel #node_"+id).find(".tcheckbox");
 	var left = tcheckbox.offset().left-23;
 	var mytop = tcheckbox.offset().top+25;
-	$(".makedone").attr("isnew","false");
+	var wrap_width = $("#wrap").width();
+	var make_done_width = $(".makedone").width();
+//	$(".makedone").attr("isnew","false");
 
   var box_left=left;  
   
-  if(left>$("#wrap").width()-70) 
+  if(left>wrap_width-70) 
   	   { 
-  	   left = left - $(".makedone").width()+15; 
-  	   box_left = $("#wrap").width()-80;
+  	   left = left - make_done_width+15; 
+  	   box_left = wrap_width-80;
   	   }
   else 
   	   {
@@ -895,7 +897,7 @@ function jsPlaceMakedone(id) //размещаю makedone там, где гало
   	   
   if(left<0) { left = 10; box_left=30; }
   
-  if( (left+$(".makedone").width() )>$("#wrap").width()-50 ) left = $("#wrap").width()-$(".makedone").width()-50;
+  if( (left+make_done_width )>wrap_width-50 ) left = wrap_width-make_done_width-50;
   $(".makedone").css({ left: left, top: mytop  }).show().attr("myid",id);
   $(".makedone_arrow").css({ left: box_left+20, top: mytop-9  }).show();
   $(".makedone_arrow2").css({ left: box_left+20, top: mytop-10  }).show();
@@ -1202,7 +1204,7 @@ function jsRegAllKey() //все общие delegate и регистрация к
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 $("#test-div").draggable({appendTo: "body"});
 
-if(typeof(test)!="undefined") jsTestIt();
+if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax = null; jsTestIt(); };
 
 	$("*").delegate(".fav_icon","click",function(){
 		var fav = $(this).find("i").attr("class");
@@ -1601,7 +1603,7 @@ if(typeof(test)!="undefined") jsTestIt();
 
 
 //	setInterval(function() { jsRefreshDo(); },5000 );
-  $.idleTimer(5*1000);
+  $.idleTimer(2*1000);
 
 	$(document).bind("active.idleTimer", function(){
 		console.info("WakeUp!!!");
@@ -1609,7 +1611,7 @@ if(typeof(test)!="undefined") jsTestIt();
 
 	$(document).bind("idle.idleTimer", function(){
 		console.info("Sleeping…");
-		if(start_sync_when_idle) jsSync();
+		if(start_sync_when_idle) { jsSync(only_save); only_save=false; }
 	});
 	
 platform = window.navigator.platform; //что за устройство?
@@ -2396,11 +2398,11 @@ setTimeout(function(){
 					clearTimeout(tttt);
 					tttt = setTimeout(function()
 					         {
-									    	searchstring = $('#textfilter').val();
+									    	var searchstring = $('#textfilter').val();
 									    	
 									    	if(searchstring.length<3) return true;
 
-									         tt = '';
+									         var tt = '';
 									         try {
 											 tt = ' = '+eval( $('#textfilter').val().replace(",",".") ); 
 											 } catch (e) {
@@ -2409,7 +2411,7 @@ setTimeout(function(){
 									    	if(tt!='') 
 									    		{ 
 									    		jsTitle(tt,100000); 
-									    		return true; 
+									    		//return true; 
 									    		}
 									    	
 					var comment_ids_found=new Array;		
@@ -2832,7 +2834,7 @@ $('#tree_back').bind("contextmenu",function(e){
         if( eventMessage.type == "need_refresh_id" ) //сообщение о изменившихся данных от do.php
         	{ 
         	there_was_message_about_change = true;
-        	mysync_id = jsGetSyncId();
+        	var mysync_id = jsGetSyncId();
         	if(mysync_id!=eventMessage.sync_id) //не нужно обновлять, если сообщение пришло благодаря этому клиенту
         		{
 	        		if( jsNow() - last_message_sync_time > 10000 )
@@ -3246,7 +3248,7 @@ $(".icon-cd").css("color","#517c5d");
 
 		lnk = "do.php?sync="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow();
 		$.postJSON(lnk,changes,function(data,j,k){
-		     countit=0;
+		     var countit=0;
 		     NeedToRefresh = false;
 		     savetext(); //сохраняю всё, что успел набрать пользователь пока синхронизируемся
 		     $.each(data.changes,function(i,d)
@@ -3490,8 +3492,8 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
 		
 			if(divider.length==0)	//если открыта одна заметка
 				{
-					id_node = $('.redactor_editor').attr("myid");
-					md5text = $('.redactor_editor').attr("md5");
+					var id_node = $('.redactor_editor').attr("myid");
+					var md5text = $('.redactor_editor').attr("md5");
 					
 					if( (id_node==d.id) && ( $.md5(d.text) != md5text )) //если с сервера прислали новый текст, то обновляю редактор. Нужно дописать, если открыто несколько заметок. bug. никогда не запускается.
 					  {
@@ -4121,23 +4123,23 @@ function jsFixScroll(type,only_selected_panel)
 {
 //	console.info("fix_scroll",type);
 	
-	if(only_selected_panel) add_id = ".old_selected,"
-	else add_id = "";
+	if(only_selected_panel) var add_id = ".old_selected,"
+	else var add_id = "";
 	$("#mypanel .panel").each(function()
 		{ 
-		if(type==2) add = ",.selected";
-		else add = "";
+		if(type==2) var add = ",.selected";
+		else var add = "";
 		
-		selected = $(this).find(add_id+add);
+		var selected = $(this).find(add_id+add);
 		if(selected.length) 
 		  	{
 			//scrollto = selected.offset().top + $(this).scrollTop() - $(this).height()/2+30;
 			
-			li_top = selected.offset().top;
-			li_height = selected.height();
-			panel_height = $(this).height();
-			panel_scroll = $(this).scrollTop();
-			scrollto = panel_scroll;
+			var li_top = selected.offset().top;
+			var li_height = selected.height();
+			var panel_height = $(this).height();
+			var panel_scroll = $(this).scrollTop();
+			var scrollto = panel_scroll;
 			
 			if(li_top < 50)
 			  {
@@ -4146,8 +4148,8 @@ function jsFixScroll(type,only_selected_panel)
 			  
 			if(li_top > panel_height-20)
 			  {
-			  if(li_height>50) addheight = li_height-30;
-			  else addheight=0;
+			  if(li_height>50) var addheight = li_height-30;
+			  else var addheight=0;
 			  scrollto = li_top - panel_height + panel_scroll + 20 + addheight;
 			  }
 			$(this).scrollTop(scrollto);
@@ -4221,7 +4223,7 @@ function jsOpenNode(id,nohash,iamfrom) //открыть заметку с ном
 		title = $(".folder.selected:last").find(".n_title").html();
 		if (!title)	title = $(".old_selected:last").find(".n_title").html();
 		
-		path = myli.attr('path');
+		var path = myli.attr('path');
 		
 		$(".header_text").html( title );
 			
@@ -4299,7 +4301,7 @@ function jsOpenPath( id, iamfrom )
 		console.info("path1",path1);
 		if(path1.length<1) return false;
 				     
-				     for(ik=0; ik<path1.length; ik=ik+1)
+				     for(var ik=0; ik<path1.length; ik=ik+1)
 				     	{
 				     	toopen = path1[ik];
 				     	if(ik==path1.length-1) jsOpenNode(toopen);
@@ -4337,12 +4339,17 @@ function jsSaveData(id_one,old_id,dontsync)
 {
 //last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
 start_sync_when_idle = true;
+if(id_one>0) only_save = true;
+else only_save = false;
+
+console.info("SAVE DATA = ",id_one)
+
 //if(!dontsync) jsStartSync("soon","SAVED DATA"); //запущу синхронизацию примерно через 15 секунд
 
 //console.info("old_id",old_id);
 
 
-for(ik=0;ik<my_all_data.length;ik++)
+for(var ik=0;ik<my_all_data.length;ik++)
 	{
 	if(id_one) 
 	  {
@@ -4371,7 +4378,6 @@ localStorage.setItem("d_length",my_all_data.length);
 
 //сохраняю комментарии
 
-preloader.trigger('hide');
 }
 
 
@@ -4379,12 +4385,12 @@ function jsSaveDataComment(id_one,old_id,dontsync)
 {
 //last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
 start_sync_when_idle = false;
-jsSync();
+jsSync("save_only");
 //if(!dontsync) jsStartSync("soon","SAVED DATA"); //запущу синхронизацию примерно через 15 секунд
 
 //console.info("old_id",old_id);
 
-for(ik=0;ik<my_all_comments.length;ik++)
+for(var ik=0;ik<my_all_comments.length;ik++)
 	{
 	if(id_one) 
 	  {
@@ -4611,14 +4617,15 @@ function jsShowTreePanel() //запускается единожды
 
 function jsTextPath(path) //превращаю путь из индексов в путь из title
 {
-		textpath = '';
+		var textpath = '';
+		var title;
 		
-		path1 = path;
+		var path1 = path;
 				     
-				     for(i=0; i<path1.length; i=i+1)
+				     for(var i=0; i<path1.length; i=i+1)
 				     	{
-				     	toopen = path1[i];
-				     	an = jsFind(toopen);
+				     	var toopen = path1[i];
+				     	var an = jsFind(toopen);
 				     	if(an) title = an.title;
 				     	else title = '';
 				     	if( title )
@@ -5474,17 +5481,17 @@ return data;
 //поиск пути элемента (все родители)
 function jsPath(element)
 {
-	path = new Array;
-	i = 0;
+	var path = new Array;
+	var i = 0;
 	while(element) 
 		{
-		parent_id = element.parent_id;
+		var parent_id = element.parent_id;
 		if(parent_id!=0) 
 			{
 			if(parent_id) path[i] = parent_id.toString();
 			i=i+1;
 			}
-		old_element = element;
+		var old_element = element;
 		element = jsFind( parent_id );
 		if(!element) 
 			if(old_element.user_id) 
@@ -5501,8 +5508,8 @@ function jsPath(element)
 var elemtext='';
 function jsFindPath(id)
 {
-element = jsFind(id);
-path = jsPath(element);
+var element = jsFind(id);
+var path = jsPath(element);
 return path;
 }
 
@@ -5520,20 +5527,20 @@ function strip_tags( str ){	// Strip HTML and PHP tags from a string
 
 function jsFindText(text,findtext,length)
 {
-text = text.substr(0,5000);
+var text = text.substr(0,5000);
 text = text.replace("</p>"," ");
 text = text.replace("</div>"," ");
 text = text.replace("<br>"," ");
 text = text.replace("</li>"," ");
 text = strip_tags(text);
-length = parseInt(length,10)/3;
+var length = parseInt(length,10)/3;
 
-findstart = text.toLowerCase().indexOf(findtext.toLowerCase());
+var findstart = text.toLowerCase().indexOf(findtext.toLowerCase());
 
 if(findstart==-1) return text.substr(0,length);
 
 
-for(i=findstart;i>0;i=i-1)
+for(var i=findstart;i>0;i=i-1)
    {
    if( (text[i]=='.') || (text[i]=='!') || (text[i]=='?') || (text[i]==';') ) { i=i+2; break; }
    }
@@ -5594,6 +5601,7 @@ var need_to_re_refresh;
 //обновление дерева
 function jsRefreshTree()
 {
+var myselected,myold_selected,old_scroll;
 last_refresh = jsNow();
 
 //если открыто редактирование дерева, то запрет на обновление и повтор через 5 секунд
@@ -5605,7 +5613,7 @@ if ( ($("#mypanel .n_title[contenteditable=true]").length > 0) || ($("#mypanel #
 	return false;
 	}
 
-scrollleft = $("#mypanel").scrollLeft();
+var scrollleft = $("#mypanel").scrollLeft();
 
 $(".panel").each( function() 
 	{ 
@@ -5772,8 +5780,8 @@ function compare2(a,b) {
 		  else 
 		    { 
 		    countdiv = ''; isFolder = "";
-		    if(parent_node==1) display = "opacity:0;";
-		    else display = "opacity:0;";
+		    if(parent_node==1) var display = "opacity:0;";
+		    else var display = "opacity:0;";
 		  	triangle = 	 "<div class='icon-play-div' style='"+display+"'>"+
 				  		 " 	<i class='icon-play'></i>"+
 				  		 "</div>";
@@ -5787,16 +5795,16 @@ function compare2(a,b) {
 		  if(parent_node==-1) //функция отображения результатов поиска//
 		  	{
 		  	where_to_add = $(".search_panel_result ul");
-		  	ans = jsFindPath(data.id);
+		  	var ans = jsFindPath(data.id);
 		  	if(ans)
-			  	add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
-			else add_text = '';
+			  	var add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
+			else var add_text = '';
 		  	
-		  	length = $(".search_panel_result").width()*3;
+		  	var length = $(".search_panel_result").width()*3;
 		  	
-		  	findtext = $('#textfilter').val();
+		  	var findtext = $('#textfilter').val();
 		  	
-		  	text = jsFindText(data.text,findtext,length);
+		  	var text = jsFindText(data.text,findtext,length);
 		  	
 		  	var temp_data = jsFindByTreeId(data.id,-1);
 		  	if(temp_data.length>0) 
@@ -5821,7 +5829,7 @@ function compare2(a,b) {
 		  if(parent_node==-2)
 		  	{
 		  	where_to_add = $(".combo_list ul");
-		  	ans = jsFindPath(data.id);
+		  	var ans = jsFindPath(data.id);
 		  	if(ans)
 			  	add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
 			else add_text = '';
@@ -5953,13 +5961,13 @@ function jsInfoFolder(data,parent_node)
 		  mytitle = data.title;
 		  if(parent_node==-1) //панель поиска
 		  	{
-		  	ans = jsFindPath(data.id);
+		  	var ans = jsFindPath(data.id);
 		  	if(ans)
-			  	add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
-			else add_text = '';
+			  	var add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
+			else var add_text = '';
 		  	length = $(".search_panel_result").width()*2.3;
-		  	findtext = $('#textfilter').val();
-		  	text = jsFindText(data.text,findtext,length);
+		  	var findtext = $('#textfilter').val();
+		  	var text = jsFindText(data.text,findtext,length);
 		  	
 //		  	mytitle = mytitle.replace(findtext,"<b>"+findtext+"</b>");
 		  	
@@ -5972,12 +5980,12 @@ function jsInfoFolder(data,parent_node)
 		  		if(findcomment[0])
 		  			{
 			  			console.info("FIND_SAMPLE = ",findcomment[0]);
-			  			if(text) text_comment = '<br>';
-			  			else text_comment = "";
+			  			if(text) var text_comment = '<br>';
+			  			else var text_comment = "";
 			  			text_comment = text_comment + '<div class="comment_foto"><img src="image.php?width=15&height=15&cropratio=1:1&image=/'+findcomment[0].foto+'" height="15px" width="15px" class="comment_foto_img"></div> <u>'+findcomment[0].name+'</u>: <i>'+strip_tags(findcomment[0].text)+'</i>';
 		  			}
 		  		}
-		  	else text_comment = "";
+		  	else var text_comment = "";
 		  	
 		  	search_sample = '<div class="search_sample">'+text+text_comment+'</div>';
 		  	}
@@ -5986,7 +5994,7 @@ function jsInfoFolder(data,parent_node)
 		  if(parent_node==-2) //указание папки переноса дела
 		  	{
 		  	where_to_add = $(".combo_list ul");
-		  	ans = jsFindPath(data.id);
+		  	var ans = jsFindPath(data.id);
 		  	if(ans)
 			  	add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
 			else add_text = '';
@@ -6039,8 +6047,8 @@ function jsInfoFolder(data,parent_node)
 		  else 
 		    { 
 		    countdiv = ''; isFolder = "";
-		    if(data.parent_id==1) display = "opacity:0;";
-		    else display = "opacity:0;";
+		    if(data.parent_id==1) var display = "opacity:0;";
+		    else var display = "opacity:0;";
 		  	triangle = 	 "<div class='icon-play-div' style='"+display+"'>"+
 				  		 " 	<i class='icon-play'></i>"+
 				  		 "</div>";
@@ -6132,6 +6140,7 @@ function jsMakeDrop()
             		}
             	else //если уронили на другой элемент
             		{
+            		if(!ui.draggable[0].attributes.myid) return true;
 	            	dropto = event.target.attributes.myid.nodeValue;
 	            	draggable = ui.draggable[0].attributes.myid.nodeValue;
 	            	console.info("dropto=",jsFind(dropto),jsFind(draggable));
@@ -6362,18 +6371,18 @@ calctabs_timer = setTimeout(function()
 	{
 	$(".favorit_tabs").each(function()
 		{
-				this_tabs = $(this);
+				var this_tabs = $(this);
 				
-				panel_width = this_tabs.parent('div').outerWidth();
+				var panel_width = this_tabs.parent('div').outerWidth();
 				
-				all_w = 0;
+				var all_w = 0;
 			
 				this_tabs.find("li").show();
 				this_tabs.next(".favorit_menu:first").find('ul').html('');
 				this_tabs.next(".favorit_menu:first").hide();
 				
 				this_tabs.find("li").each(function(){
-					current_w = $(this).outerWidth();
+					var current_w = $(this).outerWidth();
 					all_w = all_w + current_w;
 					
 					if(all_w>panel_width-25) 
@@ -6814,7 +6823,7 @@ function jsMakeLeftRightPanelResizable()
 
 
 if(true)
-  $("*").delegate('.presize','mousedown', function(e)
+  $("*").on('mousedown.presize','.presize', function(e)
      { 
 			  e.preventDefault();
 			  widthpanel = $(this);
@@ -6822,7 +6831,7 @@ if(true)
 			  var oldwidth = widthpanel.prev(".panel").width();
 			  $('.bottom_left,.resize_me i').addClass('noselectable');
 
-		$("body").mousemove(function(e){
+		$("body").on("mousemove.presize",function(e){
 			  neww = oldwidth - oldleft+e.pageX-25;			  
 			  if(mymetaKey) $("#mypanel .panel").width(neww);
 			  else
@@ -6831,10 +6840,10 @@ if(true)
 			  return false;
 		      });
 
-  $("body").mouseup( function()
+  $("body").on("mouseup.presize", function()
      { 
-		$("body").unbind("mousemove");
-		$("body").unbind("mouseup");
+		$("body").off("mousemove.presize");
+		$("body").off("mouseup.presize");
 	    $('#left').removeClass('noselectable');
 		if(mymetaKey) $.cookie('pwidth',widthpanel.prev(".panel").width(),{ expires: 300 });			
 //		$.cookie('main_y',main_y,{ expires: 300 });			
@@ -6986,19 +6995,18 @@ function jsSelectNode(id,nohash,iamfrom) //открыть заметку во в
 
 function jsRedactorOpen(ids,iamfrom)
 {
-text = "";
+var text = "", mytext="";
+var element1;
 $.each(ids,function(ii,id1) 
  {  
  //	console.info("redactor_from",iamfrom);
-   preloader.trigger('show');
    element1 = jsFind(id1);
    if(!element1) 
      {
-	 preloader.trigger('hide');
      return false;
      }
  
-   			ans = jsFindPath(id1);
+   			var ans = jsFindPath(id1);
 		  	if(ans)
 			  	path1 = jsTextPath( ans );
 			else
@@ -7010,7 +7018,7 @@ $.each(ids,function(ii,id1)
    
    divider = "<div class='divider_red' contenteditable='false' md5='"+$.md5( mytext ) +"' myid='"+id1+"'>"+count+path1+"<h6>"+""+element1.title+"</h6></div>";
    
-   text = text+divider+"<div class='edit_text'>"+mytext+"</div>";
+   text = divider+"<div class='edit_text'>"+mytext+"</div>";
    
    if(ids.length==1) 
    		{
@@ -7042,10 +7050,7 @@ if((mytitle) && (iamfrom!="fav_red") && (ids.length==1)) //устанавлив�
 		{
 		jsAddFavRed(mytitle,ids[0]);
 		}
-   
-
-   preloader.trigger('hide');
- 
+    
 }
 
 var removeraretabs;

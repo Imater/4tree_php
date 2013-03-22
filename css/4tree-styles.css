@@ -4348,11 +4348,11 @@ max-height: 3.3em;
 {
 padding: 5px;
 position: relative;
-left: 25px;
-top:300px;
+left: 125px;
+top:100px;
 background: black;
 height: auto;
-width: 93%;
+width: 80%;
 overflow: auto;
 right: 0px;
 z-index: 9999999;

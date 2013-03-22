@@ -26,7 +26,7 @@ if(when_need_sync=="soon")
 }
 
 
-function jsSync()
+function jsSync(save_only)
 {
 	if (navigator.onLine == false) //если интернета нет
 		{ jsTitle("Интернет отсутствует, попробуйте синхронизироваться позже", 5000); }
@@ -94,7 +94,11 @@ function jsSync()
 	var changes = 'changes='+encodeURIComponent(changes)+'&confirm='+encodeURIComponent(confirm_ids);
 	changes = changes + '&changes_comments='+encodeURIComponent(changes_comments);
 	//what_you_need = save,load,all
-	var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&do=save";
+	
+	if(!save_only) var what_to_do = "save_and_load";
+	else var what_to_do = "save_only";
+	
+	var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do;
 	my_console("Отправляю серверу запрос:",lnk);
 	$.postJSON(lnk,changes,function(data,j,k){
 		 if(j=="success")
@@ -109,7 +113,7 @@ function jsSync()
 			 	    		}
 
 			 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit");
-			 	    	myelement1=jsFind(d.id);
+			 	    	var myelement1=jsFind(d.id);
 		 	    		myelement1.lsync = parseInt(data.lsync);
 		 	    		myelement1.new = "";
 		 	    		jsSaveData(d.id);
@@ -128,7 +132,7 @@ function jsSync()
 		 	    		jsSaveDataComment(d.id);
 			 	    	});
 
-			 	countit=0;
+			 	var countit=0;
 		 	if(data.server_changes)
 			 	$.each(data.server_changes,function(i,d) //эти данные сохранены на сервере, можно отметить lsync = now()
 			 	    	{
@@ -193,13 +197,14 @@ function jsSync()
 			 	localStorage.setItem("last_sync_time",data.lsync); //сохраняю время успешной синхронизации
 			 	localStorage.setItem("time_dif",data.time_dif); //сохраняю время успешной синхронизации
 			 	    	
-			 	  
 			 }
 		my_console("Получен ответ от сервера:",j);
         $(".icon-cd").css("color","#888");
         preloader.trigger('hide');
         sync_now = false;
-		});
+ 	    if(window.after_ajax) window.after_ajax();	  
+
+		}); //end_of_ajax
 
 }
 
@@ -345,6 +350,7 @@ function jsChangeNewId(d) //заменяет отрицательный id на 
      	});		//заменяю всех отрицательных родителей на положительных
    
 
+	console.info("NEW_ID 1");
 	jsFind(d.old_id).id = d.id;
 	jsSaveData(d.id);
 
