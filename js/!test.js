@@ -41,7 +41,7 @@ function jsTestIt(){
 		});
 
 	test('jsPlaceMakedone', function() {
-		ok(jsPlaceMakedone(599)!=0,"jsPlaceMakedone работает");
+		ok(jsPlaceMakedone(id_of_new)!=0,"jsPlaceMakedone работает");
 		$(".makedone,.makedone_arrow,.makedone_arrow2").hide();
 		});
 
@@ -58,7 +58,7 @@ function jsTestIt(){
 		})
 		
 	test('Проверяю редактирование + jsDry', function() {
-		ok( jsDry([jsFind(6447,{text:"Тестирую"})])[0].text == "Тестирую", "jsDry(Тестирую)");
+		ok( jsDry([jsFind(id_of_new,{text:"Тестирую"})])[0].text == "Тестирую", "jsDry(Тестирую)");
 		});
 
 	test('Асинхронный тест только сохранения', function() {
