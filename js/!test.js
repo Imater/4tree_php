@@ -3,7 +3,10 @@
 function jsTestIt(){
 	$("#qunit-tests").html("");
 	
-	id_of_new = jsCreateDo(1,"_НОВОЕ");
+	test('jsCreateDo("_НОВОЕ")', function() {
+		id_of_new = jsCreateDo(1,"_НОВОЕ");
+		ok(id_of_new, 'Элемент '+id_of_new+' найден');
+	});
 	
 	test('jsFind('+id_of_new+')', function() {
 		equal(jsFind(id_of_new).id,id_of_new, 'Элемент '+id_of_new+' найден');
@@ -72,7 +75,6 @@ function jsTestIt(){
 			setTimeout(function(){
 				var answer = my_all_data.filter(function(el,i) { if(el.title) return el.title==myname; });	
 				new_id8=answer[0].id; 
-				console.info("AFTER_AJAX");
 				ok(parseInt(old_id8)<parseInt(new_id8),"Новый id = "+new_id8+", старый id = "+old_id8+", name="+myname); 
 				ok(my_all_data, localStorage.getItem("last_sync_time")+" < "+jsNow());
 				start();

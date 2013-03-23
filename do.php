@@ -310,11 +310,16 @@ $q = strtolower($HTTP_GET_VARS["diary_guest"]);
 }
 
 
-
+///регистрация пользователя
 if( (!loginuser()) AND ( !isset($_POST['phone']) )) exit;
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 $user_id = $fpk_id;
+$sqlnews2 = "UPDATE tree_users SET lastvisit = '".now()."' WHERE id=".$GLOBALS['user_id'];
+$result2 = mysql_query_my($sqlnews2); 
+
+
 
 if (isset($HTTP_GET_VARS['update_path'])) 
 {
@@ -468,6 +473,7 @@ for ($i=0; $i<$countlines; $i++)
    			{
 	   		if($display) echo "<span style='color:red'><b>Делаю резервную копию, но не сохраняю! Есть более свежие изменения сделанные ".$dif." мс. назад; ".@$changes[$i]['old_id']."</b></span><br>";
    			}
+   			//тут нужно будет поставить ограничение по времени, чтобы не бэкапить каждый раз
 	   		sync_save_backup($changes,$i,$sql,$display,$now_time);
 	   		$confirm_saved_id["saved"][$i]["id"] = "".$id;
 	   		if(@$changes[$i]['old_id']) $confirm_saved_id["saved"][$i]["old_id"] = "".@$changes[$i]['old_id'];
@@ -641,7 +647,7 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 
 	//все объекты, которые удалены, но ещё ни разу не синхронизированны
 	$sqlnews = "SELECT tree.id, tree.user_id,tree.title FROM `tree` LEFT JOIN tree_sync ON tree_sync.id = tree.id AND tree_sync.sync_id='".$sync_id."' WHERE tree.del=1 AND tree.user_id=".$GLOBALS['user_id']." AND tree_sync.id IS NULL";
-//	echo $sqlnews;
+//	echo "<hr>".$sqlnews."<hr>";
 	$result = mysql_query_my($sqlnews); 
 	$i = 0;
 	$k = 0;
@@ -656,10 +662,9 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 		$sqlnews2 = "INSERT INTO `tree_sync` SET
 	    	`id` = '".$sql["id"]."',
 	    	`del` = 1,
-	    	`title` = '".$sql['title']."',
 	    	`user_id` = '".$sql['user_id']."',
 	    	`sync_id` = '".$sync_id."' ";
-	    $result2 = mysql_query_my($sqlnews2); 
+	    $result2 = mysql_query($sqlnews2); 
 		}
 ////то же самое делаю с комментариями
 
@@ -726,6 +731,8 @@ $confirm_saved_id["lsync"] = $now_time;
 $confirm_saved_id["time_dif"] = $time_dif;
 $confirm_saved_id["server_changes"] = $server_changes;
 $confirm_saved_id["server_changes_comments"] = $server_changes_comments;
+$confirm_saved_id["frends"] = get_all_frends($GLOBALS['user_id']); //загружаю друзей и расшаренные папки
+
 
 echo json_encode($confirm_saved_id);
 
@@ -908,8 +915,11 @@ if($display) echo "SAVE BACKUP<br>";
 	else $note = "";
 	$md5 = sha1($note.@$changes[$i]['time']); //для предотвращения повтороного сохранения того же
 	
-	$sqlnews2 = "SELECT count(*) cnt FROM `tree_backup` WHERE md5 ='".$md5."' AND user_id='".$GLOBALS['user_id']."'";
-	if($display) echo $sqlnews2;
+	$time_to_save = (int)($changes[$i]['time'])-1*60*1000;
+	
+	$sqlnews2 = "SELECT count(*) cnt FROM `tree_backup` WHERE (md5 ='".$md5."' AND user_id='".$GLOBALS['user_id']."') OR (changedate > ".$time_to_save." AND id = ".$changes[$i]['id']." AND user_id='".$GLOBALS['user_id']."')";
+//	if($display) echo $sqlnews2;
+//	echo $sqlnews2;
 	$result2 = mysql_query_my($sqlnews2); 
 	@$sql2 = mysql_fetch_array($result2);
 		
@@ -1491,9 +1501,9 @@ exit;
 }
 
 
-if (isset($HTTP_GET_VARS['get_all_frends'])) 
+function get_all_frends($user_id)
 {
-$sqlnews = "SELECT * FROM tree_users WHERE id=".$GLOBALS['user_id']." OR frends LIKE '%".$GLOBALS['user_id']."%' ORDER by fio";
+$sqlnews = "SELECT * FROM tree_users WHERE id=".$user_id." OR frends LIKE '%".$user_id."%' ORDER by fio";
 
   $result = mysql_query_my($sqlnews);   
   $i=0;
@@ -1503,6 +1513,7 @@ $sqlnews = "SELECT * FROM tree_users WHERE id=".$GLOBALS['user_id']." OR frends 
   	$answer["frends"][$i]["fio"] = $sql["fio"];
   	$answer["frends"][$i]["email"] = $sql["email"];
   	$answer["frends"][$i]["female"] = $sql["female"];
+  	$answer["frends"][$i]["lastvisit"] = $sql["lastvisit"];
   	
   	if(!$sql["foto"]) $foto = "img/nofoto.png";
   	else $foto = $sql["foto"];
@@ -1511,7 +1522,7 @@ $sqlnews = "SELECT * FROM tree_users WHERE id=".$GLOBALS['user_id']." OR frends 
   	$i++;
   	}
   	
-  $sqlnews = "SELECT * FROM tree_share WHERE host_user=".$GLOBALS['user_id']." OR delegate_user=".$GLOBALS['user_id']."";
+  $sqlnews = "SELECT * FROM tree_share WHERE host_user=".$user_id." OR delegate_user=".$user_id."";
   
   $result = mysql_query_my($sqlnews);   
   $i=0;
@@ -1528,7 +1539,7 @@ $sqlnews = "SELECT * FROM tree_users WHERE id=".$GLOBALS['user_id']." OR frends 
   	}
   	
   	
-	echo json_encode($answer);  
+	return $answer;  
 
 }
 

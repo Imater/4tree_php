@@ -117,6 +117,7 @@ function jsDoFirst()
 					}
 				if (event.keyCode=='13')
 				    {
+				    localStorage.clear();
 				    form = $(this).parents('.myform').attr('id');
 				    if (form == 'reg_form') jsReg();
 				    if (form == 'login_form') jsLog();

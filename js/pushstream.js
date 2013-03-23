@@ -147,7 +147,7 @@
       }
 
       if (Log4js.logger) {
-        Log4js.logger.apply(window.console, arguments);
+//        Log4js.logger.apply(window.console, arguments);
       }
 
       var logElement = document.getElementById(PushStream.LOG_OUTPUT_ELEMENT_ID);

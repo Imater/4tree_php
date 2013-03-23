@@ -98,6 +98,7 @@ if(isset($_GET['confirm']))
 
 
 	<script src="jsredactor/redactor/redactor.js"></script>
+	<script src="js/ru.js"></script>
 	<script src="fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="js/pushstream.js" type="text/javascript" language="javascript" charset="utf-8"></script>
 	<script src="js/all_new.js"></script>
@@ -206,32 +207,25 @@ if(isset($_GET['test']))
 			<li><i class="icon-at"></i> За компьютером</li>
 		</ul>
 		<div class="horizont_line"></div>
+	</div>
+</div><!--left panel -->
 
-		<h1><i class="icon-down-dir"></i> КОНТАКТЫ</h1>
+
+<div id="right_panel_opener">
+	<i class="icon-left-open"></i>
+</div>
+<div id="right_panel">
+	<div class="inside_right_panel">
 		  <ul>
-		  <div class="left_contacts">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/0.jpeg" title="Вецель Валентина">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/katya.png">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/sergey.png">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/roma.png">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/john.png">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/tania.png">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/7.jpeg">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/1.jpeg">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/2.jpeg">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/3.jpeg">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/4.jpeg">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/5.jpeg">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/6.jpeg">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/7.jpeg">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/8.jpeg">
-			<img src="image.php?width=33&height=33&cropratio=1:1&image=/img/faces/9.jpeg">
+		  <div class="right_contacts">
 		  </div>
 		  </ul>
-		<div class="horizont_line"></div>
 
 	</div>
-</div>
+</div> <!--right panel -->
+
+
+
 	<div id="main_window">
 	  <div class="place_of_top">
 	    
@@ -773,11 +767,26 @@ if(isset($_GET['test']))
 				 </div>
 				</div>
 				
-
+<div class="chat_box" user_id="template">
+	<div class="chat_header">
+		<div class="chat_user_img"></div><div class="chat_user_name" title="Минимизировать беседу"></div>
+		<div class="chat_fullscreen"><i class="icon-resize-full"></i></div>
+		<div class="chat_close"><i class="icon-cancel"></i></div>
+	</div>
+	<div class="chat_inner">
+		<div class="chat_content">
+		</div>
+		<div class="chat_editor" contenteditable="true">
+		</div>
+	</div>
+</div>
 
 <div class="sync_console">
 	<ul>
 	</ul>
+</div>
+
+
 </div>
 
 </body>

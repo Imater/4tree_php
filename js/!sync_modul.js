@@ -100,13 +100,12 @@ function jsSync(save_only)
 	
 	var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do;
 	my_console("Отправляю серверу запрос:",lnk);
-	$.postJSON(lnk,changes,function(data,j,k){
+	$.postJSON(lnk,changes,function(data,j,k){ //////////////A J A X/////////////////
 		 if(j=="success")
 		 	{
 		 	if(data.saved)
 			 	$.each(data.saved,function(i,d) //эти данные сохранены на сервере, можно отметить lsync = now()
 			 	    	{
-			 	    	console.info(d.id,data.lsync,d.old_id);
 			 	    	if(d.old_id) 
 			 	    		{
 			 	    		jsChangeNewId(d); //заменяет отрицательный id на положительный
@@ -192,6 +191,13 @@ function jsSync(save_only)
 	 	    	if(countit==1) 
 	 	    	   {
 	     	    	jsRefreshTree();
+	 	    	   }
+	 	    	if(data.frends)   
+	 	    	   {
+	 	    	   my_all_share = data.frends.share;
+	 	    	   my_all_frends = data.frends.frends;
+	 	    	   jsRefreshOneElement(-3);
+	 	    	   jsRefreshFrends();
 	 	    	   }
 			 	    	   
 			 	localStorage.setItem("last_sync_time",data.lsync); //сохраняю время успешной синхронизации
@@ -350,7 +356,6 @@ function jsChangeNewId(d) //заменяет отрицательный id на 
      	});		//заменяю всех отрицательных родителей на положительных
    
 
-	console.info("NEW_ID 1");
 	jsFind(d.old_id).id = d.id;
 	jsSaveData(d.id);
 

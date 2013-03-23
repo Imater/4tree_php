@@ -1189,7 +1189,31 @@ $.postJSON(lnk,mynote,function(data,j,k){
 }
 
 
+function jsCloneChat(user_id)
+{
+		var new_chat = $(".chat_box[user_id='template']").clone().attr("user_id",user_id);
+		user_el = jsFrendById(user_id);
+		new_chat.find(".chat_user_name").html( user_el.fio );
+		new_chat.find(".chat_user_img").html('<img src="image.php?width=33&height=33&cropratio=1:1&image=/'+user_el.foto+'">');
+		$("body").append(new_chat);
+		
+		var cnt=0;
+		$(".chat_box[user_id!=template]").each(function(el){
+			console.info( $(this).css("top") );
+			if( $(this).css("top")=="auto" )
+				{
+				cnt = cnt+1;
+				}
+			});
+		var new_right = 30+(new_chat.width()+10)*(cnt-1);
+		if( (new_right+new_chat.width()+50)>$("body").width() ) 
+			{
+			var new_right = 50+(new_chat.width()+10)*(cnt-1-$("body").width()/(new_chat.width()+50) );
+			new_chat.css("bottom",new_chat.height()+80);
+			}
+		new_chat.css("right", parseInt(new_right) ).show().draggable({appendTo: "body"});;
 
+}
 
 
 
@@ -1202,9 +1226,54 @@ var QueryString;
 function jsRegAllKey() //все общие delegate и регистрация кнопок. Нужно указать точнее родительские элементы.
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
-$("#test-div").draggable({appendTo: "body"});
+$("#test-div,.chat_box").draggable({appendTo: "body"});
 
 if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax = null; jsTestIt(); };
+
+	$("*").delegate(".chat_box","click",function(e){
+		$(".chat_box").css("z-index",50);
+		$(this).css("z-index",51);
+	  	});
+
+	$("*").delegate(".chat_close","click",function(e){
+		var chat_box = $(this).parents(".chat_box:first");
+		chat_box.remove();		
+		return false;
+		});
+
+	$("*").delegate(".chat_fullscreen","click",function(e){
+		var chat_box = $(this).parents(".chat_box:first");
+		chat_box.addClass("fullscreen");		
+		return false;
+		});
+
+
+	$("*").delegate(".chat_header","click",function(e){
+		var chat_box = $(this).parent(".chat_box");
+		if(chat_box.height()<30) 
+			{
+			chat_box.height( $(".chat_box[user_id=template]").height() );
+			chat_box.find(".chat_inner").show();
+			}
+		else 
+			{
+			chat_box.height( $(".chat_box[user_id=template]").find(".chat_header").height() );
+			chat_box.find(".chat_inner").hide();
+			}
+		return false;
+		});
+
+
+	$("#right_panel").delegate("li","click",function(e){
+		var user_id = $(this).attr("user_id");
+		if($(".chat_box[user_id='"+user_id+"']").length) 
+			{
+			//развернуть чат
+			return false;
+			}
+		jsCloneChat(user_id)
+		return false;
+		});
 
 	$("*").delegate(".fav_icon","click",function(){
 		var fav = $(this).find("i").attr("class");
@@ -1404,6 +1473,38 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 			}
 		return false;
 		});
+
+	$('*').delegate("#right_panel_opener","click",function(){
+		var right_width = 50;
+		if($("#right_panel").css("width") != "0px")
+			{
+			$("#right_panel").animate({"width":"0"},200,function(){ $(this).hide(); });
+			$("#main_window").animate({"right":"0"},200);
+			$("#right_panel_opener").animate({"right":"0"},200);
+			localStorage.setItem("s_right_open",0);
+/*			$("#search_panel").animate({"left":"16"},200, function(){ 
+						$("#left_panel_opener .icon-left-open").attr("class","icon-right-open");
+						onResize();
+						});*/
+			console.info("closed_left_panel");
+			}
+		else
+			{
+			$("#right_panel").css({"width":"0"}).show().animate({"width":right_width},300);
+			$("#right_panel_opener").animate({"right":right_width},300);
+			$("#main_window").animate({"right":right_width},300);
+			localStorage.setItem("s_right_open",1);
+/*			$("#search_panel").animate({"left":"166"},300, 
+				function(){ 
+						$("#left_panel_opener .icon-right-open").attr("class","icon-left-open");
+						onResize();
+						});*/
+			console.info("opened_left_panel");
+			}
+		return false;
+		});
+
+	if(localStorage.getItem("s_right_open")==1) $("#right_panel_opener").click();
 
 	$('*').delegate(".show_mindmap","click",function(){
 		id = $(".makedone").attr("myid");
@@ -1606,11 +1707,9 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
   $.idleTimer(2*1000);
 
 	$(document).bind("active.idleTimer", function(){
-		console.info("WakeUp!!!");
 	});
 
 	$(document).bind("idle.idleTimer", function(){
-		console.info("Sleeping…");
 		if(start_sync_when_idle) { jsSync(only_save); only_save=false; }
 	});
 	
@@ -2113,10 +2212,10 @@ setTimeout(function(){
 	    
 	    
 	    var now = new Date().getTime();
-	    endtime = now;
+	    var endtime = now;
 	    my_min = $(this).attr('time');
 	    
-	    new_x = parseInt(my_min*513/80,10);
+	    var new_x = parseInt(my_min*513/80,10);
 	    $("#pomidor_scale").stop().animate({"margin-left":new_x-5},700);
 	    $("#pomidor_scale").animate({"margin-left":new_x},100);
 		clearInterval(mypomidor); 		
@@ -2420,7 +2519,6 @@ setTimeout(function(){
 						if( el.text.toLowerCase().indexOf(searchstring.toLowerCase())!=-1 )
 							if(comment_ids_found.indexOf(el.tree_id)==-1) comment_ids_found.push( el.tree_id );
 						});				
-					console.info("FOUND COMMENT=",comment_ids_found);
 									    	
 			    	var data = my_all_data.filter(function(el) //поиск удовлетворяющих поисковой строке условий
 		        		{ 
@@ -2857,12 +2955,12 @@ $('#tree_back').bind("contextmenu",function(e){
         $(".offline").hide();
         $(".online").show();
         $("#mode").html(pushstream.wrapper.type);
-        console.info("Связь с сервером",5000);
+//        console.info("Связь с сервером",5000);
       } else {
         $(".offline").show();
         $(".online").hide();
         $("#mode").html("");
-        console.info("Связь с сервером прервана",5000);
+//        console.info("Связь с сервером прервана",5000);
       }
     };
 
@@ -3047,7 +3145,7 @@ var idle_timer_on2 = false;
 //jsStartSync("now") - ленивый запуск синхронизации
 function jsStartSync(how_urgent,iamfrom) //how_urgent = now - если синхронизировать срочно, soon - в ближайшее время
 {
-// return true; 
+ return true; 
  soon = 1*15*1000; //15 секунд если что-то изменилось
  long = 1*60*1000; //5 минут, если ничего не менялось, вдруг на сервере изменения
 
@@ -3327,7 +3425,6 @@ var last_local_sync, last_inside_sync;
 
 function jsLocalSync() //локальная синхронизация, нужна так как возможно открытие программы в нескольких окнах
 {
-console.info("локальная синхронизация");
 return true;
 if(jsNow() - last_inside_sync < 1000 )  //если синхронизация была только-что, спасаемся от зацикливания
 	{ 
@@ -3661,8 +3758,41 @@ function jsShowComments(tree_id, parent_id)
 	
 }
 
+
+function jsRefreshFrends()
+{
+	if(!my_all_frends) return false;
+	var text = "";
+	for(var i=0;i<my_all_frends.length;i=i+1)
+		{
+		var el = my_all_frends[i];
+		if(el.lastvisit!=0) { var lastvisit = "Последний визит:\n"+(new Date( parseInt(el.lastvisit) )).jsDateTitleFull(); }
+		else lastvisit = "";
+		
+		var time_dif = parseInt( (jsNow()-el.lastvisit)/1000 );
+		
+		if( (time_dif)<20*60 ) var online_div = '<div class="contact_online contact_long" title="Online '+parseInt(time_dif/60)+' мин. назад"></div>';
+		else var online_div = '';
+
+		if( (time_dif)<3*60 ) var online_div = '<div class="contact_online" title="Online '+time_dif+' сек. назад"></div>';
+		
+		
+		text += '<li user_id="'+el.user_id+'">'+
+					online_div+
+					'<img src="image.php?width=33&height=33&cropratio=1:1&image=/'+el.foto+'" title="'+el.fio
+						+"\n"+el.email+"\n"+lastvisit+'">'+
+					'<div class="contact_round">'+el.user_id+'</div>'+
+				'</li>';
+		}
+	$(".right_contacts").html(text);
+
+
+}
+
+
 function jsFrendById(user_id)
 {	
+	if(!my_all_frends) return false;
 	var answer = my_all_frends.filter(function(el,i) 
 			{ 
 			return el.user_id == user_id;
@@ -4342,7 +4472,7 @@ start_sync_when_idle = true;
 if(id_one>0) only_save = true;
 else only_save = false;
 
-console.info("SAVE DATA = ",id_one)
+//console.info("SAVE DATA = ",id_one)
 
 //if(!dontsync) jsStartSync("soon","SAVED DATA"); //запущу синхронизацию примерно через 15 секунд
 
@@ -5403,69 +5533,38 @@ if(need_add_line)
 		}
 	if(parent_id==-3)
 		{
-		lnk = "do.php?get_all_frends";
-	
-		$.ajaxSetup({async: false});
-
-	if( (jsNow() - last_load_frends_time) > 10*60*1000 ) //загружать данные share не чаще 30 секунд
-		$.getJSON(lnk,function(data_frends){
-			if(!data_frends) return true;
-			my_all_share = data_frends.share;
-			my_all_frends = data_frends.frends;
-			last_load_frends_time = jsNow();
-			console.info("load_frends",last_load_frends_time);
-			});
-
-	if(my_all_frends)		
-		$.each(my_all_frends,function(i,d){
-			element = jsFind( "user_"+d.user_id );
-		   	data.push(element);
-	   		});
-		
-			
-		$.ajaxSetup({async: true});
-
-
+			if(my_all_frends)		
+			    $.each(my_all_frends,function(i,d){
+			    	element = jsFind( "user_"+d.user_id );
+			       	data.push(element);
+			   		});
 		}
 
 	}
 
 
-if( my_all_share )
- for(i=0;i<my_all_share.length;i=i+1) 
- 	{
-	if( (my_all_share[i].parent_id_user==parent_id) || (parent_id.toString().replace("user_","") == my_all_share[i].host_user ) )
-		{
-	if( (jsNow() - last_load_frends_time) > 30000 ) //загружать данные share не чаще 30 секунд
-		{
-		last_load_frends_time = jsNow();
-		$.ajaxSetup({async: false});
-		lnk = "do.php?get_all_frends";
-		$.getJSON(lnk,function(data_frends){
-			if(!data_frends) return true;
-			my_all_share = data_frends.share;
-			my_all_frends = data_frends.frends;
-			console.info("load_frends2",last_load_frends_time);
-			});
-		$.ajaxSetup({async: true});
-		}
-
-	if(my_all_share)
-		findshare = jsFind(my_all_share[i].tree_id);
-		if(findshare) 
+	if( my_all_share )
+	 for(i=0;i<my_all_share.length;i=i+1) 
+	 	{
+		if( (my_all_share[i].parent_id_user==parent_id) || (parent_id.toString().replace("user_","") == my_all_share[i].host_user ) )
 			{
-			findshare.share=my_all_share[i].host_user;
-		
-		    recursivedata=[];
-		    myid = my_all_share[i].tree_id;
-		    jsRecursive( myid );
-		    $.each(recursivedata,function(iii,ddd){ ddd.share = findshare.share; });
-		
-		    if(data.indexOf(findshare)==-1)	data.push( findshare );
-		    }
-		
+			if(my_all_share)
+			    findshare = jsFind(my_all_share[i].tree_id);
+			    
+			if(findshare) 
+				{
+				findshare.share=my_all_share[i].host_user;
+			
+			    recursivedata=[];
+			    myid = my_all_share[i].tree_id;
+			    jsRecursive( myid );
+			    $.each(recursivedata,function(iii,ddd){ ddd.share = findshare.share; });
+			
+			    if(data.indexOf(findshare)==-1)	data.push( findshare );
+			    }
+			
+			}
 		}
-	}
 
 recursivedata=[];
 
@@ -5716,8 +5815,8 @@ function compare2(a,b) {
 
 //		  add_class=data.img_class;
 		  if(!data)	return true;
-		  add_class = jsMakeIconText(data.id,data.text).myclass;
-		  textlength = jsMakeIconText(data.id,data.text).mylength; 
+		  var add_class = jsMakeIconText(data.id,data.text).myclass;
+		  var textlength = jsMakeIconText(data.id,data.text).mylength; 
 		  
 		  progressbar = "<div class='textlength' style='width:"+ textlength +"em'></div>";
 		  
@@ -5909,7 +6008,8 @@ function compare2(a,b) {
 
 function jsRefreshOneElement(myid)
 {
-   el = $("#node_"+id);
+   
+   el = $("#node_"+myid);
    make_class="";
    if (el.hasClass("selected")) make_class = "selected";
    if (el.hasClass("old_selected")) make_class = "old_selected";
@@ -6035,6 +6135,10 @@ function jsInfoFolder(data,parent_node)
 		  	countdiv = "<div class='countdiv'>"+datacount+"</div>"; 
 		  	countdiv = "";
 		  	isFolder="folder"; 
+
+		  	var add_class = jsMakeIconText(data.id,data.text).myclass;
+		  	var textlength = jsMakeIconText(data.id,data.text).mylength; 
+
 		  	if(textlength>0)
 			  	isFull = " full";
 		  	else
@@ -6079,6 +6183,7 @@ function jsInfoFolder(data,parent_node)
 		  		
 		  		}
 
+		var icon_share = "";
 
 		if(my_all_frends)   
 		  	if(data.user_id != $.cookie("4tree_user_id") ) 
@@ -7394,7 +7499,7 @@ mypomidor =
       
 	  $("#pomidor_scale").css("margin-left",parseInt(-resttime*513/80/60,10));
 
-	  if ((parseInt(resttime)==15),10) snd3.play();
+	  if (parseInt(resttime)==15) snd3.play();
 
 	  if (resttime<0) { 
 		 jsSetTitleBack();
@@ -7607,7 +7712,6 @@ if(type==0)
 	$("#tree_news").append(myhtml);
 	}
 }
-
 
 
 
