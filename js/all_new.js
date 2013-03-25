@@ -1704,7 +1704,7 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 
 
 //	setInterval(function() { jsRefreshDo(); },5000 );
-  $.idleTimer(2*1000);
+  $.idleTimer(7*1000);
 
 	$(document).bind("active.idleTimer", function(){
 	});
