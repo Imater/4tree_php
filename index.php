@@ -776,8 +776,10 @@ if(isset($_GET['test']))
 	<div class="chat_inner">
 		<div class="chat_content">
 		</div>
-		<div class="chat_editor" contenteditable="true">
+		<div class="chat_editor">
+			<div class="chat_editor_input"></div>
 		</div>
+		
 	</div>
 </div>
 

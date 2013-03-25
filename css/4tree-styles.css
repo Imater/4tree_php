@@ -3780,6 +3780,7 @@ transition: all 0.5s;
 
 #right_panel .contact_round
 {
+opacity: 0;
 border-radius: 36px;
 min-height: 9px;
 min-width: 9px;
@@ -3807,6 +3808,17 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 -o-transition: all 0.5s;  
 transition: all 0.5s;  
 }
+#right_panel:hover .contact_round
+{
+opacity: 1;
+-moz-transition: all 0.5s; 
+-webkit-transition: all 0.5s;  
+-ms-transition: all 0.5s;  
+-o-transition: all 0.5s;  
+transition: all 0.5s;  
+display: block;
+}
+
 
 
 #right_panel li:hover .contact_round
@@ -3820,6 +3832,8 @@ border: 2px solid #FFF;
 transition: all 0.5s;  
 }
 
+
+
 .contact_online
 {
 background: #128600;
@@ -3829,7 +3843,7 @@ position: absolute;
 right: 50px;
 margin-top: 13px;
 border-radius: 15px;
-z-index: 40;
+z-index: 7;
 cursor: pointer;
 }
 
@@ -4517,7 +4531,6 @@ height: 400px;
 width: 260px;
 margin-right: 20px;
 background: green;
-border: 1px solid #444;
 z-index: 50;
 -moz-box-shadow: 0px 2px 11px #444;
 -webkit-box-shadow: 0px 2px 11px #444;
@@ -4599,9 +4612,51 @@ right:2px;
 {
 position: absolute;
 bottom: 0px;
-height: 100px;
+height: 130px;
 left: 0px;
 right: 0px;
 background: white;
-border-top: 1px solid #444;
 }
+
+.fullscreen .chat_editor
+{
+height: 30%;
+}
+
+
+.chat_editor .redactor_box
+{
+left:0px;
+right: 0px;
+}
+
+.chat_editor .redactor_toolbar
+{
+padding-left: 5px !important;
+opacity: 0.7;
+}
+
+.chat_editor .redactor_toolbar li
+{
+padding: 2px 0px;
+}
+
+.chat_editor_input,.chat_editor_input:focus
+{
+border-top: 1px solid #CCC;
+padding: 2px 5px 2px 5px;
+top:24px;
+left: 0px;
+right: 0px;
+bottom: 0px;
+}
+
+.chat_editor_input.redactor_editor, .chat_editor_input.redactor_editor:focus, .chat_editor_input.redactor_editor div:not(.divider_count):not(.divider_red):not(.mailfrom), .chat_editor_input.redactor_editor p, .chat_editor_input.redactor_editor ul, .chat_editor_input.redactor_editor ol, .chat_editor_input.redactor_editor dl, .chat_editor_input.redactor_editor blockquote
+{
+font-size: 12px !important;
+margin-bottom: 0px !important;
+}
+
+
+
+

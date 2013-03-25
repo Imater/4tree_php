@@ -1211,7 +1211,13 @@ function jsCloneChat(user_id)
 			var new_right = 50+(new_chat.width()+10)*(cnt-1-$("body").width()/(new_chat.width()+50) );
 			new_chat.css("bottom",new_chat.height()+80);
 			}
-		new_chat.css("right", parseInt(new_right) ).show().draggable({appendTo: "body"});;
+		new_chat.css("right", parseInt(new_right) ).show().draggable({appendTo: "body", handle: ".chat_header"});
+		
+		var chat_editor = new_chat.find(".chat_editor_input");
+		  myr_comment = chat_editor.redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+$.cookie("4tree_user_id"), lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+$.cookie("4tree_user_id"), autoresize:true,  
+  			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
+     });
+
 
 }
 
@@ -1226,7 +1232,8 @@ var QueryString;
 function jsRegAllKey() //все общие delegate и регистрация кнопок. Нужно указать точнее родительские элементы.
 {
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
-$("#test-div,.chat_box").draggable({appendTo: "body"});
+$("#test-div").draggable({appendTo: "body"});
+$(".chat_box").draggable({appendTo: "body", handle: ".chat_header"});
 
 if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax = null; jsTestIt(); };
 
@@ -1243,7 +1250,8 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 
 	$("*").delegate(".chat_fullscreen","click",function(e){
 		var chat_box = $(this).parents(".chat_box:first");
-		chat_box.addClass("fullscreen");		
+		if(!chat_box.hasClass("fullscreen")) chat_box.addClass("fullscreen");		
+		else chat_box.removeClass("fullscreen");		
 		return false;
 		});
 
@@ -1271,7 +1279,7 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 			//развернуть чат
 			return false;
 			}
-		jsCloneChat(user_id)
+		jsCloneChat(user_id);
 		return false;
 		});
 
