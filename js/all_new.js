@@ -1442,7 +1442,7 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		});
 	
 
-	setTimeout(function(){ jsSync(); }, 2000);
+	setTimeout(function(){ jsSync();  }, 1000);
 
 	$('#left_panel').delegate("h1","click",function(){
 		$(this).next("ul").slideToggle(200,function(){
