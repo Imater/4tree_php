@@ -172,6 +172,7 @@ abstract class aCssParserPlugin
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 abstract class aCssMinifierPlugin
 	{
 	/**
@@ -226,6 +227,7 @@ abstract class aCssMinifierPlugin
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 abstract class aCssMinifierFilter
 	{
 	/**
@@ -817,6 +819,7 @@ class CssUrlParserPlugin extends aCssParserPlugin
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 class CssStringParserPlugin extends aCssParserPlugin
 	{
 	/**
@@ -916,6 +919,7 @@ class CssStringParserPlugin extends aCssParserPlugin
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 class CssSortRulesetPropertiesMinifierFilter extends aCssMinifierFilter
 	{
 	/**
@@ -1006,6 +1010,7 @@ class CssSortRulesetPropertiesMinifierFilter extends aCssMinifierFilter
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 class CssRulesetStartToken extends aCssRulesetStartToken
 	{
 	/**
@@ -1302,6 +1307,7 @@ class CssRemoveEmptyRulesetsMinifierFilter extends aCssMinifierFilter
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 class CssRemoveEmptyAtBlocksMinifierFilter extends aCssMinifierFilter
 	{
 	/**
@@ -1375,6 +1381,7 @@ class CssRemoveCommentsMinifierFilter extends aCssMinifierFilter
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 class CssParser
 	{
 	/**
@@ -2221,7 +2228,8 @@ class CssMin
 		$paths = array(dirname(__FILE__));
 		while (list($i, $path) = each($paths))
 			{
-			$subDirectorys = glob($path . "*", GLOB_MARK | GLOB_ONLYDIR | GLOB_NOSORT);
+//			echo $path."<br>";
+			$subDirectorys = glob($path . "sex/*", GLOB_MARK | GLOB_ONLYDIR | GLOB_NOSORT);
 			if (is_array($subDirectorys))
 				{
 				foreach ($subDirectorys as $subDirectory)
@@ -4317,6 +4325,7 @@ class CssAtMediaStartToken extends aCssAtBlockStartToken
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 class CssAtMediaParserPlugin extends aCssParserPlugin
 	{
 	/**
@@ -4742,6 +4751,7 @@ class CssAtImportToken extends aCssToken
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 class CssAtImportParserPlugin extends aCssParserPlugin
 	{
 	/**
@@ -4850,6 +4860,7 @@ class CssAtFontFaceStartToken extends aCssAtBlockStartToken
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 class CssAtFontFaceParserPlugin extends aCssParserPlugin
 	{
 	/**
@@ -5029,6 +5040,7 @@ class CssAtCharsetToken extends aCssToken
  * @license		http://opensource.org/licenses/mit-license.php MIT License
  * @version		3.0.1
  */
+
 class CssAtCharsetParserPlugin extends aCssParserPlugin
 	{
 	/**

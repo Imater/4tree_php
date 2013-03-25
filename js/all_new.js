@@ -1455,7 +1455,7 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		return false;
 		});		
 
-	$('*').delegate("#left_panel_opener","click",function(){
+	$('body').delegate("#left_panel_opener","click",function(){
 		if($("#left_panel").css("width") != "0px")
 			{
 			$("#left_panel").animate({"width":"0"},200,function(){ $(this).hide(); });
@@ -1482,7 +1482,7 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		return false;
 		});
 
-	$('*').delegate("#right_panel_opener","click",function(){
+	$('body').delegate("#right_panel_opener","click",function(){
 		var right_width = 50;
 		if($("#right_panel").css("width") != "0px")
 			{
@@ -1514,14 +1514,14 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 
 	if(localStorage.getItem("s_right_open")==1) $("#right_panel_opener").click();
 
-	$('*').delegate(".show_mindmap","click",function(){
+	$('body').delegate(".show_mindmap","click",function(){
 		id = $(".makedone").attr("myid");
 		href = "http://4tree.ru/mm.php?mindmap="+id;
 		open_in_new_tab(href);
 		return false;
 		});
 
-	$('*').delegate("#send_mail","click",function(){
+	$('body').delegate("#send_mail","click",function(){
   		mytitle = $("#title_enter").val();
   		mailto = $("#email_enter").val();
   		jsSendMail(mytitle, mailto);
@@ -1530,12 +1530,12 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		});
 
 
-	$('*').delegate("#email_enter","keyup",function(){
+	$('body').delegate("#email_enter","keyup",function(){
   		localStorage.setItem("mylastmail", $(this).val());
   		return false;
 		});
 
-	$('*').delegate(".send_by_mail","click",function(){
+	$('body').delegate(".send_by_mail","click",function(){
 	  	$(".all_screen_click").remove();
   		$("#wrap").append("<div class='all_screen_click'></div>");
 
@@ -1550,7 +1550,7 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		});
 
 
-	$('*').delegate("#add_combobox","click",function(){
+	$('body').delegate("#add_combobox","click",function(){
 		$(".combo_list").slideUp(300);
 		return false;
 		});
@@ -1581,7 +1581,7 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		});
 
 
-	$('*').delegate("#add_combobox_input","keyup",function(){
+	$('body').delegate("#add_combobox_input","keyup",function(){
 		myfilter = $(this).val();
 		
 		clearTimeout(mytimer6);
@@ -1604,7 +1604,7 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		});
 
 	//открываю всю неделю в редакторе
-	$('*').delegate(".ui-datepicker-week-col","click", function () {
+	$('body').delegate(".ui-datepicker-week-col","click", function () {
 		year = $(this).parents(".ui-datepicker-group").find(".ui-datepicker-year").html();
 		week = $(this).html();
 		
@@ -1628,13 +1628,13 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		return false;
 		});
 
-	$('*').delegate(".divider_red","click", function () {
+	$('body').delegate(".divider_red","click", function () {
 		id = $(this).attr("myid");
 		jsOpenPath(id,"divider_click");
 		return false;
 		});
 
-	$('*').delegate(".show_all_in_redactor","click", function () {
+	$('body').delegate(".show_all_in_redactor","click", function () {
 		id = $(".makedone").attr("myid");
 		jsOpenRedactorRecursive(id);
 		return false;
@@ -1657,14 +1657,14 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		});		
 	
 	
-	$('*').delegate(".show_all_history_redactor","click", function () {
+	$('body').delegate(".show_all_history_redactor","click", function () {
 		id = $(".makedone").attr("myid");
 		add = $.md5(id).substr(0,10);
 		open_in_new_tab("web.php?note_history="+add+id);
 		return false;
 		});
 
-	$('*').delegate("#recur_panel input,#recur_panel select, .recur_col","change", function () {
+	$('body').delegate("#recur_panel input,#recur_panel select, .recur_col","change", function () {
 		if( $(this).hasClass("recur_col") ) 
 			$(":radio[name=recur_end_radio][value=2]").prop("checked",true);
 
@@ -1686,13 +1686,13 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		});
 
 
-	$('*').delegate(".recur_close,#recur_panel #s_close","click", function (d1,d2) {
+	$('body').delegate(".recur_close,#recur_panel #s_close","click", function (d1,d2) {
 		console.info(d1,d2);
 		$("#all_screen").fadeOut('slow');
 		return false;
 		});
 
-	$('*').delegate("#s_recur_check,#s_recur_change","click", function () {
+	$('body').delegate("#s_recur_check,#s_recur_change","click", function () {
 		if($(this).attr('checked')) 
 		  {
 		  $("#all_screen").fadeIn('slow');
@@ -1799,7 +1799,7 @@ else
 		return false;
 		});
 		
-	 $('*').delegate(".red_new_window","click", function ()
+	 $('body').delegate(".red_new_window","click", function ()
 	   {
 	   id = node_to_id( $(".selected").attr('id') );
 	   if(id<0)
@@ -1813,14 +1813,14 @@ else
 	   });
 		
 		
-	 $('*').delegate(".todayweek","click", function ()
+	 $('body').delegate(".todayweek","click", function ()
 	   {
 	   lnk = "#edit_current_week";
 	   open_in_new_tab(lnk);
 	   return false;
 	   });
 		
-	 $('*').delegate(".todaydate","click", function ()
+	 $('body').delegate(".todaydate","click", function ()
 	   {
 	    if(old_before_diary==0)
 	    	{
@@ -1836,7 +1836,7 @@ else
 		return false;
 	   });
 	   
-	 $('*').delegate("#diaryleft","click", function ()
+	 $('body').delegate("#diaryleft","click", function ()
 	   {
 	   diaryrewind = diaryrewind - 1;
 	   jsSetDiaryDate(diaryrewind);
@@ -1845,7 +1845,7 @@ else
 	   return false;
 	   });
 
-	 $('*').delegate("#diaryright","click", function ()
+	 $('body').delegate("#diaryright","click", function ()
 	   {
 	   diaryrewind = diaryrewind + 1;
 	   jsSetDiaryDate(diaryrewind);
@@ -1854,7 +1854,7 @@ else
 	   return false;
 	   });
 		
-	 $('*').delegate(".show_childdate_do","click", function ()
+	 $('body').delegate(".show_childdate_do","click", function ()
 	   {
 	   if(!show_childdate) 
 	   		{
@@ -1875,7 +1875,7 @@ else
 	   });
 	   		
 		
-	 $('*').delegate(".show_hidden_do","click", function ()
+	 $('body').delegate(".show_hidden_do","click", function ()
 	   {
 	   if(!show_hidden) 
 	   		{
@@ -1897,7 +1897,7 @@ else
 	   });
 		
 		
-	 $('*').delegate(".makeremindsms","click", function ()
+	 $('body').delegate(".makeremindsms","click", function ()
 	   {
 	   id = $(this).parents(".makedone").attr("myid");
 	   if(jsFind(id).date1!="") 
@@ -1914,7 +1914,7 @@ else
 	   });
 
 
-	 $('*').delegate(".makeunremindsms","click", function ()
+	 $('body').delegate(".makeunremindsms","click", function ()
 	   {
 	   id = $(this).parents(".makedone").attr("myid");	   
 	   jsFind(id,{ remind: 0 });
@@ -1924,7 +1924,7 @@ else
 	   });
 		
 		
-	 $('*').delegate(".makedid","click", function ()
+	 $('body').delegate(".makedid","click", function ()
 	   {
 	   id = $(this).parents(".makedone").attr("myid");
 	   jsMakeDid(id);	   
@@ -1932,7 +1932,7 @@ else
 	   return false;
 	   });
 
-	 $('*').delegate(".makedatenull","click", function ()
+	 $('body').delegate(".makedatenull","click", function ()
 	   {
 	   id = $(this).parents(".makedone").attr("myid");
 	   jsFind(id, { date1:"", date2:"", remind:0 });
@@ -1940,14 +1940,14 @@ else
 	   return false;
 	   });
 
-	 $('*').delegate(".makeundid","click", function ()
+	 $('body').delegate(".makeundid","click", function ()
 	   {
 	   id = $(this).parents(".makedone").attr("myid");
 	   jsMakeUnDid(id);
 	   return false;
 	   });
 
-	 $('*').delegate("#makeshare","click", function ()
+	 $('body').delegate("#makeshare","click", function ()
 	 	{
    	  	$(this).focus().select();
    	  	return false;
@@ -1966,7 +1966,7 @@ if(false)
   	
   	})
 
-	 $('*').delegate(".basket","click", function ()
+	 $('body').delegate(".basket","click", function ()
 	   {
 //	   jsShowBasket();
 	   $(".basket_panel").slideToggle(300);
@@ -2119,7 +2119,7 @@ setTimeout(function(){
 				});
 
 	 //нажатие на кнопку вызова меню настройки элемента
-	 $('*').delegate(".tcheckbox","click", function (e)
+	 $('body').delegate(".tcheckbox","click", function (e)
 	   {
 	   	e.preventDefault();
 	   	is_rendering_now = true;
@@ -2208,7 +2208,7 @@ setTimeout(function(){
 	   });
 		
 
-	 $('*').delegate("#pomidoro_icon i","click", function ()
+	 $('body').delegate("#pomidoro_icon i","click", function ()
 	   {
 	    myid=parseInt($(this).attr('id').replace('pomidor',''),10);
 	    
@@ -2232,7 +2232,7 @@ setTimeout(function(){
 	    
 		return false;
 	   });
-	 $('*').delegate("#left_min,#right_min,#pomidor_timer","click", function ()
+	 $('body').delegate("#left_min,#right_min,#pomidor_timer","click", function ()
 	   {
 	    $("#pomidoro_icon i").removeClass("pomidor_now");
 	    
@@ -5152,7 +5152,7 @@ if(id==-5) //отборы
 
 		element.date1 = "";
 		element.date2 = "";
-		element.icon = "img/contacts.png";
+		element.icon = "";
 		element.id = -5;
 		element.img_class = "note-clean";
 		element.parent_id = 1;

@@ -28,6 +28,7 @@ if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)
         $gz=null;
 echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
 if(true )echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
+if(true )echo '<script src="min/redactor_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 //echo '<script src="min/all1_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 
 if(isset($_GET['test']))
@@ -71,14 +72,16 @@ if(isset($_GET['confirm']))
 
 ?>
 
-	<link rel="stylesheet" href="jsredactor/redactor/redactor.css" />
 	<link rel="stylesheet" type="text/css" href="css/4tree-styles.css">
-	<link rel="stylesheet" type="text/css" href="css/iphone.css">
 <!--[if gte IE 8]>
 	<link rel="stylesheet" type="text/css" href="css/4tree-styles-ie.css">
 <![endif]-->
 
 <!--
+	<link rel="stylesheet" href="jsredactor/redactor/redactor.css" />
+	<link rel="stylesheet" type="text/css" href="css/iphone.css">
+
+
 	<script src="js/jquery.min.js"></script>
 	<script src="js/jquery.datetimeentry2.min.js"></script>
 	<script src="js/jquery.datetimeentry-ru.js"></script>
@@ -91,19 +94,20 @@ if(isset($_GET['confirm']))
 	<script src="b_menu/jquery.dimensions.min.js"></script>
 	<script src="b_menu/jquery.menu.js"></script>
 	<script src="./js/jquery-ui.multidatespicker.js"></script>
-    <script type="text/javascript" src="./js/jquery.idle-timer.js"></script> -->
+    <script type="text/javascript" src="./js/jquery.idle-timer.js"></script>
 	<script src="./js/jquery-ui.multidatespicker.js"></script>
 	<script src="./js/iphone-style-checkboxes.js"></script>
-	<script src="./js/handlebars.js"></script>
-
-
-	<script src="jsredactor/redactor/redactor.js"></script>
+	<script src="./js/handlebars.js"></script> 
 	<script src="js/ru.js"></script>
 	<script src="fullcalendar/fullcalendar/fullcalendar.js"></script>
     <script src="js/pushstream.js" type="text/javascript" language="javascript" charset="utf-8"></script>
+	<script src="jsredactor/redactor/redactor.js"></script>
+	-->
+
+
 	<script src="js/all_new.js"></script>
 	<script src="js/!sync_modul.js"></script>
-	<script src="js/jszip.js"></script>
+<!--	<script src="js/jszip.js"></script> -->
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 

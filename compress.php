@@ -127,31 +127,16 @@ if (!file_exists($adir))
 	file_put_contents($adir.'/.htaccess',$htaccess);			//write initial htaccess file
 	}
 
-//		prepare combined, minfied and combined, minified and gzipped css and js files
-//file_compress('css_schedule.css',array('../CSS/menu.css','../CSS/ThreeColumnFixed.css','../CSS/sprite.css','../CSS/iCal.css'));
-//file_compress('css_non_schedule.css',array('../CSS/menu.css','../CSS/ThreeColumnFixed.css','../CSS/sprite.css'));
-//file_compress('css_schedule_ie7.css',array('../CSS/menuIE.css','../CSS/ThreeColumnFixed.css','../CSS/sprite.css','../CSS/iCal.css'));
-//file_compress('css_non_schedule_ie7.css',array('../CSS/menuIE.css','../CSS/ThreeColumnFixed.css','../CSS/sprite.css'));
-//file_compress('css_ie6.css',array('../CSS/menuIE6.css','../CSS/ThreeColumnFixedIE6.css','../CSS/sprite.css'));
-//file_compress('js_schedule.js',array('../JS/Schedule.js','../JS/iCal.js','../JS/Findit.js','../JS/UlScroll.js','../ExternalConnect/External.js'));
-//file_compress('js_non_schedule.js',array('../JS/Findit.js','../JS/UlScroll.js','../ExternalConnect/External.js'));
 
-file_compress('styles.css',array('ui/css/smoothness/jquery-ui-1.8.21.custom.css','fullcalendar/fullcalendar/fullcalendar.css','fontello/css/fontello.css'));
-//'css/styles.css',
-/*
-<link rel="stylesheet" href="./redactor/redactor/redactor.css" />
-<link type="text/css" href="ui/css/smoothness/jquery-ui-1.8.21.custom.css" rel="stylesheet" />
-<link rel="stylesheet" type="text/css" href="./pro_dropdown_3/pro_dropdown_3.css" />
-<link rel='stylesheet' type='text/css' href='./fullcalendar-1.5.3/fullcalendar/fullcalendar.css' />
-<link rel="stylesheet" href="./fontello/css/fontello.css">
+file_compress('styles.css',
+		array('ui/css/smoothness/jquery-ui-1.8.21.custom.css',
+			  'fullcalendar/fullcalendar/fullcalendar.css',
+			  'jsredactor/redactor/redactor.css',
+			  'css/iphone.css',
+			  'fontello/css/fontello.css'
+			  ));
 
-	<script src="js/loader.js"></script>
-	<script src="b_menu/jquery.dimensions.min.js"></script>
-	<script src="b_menu/jquery.menu.js"></script>
-	<script src="./js/jquery-ui.multidatespicker.js"></script>
-    <script type="text/javascript" src="./js/jquery.idle-timer.js"></script>
-
-*/
+file_compress('redactor.js',array('jsredactor/redactor/redactor.js'));
 
 file_compress('all.js',array('js/jquery.min.js',
 	'js/jquery.datetimeentry2.min.js',
@@ -163,6 +148,12 @@ file_compress('all.js',array('js/jquery.min.js',
 	'js/loader.js',
 	'b_menu/jquery.dimensions.min.js',
 	'b_menu/jquery.menu.js',
+	'js/iphone-style-checkboxes.js',
+	'js/jquery-ui.multidatespicker.js',
+	'js/handlebars.js',
+	'js/ru.js',
+	'fullcalendar/fullcalendar/fullcalendar.js',
+	'js/pushstream.js',
 	'js/jquery.idle-timer.js'
 	));
 

@@ -1,4 +1,11 @@
 <?php
+if(stristr($_GET['image'], "{{")) 
+	{
+	header("Content-type: image/png");
+	header('Content-Length: ' . 0);
+	exit;
+	}
+
 // Smart Image Resizer 1.4.1
 // Resizes images, intelligently sharpens, crops based on width:height ratios, color fills
 // transparent GIFs and PNGs, and caches variations for optimal performance
