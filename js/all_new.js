@@ -2119,7 +2119,7 @@ setTimeout(function(){
 				});
 
 	 //нажатие на кнопку вызова меню настройки элемента
-	 $('body').delegate(".tcheckbox","click", function (e)
+	 $('#mypanel').delegate(".tcheckbox","click", function (e)
 	   {
 	   	e.preventDefault();
 	   	is_rendering_now = true;
