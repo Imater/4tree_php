@@ -11,7 +11,7 @@ var mymetaKey = false, diaryrewind=0,old_before_diary=0;
 var autosave_timer,mypomidor,endtime,my_min,old_title,widthpanel,RestMin, show_hidden=false,show_childdate=true;
 var is_rendering_now,last_input_click;
 var timestamp=new Date().getTime(),start_sync_when_idle=false,there_was_message_about_change=false;
-var hoverListener,is_changed,only_save=false;
+var hoverListener,is_changed,only_save=false,main_user_id;
 
 function jsZipTree()
 {
@@ -788,7 +788,7 @@ function jsCreateDo(whereadd,title) // ищу элемент по названи
 	element.new = "title,";
 	element.time = jsNow();
 	element.lsync = jsNow()-1;
-	element.user_id = $.cookie("4tree_user_id");
+	element.user_id = main_user_id;
 	element.s = 0;
 	element.remind = 0;
 	element.title = "";
@@ -805,7 +805,7 @@ function jsMakeTabs() //создаю закладки из всех дел на�
 		    if(!el) return false;
 		      if(el.did==0) 
 		      	if(el.del==0) 
-		      	  if(el.user_id==$.cookie("4tree_user_id"))
+		      	  if(el.user_id==main_user_id)
 		      		if(el.title) 
 		      		  if(el.title.indexOf("[@]")==-1)
 		      			if(el.parent_id>0) 
@@ -1214,7 +1214,7 @@ function jsCloneChat(user_id)
 		new_chat.css("right", parseInt(new_right) ).show().draggable({appendTo: "body", handle: ".chat_header"});
 		
 		var chat_editor = new_chat.find(".chat_editor_input");
-		  myr_comment = chat_editor.redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+$.cookie("4tree_user_id"), lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+$.cookie("4tree_user_id"), autoresize:true,  
+		  myr_comment = chat_editor.redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+main_user_id, lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+main_user_id, autoresize:true,  
   			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
      });
 
@@ -2998,8 +2998,8 @@ $('#tree_back').bind("contextmenu",function(e){
 function jsDoFirst() //функция, которая выполняется при запуске
 {
 //jsTestDate();
-
-_connect($.cookie("4tree_user_id"));
+main_user_id = $.cookie("4tree_user_id");
+_connect(main_user_id);
 
 
 last_local_sync = jsNow()+5000;
@@ -3026,21 +3026,21 @@ last_local_sync = jsNow()+5000;
 		{ 
 		setTimeout(function(){
 			$(".show_hidden_do").html("Показать выполненные дела"); 
-			},2000);
+			},200);
 		}
 
 	if(!show_childdate) 
 		{ 
 		setTimeout(function(){
 			$(".show_childdate_do").html("Показывать дату следующего действия у папки"); 
-			},2000);
+			},200);
 		}
 	
 
 	
 	preloader = $('#myloader').krutilka("show");
 
-  myr = $('#redactor').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+$.cookie("4tree_user_id"), lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+$.cookie("4tree_user_id"), autoresize:true, 
+  myr = $('#redactor').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+main_user_id, lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+main_user_id, autoresize:true, 
   			buttonsAdd: ['|', 'button1'], 
             buttonsCustom: {
                 button1: {
@@ -3056,7 +3056,7 @@ last_local_sync = jsNow()+5000;
    $(".redactor_toolbar").insertBefore(".redactor_box");
    $(".comment_in").append( $("#tree_comments") );
 
-  myr_comment = $('.comment_enter_input').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+$.cookie("4tree_user_id"), lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+$.cookie("4tree_user_id"), autoresize:true,  
+  myr_comment = $('.comment_enter_input').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+main_user_id, lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+main_user_id, autoresize:true,  
   			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
      });
 
@@ -3495,7 +3495,7 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
 			element.did = "";
 			element.time = parseInt(d.changetime);
 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
-			element.user_id = $.cookie("4tree_user_id"); //уверен? а вдруг это дело добавил другой юзер?
+			element.user_id = main_user_id; //уверен? а вдруг это дело добавил другой юзер?
 			element.remind = 0;
 			element.new = "";
 			element.s = 0;
@@ -3825,7 +3825,7 @@ function jsAddComment(tree_id,parent_id,text)
 	element.time = jsNow();
 	element.add_time = jsNow();
 	element.lsync = jsNow()-1;
-	element.user_id = $.cookie("4tree_user_id");
+	element.user_id = main_user_id;
 	
 	jsSaveDataComment(new_id);
 
@@ -3905,7 +3905,7 @@ else
 	element.fav = 0;
 	element.time = jsNow();
 	element.lsync = jsNow()-1;
-	element.user_id = $.cookie("4tree_user_id");
+	element.user_id = main_user_id;
 	element.remind = 0;
 	element.s = 0;
 	element.title = title;
@@ -4654,7 +4654,7 @@ if ( (!localStorage.getItem("d_length")) || (load_from_server) )
 	$.ajaxSetup({async: true});
 setTimeout(function (){ //jsShowBasket(); 
 	jsFindByParent(-3);
-	jsFindByParent("user_"+$.cookie("4tree_user_id"));
+	jsFindByParent("user_"+main_user_id);
 	},100);
 	return false;
 	}
@@ -4679,7 +4679,7 @@ check_hash_add_do();
 
 setTimeout(function (){ //jsShowBasket(); 
 	jsFindByParent(-3);
-	jsFindByParent("user_"+$.cookie("4tree_user_id"));
+	jsFindByParent("user_"+main_user_id);
 	},100);
 
 return true;
@@ -5165,7 +5165,7 @@ if(id==-5) //отборы
 		element.new = "";
 		element.time = 0;
 		element.lsync = 1;
-		element.user_id = $.cookie("4tree_user_id");
+		element.user_id = main_user_id;
 		element.s = 0;
 		element.remind = 0;
 		element.title = "<i class='icon-search'></i> Отборы";
@@ -5191,7 +5191,7 @@ if(id==-6) //по дате изменения
 		element.new = "";
 		element.time = 0;
 		element.lsync = 1;
-		element.user_id = $.cookie("4tree_user_id");
+		element.user_id = main_user_id;
 		element.s = 0;
 		element.remind = 0;
 		element.title = "<i class='icon-clock-3'></i> 100 недавних изменений";
@@ -5217,7 +5217,7 @@ if(id==-7) //по дате изменения
 		element.new = "";
 		element.time = 0;
 		element.lsync = 1;
-		element.user_id = $.cookie("4tree_user_id");
+		element.user_id = main_user_id;
 		element.s = 0;
 		element.remind = 0;
 		element.title = "<i class='icon-calendar'></i> отсортированы по дате";
@@ -5243,7 +5243,7 @@ if(id==-8) //по дате изменения
 		element.new = "";
 		element.time = 0;
 		element.lsync = 1;
-		element.user_id = $.cookie("4tree_user_id");
+		element.user_id = main_user_id;
 		element.s = 0;
 		element.remind = 0;
 		element.title = "<i class='icon-export-1'></i> вы поделились";
@@ -5269,7 +5269,7 @@ if(id==-9) //по дате изменения
 		element.new = "";
 		element.time = 0;
 		element.lsync = 1;
-		element.user_id = $.cookie("4tree_user_id");
+		element.user_id = main_user_id;
 		element.s = 0;
 		element.remind = 0;
 		element.title = "<i class='icon-mail'></i> электронная почта";
@@ -5296,7 +5296,7 @@ if(id==-3)
 		element.new = "";
 		element.time = 0;
 		element.lsync = 1;
-		element.user_id = $.cookie("4tree_user_id");
+		element.user_id = main_user_id;
 		element.s = 0;
 		element.remind = 0;
 		element.title = "<i class='icon-users'></i> Контакты";
@@ -5310,7 +5310,7 @@ if(id)
 				id = id.toString().replace("user_","");
 				fio = my_all_frends.filter(function(el){ return el.user_id == id })[0].fio;
 				
-				if(id==$.cookie("4tree_user_id"))
+				if(id==main_user_id)
 					{ this_is_you="&nbsp;&nbsp;<i title='Ветки которыми вы поделились' class='icon-export-2'></i>"; myorder = 1;  myicon="<i class='icon-heart'></i>"; }
 				else
 					{ this_is_you=""; myorder = 100; myicon="<i class='icon-vcard'></i>"; }
@@ -5602,7 +5602,7 @@ function jsPath(element)
 		element = jsFind( parent_id );
 		if(!element) 
 			if(old_element.user_id) 
-				if(old_element.user_id != $.cookie("4tree_user_id") ) 
+				if(old_element.user_id != main_user_id ) 
 						{
 						element = jsFind( "user_" + old_element.user_id );
 						path[i] = "user_"+old_element.user_id;
@@ -6176,12 +6176,12 @@ function jsInfoFolder(data,parent_node)
 			  	else
 			  		frend_share = my_all_frends.filter(function(el){ return el.user_id == data.user_id; });
 
-			if(frend_share[0].user_id!=$.cookie("4tree_user_id"))
+			if(frend_share[0].user_id!=main_user_id)
 		  		icon_share = "<div title='"+frend_share[0].fio+" ("+frend_share[0].email+")\nделится с вами СВОЕЙ веткой' class='share_img'><img src='"+frend_share[0].foto+"'></div>";
 		  	else
 		  		{
 		  		if(my_all_share)
-		  		  var ddd =my_all_share.filter(function(el){ return (el.host_user==$.cookie("4tree_user_id") && (el.tree_id==data.id)); });
+		  		  var ddd =my_all_share.filter(function(el){ return (el.host_user==main_user_id && (el.tree_id==data.id)); });
 		  		icons_share = "";
 		  		$.each(ddd,function(j,myfrend){
 			  		frend_share = my_all_frends.filter(function(el){ return el.user_id == myfrend.delegate_user; });
@@ -6194,7 +6194,7 @@ function jsInfoFolder(data,parent_node)
 		var icon_share = "";
 
 		if(my_all_frends)   
-		  	if(data.user_id != $.cookie("4tree_user_id") ) 
+		  	if(data.user_id != main_user_id ) 
 		  		{
 			  	frend_share = my_all_frends.filter(function(el){ return el.user_id == data.user_id; });
 

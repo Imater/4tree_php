@@ -2180,7 +2180,7 @@ font-size: 0.8em;
 font-size: 1em;
 }
 
-li .date1
+.date1
 {
 display: none;
 overflow: hidden;
@@ -4622,6 +4622,8 @@ background: white;
 {
 height: 30%;
 }
+
+.
 
 
 .chat_editor .redactor_box
