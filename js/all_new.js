@@ -654,7 +654,8 @@ function jsCreate_or_open(path) //открывает если есть или с
 {
 	sync_now = true;
 	var id=1;
-	for(var i=0;i<path.length;i++)
+	var p_len = path.length;
+	for(var i=0;i<p_len;i++)
 		{
 		id = jsCreateDo(id,path[i]);
 		if(path[i].indexOf(" неделя")!=-1) var my_week_num = id;
@@ -741,7 +742,8 @@ var answer = allmydates.filter(function(el,i)
 if(answer.length!=0) 
 	{ 
 	var mytext = "";
-	for(i=0;i<answer.length;i=i+1)
+	var a_len = answer.length;
+	for(i=0;i<a_len;i=i+1)
 		{
 		mytext = mytext + "— "+answer[i].title;
 		if(i!=answer.length-1) mytext = mytext+"\r";
@@ -832,8 +834,8 @@ function jsMakeTabs() //создаю закладки из всех дел на�
 		data = data.sort(compare); //сортирую табы по полю tab
 		
 	var alltabs="<ul>";
-	
-	for(i=0; i<data.length; i=i+1)
+	var d_len = data.length;
+	for(i=0; i<d_len; i=i+1)
 		{
 		if(data[i].title.length>10) title = data[i].title;
 		else title = "";
@@ -999,7 +1001,9 @@ function jsFindLastSync()  //нахожу время последней синх
 var maxt = 0; var mint = parseInt(99999999999999999); 
 
 if(my_all_data)
-for(i=0;i<my_all_data.length;i++) 
+{
+var m_len = my_all_data.length;
+for(i=0;i<m_len;i++) 
 	{ 
 	if(!my_all_data[i]) continue;
 	var lsync = my_all_data[i].lsync; 
@@ -1008,9 +1012,11 @@ for(i=0;i<my_all_data.length;i++)
 	if(changetime>lsync) 
 		if( mint>changetime ) mint=parseInt(changetime,10); 
 	}
-
+}
 if(my_all_comments)
-for(i=0;i<my_all_comments.length;i++) 
+{
+var mc_len = my_all_comments.length;
+for(i=0;i<mc_len;i++) 
 	{ 
 	var lsync = my_all_comments[i].lsync; 
 	var changetime = my_all_comments[i].time; 
@@ -1018,6 +1024,7 @@ for(i=0;i<my_all_comments.length;i++)
 	if(changetime>lsync) 
 		if( mint>changetime ) mint=parseInt(changetime,10); 
 	}
+}
 
 if(mint<maxt) return mint;
 else return maxt;
@@ -3441,8 +3448,8 @@ if(jsNow() - last_inside_sync < 1000 )  //если синхронизация б
 	return true; 
 	}
 last_inside_sync = jsNow();
-
-for(ij=0;ij<localStorage.getItem("d_length");ij++)
+var d_len = localStorage.getItem("d_length");
+for(ij=0;ij<d_len;ij++)
 	{
 	element = JSON.parse( localStorage.getItem("d_"+ij) );
 	if(element)
@@ -3771,7 +3778,8 @@ function jsRefreshFrends()
 {
 	if(!my_all_frends) return false;
 	var text = "";
-	for(var i=0;i<my_all_frends.length;i=i+1)
+	var m_len = my_all_frends.length;
+	for(var i=0;i<m_len;i=i+1)
 		{
 		var el = my_all_frends[i];
 		if(el.lastvisit!=0) { var lastvisit = "Последний визит:\n"+(new Date( parseInt(el.lastvisit) )).jsDateTitleFull(); }
@@ -4438,8 +4446,8 @@ function jsOpenPath( id, iamfrom )
 		path1 = jsFindPath( id );
 		console.info("path1",path1);
 		if(path1.length<1) return false;
-				     
-				     for(var ik=0; ik<path1.length; ik=ik+1)
+				     var p_len = path1.length;
+				     for(var ik=0; ik<p_len; ik=ik+1)
 				     	{
 				     	toopen = path1[ik];
 				     	if(ik==path1.length-1) jsOpenNode(toopen);
@@ -4467,7 +4475,8 @@ return $.md5( check.title+check.text+check.date1+check.date2 );
 
 function jsCheckSum()
 {
-for(i=0;i<my_all_data.length;i++)
+var m_len = my_all_data.length;
+for(i=0;i<m_len;i++)
 	{
 	console.info( jsmd5(my_all_data[i]) );
 	}
@@ -4486,8 +4495,8 @@ else only_save = false;
 
 //console.info("old_id",old_id);
 
-
-for(var ik=0;ik<my_all_data.length;ik++)
+var m_len = my_all_data.length;
+for(var ik=0;ik<m_len;ik++)
 	{
 	if(id_one) 
 	  {
@@ -4527,8 +4536,8 @@ jsSync("save_only");
 //if(!dontsync) jsStartSync("soon","SAVED DATA"); //запущу синхронизацию примерно через 15 секунд
 
 //console.info("old_id",old_id);
-
-for(var ik=0;ik<my_all_comments.length;ik++)
+var mc_len = my_all_comments.length;
+for(var ik=0;ik<mc_len;ik++)
 	{
 	if(id_one) 
 	  {
@@ -4660,13 +4669,15 @@ setTimeout(function (){ //jsShowBasket();
 	}
 
 my_all_data = new Array;
-for(i=0;i<localStorage.getItem("d_length");i++)
+var d_len = localStorage.getItem("d_length");
+for(i=0;i<d_len;i++)
 	{
 	my_all_data[i] = JSON.parse( localStorage.getItem("d_"+i) );
 	}
 
 my_all_comments = new Array; //загружаю комментарии
-for(i=0;i<localStorage.getItem("c_length");i++)
+var dc_len = localStorage.getItem("c_length");
+for(i=0;i<dc_len;i++)
 	{
 	my_all_comments[i] = JSON.parse( localStorage.getItem("c_"+i) );
 	}
@@ -4759,8 +4770,8 @@ function jsTextPath(path) //превращаю путь из индексов в
 		var title;
 		
 		var path1 = path;
-				     
-				     for(var i=0; i<path1.length; i=i+1)
+				     var p_len = path1.length;
+				     for(var i=0; i<p_len; i=i+1)
 				     	{
 				     	var toopen = path1[i];
 				     	var an = jsFind(toopen);

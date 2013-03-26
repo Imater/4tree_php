@@ -120,7 +120,91 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 
 
 <body onResize="onResize();">
+<!--
 
+                                                                                                              
+                                                        .                                                     
+                                                       ,                                                      
+                                                  r  .9                                                       
+                                                  X  ::                G.                                     
+                       s               h          #  #    r        :r  h                                      
+                  .G9X            GhhA,rG   ..G&  @  ,    .        ,3s ;       :                              
+                   r32 s2        #G&X     s  :    #.3    @          5,sXAA     5                              
+                    s             M         s9r   @    i   &r                  5 Ar    r ,:                   
+                     ;   B         rG          XX # 95  @  3GS      X 3h       : &G . i SX;.                  
+               9&      @    ;   ,Xr              3H 33Xi 5          @  &X, r   S  . ;                         
+               .AG      9s   ;        rM hGr      B. XsG  B   9     h   : ;    B  ;h                          
+                :A:      ,#i H          3i.  :    # .: s   X        i   3 .s    @,@                           
+                .SB:       :@:r  :;      SiM      B:   .   M  ,    r   r  As    9    r3S                      
+                XXh9  #      M,      S   @   s@B#MH:   r G :  2    #  .  ,  &G @ ; .9hX      ,GA              
+                       5      #3       2:2        Mi   @   A  ;    M  # ;A: XA@  h Xi       2Ahs              
+                 .:       2@h,.2H    A&:  M       MM   9   2 #    3r #      #   hs  :B@Gs.                    
+             ;   hX ,&X.       ..H5   r5 , M      @#  s:    H     #s#      h.  A@;:    hh:                    
+    :;      .    293 ,h5.r.H,     #Hr   3 B M     MB 3H r   h9    A       ,5  @.       :X99:    ,X            
+    s99X.     . @2hX     2  X      #A   . B S@    #@sH2      @@  B        @  # #2          .  :AhG            
+       ;s        .93     :  ;5,     @S ;      M;  @MM    s    SBG        5A@&    .5#@S,X#r    Hh.             
+             .: .   S5     ;        i#  r      i&;3A     .   MHr    ,AA@B;                   2                
+      :r:    X   .:2&9M:    5       :#           @AH     9  rB 2@M@5:  H             5H .       ;33           
+    S9GGG3,.            @   h        H s          9H:    s  #;    r   iA##HM;            .     r3X,           
+       .  .               #:@        @A@          XHr     #AB   ;     B      i@                95             
+    .    .            &    .H         H# s        3A5     ,A  .      B         ;             5      h&        
+ 9H   s;i,       s52  X      #r       .H9r        GBh     @.  r     MX            ,hS,    9@    2h.&&h        
+            #     r    S       &H       Hr        BHX    rB  #    3H r                ,M.     ,hX: r:         
+        .s&@MM###M#9:            H      M&       .AH     @r @    &@                 BG       s5XBAX:          
+    3s  .@.          i&#AH;       H    , #H      2HH     BB,  rAMMM@#9     5s    ,B3#@9r5#@AS           ;     
+     X:#                @ @A      iX   @  #H      &B5    H   &@                A@            G::       ,&;    
+  &3  9               X9    @S     MA  9   @GX    BHH    #&SG9       r       &A             iA          A     
+    ;            HS;.         #BA#. 2& 3     @A.   GH@.  ,AAr              ;#   sBM                    si,    
+ r ;       &hAGh            ,X#s;;@G&AH#      BH@: AAB@  HHG    3  h&i     @    s   @           r    :        
+  ;& r,   ;Xhr;           @.         i@BAG&AAM# 3BA&hGB HA@    H  A&&     @      ,   # ,       r   #          
+  rhs   2@. ,                 &A.r;     MX         3G&ABA@    :ss, .S&G iBi      ..39 ,9s     &i@s            
+   5.       9@i               S   s .    MM        r9ABH@      r      :GH.             ;    3:                
+               .G@#:       9H          #SB@&        G&H@       @S; , M@               i    @                  
+                     #Bi  : XB;   :i9M@5   ,HAX     &GH#       @   9BS,,2@3           5 2H                    
+          h            .#MhA.                :BG    BGABs      s rh9        B ;      @                        
+       ,;,. @       ss     .M#                 @&A; #&&H@     AA&#        :S X:   :@                   ,9     
+      3G&&    :MM@@.         HB       r          @&&H&AHB;i@HA@        .S       :&5S2:                33:     
+     ,&i             2#      iB#  5is    HA,      ;MAhABBAH#X         @        X#                ,h#X 3   3&G:
+          ;X@3:rMr    .:Hh&&@h :Hs5S;   h  ;sh&     XGABBi   .2@@A&H&BHHBBBB#B@H.       :iH##2     hA         
+     SB,         .#              @Ah.    9 .        3&AHA&9B#i               r&.BHH#AH5          .&GG         
+                A                  #MA     :        2&ABBBB                   @      @H.    ;G.  .;           
+              .                      rHB     3      G&AHH@                     @           r     rr           
+            :           9&A&, 2XS;:;5#@2A&.   r;    #GAHH#              :SS     .5        ;& :M&M             
+                       A&i                i#&AS#    HHAHB@#h           &hh        S 9                         
+                                              5#GHHAA&AMH3     .3  .Gr         .Ghr  :                        
+                                                   i&H&HB,      2i     r,          s  .                       
+                                                   MhHBBA      AX  .X              ,G2 i                      
+                                                   H&AHBM                               s                     
+                                                   &&HBH@                                                     
+                                                  A&&AMBs                                                     
+                                                  BGABHA                                                      
+                                                  &&ABH@                                                      
+                                                 SG&HBB@                                                      
+                                                 @G&HBB#                                                      
+                                                 HG&HBB2                                                      
+                                                 &G&HBB5                                                      
+                                                 GG&HBBX                                                      
+                                                 GG&HBB@                                                      
+                                                 GG&HBB#                                                      
+                                                 GG&HBBM                                                      
+                                                 &&AHBBB3                                                     
+                                                 &&AHBBM#                                                     
+                                                 AAAHBBBB,                                                    
+                                                 AAAHBBMB#                                                    
+                                                .AAAHBBBHM                                                    
+                                                .HAHHBBBMBH                                                   
+                                                .HAHHBBMMM#                                                   
+                                                ,HHHHBBBMBB                                                   
+                                                rHHHHBBBBBB                                                   
+                                                BHBBBHHBBBHS                                                  
+                                                ........:XASr                                                 
+                                               STOP SEARCHING
+                                      TOOLS FOR GTD. DON'T TRY. JUST DO.
+                                      ALL YOUR STUFF IN ONE PLACE OF 4TREE
+                                     I'M HERE NOW. JUST DO. I WILL HELP YOU.
+                                     
+
+-->
 
 <?
 if(isset($_GET['test']))
@@ -794,6 +878,42 @@ if(isset($_GET['test']))
 
 
 </div>
+<!--
 
+
+532XX3XX25SS5s                                                                                                
+iXXXXXXXXXXXXXX2   52XXX555255SSi                                                                             
+ 5XXXXXXXXXXXXXX2  52XXX2XXXX3XXXS     2S5525Si;;,.                                                           
+ 5XXXXXX,  ;2XXX3; SXXXXXXXXXX2X29s   5XXXXXXXXX2X5; SX2XXXiS                                                 
+  5522225   522225  5XXX2XSssiX2XXX,  53XXXXXXXXXXXX.  32XX2Xr   r9XXXX2  5                                   
+  S555555, ,55555SS :22252S   S22225r rXXXXXXXXXXXX92  ,3XXXX22  22XXXXS  X3:                                 
+  ;5S55555555555S5   5S5555:   S55555  5222222r         S552225s 5X2222s s2XX255555S 555S .,                  
+   i5SSSSSSSSSSSSSS  i55555S    S55S5s  5555555          2555552SX5555S  i32222222552s 239S SX2.:32  25       
+   SiSSSSSSSSS5iSiSi  5SSSSSS   2S5SSS2 rSSSSS5;          SSSSSS55SSSS5 i52X5555555552i :22S;;535 53i S3s     
+   ;iiiiiiS   SiiiiSs 5iiiiiSSSS5Siiiii  5SSSSii          ,SSSSSSSSSSS5   .5SSSSSSSSSS5S  SSS5 SS5 S25 55S    
+    siiiiiS   ,iiiiiS .SiiiiiiiiiiiiiiiS  iiiiiS5          SiiiiiiiiiiSiisi  :SiSSSSSS5Si. 5Ss5 Sii Si5 S55   
+    isssssi5,.2isssss  siiissssssssiiisi; 5iSsiii           iiiiissisiiiiissS,  5iiiiiiiiS, Ssi5 si5 2i5 5Si  
+    2ssssssssssssssssr 5sssssSSSSSSsiissi  sisssssssssiiiiiSsssssii :iissisissi5  ssriisiiiS iss  rsS 5ss Xr  
+    issrssssssssssssss rsssrr5     Sssssi: :sisssssssssiissrrrssssr2   Sssssssisr5. rii:                      
+    rrrrrrrrrrrrrrr;;   rrrrrr     :ssrrsi  :rrrrrrrrrrrrrrssssssssr      2ssrrrrrrs; si                      
+    :;rr;;rrr;;;rrrS    r;rrrs      S;rr:;    iirrrrrrrrrrr;;;;;;;;;:       5rrrrrrrri5 S                     
+                                                                                                              
+     issrrrss Sssssss    siiiiiiiiiii irsssi   ssssr5ssrsrrrsrrrrs srrssS  ssssrs.ssrrssssssS  rssssrrrsss5   
+     isssssii.;sssrsiS   ssssssssssrr rirrr5  .srrrr.isrssssrssssS srrss   rrrss isissssssssi ,ssssssssssr    
+       ;ss   iss   is:  Sisssssssssi55ssssir  Sssssr rssssssssiiis2sssss  Ssssi5 Sissiriisssr 5sisss55555S    
+       iss   si,  .sS   issiiiiS5555 siirsi   irsii2rsisiiisss    iiiiis  Sssis 5iiis5 SsiiiS iiisiiSi5r      
+       iir  riS   sSS   iiiiiSr     :iiiSiS  iiiiii    5iiiiii   5siiiS  SSiii5 SiiiiSisssii SiiisSiii5       
+      SSi   sSSSiiiS   ;SSiiiiiSiSS SiiiiS   iiiii2    iiiiSi    iSiii, 5iiiSi iSiiiiiiiiii riSiiiSS55        
+      ii;              5SSSSSiiSSsiSisSSSS  S5SSSS    S5SSSi5   SiS555 5iSSiS;SSSSSSSSiis   iSSSSS   .        
+   :SSiSi SS 5SS Si5S  25555SSSS5S SSS55S  ,5S555:   siSS55S   5555S55S52555SS555S5 525552 S55S55SSS2         
+   S2525ii2S 52,S52,. 2555525;::. S555555SS555525    S55552:   5S5555555555Ss5S525  S52255SX55555222.         
+    r55  X2;i25 2222i 522225      X2222222X222X2    52222X5    22222222225,s2S555.  SSr:.                     
+    X3  SX2XX3 SX25i 5X2XXX      S2XXXXXXXXXXXi    ,X2XX25      sSrr:                                         
+   525 sX5 S2sS2222 iXXX325      X9X2SS5S5255s                                                                
+  :2X  32 5X2 3XXX2:i55S;:                                                                                    
+  ii 
+
+DONT PROCRASTINATE, BACK TO THE WORK. NOW IS THE BEST TIME TO MAKE YOUR FUTURE. NO TOMMOROW! TODAY.
+-->
 </body>
 </html>
