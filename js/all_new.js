@@ -780,7 +780,7 @@ function jsCreateDo(whereadd,title) // ищу элемент по названи
 	element.icon = "";
 	element.id = new_id;
 	element.img_class = "note-clean";
-	element.parent_id = whereadd;
+	element.parent_id = parseInt(whereadd);
 	element.position = newposition.toString();
 	element.text = "";
 	element.did = "";
@@ -2126,7 +2126,8 @@ setTimeout(function(){
 				});
 
 	 //нажатие на кнопку вызова меню настройки элемента
-	 $('#mypanel').delegate(".tcheckbox","click", function (e)
+	 //mousedown быстее, чем click
+	 $('#mypanel').delegate(".tcheckbox","mousedown", function (e)
 	   {
 	   	e.preventDefault();
 	   	is_rendering_now = true;
@@ -2310,7 +2311,7 @@ setTimeout(function(){
 		return false;
 		});
 		
-	$("body").delegate(".makedate,.date1","click",function()
+	$("#mypanel").delegate(".makedate,.date1","click",function()
 		{
 		if($(this).hasClass("fromchildren")) 
 			{
@@ -2422,6 +2423,7 @@ setTimeout(function(){
 
 		return false;
 		});
+		
 		
 	//Клик в LI открывает детей этого объекта LILILI
 	$('#mypanel').delegate("li","click", function () {
@@ -3496,7 +3498,7 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
 			element.icon = "";
 			element.id = d.id;
 			element.img_class = "note-clean";
-			element.parent_id = d.parent_id;
+			element.parent_id = parseInt(d.parent_id);
 			element.position = d.position.toString();
 			element.text = "";
 			element.did = "";
@@ -3549,7 +3551,7 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
 
 		
 	myelement.title = d.title;
-	myelement.parent_id = d.parent_id;
+	myelement.parent_id = parseInt(d.parent_id);
 	myelement.did = d.did;
 	myelement.fav = d.fav;
 	myelement.date1 = d.date1;
@@ -3825,7 +3827,7 @@ function jsAddComment(tree_id,parent_id,text)
 	my_all_comments[new_line]=new Object(); element = my_all_comments[new_line];
 
 	element.id = new_id;
-	element.parent_id = parent_id;
+	element.parent_id = parseInt(parent_id);
 	element.tree_id = tree_id;
 	element.text = text;
 	element.del = 0;
@@ -3857,7 +3859,7 @@ function jsAddDo(arrow, myparent, mytitle, date1, date2)
  	{
  	panel = node_to_id( sender.attr('id') );
  	sender.parents(".panel").nextAll(".panel").not("#panel_"+panel).remove();
- 	sender.find(".node_img").addClass('folder_closed');
+ 	sender.find(".node_img").addClass('folder_closed').html("<div class='countdiv'>1</div>").removeClass("node_img");
  	iii = $("#panel_"+panel+" li").length; 
 	if(iii==0) $("#mypanel").append("<div id='panel_"+panel+"' class='panel'><ul></ul></div>");
  	}
@@ -3904,7 +3906,7 @@ else
 	element.icon = "";
 	element.id = new_id;
 	element.img_class = "note-clean";
-	element.parent_id = panel;
+	element.parent_id = parseInt(panel);
 	element.position = newposition.toString();
 	element.text = "";
 	element.did = "";
@@ -4366,7 +4368,7 @@ function jsOpenNode(id,nohash,iamfrom) //открыть заметку с ном
 			}
 
 		
-		title = $(".folder.selected:last").find(".n_title").html();
+		title = $(".selected:last").find(".n_title").html();
 		if (!title)	title = $(".old_selected:last").find(".n_title").html();
 		
 		var path = myli.attr('path');
@@ -4392,7 +4394,7 @@ if(mytitle && !nohash)
 		}
 
 
-		if( myli.find('.countdiv').length==1 )
+		if( myli.find('.countdiv').length==1 ) //если это папка
     		{
     		jsShowTreeNode( id, isTree );
     		}
@@ -4485,7 +4487,7 @@ for(i=0;i<m_len;i++)
 function jsSaveData(id_one,old_id,dontsync)
 {
 //last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
-start_sync_when_idle = true;
+start_sync_when_idle = false; //тестирую
 if(id_one>0) only_save = true;
 else only_save = false;
 

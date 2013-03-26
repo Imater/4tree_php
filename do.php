@@ -1589,12 +1589,21 @@ function set_all_share_children($user_id)
 global $main_array,$all_tree_id;
 
 
-  $sqlnews = "SELECT distinct(delegate_user) FROM tree_share WHERE host_user=".$user_id;
+  $sqlnews = "SELECT distinct(delegate_user) FROM tree_share WHERE (host_user=".$user_id." OR delegate_user=".$user_id.")";
+    
   $result = mysql_query_my($sqlnews); 
   $filter="";
   while (@$sql = mysql_fetch_array($result))
   	{
   	$filter .= "user_id = ".$sql["delegate_user"]." OR ";
+	}
+
+  $sqlnews = "SELECT distinct(host_user) FROM tree_share WHERE (host_user=".$user_id." OR delegate_user=".$user_id.")";
+  
+  $result = mysql_query_my($sqlnews); 
+  while (@$sql = mysql_fetch_array($result))
+  	{
+  	$filter .= "user_id = ".$sql["host_user"]." OR ";
 	}
 	
   $filter .= "FALSE";
