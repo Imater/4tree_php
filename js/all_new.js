@@ -1719,7 +1719,7 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 
 
 //	setInterval(function() { jsRefreshDo(); },5000 );
-  $.idleTimer(7*1000);
+  $.idleTimer(5*1000);
 
 	$(document).bind("active.idleTimer", function(){
 	});
@@ -4487,7 +4487,7 @@ for(i=0;i<m_len;i++)
 function jsSaveData(id_one,old_id,dontsync)
 {
 //last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
-start_sync_when_idle = false; //тестирую
+start_sync_when_idle = true; //тестирую
 if(id_one>0) only_save = true;
 else only_save = false;
 
