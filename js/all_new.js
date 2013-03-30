@@ -13,6 +13,55 @@ var is_rendering_now,last_input_click;
 var timestamp=new Date().getTime(),start_sync_when_idle=false,there_was_message_about_change=false;
 var hoverListener,is_changed,only_save=false,main_user_id;
 
+var DB_INTERFACE = function(){  //singleton
+	 if (typeof arguments.callee.instance=='undefined')
+	 {
+	  arguments.callee.instance = new function()
+		  {
+		    var rnd = Math.random();
+		    var db = new ydn.db.Storage('_all_tree');    
+		    
+		    this.savedata = function() //сохраняю my_all_data в базу данных
+		    	{ 
+			    var my_length = my_all_data.length;
+			    for(i=0;i<my_length;i=i+1)
+			    	{
+			    	e = my_all_data[i];
+			    	db.put('tree', e, parseInt(e.id));
+			    	}
+			    
+		    	console.info(rnd); 
+		    	};
+		    
+		    //считаю кол-во элементов t=tree_db.count_lines().done(function(x){console.info("lines="+x)})
+		    this.count_lines = function() 
+		    	{
+		    	var d=$.Deferred();
+		    	db.count('tree').done(function(x) 
+		    		{
+				    d.resolve(x);
+				    });
+				return d.promise();
+		    	};
+		    
+		    //загружаю все данные в my_all_data
+		    this.load_data = function() 
+		    	{
+		    	var d=$.Deferred();
+		    	db.values('tree').done(function(records) {
+			      my_all_data = $.map(records, function (value, key) { return value; });
+		    	  d.resolve(records);
+		    	});
+				return d.promise();
+		    	};
+		    
+		  };
+	 }
+	 return arguments.callee.instance;
+};
+
+
+
 function jsZipTree()
 {
   var zip = new JSZip();
@@ -4694,6 +4743,10 @@ setTimeout(function (){ //jsShowBasket();
 	jsFindByParent(-3);
 	jsFindByParent("user_"+main_user_id);
 	},100);
+	
+tree_db = new DB_INTERFACE;
+
+tree_db.savedata();
 
 return true;
 }
