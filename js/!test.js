@@ -3,6 +3,12 @@
 function jsTestIt(){
 	$("#qunit-tests").html("");
 	
+	test("Открытие рекурсивом большой папки",function(){
+		jsOpenRedactorRecursive(599);
+		ok(true);
+	})
+	
+	
 	test('jsCreateDo("_НОВОЕ")', function() {
 		id_of_new = jsCreateDo(1,"_НОВОЕ");
 		ok(id_of_new, 'Элемент '+id_of_new+' найден');
@@ -88,6 +94,6 @@ function jsTestIt(){
 	setTimeout(function(){
 		console.info(jsDelId( parseInt(new_id8) ),"Заметка №"+new_id8+" удалена");
 		},30000);
-
+		
 
 }

@@ -1698,11 +1698,12 @@ if($GLOBALS['user_id'])
 	create_start_database_if_need($GLOBALS['user_id']);
 	}
 
-  $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR ".$share_ids.") AND del=0 ORDER by parent_id, position";
+  $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR ".$share_ids.") AND del=0 ORDER by id";
 
   $result = mysql_query_my($sqlnews); 
   $i=0;
   $sqlnews2 = "";
+  $longtext = "";
   while (@$sql = mysql_fetch_array($result))
     {
 	$len = strlen( strip_tags($sql['text']) );
@@ -1712,8 +1713,9 @@ if($GLOBALS['user_id'])
     $answer[$i]['id']=$i;
     $answer[$i]['parent_id']=$sql['parent_id'];
     
-    
+        
     $title = $sql['title'];
+    
     $answer[$i]['lsync']=(integer)$now_time;
     $answer[$i]['title']=$title;
     $answer[$i]['user_id']=$sql['user_id'];
@@ -1768,6 +1770,9 @@ if($GLOBALS['user_id'])
 	    
 	    $answer[$i]['date2']=$date2;
 
+	    $alldata = $sql['id'].$sql['title'].$sql['text'].$date1.
+    				  $date2.$sql['del'].$did.$sql['position'];
+    	$longtext[$sql['id']] = substr(md5( $alldata ),0,5);
 	}
 	
 if(true) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; } 
@@ -1799,10 +1804,15 @@ if(true) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; }
     $i++;
 	}
 	
+	$res["md5"] = $longtext;
 	$res["time_dif"] = $time_dif;
-	$res["comments"] = $comments;
-	$res["all_data"] = $answer;
+//	$res["comments"] = $comments;
+//	$res["all_data"] = $answer;
+	
+///	echo md5($longtext)."<hr>";
+//	echo ($longtext);
 	echo json_encode($res);
+	
 }
 
 

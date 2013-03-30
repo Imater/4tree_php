@@ -18,19 +18,121 @@ var DB_INTERFACE = function(){  //singleton
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		    var rnd = Math.random();
 		    var db = new ydn.db.Storage('_all_tree');    
+	    	console.info("tree_db started"); 
 		    
-		    this.savedata = function() //сохраняю my_all_data в базу данных
+		    this.calculate_md5 = function() //проверяю целостность данных
+		    	{
+		    	var d=$.Deferred();
+		    	db.values('tree',null,9999999999999999999).done(function(records) {
+		    	  var longtext=[];
+			      for(var i=0; len = records.length, i<len; i=i+1 )
+			      	{
+			      	el = records[i];
+			      	var alldata = (el.id?el.id:"") + (el.title?el.title:"") + (el.text?el.text:"") + 
+			      				  (el.date1?el.date1:"") + (el.date2?el.date2:"") + (el.del?el.del:"") + 
+			      				  (el.did?el.did:"") + (el.position?el.position:"");
+//			      	alldata = el.id+":"+(el.title?el.title:"")+", ";
+//				if(el.id==4474)
+			      	longtext.push({ id:el.id, md5:$.md5( alldata ).substr(0,5) });
+			      	}
+		    	  d.resolve(longtext);
+		    	  });
+		    	return d.promise();
+		    	}
+		    
+		    this.clear_all_data = function() //сохраняю my_all_data в базу данных
+		    	{
+		    	var d=$.Deferred();
+		    	db.clear().done(function(){ d.resolve(); });
+		    	return d.promise();
+		    	}
+
+		    this.clear_tree_data = function() //сохраняю my_all_data в базу данных
+		    	{
+		    	var d=$.Deferred();
+		    	db.clear("tree").done(function(){ d.resolve(); });
+		    	return d.promise();
+		    	}
+		    	
+		    this.setItem = function(param_name, param_value)
+		    	{
+		    	var d=$.Deferred();
+		    	if( typeof param_value == 'undefined' ) //считать параметр
+		    		{
+			    	var iter = ydn.db.KeyRange.only(param_name);
+			    	db.values("tree_settings",iter).done(function(records) {
+				    	x = records[0].value;
+				    	d.resolve(x); 
+				    	});
+		    		}
+		    	else
+		    		{
+			    	db.put('tree_settings', {value:param_value}, param_name).
+			    						done(function(){ d.resolve(param_value); }); 
+		    		}
+		    	return d.promise();
+		    	}
+		    	
+		    this.load_from_server = function()
+		    	{
+		    	var d=$.Deferred();
+		    	var sync_id = jsGetSyncId();
+		    	//передаю время, чтобы заполнить время последней синхронизации
+				var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id; 
+				preloader.trigger('show');
+	
+				$.getJSON(lnk,function(data){
+					if(!data.all_data) 
+						{
+						tree_db.clear_all_data();
+						alert("Данные с сервера не доступны");
+						}
+					jsTitle('Данные загружены с сервера');
+					if(data.time_dif) localStorage.setItem("time_dif",data.time_dif);
+					localStorage.setItem("last_sync_time",jsNow());
+					localStorage.setItem("sync_time_server",jsNow());
+					localStorage.setItem("sync_id",sync_id);
+					my_all_data = $.map(data.all_data, function (value, key) { return value; });
+					my_all_comments = $.map(data.comments, function (value, key) { return value; });
+					tree_db.save_data();
+//					jsSaveDataComment();
+					preloader.trigger('hide');
+					console.info("my_all_data:",my_all_data);
+					console.info("my_all_comments:",my_all_comments);
+					});
+
+		    	return d.promise();
+		    	}
+
+		    this.save_data = function(id) //сохраняю my_all_data в базу данных, 
 		    	{ 
+		    	var d=$.Deferred();
 			    var my_length = my_all_data.length;
+			    var elements = [], ids = [];
 			    for(i=0;i<my_length;i=i+1)
 			    	{
-			    	e = my_all_data[i];
-			    	db.put('tree', e, parseInt(e.id));
+			    	var el=my_all_data[i];
+			    	if(typeof id == 'undefined' || el.id==id) //если есть id, то сохраняю не всё
+			    		{
+				    	elements.push( el );
+				    	ids.push( parseInt(el.id) );
+				    	}
 			    	}
+
+			    if(typeof id == 'undefined')
+				    {
+				    tree_db.clear_tree_data().done( function()
+				    	{ 
+				    	db.put('tree', elements, ids).done(function(){ d.resolve(); }); 
+				    	});
+				    }
+				else //если нужно сохранить один элемент
+					{
+				    	db.put('tree', elements, ids).done(function(){ d.resolve(); }); 
+					}
 			    
-		    	console.info(rnd); 
+			    return d.promise();
 		    	};
 		    
 		    //считаю кол-во элементов t=tree_db.count_lines().done(function(x){console.info("lines="+x)})
@@ -39,6 +141,7 @@ var DB_INTERFACE = function(){  //singleton
 		    	var d=$.Deferred();
 		    	db.count('tree').done(function(x) 
 		    		{
+		    		console.info(x);
 				    d.resolve(x);
 				    });
 				return d.promise();
@@ -48,7 +151,7 @@ var DB_INTERFACE = function(){  //singleton
 		    this.load_data = function() 
 		    	{
 		    	var d=$.Deferred();
-		    	db.values('tree').done(function(records) {
+		    	db.values('tree',null,9999999999999999999).done(function(records) {
 			      my_all_data = $.map(records, function (value, key) { return value; });
 		    	  d.resolve(records);
 		    	});
@@ -60,6 +163,22 @@ var DB_INTERFACE = function(){  //singleton
 	 return arguments.callee.instance;
 };
 
+
+jQuery.fn.quickEach = (function() {
+  var jq = jQuery([1]);
+  return function(c) {
+   var i = -1,
+       el, len = this.length;
+   try {
+    while (++i < len && (el = jq[0] = this[i]) && c.call(jq, i, el) !== false);
+   } catch (e) {
+    delete jq[0];
+    throw e;
+   }
+   delete jq[0];
+   return this;
+  };
+ }());
 
 
 function jsZipTree()
@@ -601,7 +720,7 @@ function jsMakeShortRecur() //обработка формы выбора пов�
 		{
 		n = ' — ';
 		i = 0;
-		$(".r_week:checked").each(function(){
+		$(".r_week:checked").quickEach(function(){
 			myday = $(this).attr('name').replace("w","");
 			if(i != 0) mycoma = ', ';
 			else mycoma = '';
@@ -1217,6 +1336,8 @@ function jsOpenRedactorRecursive(id)  //открываю в редакторе �
 		    jsRecursive( id );
 			var amount = parseInt(recursivedata.length,10);
 	   		var need_open = [];
+	   		
+	   		
 	   		$.each(recursivedata,function(i,el)
 	   			{ 
 	   			need_open.push(el.id);
@@ -1254,7 +1375,7 @@ function jsCloneChat(user_id)
 		$("body").append(new_chat);
 		
 		var cnt=0;
-		$(".chat_box[user_id!=template]").each(function(el){
+		$(".chat_box[user_id!=template]").quickEach(function(el){
 			console.info( $(this).css("top") );
 			if( $(this).css("top")=="auto" )
 				{
@@ -4322,7 +4443,7 @@ function jsFixScroll(type,only_selected_panel)
 	
 	if(only_selected_panel) var add_id = ".old_selected,"
 	else var add_id = "";
-	$("#mypanel .panel").each(function()
+	$("#mypanel .panel").quickEach(function()
 		{ 
 		if(type==2) var add = ",.selected";
 		else var add = "";
@@ -4746,8 +4867,6 @@ setTimeout(function (){ //jsShowBasket();
 	
 tree_db = new DB_INTERFACE;
 
-tree_db.savedata();
-
 return true;
 }
 
@@ -5155,7 +5274,7 @@ else
 
 function jsPrepareDate()
 {
-  $(".date1").each( function()
+  $(".date1").quickEach( function()
       {  
       if($(this).attr("childdate")) 
       	{
@@ -5788,7 +5907,7 @@ if ( ($("#mypanel .n_title[contenteditable=true]").length > 0) || ($("#mypanel #
 
 var scrollleft = $("#mypanel").scrollLeft();
 
-$(".panel").each( function() 
+$(".panel").quickEach( function() 
 	{ 
 	if( $(this).attr('id') )
 		{
@@ -5810,7 +5929,7 @@ jsFixScroll(2);
 
 function jsPresize() //удаляю и добавляю узкие полоски для регулировки ширины панелей
 {
-	$("#mypanel .panel").each(function() 
+	$("#mypanel .panel").quickEach(function() 
 		{ 
 		if( $(this).next(".presize").length==0 )
 			$("<div class='presize'></div>").insertAfter($(this)); 
@@ -6548,7 +6667,7 @@ function jsCalcTabs()
 clearTimeout(calctabs_timer);
 calctabs_timer = setTimeout(function()
 	{
-	$(".favorit_tabs").each(function()
+	$(".favorit_tabs").quickEach(function()
 		{
 				var this_tabs = $(this);
 				
@@ -6560,7 +6679,7 @@ calctabs_timer = setTimeout(function()
 				this_tabs.next(".favorit_menu:first").find('ul').html('');
 				this_tabs.next(".favorit_menu:first").hide();
 				
-				this_tabs.find("li").each(function(){
+				this_tabs.find("li").quickEach(function(){
 					var current_w = $(this).outerWidth();
 					all_w = all_w + current_w;
 					
@@ -6902,7 +7021,7 @@ function jsSetTimeNow()
 		
 		
 		if ((cur_view=='agendaWeek') || (cur_view=='agendaDay'))
-			$("* #time_now_to").each(function(){				
+			$("* #time_now_to").quickEach(function(){				
 				if ($(this).children('.fc-mynow').html()==null)
 				   $('<div class="fc-mynow"></div>').prependTo(this);
 				   
@@ -7123,7 +7242,7 @@ function jsCalendarNode(id)
 		  	{ 
 				if((slot!=0) && (i_am_scroll == 1))
 					{
-					$('* #slot_scroll').each(function() 
+					$('* #slot_scroll').quickEach(function() 
 					  { 
 					  	if(slot<0) return true;
 					  	slot = $(this).find('.fc-slot'+slot);
@@ -7197,7 +7316,7 @@ $.each(ids,function(ii,id1)
    
    divider = "<div class='divider_red' contenteditable='false' md5='"+$.md5( mytext ) +"' myid='"+id1+"'>"+count+path1+"<h6>"+""+element1.title+"</h6></div>";
    
-   text = divider+"<div class='edit_text'>"+mytext+"</div>";
+   text = text + divider+"<div class='edit_text'>"+mytext+"</div>";
    
    if(ids.length==1) 
    		{
@@ -7279,7 +7398,7 @@ clearTimeout(my_autosave);
 		jsHighlightText();
 		text = html;	
 		
-		$("<div>"+html+"</div>").find(".divider_red").each(function(iii,el){
+		$("<div>"+html+"</div>").find(".divider_red").quickEach(function(iii,el){
 			text = "";
 			var id_node = $(el).attr('myid');
 	    	var md5text = $(".divider_red[myid='"+id_node+"']").attr('md5');
