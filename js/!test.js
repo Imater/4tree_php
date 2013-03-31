@@ -3,11 +3,42 @@
 function jsTestIt(){
 	$("#qunit-tests").html("");
 	
+	if( window.location.hash.indexOf("long") !=-1 )	var longtest = true;
+	else var longtest = false;
+	
+	if(longtest)
 	test("Открытие рекурсивом большой папки",function(){
 		jsOpenRedactorRecursive(599);
 		ok(true);
-	})
+	});
 	
+	
+	//длинные тесты, чтобы выполнить, нужно набрать в строку #long
+	if(longtest)
+	test('Асинхронный тест только сохранения', function() {
+		setTimeout(function(){
+			console.info(jsDelId( parseInt(new_id8) ),"Заметка №"+new_id8+" удалена");
+			},30000);
+		stop();
+		var myname = jsNow()+" - тест";
+		var old_id8 = jsCreateDo(1,myname);
+
+		window.after_ajax = function()
+			{ 
+			window.after_ajax = null;
+			setTimeout(function(){
+				var answer = my_all_data.filter(function(el,i) { if(el.title) return el.title==myname; });	
+				new_id8=answer[0].id; 
+				ok(parseInt(old_id8)<parseInt(new_id8),"Новый id = "+new_id8+", старый id = "+old_id8+", name="+myname); 
+				ok(my_all_data, localStorage.getItem("last_sync_time")+" < "+jsNow());
+				start();
+				},500);
+			};
+
+		jsSync("save_only");
+		});
+	
+	///короткие тесты 	
 	
 	test('jsCreateDo("_НОВОЕ")', function() {
 		id_of_new = jsCreateDo(1,"_НОВОЕ");
@@ -37,9 +68,10 @@ function jsTestIt(){
 	
 	test('jsCreateDo + jsDelete + node_to_id + jsPlaceMakedone + jsNow + jsGetSyncId', function() {
 		var id = jsCreateDo(1,"***Тест-"+jsNow());
-		ok( jsFind(id).id == id , "Нашёл созданную заметку №"+id);
+		ok( jsFind(id).id == id , "Создал и нашёл созданную заметку №"+id);
 		ok(jsDelId(id),"Заметка №"+id+" удалена");
-		ok( (jsNow() - jsNow(22)) > 0 , "Вывод текущего времени" );
+		var time_dif = (jsNow() - jsNow(22));
+		ok( time_dif > 0 , "Вывод текущего времени "+time_dif );
 		ok( jsGetSyncId().indexOf(":")!=-1, "jsGetSyncId()");
 	});
 
@@ -64,36 +96,53 @@ function jsTestIt(){
 		ok($(".highlight").length==0,"Вся подсветка снята");
 		$("#textfilter").val("вертолётной");
 		$('#textfilter').keyup();
-		})
+		});
 		
-	test('Проверяю редактирование + jsDry', function() {
+	test('Проверяю jsDry', function() {
 		ok( jsDry([jsFind(id_of_new,{text:"Тестирую"})])[0].text == "Тестирую", "jsDry(Тестирую)");
 		});
 
-	test('Асинхронный тест только сохранения', function() {
+	test('Проверяю внутренню базу IndexedDB', function() {
 		stop();
-		var myname = jsNow()+" - тест";
-		var old_id8 = jsCreateDo(1,myname);
-
-		window.after_ajax = function()
-			{ 
-			window.after_ajax = null;
-			setTimeout(function(){
-				var answer = my_all_data.filter(function(el,i) { if(el.title) return el.title==myname; });	
-				new_id8=answer[0].id; 
-				ok(parseInt(old_id8)<parseInt(new_id8),"Новый id = "+new_id8+", старый id = "+old_id8+", name="+myname); 
-				ok(my_all_data, localStorage.getItem("last_sync_time")+" < "+jsNow());
-				start();
-				},500);
-			};
-
-		jsSync("save_only");
+		tree_db.setItem("author","JOHN WEZEL").done(function(ans)
+			{
+				tree_db.setItem("author").done(function(ans)
+					{
+					if(ans=="JOHN WEZEL") ok(true,"Сохранил и считал один параметр в tree_settings: "+ans+
+											". Тип хранения: "+db.getType());
+					start();
+					});
+			});		
 		});
-
-
-	setTimeout(function(){
-		console.info(jsDelId( parseInt(new_id8) ),"Заметка №"+new_id8+" удалена");
-		},30000);
 		
+	test('Тесты tree_db', function () {
+		ok( JSON.stringify(db.getSchema().stores).indexOf('"tree"') != -1, "Таблица tree существует" );
+		stop();
+		tree_db.calculate_md5().done(function(md5)
+			{ 
+			ok(md5.length>0,"md5 массив передан в кол-ве: "+md5.length+" шт.")
+			start();
+			});
+		stop();
+
+		tree_db.compare_md5_local_and_server().done(function(test_ok)
+			{ 
+			ok(true,"Сверку локальной базы и сервера по md5 "+test_ok);
+			start();
+			});
+			
+		stop();
+		tree_db.setItem("big_object",jsFind(id_of_new)).done(function(ans)
+			{
+				tree_db.setItem("big_object").done(function(ans)
+					{
+					if(JSON.stringify(ans)==JSON.stringify(jsFind(id_of_new))) ok(true,"Сохранил и считал один параметр в tree_settings: "+ans.title+
+											". Тип хранения: "+db.getType());
+					start();
+					});
+			});
+
+
+		});
 
 }

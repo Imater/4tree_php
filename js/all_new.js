@@ -12,13 +12,14 @@ var autosave_timer,mypomidor,endtime,my_min,old_title,widthpanel,RestMin, show_h
 var is_rendering_now,last_input_click;
 var timestamp=new Date().getTime(),start_sync_when_idle=false,there_was_message_about_change=false;
 var hoverListener,is_changed,only_save=false,main_user_id;
+var db;
 
 var DB_INTERFACE = function(){  //singleton
 	 if (typeof arguments.callee.instance=='undefined')
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		    var db = new ydn.db.Storage('_all_tree');    
+//		    var db = new ydn.db.Storage('_all_tree');    
 	    	console.info("tree_db started"); 
 		    
 		    this.calculate_md5 = function() //проверяю целостность данных
@@ -46,7 +47,10 @@ var DB_INTERFACE = function(){  //singleton
 		    this.clear_all_data = function() //сохраняю my_all_data в базу данных
 		    	{
 		    	var d=$.Deferred();
-		    	db.clear().done(function(){ d.resolve(); });
+		    	if( JSON.stringify(db.getSchema().stores).indexOf('"tree"') != -1 ) //если таблицы tree нет
+			    	db.clear().done(function(){ d.resolve(); });
+			    else
+			    	d.resolve();
 		    	return d.promise();
 		    	}
 
@@ -99,8 +103,10 @@ var DB_INTERFACE = function(){  //singleton
 						    		}
 					    		});
 					    console.info("Сверку с сервером по md5 "+test_ok);
+   				    	d.resolve(test_ok);
 			    		});
 			    	});
+			    return d.promise();
 		    	}
 		    	
 		    	
@@ -3208,6 +3214,7 @@ function jsDoFirst() //функция, которая выполняется п�
 {
 //jsTestDate();
 tree_db = new DB_INTERFACE;
+db = new ydn.db.Storage('_all_tree');    
 
 main_user_id = $.cookie("4tree_user_id");
 _connect(main_user_id);
@@ -4688,7 +4695,7 @@ for(i=0;i<m_len;i++)
 
 function jsSaveData(id_one,old_id,dontsync)
 {
-//tree_db.save_data(id_one);
+tree_db.save_data(id_one);
 //last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
 start_sync_when_idle = true; //тестирую
 if(id_one>0) only_save = true;
@@ -6414,8 +6421,8 @@ function jsInfoFolder(data,parent_node)
 		  	if(data.user_id != main_user_id ) 
 		  		{
 			  	frend_share = my_all_frends.filter(function(el){ return el.user_id == data.user_id; });
-
-		  		icon_share = "<div title='"+frend_share[0].fio+" ("+frend_share[0].email+")\nделится с вами СВОЕЙ веткой' class='share_img'><img src='"+frend_share[0].foto+"'></div>";
+			  if(frend_share[0])
+		  		icon_share = "<div title='"+frend_share[0]["fio"]+" ("+frend_share[0]["email"]+")\nделится с вами СВОЕЙ веткой' class='share_img'><img src='"+frend_share[0]["foto"]+"'></div>";
 		  		}
 		    
 		var comment_count = jsFindByTreeId(data.id,-1).length;
