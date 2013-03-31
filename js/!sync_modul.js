@@ -1,3 +1,5 @@
+var compare_timer;
+
 function my_console(text,text2) //вывод лога в консоль
 {
 	if(!$(".sync_console:visible").length) return true;
@@ -135,7 +137,7 @@ function jsSync(save_only)
 		 	if(data.server_changes)
 			 	$.each(data.server_changes,function(i,d) //эти данные сохранены на сервере, можно отметить lsync = now()
 			 	    	{
-			 	    	console.info(d);
+//			 	    	console.info(d);
 			 	    	jsSaveElement(d);
 			 	    	jsRefreshRedactor(d);
 			 	    	countit=1;
@@ -202,7 +204,8 @@ function jsSync(save_only)
 			 	    	   
 			 	localStorage.setItem("last_sync_time",data.lsync); //сохраняю время успешной синхронизации
 			 	localStorage.setItem("time_dif",data.time_dif); //сохраняю время успешной синхронизации
-			 	    	
+			 	clearTimeout(compare_timer);
+			 	compare_timer = setTimeout(function(){ tree_db.compare_md5_local_and_server(); },500);
 			 }
 		my_console("Получен ответ от сервера:",j);
         $(".icon-cd").css("color","#888");

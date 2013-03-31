@@ -33,8 +33,10 @@ var DB_INTERFACE = function(){  //singleton
 			      				  (el.date1?el.date1:"") + (el.date2?el.date2:"") + (el.del?el.del:"") + 
 			      				  (el.did?el.did:"") + (el.position?el.position:"");
 //			      	alldata = el.id+":"+(el.title?el.title:"")+", ";
-//				if(el.id==4474)
-			      	longtext.push({ id:el.id, md5:$.md5( alldata ).substr(0,5) });
+				if(el.id==1613) yyy = el.text;
+					var mymd5 = hex_md5( alldata ).substr(0,5);
+					
+			      	longtext.push({ id:el.id, md5:mymd5 });
 			      	}
 		    	  d.resolve(longtext);
 		    	  });
@@ -73,6 +75,34 @@ var DB_INTERFACE = function(){  //singleton
 		    		}
 		    	return d.promise();
 		    	}
+		    	
+		    this.compare_md5_local_and_server = function()
+		    	{
+		    	var d=$.Deferred();
+		    	var sync_id = jsGetSyncId();
+		    	//передаю время, чтобы заполнить время последней синхронизации
+				var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id; 
+	
+				$.getJSON(lnk,function(data){
+			    	tree_db.calculate_md5().done(function(md5)
+			    		{ 
+			    			var test_ok = "выполнил успешно.";
+				    		$.each(md5, function(i,el)
+					    		{ 
+					    		if(el.md5!=data.md5[el.id])
+					    			{
+						    		console.info("!!!!!MD5!!!!!Данные на сервере не совпадают"+
+						    					 " с локальными:",el.id,el.md5, data.md5[el.id]); 
+						    		jsFind(el.id,{lsync:0}); //восстанавливаю целостность, забирая элемент с сервера
+						    		jsSync();
+						    		test_ok = "ПРОВАЛИЛ!!!!!!!!! :( ИСПРАВЛЯЮ :).";
+						    		}
+					    		});
+					    console.info("Сверку с сервером по md5 "+test_ok);
+			    		});
+			    	});
+		    	}
+		    	
 		    	
 		    this.load_from_server = function()
 		    	{
@@ -3177,6 +3207,8 @@ $('#tree_back').bind("contextmenu",function(e){
 function jsDoFirst() //функция, которая выполняется при запуске
 {
 //jsTestDate();
+tree_db = new DB_INTERFACE;
+
 main_user_id = $.cookie("4tree_user_id");
 _connect(main_user_id);
 
@@ -4656,6 +4688,7 @@ for(i=0;i<m_len;i++)
 
 function jsSaveData(id_one,old_id,dontsync)
 {
+//tree_db.save_data(id_one);
 //last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию
 start_sync_when_idle = true; //тестирую
 if(id_one>0) only_save = true;
@@ -4865,7 +4898,6 @@ setTimeout(function (){ //jsShowBasket();
 	jsFindByParent("user_"+main_user_id);
 	},100);
 	
-tree_db = new DB_INTERFACE;
 
 return true;
 }
@@ -8026,5 +8058,8 @@ var pomidor_text = ['Отлично. Но нужно отвлечься',
 					'Отлично, но вы заслужили право немного полениться',
 					'Вы отлично сконцентрированны. Но отдых вам пригодится',
 					'Хорошо, что вы не отвлекались'];
+
+
+
 
 

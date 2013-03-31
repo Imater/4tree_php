@@ -1773,6 +1773,12 @@ if($GLOBALS['user_id'])
 	    $alldata = $sql['id'].$sql['title'].$sql['text'].$date1.
     				  $date2.$sql['del'].$did.$sql['position'];
     	$longtext[$sql['id']] = substr(md5( $alldata ),0,5);
+    	
+    	if($sql['id']==1613 && false)
+    		{
+	    		echo $sql['text'];
+	    		echo "<hr>".md5($sql['text'])."<hr>";
+	    	}
 	}
 	
 if(true) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; } 
@@ -1806,8 +1812,8 @@ if(true) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; }
 	
 	$res["md5"] = $longtext;
 	$res["time_dif"] = $time_dif;
-//	$res["comments"] = $comments;
-//	$res["all_data"] = $answer;
+	$res["comments"] = $comments;
+	$res["all_data"] = $answer;
 	
 ///	echo md5($longtext)."<hr>";
 //	echo ($longtext);
