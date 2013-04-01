@@ -458,6 +458,9 @@ if(isset($_GET['test']))
 		  			</div>
 		  		</div>
 
+	  			<div id="tree_agenda">
+		  		</div>
+
 				
 			    <div id="calendar" class="noselectable1">
 				</div>	
