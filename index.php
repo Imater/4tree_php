@@ -459,6 +459,9 @@ if(isset($_GET['test']))
 		  		</div>
 
 	  			<div id="tree_agenda">
+	  				<div class="agenda_day">
+	  					<div >
+	  				</div>
 		  		</div>
 
 				
@@ -469,6 +472,7 @@ if(isset($_GET['test']))
     				<ul>
     					<li id="tab_find"><i class="icon-search"></i> Поиск</li><li class="active" id="tab_calendar">
     					<i class="icon-calendar"></i> Календарь</li><li id="tab_news">
+    					<i class="icon-clock"></i> Мои новости</li>
     					<i class="icon-clock"></i> Мои новости</li>
     					<!--<li style="display:none">
     					Параметры</li><li style="display:none">
