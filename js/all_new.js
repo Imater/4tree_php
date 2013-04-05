@@ -1434,7 +1434,9 @@ function jsCloneChat(user_id) //клонирую чат из template
 		  myr_comment = chat_editor.redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+main_user_id, lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+main_user_id, autoresize:true,  
   			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
      });
-     	new_chat.find(".chat_content").append("chat_"+main_user_id+"_"+user_id);
+     	var chat_html = jsShowChatHistory( "chat_"+main_user_id+"_"+user_id );
+     	new_chat.find(".chat_content").html(chat_html);
+     	
 
 
 }
@@ -3937,7 +3939,7 @@ function jsDelComment(comment_id)
 		}
 }
 
-function jsShowAllComments(tree_id)
+function jsShowAllComments(tree_id) //показываю все комментарии
 {
 	$("#comment_enter_place").append( $("#comment_enter") );
 	element = jsFind(tree_id);
@@ -3954,7 +3956,7 @@ function jsShowAllComments(tree_id)
 	if( $("#tree_news").is(":visible") ) jsShowNews(0);
 	
 }
-function jsShowComments(tree_id, parent_id)
+function jsShowComments(tree_id, parent_id) //рекурсивно заполняет глобальную переменную myhtml сообщениями комментариев
 {
 	var source = $("#comment_template").html();
 	template = Handlebars.compile(source);
@@ -3989,6 +3991,12 @@ function jsShowComments(tree_id, parent_id)
 	
 }
 
+function jsShowChatHistory(tree_id) //возвращает комментарии являющиеся чатом (история) tree_id = "chat_11_12"
+{
+myhtml="";
+jsShowComments("chat_11_12",-1);
+return myhtml;
+}
 
 function jsRefreshFrends()
 {

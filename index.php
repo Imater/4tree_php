@@ -772,7 +772,6 @@ if(isset($_GET['test']))
 							
 						</div>
 					</div>
-				 </div>
 				</div>
 				
 <div class="chat_box" user_id="template">
