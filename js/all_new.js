@@ -57,7 +57,11 @@ var DB_INTERFACE = function(){  //singleton
 		    this.clear_tree_data = function() //сохраняю my_all_data в базу данных
 		    	{
 		    	var d=$.Deferred();
-		    	db.clear("tree").done(function(){ d.resolve(); });
+		    	
+		    	if( JSON.stringify(db.getSchema().stores).indexOf('"tree"') != -1 ) //если таблицы tree нет
+		    		{
+		    		db.clear("tree").done(function(){ d.resolve(); });
+		    		}
 		    	return d.promise();
 		    	}
 		    	
@@ -1402,7 +1406,7 @@ $.postJSON(lnk,mynote,function(data,j,k){
 }
 
 
-function jsCloneChat(user_id)
+function jsCloneChat(user_id) //клонирую чат из template
 {
 		var new_chat = $(".chat_box[user_id='template']").clone().attr("user_id",user_id);
 		user_el = jsFrendById(user_id);
@@ -1430,6 +1434,7 @@ function jsCloneChat(user_id)
 		  myr_comment = chat_editor.redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+main_user_id, lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+main_user_id, autoresize:true,  
   			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
      });
+     	new_chat.find(".chat_content").append("chat_"+main_user_id+"_"+user_id);
 
 
 }
