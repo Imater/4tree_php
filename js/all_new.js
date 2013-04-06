@@ -31,10 +31,10 @@ var DB_INTERFACE = function(){  //singleton
 			      	{
 			      	el = records[i];
 			      	var alldata = (el.id?el.id:"") + (el.title?el.title:"") + (el.text?el.text:"") + 
-			      				  (el.date1?el.date1:"") + (el.date2?el.date2:"") + (el.del?el.del:"") + 
-			      				  (el.did?el.did:"") + (el.position?el.position:"");
+			      				  (el.date1?el.date1:"") + (el.date2?el.date2:"") + 
+			      				  (el.did?el.did:"");
 //			      	alldata = el.id+":"+(el.title?el.title:"")+", ";
-				if(el.id==1613) yyy = el.text;
+				if(el.id==6679) console.info("Сверка md5:"+alldata);
 					var mymd5 = hex_md5( alldata ).substr(0,5);
 					
 			      	longtext.push({ id:el.id, md5:mymd5 });
@@ -72,7 +72,7 @@ var DB_INTERFACE = function(){  //singleton
 		    		{
 			    	var iter = ydn.db.KeyRange.only(param_name);
 			    	db.values("tree_settings",iter).done(function(records) {
-				    	x = records[0].value;
+				    	var x = records[0].value;
 				    	d.resolve(x); 
 				    	});
 		    		}
@@ -89,7 +89,7 @@ var DB_INTERFACE = function(){  //singleton
 		    	var d=$.Deferred();
 		    	var sync_id = jsGetSyncId();
 		    	//передаю время, чтобы заполнить время последней синхронизации
-				var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id; 
+				var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id+"&only_md5=1"; 
 	
 				$.getJSON(lnk,function(data){
 			    	tree_db.calculate_md5().done(function(md5)
@@ -97,11 +97,12 @@ var DB_INTERFACE = function(){  //singleton
 			    			var test_ok = "выполнил успешно.";
 				    		$.each(md5, function(i,el)
 					    		{ 
-					    		if(el.md5!=data.md5[el.id])
+					    		if( (el.id>0) && (el.md5!=data.md5[el.id]) )
 					    			{
 						    		console.info("!!!!!MD5!!!!!Данные на сервере не совпадают"+
-						    					 " с локальными:",el.id,el.md5, data.md5[el.id]); 
-						    		jsFind(el.id,{lsync:0}); //восстанавливаю целостность, забирая элемент с сервера
+						    					 " с локальными:",el.id,el.md5, data.md5[el.id],jsFind(el.id)); 
+						    		
+						    		trampampam = jsFind(el.id,{lsync:0}); //восстанавливаю целостность, забирая элемент с сервера
 						    		jsSync();
 						    		test_ok = "ПРОВАЛИЛ!!!!!!!!! :( ИСПРАВЛЯЮ :).";
 						    		}
@@ -1442,6 +1443,34 @@ function jsCloneChat(user_id) //клонирую чат из template
 }
 
 
+function jsOpenWikiPage(parent_id,mytitle)
+{
+	var childrens = jsFindByParent(parent_id);
+	var myfilter="[["+mytitle+"]]";
+	var mynewdata = childrens.filter(function(el)
+			{
+			if(el.did!="") return false;
+			if(el.del==1) return false;
+			if(el.title) return el.title.toLowerCase().indexOf(myfilter.toLowerCase())!=-1;
+			});
+				
+	if(!mynewdata.length) 
+		{
+		jsAddDo("right",parent_id,"[["+mytitle+"]]");
+		}
+	else
+		{
+		jsSelectNode(mynewdata[0].id);
+		jsOpenNode(mynewdata[0].id);
+		jsFixScroll(2);
+
+		console.info(mynewdata,mynewdata[0].id);
+		}
+		
+	
+	myr.setFocus();
+}
+
 
 var scrolltimer;
 var last_blur_sync_time = 0;
@@ -1454,6 +1483,16 @@ function jsRegAllKey() //все общие delegate и регистрация к
 //  		localStorage.setItem("mylastmail","eugene.leonar@gmail.com");
 $("#test-div").draggable({appendTo: "body"});
 $(".chat_box").draggable({appendTo: "body", handle: ".chat_header"});
+
+jsRerememberPomidor();
+
+$(".redactor_").delegate("wiki","click",function()
+	{ 
+	var mytitle = strip_tags( $(this).html() ); 
+    var id = node_to_id( $(".selected").attr('id') );
+    jsOpenWikiPage(id,mytitle);
+	return false;
+	});
 
 if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax = null; jsTestIt(); };
 
@@ -2431,26 +2470,21 @@ setTimeout(function(){
 
 	 $('body').delegate("#pomidoro_icon i","click", function ()
 	   {
-	    myid=parseInt($(this).attr('id').replace('pomidor',''),10);
-	    
-	    alert(myid);
+	    myid=parseInt($(this).attr('id').replace('pomidor',''),10); //номер кликнутой помидорки
 	    
 	    $("#pomidoro_icon i").removeClass("pomidor_now");
-	    $(this).addClass("pomidor_now");
-	    
-	    
+	    $(this).addClass("pomidor_now"); //отмечаю текущую помидорку зелёным
 	    
 	    var now = new Date().getTime();
-	    var endtime = now;
-	    my_min = $(this).attr('time');
+	    endtime = now; //текущее время
+	    my_min = $(this).attr('time'); //через сколько минут остановить таймер
 	    
 	    var new_x = parseInt(my_min*513/80,10);
 	    $("#pomidor_scale").stop().animate({"margin-left":new_x-5},700);
 	    $("#pomidor_scale").animate({"margin-left":new_x},100);
-		clearInterval(mypomidor); 		
+     	setTimeout(function(){ $("#pomidoro_icon").show(); },1200); //отображаю панель с помидорками
+     	console.info("показываю иконки!");
 		goPomidor();
-	    
-	    
 		return false;
 	   });
 	 $('body').delegate("#left_min,#right_min,#pomidor_timer","click", function ()
@@ -2509,8 +2543,8 @@ setTimeout(function(){
 	    var now = new Date().getTime();
 	    endtime = now;
 		
-		clearInterval(mypomidor); 		
-		if (startPomidor!=0) goPomidor();
+//		clearInterval(mypomidor); 		
+		goPomidor();
      });
 
      });
@@ -4552,6 +4586,7 @@ if(mytitle)
 		{
 		document.title = "4tree.ru: "+jsShortText( strip_tags(mytitle) ,150 );
 		}
+else document.title = "4tree.ru";
 }
 
 function jsOpenNode(id,nohash,iamfrom) //открыть заметку с номером
@@ -7544,37 +7579,147 @@ return { myclass:("note-"+i_size), mylength:mylength1 };
 }
 
 
-function jsMakeWiki()
+function jsMakeWiki() //находит всё что в квадратных скобках и заменяет на тег <wiki>
 {
-txt = $(".redactor_editor").html();
+txt = myr.getCode();
 wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
+if(!wiki_words) 
+	{
+	return true; //если нет символов WIKI
+	}
+else
+	{
+	aa = rangy.saveSelection();
+	txt = myr.getCode();
+	wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
+	}
 newtxt = txt;
+var need_refresh=false;
 $.each(wiki_words, function(i,myword){
-	mynewword = myword.replace("[[","").replace("]]","");
-	console.info(i,myword, mynewword);
-	newtxt = newtxt.replace(myword,"<wiki>"+mynewword+"</wiki>");
+	if(myword.length>4) 
+		{
+			mynewword = myword.replace("[[","").replace("]]","");
+			console.info(i,myword, mynewword);
+			newtxt = newtxt.replace(myword,"[ <wiki>"+mynewword+"</wiki> ]");
+			need_refresh = true;
+		}
+	else
+		{
+		rangy.removeMarkers(aa);
+		}
 	});
-$(".redactor_editor").html(newtxt);
+if(need_refresh) 
+	{
+    console.info("saved_1",savedRange,savedRange2);
+	myr.setCode(newtxt);
+	note_saved = false;
+    console.info("saved_2",savedRange,savedRange2);
+    rangy.restoreSelection(aa);
+    savetext(1);
+    console.info("saved_3",savedRange,savedRange2);
+	}
 }
 
+function getCaretPosition(editableDiv) {
+    var caretPos = 0, containerEl = null, sel, range;
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            if (range.commonAncestorContainer.parentNode == editableDiv) {
+                caretPos = range.endOffset;
+            }
+        }
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        if (range.parentElement() == editableDiv) {
+            var tempEl = document.createElement("span");
+            editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+            var tempRange = range.duplicate();
+            tempRange.moveToElementText(tempEl);
+            tempRange.setEndPoint("EndToEnd", range);
+            caretPos = tempRange.text.length;
+        }
+    }
+    return caretPos;
+}
+
+
+var savedRange,savedRange2,isInFocus;
+function saveSelection()
+{
+    if(window.getSelection)//non IE Browsers
+    {
+        savedRange = window.getSelection().getRangeAt(0);
+    }
+    else if(document.selection)//IE
+    { 
+        savedRange = document.selection.createRange();  
+    } 
+    savedRange2 = savedRange.cloneRange();
+    console.info("saved",savedRange,savedRange2);
+}
+
+function restoreSelection()
+{
+    isInFocus = true;
+//    document.getElementById("area").focus();
+    console.info("loaded",savedRange);
+    if (savedRange != null) {
+        if (window.getSelection)//non IE and there is already a selection
+        {
+            var s = window.getSelection();
+            if (s.rangeCount > 0) 
+                s.removeAllRanges();
+            s.addRange(savedRange);
+        }
+        else 
+            if (document.createRange)//non IE and no selection
+            {
+                window.getSelection().addRange(savedRange);
+            }
+            else 
+                if (document.selection)//IE
+                {
+                    savedRange.select();
+                }
+    }
+}
+//this part onwards is only needed if you want to restore selection onclick
+var isInFocus = false;
+function onDivBlur()
+{
+    isInFocus = false;
+}
+
+function cancelEvent(e)
+{
+    if (isInFocus == false && savedRange != null) {
+        if (e && e.preventDefault) {
+            //alert("FF");
+            e.stopPropagation(); // DOM style (return false doesn't always work in FF)
+            e.preventDefault();
+        }
+        else {
+            window.event.cancelBubble = true;//IE stopPropagation
+        }
+        restoreSelection();
+        return false; // false = IE style
+    }
+}
+
+
+//сохранение текста 
+//id_node - номер id 
+//text - html текст
+//note_saved = false - сохраняет только при этом условии
 function jsSendText(id_node,text,dont)
 {
-	clearTimeout(my_autosave);
-	
-//	jsMakeWiki();
-
-	if(note_saved==true) { return false; }
-//console.info("savetext id=",id_node,text);
-//		console.info(id_node,text,dont);
-
-//		if($('#'+id_node).find('.tip').attr('class')) $('#'+id_node).find('.tip').html(text.substr(0,1000));
-//		else $('<div class="tip">'+text.substr(0,1000)+'</div>').appendTo( $('#'+id_node).children('a') );
+	clearTimeout(my_autosave);  
+	jsMakeWiki();
+	if(note_saved==true) { return false; } //если сохранения не требуется
 		
-	if(note_saved==false)
-//		localStorage.setItem( "note_"+id_node , text); //сохраняю внутри браузера
-//		console.info(id_node);
-		
-    	if($(".redactor_editor").find("img:first").length) 
+    	if($(".redactor_editor").find("img:first").length)  //если есть картинка, устанавливаю её иконкой
     		{
     		imgsrc = $(".redactor_editor").find("img:first").attr("src");
     		$("#node_"+id_node+" .node_img").css("background-image", "url("+imgsrc+")");
@@ -7586,58 +7731,18 @@ function jsSendText(id_node,text,dont)
 	    	}
 
 		tt = jsFind(id_node, { text : text, icon : icon }); //сохраняю текст в главном массиве
-
-		if(tt) if(tt.title.indexOf(" - ")!=-1) jsGetAllMyNotes(); //обновляю массив для календаря дневника
-
-//		console.log("saving_text",text,"id_node=",id_node);
-		
-//		text = encodeURIComponent(text);		
-    	
+		if(tt) if(tt.title.indexOf(" - ")!=-1) jsGetAllMyNotes(); //обновляю массив для календаря дневника, если это дневник
     	note_saved=true;
-    	
-//    	if (id_node) jsTitle('текст заметки сохранён');
-    	preloader.trigger('hide');
-    	
-/*		if(t=='')
-		  {
-		   $(".selected .node_img").removeClass('note-clean').addClass("note-6");
-		  }
-		else
-    	   if(t!='') 
-    	     {
-		   	  icon = "image.php?width=150&height=150&cropratio=1:1&image=/fpk/4tree/"+t;
-
-		   $(".selected .node_img").removeClass("note-clean").removeClass("note-1").removeClass("note-2").removeClass("note-3").removeClass("note-4").removeClass("note-5").removeClass("note-6");
-		   $(".selected .node_img").css("background-image","url("+icon+")").addClass(".node_box");
-//		   console.info(icon);
-
-
-    	     }
-    	   if (dont!=1) 
-    	     {
-			 		$("#tabs a[myid=1]").click();
-			 		setTimeout(function(){ $('#demo').jstree('refresh',-1); },700);
-    	     $('#calendar').fullCalendar( 'refetchEvents' );
-    	     }*/
-    	     
-
-
-
 }
 
-function jsTitle(title,tim)
+function jsTitle(title,tim) //вывод подсказок в левый нижний угол
 {
 var mytim = tim;
-if (tim == undefined) mytim = 2000;
-clearTimeout(t1);
-var t1 = setTimeout( function()
-             {
-			  $('.f_text').html(title).fadeIn('slow');
-			  clearTimeout(t2);
-			  if(mytim<60000) t2 = setTimeout(function() { $('.f_text').fadeOut('slow').html('');} ,mytim);
-								
-								
-								},200);
+if (!tim) mytim = 5000;
+
+ $('.f_text').html(title).fadeIn('slow');
+ clearTimeout(t2);
+ if(mytim<60000) t2 = setTimeout(function() { $('.f_text').fadeOut('slow').html('');} ,mytim);
 
 }
 
@@ -7659,10 +7764,9 @@ Object.size = function(obj) {
         if (obj.hasOwnProperty(key)) size++;
     }
     return size;
-};
+}; //подсчёт кол-ва элементов в объектах
 
-Date.prototype.jsDateTitleFull = jsDateTitleFull;
-function jsDateTitleFull(shortit)
+Date.prototype.jsDateTitleFull = function(shortit) //вывожу полную дату с днём недели
 {
 if(!shortit) 
 	{
@@ -7678,8 +7782,7 @@ var n = this.getDate() + months[this.getMonth()] + " " + this.getFullYear() + ",
 return n;
 }
 
-Date.prototype.jsDateTitle = jsDateTitle;
-function jsDateTitle()
+Date.prototype.jsDateTitle = function() //вывожу дату на русском языке для правого нижнего угла
 {
 var months = [" января", " февраля", " марта", " апреля", " мая", " июня", " июля", " августа", " сентября", " октября", " ноября", " декабря"];
 var days = ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "Суббота"];
@@ -7687,7 +7790,7 @@ var n = this.getDate() + months[this.getMonth()] + ", " + days[this.getDay()];
 return n;
 }
 
-function jsSetDiaryDate(skipdays)
+function jsSetDiaryDate(skipdays) //устанавливаю дату и номер недели в правый нижний угол
 {
 today = new Date( jsNow()+skipdays*24*60*60*1000 ); 
 
@@ -7696,33 +7799,52 @@ $(".todayweek").html( "(" + today.getWeek() + " неделя)");
 }
 
 
-function goPomidor()
+function jsRerememberPomidor() //вспоминаю установки помидорок, нужно после перезагрузки
+{
+	var pomidor_id = localStorage.getItem("pomidor_id");
+	var pomidor_endtime = localStorage.getItem("pomidor_endtime");
+	var pomidor_my_min = localStorage.getItem("pomidor_my_min");
+
+	if(pomidor_id && pomidor_endtime && pomidor_my_min )
+		{
+			$("#pomidor"+pomidor_id).addClass("pomidor_now");
+			my_min = pomidor_my_min;
+			endtime = pomidor_endtime;
+			var now = new Date().getTime();
+			if(endtime<now) goPomidor();
+		}
+}
+
+function goPomidor()  //запуск помидорки, если установленно время финиша
 {
       var now = new Date().getTime();
       finishtime = parseInt(endtime,10)+(-my_min*60*1000);
       resttime = (finishtime-now)/1000;
 
-      if(!resttime) { clearTimeout(mypomidor); return false; }
-
-	  if (resttime<0) 
+	  if ((!resttime) || (resttime<0)) //если время уже давно вышло, сбрасываю
 	  	{ 
-	  	$("#pomidoro_icon i").removeClass("pomidor_now"); 
-	  	localStorage.setItem("pomidor_id","0"); return true; 
+	  	$("#pomidoro_icon i").removeClass("pomidor_now");
+	  	$("#pomidoro_icon").hide();
+		 console.info("resttime<","скрываю");
+
+	  	localStorage.setItem("pomidor_id","0"); 
+	    localStorage.setItem("pomidor_endtime","0");
+	  	jsSetTitleBack();
+	  	return true; 
 	  	}
 
 
-$("#pomidor").css("opacity","1");
-
-var snd3 = new Audio("img/tick2.mp3"); // buffers automatically when created
-
-snd3.play();
-
-var snd = new Audio("img/bell.wav"); // buffers automatically when created
+  	  $("#pomidor").css("opacity","1");
+  	  
+  	  var snd3 = new Audio("img/tick2.mp3"); // buffers automatically when created
+  	  snd3.play();
+  	  
+  	  var snd = new Audio("img/bell.wav"); // buffers automatically when created
 
 	  //Сохраняю параметры, чтобы при перезагрузки сайта таймер тикал дальше
 	  if($(".pomidor_now").attr('id')) 
 	    {
-	    id = parseInt( $(".pomidor_now").attr('id').replace("p",""),10 );
+	    id = parseInt( $(".pomidor_now").attr('id').replace("pomidor",""),10 );
 	    localStorage.setItem("pomidor_id",id);
 	    }
 	  else
@@ -7733,8 +7855,7 @@ var snd = new Audio("img/bell.wav"); // buffers automatically when created
 	  localStorage.setItem("pomidor_my_min",my_min);
 	  
 	  
-
-
+clearInterval(mypomidor);
 mypomidor =
    setInterval(function(){
       var now = new Date().getTime();
@@ -7746,44 +7867,39 @@ mypomidor =
 
 	  if (parseInt(resttime)==15) snd3.play();
 
-	  if (resttime<0) { 
+	  if (resttime<=0) 
+	  	 { 
 		 jsSetTitleBack();
+//		 $("#pomidoro_icon").hide();
+		 console.info("<=","скрываю");
 	     $("#pomidor_scale").css("margin-left",0); 
-	     my_min3 = -my_min;
 
-		 my_min2 = my_min3 - parseInt(my_min3/10,10)*10;
-		 
-		 
+	     var my_min3 = -my_min;
+		 var my_min2 = my_min3 - parseInt(my_min3/10,10)*10;
+		 var word_end,word_end2;
 	     if((my_min2==2) || (my_min2==3) || (my_min2==4)) { word_end = 'ы'; word_end2 = 'у'; }
 	     else { word_end = ''; word_end2 = 'у'; }
 	     if((my_min2==1)) { word_end = 'а'; word_end2 = 'ё'; }
 	     
 		 snd.play();
-	     if($("#pomidoro_icon i").hasClass("pomidor_now")) {
-
-		        id = parseInt( $(".pomidor_now").attr('id').replace("p",""),10 );
+	     if($("#pomidoro_icon i").hasClass("pomidor_now")) { //если это помидорка
+		        var id = parseInt( $(".pomidor_now").attr('id').replace("pomidor",""),10 );
 		        if (id==8) id=0;
 		        id = id+1;
-		        text = $("#p"+id).attr("text");
+		        text = $("#pomidor"+id).attr("text");
 		        
-		        joke_id = parseInt(Math.random()*pomidor_text.length,10);
+		        joke_id = parseInt(Math.random()*pomidor_text.length,10); //выбираю случайную шутку из массива
 		        
-		        if($("#p"+id).attr("time")!="-25") 
+		        if($("#pomidor"+id).attr("time")!="-25") 
 		           { 
-		           joke = pomidor_text[joke_id]+".\n\n"; 
-				   $('#bubu').load("do.php?add_pomidor",function()
-		  	      		{  
-		  	      		diarywindow.document.location.reload(); //обновляю дневник
-		  	      		});
-		           
+		           joke = pomidor_text[joke_id]+".\n\n";  //тут нужно добавить помидорку в дневник
 		           }
 		        else joke="";
 
 		     if (confirm(joke +text+ "\n\nЗапустить таймер Pomodoro?")) 
 		        {		        
 			    $("#pomidoro_icon i").removeClass("pomidor_now");
-		        $("#p"+id).addClass("pomidor_now").click();
-		        
+		        $("#pomidor"+id).addClass("pomidor_now").click();
 		        }
 		     else
 		        {
@@ -7796,6 +7912,9 @@ mypomidor =
 	       alert('Вы просили напомнить, когда пройд'+word_end2+'т '+(my_min3)+' минут'+word_end+'.'); 
 		   clearInterval(mypomidor); return; 
 		   }
+	     } //resttime<0
+	   else
+	     {
 	     }
    	  
       },1000)
@@ -7803,115 +7922,7 @@ mypomidor =
 }
 
 
-/**
-* hoverIntent is similar to jQuery's built-in "hover" function except that
-* instead of firing the onMouseOver event immediately, hoverIntent checks
-* to see if the user's mouse has slowed down (beneath the sensitivity
-* threshold) before firing the onMouseOver event.
-* 
-* hoverIntent r6 // 2011.02.26 // jQuery 1.5.1+
-* <http://cherne.net/brian/resources/jquery.hoverIntent.html>
-* 
-* hoverIntent is currently available for use in all personal or commercial 
-* projects under both MIT and GPL licenses. This means that you can choose 
-* the license that best suits your project, and use it accordingly.
-* 
-* // basic usage (just like .hover) receives onMouseOver and onMouseOut functions
-* $("ul li").hoverIntent( showNav , hideNav );
-* 
-* // advanced usage receives configuration object only
-* $("ul li").hoverIntent({
-*	sensitivity: 7, // number = sensitivity threshold (must be 1 or higher)
-*	interval: 100,   // number = milliseconds of polling interval
-*	over: showNav,  // function = onMouseOver callback (required)
-*	timeout: 0,   // number = milliseconds delay before onMouseOut function call
-*	out: hideNav    // function = onMouseOut callback (required)
-* });
-* 
-* @param  f  onMouseOver function || An object with configuration options
-* @param  g  onMouseOut function  || Nothing (use configuration options object)
-* @author    Brian Cherne brian(at)cherne(dot)net
-*/
-(function($) {
-	$.fn.hoverIntent = function(f,g) {
-		// default configuration options
-		var cfg = {
-			sensitivity: 7,
-			interval: 1300,
-			timeout: 0
-		};
-		// override configuration options with user supplied object
-		cfg = $.extend(cfg, g ? { over: f, out: g } : f );
-
-		// instantiate variables
-		// cX, cY = current X and Y position of mouse, updated by mousemove event
-		// pX, pY = previous X and Y position of mouse, set by mouseover and polling interval
-		var cX, cY, pX, pY;
-
-		// A private function for getting mouse position
-		var track = function(ev) {
-			cX = ev.pageX;
-			cY = ev.pageY;
-		};
-
-		// A private function for comparing current and previous mouse position
-		var compare = function(ev,ob) {
-			ob.hoverIntent_t = clearTimeout(ob.hoverIntent_t);
-			// compare mouse positions to see if they've crossed the threshold
-			if ( ( Math.abs(pX-cX) + Math.abs(pY-cY) ) < cfg.sensitivity ) {
-				$(ob).unbind("mousemove",track);
-				// set hoverIntent state to true (so mouseOut can be called)
-				ob.hoverIntent_s = 1;
-				return cfg.over.apply(ob,[ev]);
-			} else {
-				// set previous coordinates for next time
-				pX = cX; pY = cY;
-				// use self-calling timeout, guarantees intervals are spaced out properly (avoids JavaScript timer bugs)
-				ob.hoverIntent_t = setTimeout( function(){compare(ev, ob);} , cfg.interval );
-			}
-		};
-
-		// A private function for delaying the mouseOut function
-		var delay = function(ev,ob) {
-			ob.hoverIntent_t = clearTimeout(ob.hoverIntent_t);
-			ob.hoverIntent_s = 0;
-			return cfg.out.apply(ob,[ev]);
-		};
-
-		// A private function for handling mouse 'hovering'
-		var handleHover = function(e) {
-			// copy objects to be passed into t (required for event object to be passed in IE)
-			var ev = jQuery.extend({},e);
-			var ob = this;
-
-			// cancel hoverIntent timer if it exists
-			if (ob.hoverIntent_t) { ob.hoverIntent_t = clearTimeout(ob.hoverIntent_t); }
-
-			// if e.type == "mouseenter"
-			if (e.type == "mouseenter") {
-				// set "previous" X and Y position based on initial entry point
-				pX = ev.pageX; pY = ev.pageY;
-				// update "current" X and Y position based on mousemove
-				$(ob).bind("mousemove",track);
-				// start polling interval (self-calling timeout) to compare mouse coordinates over time
-				if (ob.hoverIntent_s != 1) { ob.hoverIntent_t = setTimeout( function(){compare(ev,ob);} , cfg.interval );}
-
-			// else e.type == "mouseleave"
-			} else {
-				// unbind expensive mousemove event
-				$(ob).unbind("mousemove",track);
-				// if hoverIntent state is true, then call the mouseOut function after the specified delay
-				if (ob.hoverIntent_s == 1) { ob.hoverIntent_t = setTimeout( function(){delay(ev,ob);} , cfg.timeout );}
-			}
-		};
-
-		// bind the function to the two event listeners
-		return this.bind('mouseenter',handleHover).bind('mouseleave',handleHover);
-	};
-})(jQuery);
-
-
-function jsShowNews(type)
+function jsShowNews(type) //отображение всех комментариев
 {
 $("#tree_news").html("");
 if(type==0)
@@ -7960,20 +7971,20 @@ if(type==0)
 
 
 
-var myadd=0;
-var dots=":";
 
-function RestMin(restsec)
+function RestMin(restsec) //сколько осталось минут
 {
-min = parseInt(restsec/60,10);
+var dots=":",my_nul;
 
-sec = parseInt(restsec-min*60,10);
+var min = parseInt(restsec/60,10);
+
+var sec = parseInt(restsec-min*60,10);
 
 	     if (sec<'10') my_nul = '0';
 	     else my_nul = '';
 
 
-answer = min + dots + my_nul + sec + " — осталось";
+var answer = min + dots + my_nul + sec + " — осталось";
 
 return answer;
 }

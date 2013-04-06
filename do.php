@@ -1658,6 +1658,8 @@ if (isset($HTTP_GET_VARS['get_all_data2']))
 $now = now();
 $now_time = $HTTP_GET_VARS['get_all_data2'];
 
+$only_md5 = $HTTP_GET_VARS['only_md5'];
+
 $time_dif = $now - $now_time;
 
 
@@ -1690,6 +1692,7 @@ $browser_info = $ip."\n".$browser."\n".$r_time;
 				'',  '-1',  '".$GLOBALS['user_id']."', '',  '".$sync_id."',  '".$now_time."', '".sqldate($now_time)."',  '', '".sqldate( $sql['changetime'] )."',  'Новый клиент', '1', '".$browser_info."'
 				); ";
 
+if($only_md5!=1)
 		$result2 = mysql_query($sqlnews2);
 
 
@@ -1771,13 +1774,13 @@ if($GLOBALS['user_id'])
 	    $answer[$i]['date2']=$date2;
 
 	    $alldata = $sql['id'].$sql['title'].$sql['text'].$date1.
-    				  $date2.$sql['del'].$did.$sql['position'];
+    				  $date2.$did;
     	$longtext[$sql['id']] = substr(md5( $alldata ),0,5);
     	
-    	if($sql['id']==1613 && false)
+    	if($sql['id']==6679 && false)
     		{
-	    		echo $sql['text'];
-	    		echo "<hr>".md5($sql['text'])."<hr>";
+	    		echo $alldata;
+	    		echo "<hr>".substr(md5( $alldata ),0,5)."<hr>";
 	    	}
 	}
 	
@@ -1812,8 +1815,12 @@ if(true) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; }
 	
 	$res["md5"] = $longtext;
 	$res["time_dif"] = $time_dif;
+	
+if($only_md5!=1)
+	{	
 	$res["comments"] = $comments;
 	$res["all_data"] = $answer;
+	}
 	
 ///	echo md5($longtext)."<hr>";
 //	echo ($longtext);

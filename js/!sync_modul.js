@@ -204,8 +204,15 @@ function jsSync(save_only)
 			 	    	   
 			 	localStorage.setItem("last_sync_time",data.lsync); //сохраняю время успешной синхронизации
 			 	localStorage.setItem("time_dif",data.time_dif); //сохраняю время успешной синхронизации
+
+			 	var lasttime = localStorage.getItem("last_compare_md5");
 			 	clearTimeout(compare_timer);
-			 	compare_timer = setTimeout(function(){ tree_db.compare_md5_local_and_server(); },500);
+				if( ( jsNow() - lasttime) > 6*60*1000 )		 	
+				 	{
+				 	compare_timer = setTimeout(function(){ tree_db.compare_md5_local_and_server(); },500);
+				 	localStorage.setItem("last_compare_md5",jsNow());
+				 	}
+				 else console.info("Сверка не требуется");
 			 }
 		my_console("Получен ответ от сервера:",j);
         $(".icon-cd").css("color","#888");
@@ -367,6 +374,14 @@ function jsChangeNewId(d) //заменяет отрицательный id на 
     $('.divider_red[myid="'+d.old_id+'"]').attr('myid',d.id);
     $(".makedone[myid="+d.old_id+"]").attr("myid",d.id); //заменяю индексы makedone
     $("#node_"+d.old_id).attr("id","node_"+d.id).find(".tcheckbox").attr("title",d.id);
+    
+	var id = parseInt(window.location.hash.replace("#",""),36);
+	if(id==d.old_id) 
+		{
+				$(window).unbind('hashchange');
+				window.location.hash = d.id.toString(36); 
+				$(window).bind('hashchange', jsSethash );
+		}
 
 	
 	

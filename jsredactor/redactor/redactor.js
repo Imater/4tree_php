@@ -1287,6 +1287,41 @@ if(!need_text)
 		},
 
 		// API functions
+		setCodeFast: function(html)
+		{
+			var sel, range;
+			if (this.document.getSelection)
+			{
+				sel = this.window.getSelection();
+				if (sel.getRangeAt && sel.rangeCount)
+				{
+					range = sel.getRangeAt(0);
+					range.deleteContents();
+					var el = this.document.createElement("div");
+					el.innerHTML = html;
+					var frag = this.document.createDocumentFragment(), node, lastNode;
+					while (node = el.firstChild)
+					{
+						lastNode = frag.appendChild(node);
+					}
+					range.insertNode(frag);
+
+					if (lastNode)
+					{
+						range = range.cloneRange();
+						range.setStartAfter(lastNode);
+						range.collapse(true);
+						sel.removeAllRanges();
+						sel.addRange(range);
+					}
+				}
+			}
+			else if (this.document.selection && this.document.selection.type != "Control")
+			{
+				this.document.selection.createRange().pasteHTML(html);
+			}
+
+		},
 		setCode: function(html)
 		{
 			html = this.stripTags(html);
@@ -2588,9 +2623,13 @@ if(!need_text)
 
 			this.savedSel = this.getOrigin();
 			this.savedSelObj = this.getFocus();
+			console.info(this.savedSel);
+			console.info(this.savedSelObj);
 		},
 		restoreSelection: function()
 		{
+			console.info(this.savedSel);
+			console.info(this.savedSelObj);
 			if (typeof this.savedSel !== 'undefined' && this.savedSel !== null && this.savedSelObj !== null && this.savedSel[0].tagName !== 'BODY')
 			{
 				if (this.opts.iframe === false && $(this.savedSel[0]).closest('.redactor_editor').size() == 0)
@@ -4089,6 +4128,11 @@ if(!need_text)
 		return this.data('redactor').getSelectedHtml();
 	};
 
+	$.fn.setCodeFast = function(html)
+	{
+		this.data('redactor').setCodeFast(html);
+	};
+
 	$.fn.setCode = function(html)
 	{
 		this.data('redactor').setCode(html);
@@ -4098,6 +4142,7 @@ if(!need_text)
 	{
 		this.data('redactor').insertHtml(html);
 	};
+
 
 	$.fn.destroyEditor = function()
 	{

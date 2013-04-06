@@ -115,6 +115,7 @@ function jsTestIt(){
 			});		
 		});
 		
+	if(longtest)
 	test('Тесты tree_db', function () {
 		ok( JSON.stringify(db.getSchema().stores).indexOf('"tree"') != -1, "Таблица tree существует" );
 		stop();
@@ -144,5 +145,16 @@ function jsTestIt(){
 
 
 		});
+		
+		//////////////////////////////////////////
+		test('Тесты разных функций', function () {
+		ok(Object.size(pomidor_text)>20,"Проверяю функцию Object.size");
+		equal(RestMin(160),"2:40 — осталось","Проверяю вывод заголовков с временем, которое осталось");
+		jsTitle("Проверяю вывод комментария");
+		ok($('.f_text').is(":visible"),"Комментарий отображается");
+		ok($('.f_text').html()=="Проверяю вывод комментария","Комментарий совпадает с тем, который установили в тесте: "+$('.f_text').html());
+		
+		});
+
 
 }

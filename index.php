@@ -28,7 +28,7 @@ if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)
         $gz=null;
 echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
 if(true )echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
-if(true )echo '<script src="min/redactor_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
+//if(true )echo '<script src="min/redactor_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 //echo '<script src="min/all1_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 
 if(isset($_GET['test']))
@@ -108,6 +108,9 @@ if(isset($_GET['confirm']))
 	<script src="js/zvt-ydn.db-dev-0.4.6.js"></script>
 	<script src="js/md5.js"></script>
 	<script src="js/sjcl.js"></script>
+	<script src="jsredactor/redactor/redactor.js"></script>
+	<script src="js/rangy-core.js"></script>
+	<script src="js/rangy-selectionsaverestore.js"></script>
 
 <!--	<script src="js/jszip.js"></script> -->
 

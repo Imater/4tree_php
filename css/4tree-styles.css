@@ -2357,31 +2357,34 @@ bottom: 25px;
 vertical-align: top;
 cursor: pointer;
 background: url("../img/opacity-dark.png");
-padding: 10px;
-padding-left: 20px;
-padding-right: 20px;
+padding: 2px;
+padding-left: 10px;
+padding-right: 10px;
 border-radius: 5px;
+font-size: 12px;
+border: 3px solid gray; 
+z-index: 5;
 }
 
 
 #pomidoro_icon .icon-hourglass
 {
-font-size: 15px;
+font-size: 12px;
 line-height: 20px;
 }
 
 #pomidoro_icon i::before
 {
-margin-right: 0px !important;
+margin-right: 5px !important;
 }
 #pomidoro_icon .icon-record
 {
-font-size: 15px;
+font-size: 12px;
 }
 
 .pomidor_now
 {
-color: #336a22;
+color: #a9ff8e !important;
 opacity: 1 !important;
 }
 
