@@ -4704,3 +4704,93 @@ font-size: 13px;
 .agenda_day
 {
 }
+
+
+.chat-bubble {
+    font-size:12px;
+	line-height:1.25em;
+	margin:10px 10px 3px 20px;
+	padding:6px;
+	position:relative;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(195, 241, 156)), color-stop(0.28, rgb(160,215,60)), color-stop(1, rgb(165,255,69)));
+	background:-moz-linear-gradient(center top, rgb(90,150,40) 0%, rgb(160,215,60) 28%, rgb(165,255,69) 100%);
+        border:1px solid #38691a;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+        border-radius: 10px;
+	-webkit-box-shadow: rgba(160, 215, 60, 0.7) 2px 4px 5px;
+	-moz-box-shadow: rgba(160, 215, 60, 0.7) 2px 4px 5px; /* FF 3.5+ */
+        box-shadow: rgba(160, 215, 60, 0.7) 2px 4px 5px;
+}
+
+.chat-bubble-glare {
+	position: absolute;
+	top: 0px;
+	left: 4px;
+	height: 6px;
+	right: 4px;
+	padding: 6px 0;
+        -webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+        border-radius: 10px;
+	background: -moz-linear-gradient(top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
+	background: -webkit-gradient(linear, 0% 0%, 0% 95%, from(rgba(255, 255, 255, 0.6)), to(rgba(255, 255, 255, 0)));
+}
+
+.chat-bubble-arrow {
+	border-color: transparent #a5ff45 transparent transparent;
+	border-style: solid;
+	border-width: 6px;
+        height:0;
+	width:0;
+	position:absolute;
+	bottom:-1px;
+	left:-3px;
+	-webkit-transform: rotate(70deg);
+	-moz-transform: rotate(70deg);
+        transform: rotate(70deg);
+}
+
+
+.chat-bubble-arrow-border {
+	border-color: transparent #38691a transparent transparent;
+	border-style: solid;
+	border-width: 6px;
+	height:0;
+	width:0;
+	position:absolute;
+	bottom:-3px;
+	left:-5px;
+	-webkit-transform: rotate(70deg);
+	-moz-transform: rotate(70deg);
+}
+
+.chat_text p
+{
+margin: 0px;
+}
+
+.chat_time
+{
+font-size: 10px;
+color: gray;
+text-align: center;
+}
+
+.chat_send_button
+{
+cursor: pointer;
+color: gray;
+position: absolute;
+top: 6px;
+right: 9px;
+}
+
+.chat_content
+{
+overflow-y: auto;
+height: auto;
+position: absolute;
+bottom: 130px;
+top: 0px;
+}

@@ -1435,8 +1435,9 @@ function jsCloneChat(user_id) //клонирую чат из template
 		  myr_comment = chat_editor.redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+main_user_id, lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+main_user_id, autoresize:true,  
   			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
      });
+	    myhtml="";
      	var chat_html = jsShowChatHistory( "chat_"+main_user_id+"_"+user_id );
-     	new_chat.find(".chat_content").html(chat_html);
+     	new_chat.find(".chat_content").html(chat_html).scrollTop(99999999999);
      	
 
 
@@ -1665,6 +1666,18 @@ if(typeof(test)!="undefined") window.after_ajax = function(){ window.after_ajax 
 		return false;
 		});
 		
+	$('body').delegate(".chat_send_button","click",function(){ //добавляю сообщение в чат
+		var to_user_id = $(this).parents(".chat_box:first").attr("user_id");
+		var text = $(this).parents(".chat_box:first").find(".redactor_editor").getCode();
+		jsAddComment("chat_"+main_user_id+"_"+to_user_id,-1,text);
+
+		myhtml="";
+     	var chat_html = jsShowChatHistory( "chat_"+main_user_id+"_"+to_user_id );
+     	$(this).parents(".chat_box:first").find(".chat_content").html(chat_html);
+     	$(this).parents(".chat_box:first").find(".chat_content").scrollTop(1234567890);
+
+		return false;
+		});
 
 	$('#comment_enter').delegate(".comment_send_button","click",function(){
 	    var id = node_to_id( $(".selected").attr('id') );
@@ -4091,8 +4104,36 @@ function jsShowComments(tree_id, parent_id) //рекурсивно заполн�
 
 function jsShowChatHistory(tree_id) //возвращает комментарии являющиеся чатом (история) tree_id = "chat_11_12"
 {
-myhtml="";
-jsShowComments("chat_11_12",-1);
+	var source = $("#chat_template").html();
+	var parent_id = -1;
+	template = Handlebars.compile(source);
+	
+	var chat = jsFindByTreeId(tree_id,parent_id);
+	var html = "";
+	$.each(chat, function(i,d)
+		{
+		var frend = jsFrendById(d.user_id);
+		d.foto = frend.foto;
+		d.name = frend.fio;
+		d.tree_title = "";
+
+		if(d.add_time=="0")  d.add_time_txt = "";
+		else
+			{
+			var add_time = new Date( parseInt(d.add_time) );
+			d.add_time_txt = add_time.jsDateTitleFull("need_short_format");
+			}
+		
+		myhtml += template(d);
+		
+		if(jsFindByParentComments(d.id).length>0)
+		  {
+		  myhtml +="<ul>";
+		  jsShowComments(tree_id, d.id);
+		  myhtml +="</ul>";
+		  }
+		
+		});
 return myhtml;
 }
 

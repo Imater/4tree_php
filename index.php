@@ -776,6 +776,20 @@ if(isset($_GET['test']))
 						</div>
 					</div>
 				</div>
+
+				<div id="chat_template" style="display:none">
+					<div class="chat_inner_box" id="comment_{{id}}">
+							<div class="chat-bubble">
+							    <div class="chat-bubble-glare"></div>
+							    <div class="chat_text">{{{text}}}</div>
+							    <div class="chat-bubble-arrow-border"></div>
+							    <div class="chat-bubble-arrow"></div>
+							 </div>					
+						    <div class="chat_time">{{add_time_txt}}</div>
+					</div>
+				</div>
+
+
 				
 <div class="chat_box" user_id="template">
 	<div class="chat_header">
@@ -788,6 +802,7 @@ if(isset($_GET['test']))
 		</div>
 		<div class="chat_editor">
 			<div class="chat_editor_input"></div>
+			<div class="chat_send_button" title="Отправить сообщение (ctrl+enter)"><i class='icon-chat-1'></i></div>
 		</div>
 		
 	</div>
