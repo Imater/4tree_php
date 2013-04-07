@@ -7323,18 +7323,8 @@ function jsSetTimeNow()
 
 
 
-function jsMakeLeftRightPanelResizable()
+function jsMakeLeftRightPanelResizable() //настраиваю ресайзы и джойстик
 {
-/*  neww = $.cookie('width');
-  if (neww != '')
-    {
-      neww=parseFloat(neww);
-	  $('#right').css('width',neww);
-	  $('#page').css('width',neww);
-	  $('#left').css('margin-right',neww);
-	} */
-
-
   $('.resize_me,.sos').bind("touchstart", function(e)
      { 
 			  e.preventDefault();
@@ -7469,7 +7459,6 @@ if(true)
 var anotherday = false;
 function jsCalendarNode(id)
 {
-//	if( $(".fc-event[myid="+id+"]").hasClass('event-selected') ) return true;
 	if(!(element = jsFind(id))) return true;
 	gotodate = element.date1;
 	if ((gotodate!='0000-00-00 00:00:00') && (gotodate)) //прыгаем календарем на выбранную делом дату 
@@ -7532,8 +7521,6 @@ function jsCalendarNode(id)
 		  
 }
 
-
-
 var openredactor;
 function jsSelectNode(id,nohash,iamfrom) //открыть заметку во всех панелях
 {
@@ -7550,7 +7537,7 @@ function jsSelectNode(id,nohash,iamfrom) //открыть заметку во в
 
 }
 
-function jsRedactorOpen(ids,iamfrom)
+function jsRedactorOpen(ids,iamfrom) //открыть редактор / ids=[1,2,3] номера заметок
 {
 var text = "", mytext="";
 var element1;
@@ -7613,51 +7600,33 @@ if((mytitle) && (iamfrom!="fav_red") && (ids.length==1)) //устанавлив�
 }
 
 var removeraretabs;
-function jsAddFavRed(mytitle,id)
+function jsAddFavRed(mytitle,id) //добавляет закладку под редактор
 {
   var myel = jsFind(id);
   if(!myel) return true;
   mytitle = strip_tags( myel.title );
-  elel = $("#fav_red li[myid='"+id+"']");
+  var elel = $("#fav_red li[myid='"+id+"']");
   if(elel.length>0)
   	{
 	$("#fav_red ul li:first").before(  elel );
   	return true;
   	}
 
-  shorttitle = jsShortText( mytitle , 15 );
+  var shorttitle = jsShortText( mytitle , 15 );
 
   $("<li fix=0 myid='"+id+"' title='"+mytitle+"'>"+shorttitle+"</li>").insertBefore("#fav_red ul li:first");
-//  clearTimeout(removeraretabs);
-//  removeraretabs = setTimeout(function() { $("#fav_red li[fix=0]").not(":first").remove(); },60000);
   jsCalcTabs();
-  
-//  $(".redactor_box").next(".favorit_tabs").find("li:first").html( shorttitle ).attr("title",mytitle).attr("myid",id);
 }
 
-
-function jsShowText(id,text,need_h,path)
-{
-if(need_h==1) mytext = '<div class="divider" contenteditable="false" id="'+id+'">'+ph+'</h2></div><div class="edit_text"><p>';
-		  		 else mytext='';
-		  		 if (text == '') { $('#bubu').html('&nbsp;'); text = "&nbsp;"; };
-			     notetext = mytext + text + '</p></div>';	
-			     return notetext;
-}
-
-
-
-
-function savetext(dont)
+function savetext(dont) //сохранение текста в переменной jsSendText - отправляется если текст изменился
 {
 note_saved = false;
 
 clearTimeout(my_autosave);
 
-//		$(".highlight").contents().unwrap();
 		var html = myr.getCode();
 		jsHighlightText();
-		text = html;	
+		var text = html,textlength;	
 		
 		$("<div>"+html+"</div>").find(".divider_red").quickEach(function(iii,el){
 			text = "";
@@ -7695,7 +7664,7 @@ clearTimeout(my_autosave);
 	    		}
 	    }); //end of each .divider_red
 	    
-	  if($("<div>"+html+"</div>").find(".divider_red").length==0) 
+	  if($("<div>"+html+"</div>").find(".divider_red").length==0) //если текст редактируемый один
    		{
 			var id_node = $('.redactor_editor').attr("myid");
 	    	var md5text = $('.redactor_editor').attr("md5");
@@ -7736,15 +7705,15 @@ clearTimeout(my_autosave);
 
 }
 
-function jsMakeIconText(id,text)
+function jsMakeIconText(id,text) //выбирает кол-во полосок в иконке при кол-ве текста
 {
-		mylength = strip_tags(text).length;
-		i_size = parseInt( mylength/100,10 );
+		var mylength = strip_tags(text).length;
+		var i_size = parseInt( mylength/100,10 );
 		if(i_size>6) i_size=6;
 		if(mylength<100) i_size = "1";				
 		if(mylength==0) { i_size = "clean"; }
 		
-		mylength1 = parseInt(mylength/30,10)/10;
+		var mylength1 = parseInt(mylength/30,10)/10;
 		if(mylength>0 && mylength1==0) mylength1 = 0.1;
 		if(mylength1>1) mylength1 = 0.7;
 
@@ -7755,8 +7724,8 @@ return { myclass:("note-"+i_size), mylength:mylength1 };
 
 function jsMakeWiki() //находит всё что в квадратных скобках и заменяет на тег <wiki>
 {
-txt = myr.getCode();
-wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
+var txt = myr.getCode();
+var wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
 if(!wiki_words) 
 	{
 	return true; //если нет символов WIKI
@@ -7801,95 +7770,6 @@ if(need_refresh)
 	}
 }
 
-function getCaretPosition(editableDiv) {
-    var caretPos = 0, containerEl = null, sel, range;
-    if (window.getSelection) {
-        sel = window.getSelection();
-        if (sel.rangeCount) {
-            range = sel.getRangeAt(0);
-            if (range.commonAncestorContainer.parentNode == editableDiv) {
-                caretPos = range.endOffset;
-            }
-        }
-    } else if (document.selection && document.selection.createRange) {
-        range = document.selection.createRange();
-        if (range.parentElement() == editableDiv) {
-            var tempEl = document.createElement("span");
-            editableDiv.insertBefore(tempEl, editableDiv.firstChild);
-            var tempRange = range.duplicate();
-            tempRange.moveToElementText(tempEl);
-            tempRange.setEndPoint("EndToEnd", range);
-            caretPos = tempRange.text.length;
-        }
-    }
-    return caretPos;
-}
-
-
-var savedRange,savedRange2,isInFocus;
-function saveSelection()
-{
-    if(window.getSelection)//non IE Browsers
-    {
-        savedRange = window.getSelection().getRangeAt(0);
-    }
-    else if(document.selection)//IE
-    { 
-        savedRange = document.selection.createRange();  
-    } 
-    savedRange2 = savedRange.cloneRange();
-    console.info("saved",savedRange,savedRange2);
-}
-
-function restoreSelection()
-{
-    isInFocus = true;
-//    document.getElementById("area").focus();
-    console.info("loaded",savedRange);
-    if (savedRange != null) {
-        if (window.getSelection)//non IE and there is already a selection
-        {
-            var s = window.getSelection();
-            if (s.rangeCount > 0) 
-                s.removeAllRanges();
-            s.addRange(savedRange);
-        }
-        else 
-            if (document.createRange)//non IE and no selection
-            {
-                window.getSelection().addRange(savedRange);
-            }
-            else 
-                if (document.selection)//IE
-                {
-                    savedRange.select();
-                }
-    }
-}
-//this part onwards is only needed if you want to restore selection onclick
-var isInFocus = false;
-function onDivBlur()
-{
-    isInFocus = false;
-}
-
-function cancelEvent(e)
-{
-    if (isInFocus == false && savedRange != null) {
-        if (e && e.preventDefault) {
-            //alert("FF");
-            e.stopPropagation(); // DOM style (return false doesn't always work in FF)
-            e.preventDefault();
-        }
-        else {
-            window.event.cancelBubble = true;//IE stopPropagation
-        }
-        restoreSelection();
-        return false; // false = IE style
-    }
-}
-
-
 //сохранение текста из редактора
 //id_node - номер id 
 //text - html текст
@@ -7911,7 +7791,7 @@ function jsSendText(id_node,text,dont)
 	    	icon = "";
 	    	}
 
-		tt = jsFind(id_node, { text : text, icon : icon }); //сохраняю текст в главном массиве
+		var tt = jsFind(id_node, { text : text, icon : icon }); //сохраняю текст в главном массиве
 		if(tt) if(tt.title.indexOf(" - ")!=-1) jsGetAllMyNotes(); //обновляю массив для календаря дневника, если это дневник
     	note_saved=true;
 }

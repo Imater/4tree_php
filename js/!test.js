@@ -153,7 +153,15 @@ function jsTestIt(){
 		jsTitle("Проверяю вывод комментария");
 		ok($('.f_text').is(":visible"),"Комментарий отображается");
 		ok($('.f_text').html()=="Проверяю вывод комментария","Комментарий совпадает с тем, который установили в тесте: "+$('.f_text').html());
-		
+		ok(jsMakeIconText(2,"Привет я тебе хочу сказать про тебя").myclass == "note-1","jsMakeIconText - иконка по длине текста");
+		ok(savetext(1) || true,"Сохранение текста");
+		jsAddFavRed("",new_id8);
+		ok($("li[title='_НОВОЕ']").html()=="_НОВОЕ","Добавил закладку под редактор");
+		ok(jsRedactorOpen([new_id8]) || true,"Открываю заметку в редакторе");
+		jsFind(new_id8,{date1:"2012-01-01 11:11:11"});
+		ok(jsCalendarNode(new_id8),"Открыл календарь на этой дате");
+		jsFind(new_id8,{date1:""});
+		jsMakeLeftRightPanelResizable();
 		});
 
 
