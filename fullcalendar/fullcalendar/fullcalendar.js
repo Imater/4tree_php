@@ -192,6 +192,7 @@ function Calendar(element, options, eventSources) {
 	t.render = render;
 	t.destroy = destroy;
 	t.refetchEvents = refetchEvents;
+	t.clearAllOverlays = function() { getHoverListener().stop(); };
 	t.reportEvents = reportEvents;
 	t.reportEventChange = reportEventChange;
 	t.rerenderEvents = rerenderEvents;

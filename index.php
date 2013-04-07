@@ -418,7 +418,7 @@ if(isset($_GET['test']))
 					</div>
 					<div class="red_new_window" style="" title="Открыть в новом окне"><i class="icon-forward"></i></div>
 					<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>	
-					<div class="wiki_back_button">назад в wiki</div>
+					<div class="wiki_back_button" title="Вернуться назад в wiki"><i class="icon-left-bold"></i></div>
 					
 	  			
 	  		</div>

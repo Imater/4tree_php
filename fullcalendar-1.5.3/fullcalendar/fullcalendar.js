@@ -189,6 +189,7 @@ function Calendar(element, options, eventSources) {
 	t.render = render;
 	t.destroy = destroy;
 	t.refetchEvents = refetchEvents;
+	t.clearOverlaysMy = function(){ alert("OK!"); };
 	t.reportEvents = reportEvents;
 	t.reportEventChange = reportEventChange;
 	t.rerenderEvents = rerenderEvents;

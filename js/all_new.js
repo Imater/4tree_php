@@ -1442,9 +1442,38 @@ function jsCloneChat(user_id) //клонирую чат из template
 
 }
 
-
-function jsOpenWikiPage(parent_id,mytitle)
+function jsParseWikiLinks(parent_id)
 {
+	var wiki = $(".wiki");
+	if(wiki.length)
+		{
+		var wiki_founded;
+		wiki.each(function(i,el){
+			mytitle = strip_tags( $(el).html() );
+			wiki_founded = jsFindWikiForParent(parent_id, mytitle);
+			if(wiki_founded)
+				{
+				var mini_text = wiki_founded.text.replace(/<div>/g," ");
+				mini_text = mini_text.replace(/<p>/g," ");
+				mini_text = mini_text.replace(/&nbsp;/g," ");
+				mini_text = jsShortText( strip_tags(mini_text),500);
+				
+				$(el).addClass("wiki_founded").attr("title", mini_text );
+				}
+			else
+				{
+				$(el).removeClass("wiki_founded");
+				}
+			});
+		}
+	
+}
+
+function jsFindWikiForParent(parent_id, mytitle)
+{
+	mytitle = mytitle.replace("&nbsp;", " ").trim();
+	mytitle = strip_tags(mytitle.trim());
+
 	var childrens = jsFindByParent(parent_id);
 	var myfilter="[["+mytitle+"]]";
 	var mynewdata = childrens.filter(function(el) //ищу в первую очередь среди детей
@@ -1473,21 +1502,27 @@ function jsOpenWikiPage(parent_id,mytitle)
 			if(el.title) return el.title.toLowerCase().indexOf(myfilter.toLowerCase())!=-1;
 			});
 		}
+		
+	if(mynewdata.length) 
+		{
+		return mynewdata[0];
+		}		
+}
 
-
-	if(!mynewdata.length) 
+function jsOpenWikiPage(parent_id,mytitle)
+{
+	var mynewdata = jsFindWikiForParent(parent_id, mytitle);
+	
+	if(!mynewdata) 
 		{
 		jsAddDo("right",parent_id,"[["+mytitle+"]]");
 		}
 	else
 		{
-//		jsSelectNode(mynewdata[0].id);
-		jsOpenPath(mynewdata[0].id);
-		$(".wiki_back_button").show().attr("myid",parent_id);
+		jsOpenPath(mynewdata.id);
 		jsFixScroll(2);
 		}
-		
-	
+	$(".wiki_back_button").show().attr("myid",parent_id);
 	myr.setFocus();
 }
 
@@ -1515,7 +1550,7 @@ $("body").delegate(".wiki_back_button","click",function()
 	});
 		
 
-$(".redactor_").delegate("wiki","click",function()
+$(".redactor_").delegate(".wiki","click",function()
 	{ 
 	var mytitle = strip_tags( $(this).html() ); 
     var id = node_to_id( $(".selected").attr('id') );
@@ -5486,7 +5521,7 @@ if(id==-6) //по дате изменения
 		element.img_class = "note-clean";
 		element.parent_id = 1;
 		element.position = "100";
-		element.text = "";
+		element.text = "Все заметки, которые недавно редактировались";
 		element.did = "";
 		element.del = 0;
 		element.tab = 0;
@@ -5512,7 +5547,7 @@ if(id==-7) //по дате изменения
 		element.img_class = "note-clean";
 		element.parent_id = 1;
 		element.position = "100";
-		element.text = "";
+		element.text = "Все дела отсортированные по дате выполнения";
 		element.did = "";
 		element.del = 0;
 		element.tab = 0;
@@ -5538,7 +5573,7 @@ if(id==-8) //по дате изменения
 		element.img_class = "note-clean";
 		element.parent_id = 1;
 		element.position = "100";
-		element.text = "";
+		element.text = "Все заметки, в которых вы нажали <b>поделиться</b> и у которых есть короткая ссылка";
 		element.did = "";
 		element.del = 0;
 		element.tab = 0;
@@ -5564,7 +5599,7 @@ if(id==-9) //по дате изменения
 		element.img_class = "note-clean";
 		element.parent_id = 1;
 		element.position = "100";
-		element.text = "";
+		element.text = "Отбор всех записей в названии которых есть символ [@]";
 		element.did = "";
 		element.del = 0;
 		element.tab = 0;
@@ -5576,6 +5611,32 @@ if(id==-9) //по дате изменения
 		element.s = 0;
 		element.remind = 0;
 		element.title = "<i class='icon-mail'></i> электронная почта";
+		return element;
+	}
+
+if(id==-10) //по дате изменения
+	{
+		element = new Object;
+
+		element.date1 = "";
+		element.date2 = "";
+		element.icon = "";
+		element.id = -10;
+		element.img_class = "note-clean";
+		element.parent_id = 1;
+		element.position = "100";
+		element.text = "всё что вы оборачиваете в двойные [[квадратные скобки]], становится wiki статьёй<br>При клике, создаётся новая запись с таким заголовком.";
+		element.did = "";
+		element.del = 0;
+		element.tab = 0;
+		element.fav = 0;
+		element.new = "";
+		element.time = 0;
+		element.lsync = 1;
+		element.user_id = main_user_id;
+		element.s = 0;
+		element.remind = 0;
+		element.title = "[[wiki]] определения";
 		return element;
 	}
 
@@ -5713,6 +5774,8 @@ if(need_add_line)
 		data.push(element);
 		element = jsFind(-9);
 		data.push(element);
+		element = jsFind(-10);
+		data.push(element);
 		}
 		
 	if(parent_id==-6)
@@ -5834,6 +5897,42 @@ if(need_add_line)
 		
 		}
 
+	if(parent_id==-10)
+		{
+		function compare6(a,b) {
+ 		 aa = a.title;
+ 		 bb = b.title;
+ 		 
+ 		 if ((aa) < (bb))
+ 		    return -1;
+ 		 if ((aa) > (bb))
+ 		   return 1;
+}		
+
+		jj=0;
+		var mydata2 = my_all_data.filter(function(el) 
+		   {
+		   if(!show_hidden && !need_did)
+			   if(el.did != "") return false; 
+		   if(el.del == 1) return false;
+		   if(el.title) { if(el.title.indexOf("[[")==-1) return false; }
+		   if(el.title) { if(el.title.indexOf("]]")==-1) return false; }
+		   else return false;
+		   jj++;
+		   if(jj>100) return false;
+		   return true; 
+		   });
+		   
+		mydata = [];
+		mydata = mydata2.slice(0);
+		mydata2 = mydata.sort(compare6); //сортировка отключена
+		   
+
+		return mydata2;
+		
+		}
+
+
 	
 	if(parent_id==1)
 		{
@@ -5938,7 +6037,7 @@ function strip_tags( str ){	// Strip HTML and PHP tags from a string
 function jsFindText(text,findtext,length)
 {
 var text = text.substr(0,5000);
-text = text.replace("</p>"," ");
+text = text.replace("</p>"," \n");
 text = text.replace("</div>"," ");
 text = text.replace("<br>"," ");
 text = text.replace("</li>"," ");
@@ -6574,7 +6673,8 @@ function jsMakeDrop()
 			    	    jsTitle("Объект перемещён",5000);
 			           }});
 		           	}
-   				$("* .ui-draggable-dragging").remove();
+            	$(".fc-cell-overlay").remove();
+   				$(".ui-draggable-dragging").remove();
 
         }});
 
@@ -7466,7 +7566,9 @@ if((mytitle) && (iamfrom!="fav_red") && (ids.length==1)) //устанавлив�
 		{
 		jsAddFavRed(mytitle,ids[0]);
 		}
-    
+		
+//раскрашиваю wiki ссылки
+	jsParseWikiLinks(ids[0]);    
 }
 
 var removeraretabs;
@@ -7624,14 +7726,20 @@ else
 	txt = myr.getCode();
 	wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
 	}
+
+if(!wiki_words) 
+	{
+	return true; //если нет символов WIKI
+	}
+
 newtxt = txt;
 var need_refresh=false;
 $.each(wiki_words, function(i,myword){
-	if(myword.length>4) 
+	if(strip_tags(myword).length>4) 
 		{
 			mynewword = myword.replace("[[","").replace("]]","");
 			console.info(i,myword, mynewword);
-			newtxt = newtxt.replace(myword,"[ <wiki>"+mynewword+"</wiki> ]");
+			newtxt = newtxt.replace(myword,"[&nbsp;<span class='wiki' title='Кликните, чтобы создать определение Wiki'>"+mynewword+"</span> ]");
 			need_refresh = true;
 		}
 	else
@@ -7647,6 +7755,7 @@ if(need_refresh)
     console.info("saved_2",savedRange,savedRange2);
     rangy.restoreSelection(aa);
     savetext(1);
+    jsParseWikiLinks($(".redactor_").attr("myid"));
     console.info("saved_3",savedRange,savedRange2);
 	}
 }
@@ -7740,7 +7849,7 @@ function cancelEvent(e)
 }
 
 
-//сохранение текста 
+//сохранение текста из редактора
 //id_node - номер id 
 //text - html текст
 //note_saved = false - сохраняет только при этом условии
@@ -7777,7 +7886,7 @@ if (!tim) mytim = 5000;
 
 }
 
-
+//меняет элементы на странице местами
 jQuery.fn.swapWith = function(to) {
 	console.info("swap");
     return this.each(function() {

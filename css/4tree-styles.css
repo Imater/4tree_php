@@ -1922,16 +1922,16 @@ display: none;
 
 .wiki_back_button
 {
-display: inline-block;
+display: none;
 position: absolute;
-right: 35px;
-top: 39px;
-font-size: 11px;
+left: 16px;
+top: 34px;
+font-size: 10px;
 background: magenta;
 cursor: pointer;
-padding: 1px 20px;
-border-radius: 5px;
+padding: 2px 2px;
 color: white;
+opacity: 0.5;
 }
 
 
@@ -3173,13 +3173,18 @@ vertical-align: top;
 }
 
 
-wiki
+.wiki
 {
-color: magenta;
-text-decoration: underline;
+display: inline-block;
+color: #c000c0;
+border-bottom: 2px dashed #c000c0;
 cursor: pointer;
 }
 
+.wiki_founded
+{
+border-bottom: 3px double #c000c0;
+}
 
 .fc-view-month
 {
