@@ -154,6 +154,11 @@ file_compress('all.js',array('js/jquery.min.js',
 	'js/ru.js',
 	'fullcalendar/fullcalendar/fullcalendar.js',
 	'js/pushstream.js',
+//	'js/zvt-ydn.db-dev-0.4.6.js',
+	'js/md5.js',
+	'js/sjcl.js',
+//	'js/rangy-core.js',
+//	'js/rangy-selectionsaverestore.js',
 	'js/jquery.idle-timer.js'
 	));
 

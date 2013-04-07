@@ -1,5 +1,5 @@
 <?php
-if(stristr($_GET['image'], "{{")) 
+if( (stristr($_GET['image'], "{{")) OR ($_GET['image']=="/")) 
 	{
 	header("Content-type: image/png");
 	header('Content-Length: ' . 0);

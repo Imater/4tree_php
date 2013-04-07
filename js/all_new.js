@@ -1447,24 +1447,44 @@ function jsOpenWikiPage(parent_id,mytitle)
 {
 	var childrens = jsFindByParent(parent_id);
 	var myfilter="[["+mytitle+"]]";
-	var mynewdata = childrens.filter(function(el)
+	var mynewdata = childrens.filter(function(el) //ищу в первую очередь среди детей
 			{
 			if(el.did!="") return false;
 			if(el.del==1) return false;
 			if(el.title) return el.title.toLowerCase().indexOf(myfilter.toLowerCase())!=-1;
 			});
 				
+	if(!mynewdata.length)  //теперь ищу по всему дереву, где я создатель заметки
+		{
+		var mynewdata = my_all_data.filter(function(el) 
+			{
+			if(el.did!="") return false;
+			if(el.del==1) return false;
+			if(el.title) if(el.user_id==main_user_id) return el.title.toLowerCase().indexOf(myfilter.toLowerCase())!=-1;
+			});
+		}
+
+	if(!mynewdata.length)  //теперь ищу по всему дереву, где не только я создатель заметки
+		{
+		var mynewdata = my_all_data.filter(function(el) 
+			{
+			if(el.did!="") return false;
+			if(el.del==1) return false;
+			if(el.title) return el.title.toLowerCase().indexOf(myfilter.toLowerCase())!=-1;
+			});
+		}
+
+
 	if(!mynewdata.length) 
 		{
 		jsAddDo("right",parent_id,"[["+mytitle+"]]");
 		}
 	else
 		{
-		jsSelectNode(mynewdata[0].id);
-		jsOpenNode(mynewdata[0].id);
+//		jsSelectNode(mynewdata[0].id);
+		jsOpenPath(mynewdata[0].id);
+		$(".wiki_back_button").show().attr("myid",parent_id);
 		jsFixScroll(2);
-
-		console.info(mynewdata,mynewdata[0].id);
 		}
 		
 	
@@ -1485,6 +1505,15 @@ $("#test-div").draggable({appendTo: "body"});
 $(".chat_box").draggable({appendTo: "body", handle: ".chat_header"});
 
 jsRerememberPomidor();
+
+$("body").delegate(".wiki_back_button","click",function()
+	{ 
+	var myid = $(this).attr("myid");
+	$(this).hide();
+	jsOpenPath(myid);
+	return false;
+	});
+		
 
 $(".redactor_").delegate("wiki","click",function()
 	{ 
@@ -4591,6 +4620,8 @@ else document.title = "4tree.ru";
 
 function jsOpenNode(id,nohash,iamfrom) //открыть заметку с номером
 {
+	$(".wiki_back_button").hide();
+
 	clearTimeout(show_help_timer);
 	if(!nohash)
 		{

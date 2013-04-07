@@ -106,11 +106,9 @@ if(isset($_GET['confirm']))
 	<script src="js/all_new.js"></script>
 	<script src="js/!sync_modul.js"></script>
 	<script src="js/zvt-ydn.db-dev-0.4.6.js"></script>
-	<script src="js/md5.js"></script>
-	<script src="js/sjcl.js"></script>
-	<script src="jsredactor/redactor/redactor.js"></script>
 	<script src="js/rangy-core.js"></script>
 	<script src="js/rangy-selectionsaverestore.js"></script>
+	<script src="jsredactor/redactor/redactor.js"></script>
 
 <!--	<script src="js/jszip.js"></script> -->
 
@@ -419,7 +417,8 @@ if(isset($_GET['test']))
 						</ul>
 					</div>
 					<div class="red_new_window" style="" title="Открыть в новом окне"><i class="icon-forward"></i></div>
-					<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>					
+					<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>	
+					<div class="wiki_back_button">назад в wiki</div>
 					
 	  			
 	  		</div>
