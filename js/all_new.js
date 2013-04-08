@@ -4809,7 +4809,7 @@ else
 
 function jsOpenPath( id, iamfrom )
 {
-		path1 = jsFindPath( id );
+		var path1 = jsFindPath( id );
 		console.info("path1",path1);
 		if(path1.length<1) return false;
 				     var p_len = path1.length;
@@ -6506,10 +6506,10 @@ jQuery.fn.highlight = function (str, className) {
     });
 };
 
-function jsInfoFolder(data,parent_node)
+function jsInfoFolder(data,parent_node) //заполняет массив данными элемента //DO:иконки share не показывает
 {
 
-		  mytitle = data.title;
+		  var mytitle = data.title;
 		  if(parent_node==-1) //панель поиска
 		  	{
 		  	var ans = jsFindPath(data.id);
@@ -6538,73 +6538,73 @@ function jsInfoFolder(data,parent_node)
 		  		}
 		  	else var text_comment = "";
 		  	
-		  	search_sample = '<div class="search_sample">'+text+text_comment+'</div>';
+		  	var search_sample = '<div class="search_sample">'+text+text_comment+'</div>';
 		  	}
 		  else { add_text = ''; search_sample = ''; }
 
 		  if(parent_node==-2) //указание папки переноса дела
 		  	{
-		  	where_to_add = $(".combo_list ul");
+		  	var where_to_add = $(".combo_list ul");
 		  	var ans = jsFindPath(data.id);
 		  	if(ans)
-			  	add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
-			else add_text = '';
+			  	var add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
+			else var add_text = '';
 		  	}
 
 ////////////
 		  if( ((data.lsync - data.time) > 0) || (data.new=="position,"))
-			  hideit = " hideit";
+			  var hideit = " hideit";
 		  else
-			  hideit = "";
+			  var hideit = "";
 
-		  needsync = "<div class='syncit'><i class='icon-arrows-cw sync_it_i"+hideit+"'></i></div>";
-
-////////////
-		  if(data.did!="") crossline = " do_did";
-		  else crossline = "";
+		  var needsync = "<div class='syncit'><i class='icon-arrows-cw sync_it_i"+hideit+"'></i></div>";
 
 ////////////
-		  if(data.remind==0) remind = "";
-		  else remind = "<i class='icon-bell-1' style='float:right;'></i>";
+		  if(data.did!="") var crossline = " do_did";
+		  else var crossline = "";
+
+////////////
+		  if(data.remind==0) var remind = "";
+		  else var remind = "<i class='icon-bell-1' style='float:right;'></i>";
 ///////////
-		  add_class = jsMakeIconText(data.id,data.text).myclass;
+		  var add_class = jsMakeIconText(data.id,data.text).myclass;
 ///////////
 		  if(data.icon=='') 
-		  	img = "<div class='node_img "+add_class+"'>"+"</div>";
+		  	var img = "<div class='node_img "+add_class+"'>"+"</div>";
 		  else 
 		  	{
-		  	icon = data.icon.replace("mini/","");
+		  	var icon = data.icon.replace("mini/","");
 		  	icon = "image.php?width=50&height=50&cropratio=1.1:1&image=/"+icon;
-		  	img = "<div class='node_img node_box' style='background-image:url("+icon+")'>"+"</div>";
+		  	var img = "<div class='node_img node_box' style='background-image:url("+icon+")'>"+"</div>";
 		  	}
 
 ///////////
-		  datacount = Object.size( jsFindByParent(data.id,null,true) );
+		  var datacount = Object.size( jsFindByParent(data.id,null,true) );
 		  
 		  if(datacount>0) 
 		  	{ 
-		  	countdiv = "<div class='countdiv'>"+datacount+"</div>"; 
 		  	countdiv = "";
-		  	isFolder="folder"; 
+		  	var isFolder="folder"; 
 
 		  	var add_class = jsMakeIconText(data.id,data.text).myclass;
 		  	var textlength = jsMakeIconText(data.id,data.text).mylength; 
 
 		  	if(textlength>0)
-			  	isFull = " full";
+			  	var isFull = " full";
 		  	else
-			  	isFull = "";
-		  	img = "<div class='folder_closed"+isFull+"'>"+"<div class='countdiv'>"+datacount+"</div>"+"</div>";
-		  	triangle = 	 "<div class='icon-play-div'>"+
+			  	var isFull = "";
+		  	var img = "<div class='folder_closed"+isFull+"'>"+"<div class='countdiv'>"+datacount+"</div>"+"</div>";
+		  	var triangle = 	 "<div class='icon-play-div'>"+
 				  		 " 	<i class='icon-play'></i>"+
 				  		 "</div>";
 		  	}
 		  else 
 		    { 
-		    countdiv = ''; isFolder = "";
+		    var countdiv = ''; 
+		    var isFolder = "";
 		    if(data.parent_id==1) var display = "opacity:0;";
 		    else var display = "opacity:0;";
-		  	triangle = 	 "<div class='icon-play-div' style='"+display+"'>"+
+		  	var triangle = 	 "<div class='icon-play-div' style='"+display+"'>"+
 				  		 " 	<i class='icon-play'></i>"+
 				  		 "</div>";
 		    }
@@ -6612,7 +6612,7 @@ function jsInfoFolder(data,parent_node)
 ///////////////////////////////////////////////////////
 
 		if(my_all_frends)   
-		  	if(data.share) 
+		  	if(data.share) //нужно исправить, такой переменной нет!
 		  		{
 				if(data.user_id==data.share)
 			  		frend_share = my_all_frends.filter(function(el){ return el.user_id == data.share; });
@@ -6651,7 +6651,7 @@ return {comment_count:comment_count,countdiv:countdiv, isFolder:isFolder, img: i
 }
 
 
-function jsMakeDrop()
+function jsMakeDrop() //обеспечивает элементам drag&drop
 {
 //return true;
 		$("body").unbind("mousemove");
@@ -6722,9 +6722,8 @@ function jsMakeDrop()
 
 }
 
-var recursivedata = new Array();
-
-function jsRecursive(id)
+var recursivedata = [];
+function jsRecursive(id) //рекурсивно перебирает все элементы определённого родителя. Наполняет recursivedata.
 {
 
 var mychildrens = my_all_data.filter(function(el) 
@@ -6754,12 +6753,12 @@ mychildrens = mychildrens.sort(compare); //сортирую
 		}
 }
 
-
+//Показывает максимальную дату, проходя рекурсивно по всем детям
 //jsShowMaxDate(1,jsFindByParent(1))
 function jsShowMaxDate(id)
 {	
 	if ( !show_childdate ) return ["",0,""];
-	parent = id;
+	var parent = id;
 	recursivedata=[]; 
 	el_id = "";
 	el_title = "";
@@ -6782,24 +6781,12 @@ function jsShowMaxDate(id)
 
 }
 
-function jsMakeDates()
-{
-
-	$.each(my_all_data,function(i,data) 
-		{
-		
-//		console.info( 'result = ',jsShowMaxDate(i,data) );
-		
-		});
-
-}
-
-function onResize()
+function onResize() //вызывается при каждом ресайзе страницы
 {
 	if($(".ui-resizable-resizing").length) return true;
 	
-			w = $(document).width();
-			y = $(document).height();
+			var w = $(document).width();
+			var y = $(document).height();
 			
 			//если мышка подошла близко к краю, то скрываю одну панель
 			if(main_x<15) 
@@ -6896,7 +6883,7 @@ function onResize()
 			$("#bottom_panel").css('top',main_y);
 			
 			
-			newheight=$('#calendar').parent("div").height()-62;
+			var newheight=$('#calendar').parent("div").height()-62;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight);
 			$("#tree_news").height(newheight);
@@ -6921,7 +6908,7 @@ function onResize()
 
 }
 
-function jsCalcTabs()
+function jsCalcTabs() //устанавливает ширину табов у дневника и у избранных
 {
 clearTimeout(calctabs_timer);
 calctabs_timer = setTimeout(function()
@@ -6949,7 +6936,6 @@ calctabs_timer = setTimeout(function()
 					  $(this).hide().clone().appendTo(ul).show();
 					  }
 					
-			//		console.info(all_w);
 					});
 		});
 		
@@ -6958,30 +6944,23 @@ calctabs_timer = setTimeout(function()
 }
 
 
-/**
- * You first need to create a formatting function to pad numbers to two digits…
- **/
+//дописывает ноль к цифре
 function twoDigits(d) {
     if(0 <= d && d < 10) return "0" + d.toString();
     if(-10 < d && d < 0) return "-0" + (-1*d).toString();
     return d.toString();
 }
 
-/**
- * …and then create the method to output the date string as desired.
- * Some people hate using prototypes this way, but if you are going
- * to apply this to more than one Date object, having it as a prototype
- * makes sense.
- **/
+//Перевожу дату new Date в mySQL формат
 Date.prototype.toMysqlFormat = function() {
     return this.getFullYear() + "-" + twoDigits(1 + this.getMonth()) + "-" + twoDigits(this.getDate()) + " " + twoDigits(this.getHours()) + ":" + twoDigits(this.getMinutes()) + ":" + twoDigits(this.getSeconds());
 };
 
-
+//собираю все события с датами для календаря
 function jsGetEvents(start, end, callback) {
 setTimeout(function()
 	{
-	caldata2=[];
+	 var caldata2=[];
 	
 	var caldata = my_all_data.filter(function(el) 
 			{ 
@@ -6990,25 +6969,25 @@ setTimeout(function()
 			else return false;
 			} );
 			
-	for(date=start;date<end;date=new Date(date.getTime() + 1*24*60*60*1000))
+	for(var date=start;date<end;date=new Date(date.getTime() + 1*24*60*60*1000))
 		{
-		found_dates = jsFindRecur( date.toMysqlFormat() );
+		var found_dates = jsFindRecur( date.toMysqlFormat() );
 		if(found_dates.length>0) 
 			{
 			$.each(found_dates,function(i,d)
 				{ 
-				mytime = d.date1.split(" ");
-				mydate = date.toMysqlFormat();
+				var mytime = d.date1.split(" ");
+				var mydate = date.toMysqlFormat();
 				mydate = mydate.split(" ");
-				mynewdate = mydate[0]+" "+mytime[1];
+				var mynewdate = mydate[0]+" "+mytime[1];
 				caldata2.push( { id:d.id , date1: mynewdate } );
 				});
 			}
 		}
 //	console.info("caldata = ",caldata2);
 	
-	answer1=[];
-	datenow = sqldate( jsNow() );
+	var answer1=[];
+	var datenow = sqldate( jsNow() );
 			
 	$.each(caldata,function(i,d)
 		{
@@ -7016,9 +6995,9 @@ setTimeout(function()
 		else allday = false;
 		
 		if(d.did=="")
-			isdid = "";
+			var isdid = "";
 		else
-			isdid = "did";
+			var isdid = "did";
 		
 //		console.info(d);		
 		if(d.date1<datenow) isdid = isdid+" pasted";
@@ -7030,31 +7009,29 @@ setTimeout(function()
 		{
 		console.info("c2=",d.id,d.date1);
 		
-		element = jsFind(d.id);
+		var element = jsFind(d.id);
 		
-		if(d.date1.indexOf("00:00:00")>-1) allday = true;
-		else allday = false;
+		if(d.date1.indexOf("00:00:00")>-1) var allday = true;
+		else var allday = false;
 		
 		if(element.did=="")
-			isdid = "";
+			var isdid = "";
 		else
-			isdid = "did";
+			var isdid = "did";
 		answer1.push({title:element.title, start:d.date1, allDay:allday, id:element.id,className: isdid });	
 		});
 
 //	console.info("answer",answer1);
-	
 //	caldata.push({title:"Привет", start:d.toString()});
-
 //	jsFindRecur("2013-01-07");
 
 	callback(answer1);
 	},1);
-}
+} 
 
 var caldata;
 
-function jsShowCalendar()
+function jsShowCalendar() //отображаю календарь
 {
 
 		var date = new Date();
@@ -7077,22 +7054,22 @@ function jsShowCalendar()
         
         console.info(event.id,dayDelta,minuteDelta);
 
-		el = jsFind(event.id);
+		var el = jsFind(event.id);
 		
 		if(el.date2<el.date1) 
 			{
-			mydate1 = Date.createFromMysql( el.date1 );
+			var mydate1 = Date.createFromMysql( el.date1 );
 			mydate1.setMinutes( mydate1.getMinutes() + 60 );
 			el.date2 = mydate1.toMysqlFormat();
 			console.info("Был глюк с датой", el.date2);
 			}
 
-		mydate = Date.createFromMysql( el.date2 );
+		var mydate = Date.createFromMysql( el.date2 );
 		
 		mydate.setMinutes( mydate.getMinutes() + parseInt(minuteDelta,10) );
 		mydate.setDate( mydate.getDate() + parseInt(dayDelta,10) );
 		
-		mydate2 = mydate.toMysqlFormat();
+		var mydate2 = mydate.toMysqlFormat();
 		jsFind(event.id,{date2:mydate2});
 		
 		console.info("newdate = ",mydate,mydate2);
@@ -7104,9 +7081,9 @@ function jsShowCalendar()
 ////////////////После того как элемент дерева брошен на календарь, присваиваем дату при помощи AJAX и обновляем календарь			  			
 			  $.ajaxSetup({async: false});
 			 if(ev.target.attributes.myid) {
-			 	 mynode = ev.target.attributes.myid.nodeValue;
+			 	 var mynode = ev.target.attributes.myid.nodeValue;
 				
-				newdate = date1.toMysqlFormat();
+				var newdate = date1.toMysqlFormat();
 				console.info("drop=",date1,allday,ev,et);
 				jsFind(mynode,{ date1:newdate });
 				jsRefreshTree();
@@ -7117,17 +7094,16 @@ function jsShowCalendar()
 			 if(et.data)
  			   et.data.obj.each(function()
 			     { 
-			    mynode = this.id;
-			    mydate = encodeURIComponent(date1.toMysqlFormat());
-			    alert(mydate);
+			    var mynode = this.id;
+			    var mydate = encodeURIComponent(date1.toMysqlFormat());
 			    jsFind(mynode, { date1 : mydate });
 			 	$('#calendar').fullCalendar( 'refetchEvents' ); 
 			    jsRefreshTree();
 			    
-			    lnk="do.php?date_to_do="+$(this).attr('id')+"&date1="+mydate+"&allday="+allday;
+			    var lnk="do.php?date_to_do="+$(this).attr('id')+"&date1="+mydate+"&allday="+allday;
 		 		$('#bubu').load(lnk, function () 
 		 		  { 
-		 		    new_date = $('#bubu').html();
+		 		    var new_date = $('#bubu').html();
 		 		    $("#"+mynode).attr('date1',new_date);
 			 		jsRefreshDate(mynode.replace('node_',''));
 			 		$('#calendar').fullCalendar( 'refetchEvents' ); 
@@ -7146,16 +7122,6 @@ function jsShowCalendar()
 			firstDay: 1,
 
 		
-/*			// US Holidays
-			eventSources: [{
-//					url:'https://www.google.com/calendar/feeds/eugene.leonar%40gmail.com/public/basic',
-					editable:'true'
-					},
-					{
-//					url:'do.php?calendar',
-					className: 'my_event'
-					},
-					myEvents()], */
 			eventSources: [{ events: function(start, end, callback){ jsGetEvents(start, end, callback); }, 
 							 className: 'my_event' }],					
 					
@@ -7171,16 +7137,8 @@ function jsShowCalendar()
 				//(,"calendar");
 			},
 			eventDrop: function(event, delta, minutedelta, allday) {
-			  if (allday) 
-			     {
-//			     lnk="do.php?movedo="+event.id+"&days="+delta+"&minutes="+minutedelta+"&allday=1";
-			     }
-			     else
-			     {
-//			     lnk="do.php?movedo="+event.id+"&days="+delta+"&minutes="+minutedelta+"&allday=0";
-			     }
 			   
-			   today = new Date( event.start );
+			   var today = new Date( event.start );
 			   
 			   if(allday) 
 			    	{
@@ -7192,41 +7150,6 @@ function jsShowCalendar()
 			   jsFind(event.id,{ date1 : today.toMysqlFormat() });
 			   jsRefreshTree();
 			   
-//			    var today = Date.createFromMysql(d);
-//				var newDate = new Date();
-//				newDate.setDate(today.getDate()+delta);
-//				newDate = new Date(newDate.getTime() + minutedelta*60*1000);
-//				newDate = new Date(newDate);
-
-//			   newDate = new Date( Date.createFromMysql(d) + delta*24*60*60*1000 + minutedelta*60*1000 );
-
-//			   console.info(event,delta,minutedelta,allday,newDate.toMysqlFormat());
-			   
-//				newdate = date1.toMysqlFormat();
-//			    mydate = encodeURIComponent(newdate);
-//				jsFind(mynode,1).date1=newdate;
-//				jsRefreshTree();
-
-		if(false)			   
-	 		$('#bubu').load(lnk, function ()
-	 		    {
-	    	   	var myid = event.id;
-
-	 		    new_date = $('#bubu').html();
-	 		    
-	 		    $("#node_"+myid).attr('date1',new_date);
-	 		    
-	 		    jsRefreshDate(myid);
-	 		    
-	 		    $('* #demo').jstree('deselect_all');
-	 		    $('* #demo').jstree('select_node',$("#node_"+myid));
-	 		    
-	 		    //$("#node_"+myid).css('color','red');
-	    	   	//$('#demo').jstree('refresh',-1);
-				//setTimeout(function() { $("#demo").jstree("search", "#node_"+myid); },500);
-	    	   	
-	 		    });
-
 			  
 			},
 			
@@ -7245,17 +7168,17 @@ function jsShowCalendar()
 			if( end-start == 900000 ) { 	calend.fullCalendar('unselect'); return true; }
 				var title = prompt('Название события:');
 				if (title) { 
-				manager = encodeURIComponent($('#selectmanager').html()); 
+				var manager = encodeURIComponent($('#selectmanager').html()); 
 				
 			if(allDay==false)
 				{	
-				st = start.toString();
-				en = end.toString();
+				var st = start.toString();
+				var en = end.toString();
 				}
 			else
 			 	{
-				st = start.toDateString();
-				en = end.toDateString();
+				var st = start.toDateString();
+				var en = end.toDateString();
 			 	}
 				
 				console.info(start.toMysqlFormat(),end.toMysqlFormat(), title);
@@ -7274,9 +7197,10 @@ function jsShowCalendar()
 }
 
 
-function jsSetTimeNow()
+function jsSetTimeNow() //устанавливаю красную полоску - показывающую текущую дату
 {
-		cur_view = calend.fullCalendar('getView').name;
+		var cur_view = calend.fullCalendar('getView').name;
+		var myl,myleft,mywidth;
 		
 		
 		if ((cur_view=='agendaWeek') || (cur_view=='agendaDay'))
@@ -7291,9 +7215,9 @@ function jsSetTimeNow()
 		           
 		           
 				   if($.cookie('swap_calendar')==0)
-		           swap = 1;
+		           var swap = 1;
 		           else
-		           swap = $('#left_top').width()+1;
+		           var swap = $('#left_top').width()+1;
 		           
 				   myleft=myl-$('.fc-agenda-axis').width()-swap+38;
 				   				   
@@ -7312,9 +7236,9 @@ function jsSetTimeNow()
 				   $(this).children('.fc-mynow').css('top',0).css('width',mywidth).css('left',myleft);
 				   
 				   
-					currentTime=new Date;
-					tim=currentTime.getHours() + currentTime.getMinutes()/60;
-					timenow=$(this).height()/24*(tim);
+					var currentTime=new Date;
+					var tim=currentTime.getHours() + currentTime.getMinutes()/60;
+					var timenow=$(this).height()/24*(tim);
 					$(this).children(".fc-mynow").css({"top": timenow});
 				   
 				   });
@@ -7459,8 +7383,9 @@ if(true)
 var anotherday = false;
 function jsCalendarNode(id)
 {
+	var i_am_scroll;
 	if(!(element = jsFind(id))) return true;
-	gotodate = element.date1;
+	var gotodate = element.date1;
 	if ((gotodate!='0000-00-00 00:00:00') && (gotodate)) //прыгаем календарем на выбранную делом дату 
 		  {
 		  gotodate = Date.createFromMysql(gotodate);
@@ -7476,12 +7401,12 @@ function jsCalendarNode(id)
 	
 	
 	
-		  d = gotodate.getDate();
-		  m = gotodate.getMonth();
-		  y = gotodate.getFullYear();
+		  var d = gotodate.getDate();
+		  var m = gotodate.getMonth();
+		  var y = gotodate.getFullYear();
 
-		  h = gotodate.getHours();
-		  slot = parseInt((95/24)*h,10)-6;
+		  var h = gotodate.getHours();
+		  var slot = parseInt((95/24)*h,10)-6;
 
 		  $('#calendar').fullCalendar('gotoDate',y,m,d);		  
 		  
@@ -7539,8 +7464,8 @@ function jsSelectNode(id,nohash,iamfrom) //открыть заметку во в
 
 function jsRedactorOpen(ids,iamfrom) //открыть редактор / ids=[1,2,3] номера заметок
 {
-var text = "", mytext="";
-var element1;
+var text = "", mytext="",path1;
+var element1,myelement;
 $.each(ids,function(ii,id1) 
  {  
  //	console.info("redactor_from",iamfrom);
@@ -7555,12 +7480,12 @@ $.each(ids,function(ii,id1)
 			  	path1 = jsTextPath( ans );
 			else
 				path1 = "";
-	count = "<div class='divider_count'>"+(ii+1)+"</div>";
+	var count = "<div class='divider_count'>"+(ii+1)+"</div>";
 
    mytext = element1.text;
    if(mytext=="") mytext = "<p>&nbsp;</p>";
    
-   divider = "<div class='divider_red' contenteditable='false' md5='"+$.md5( mytext ) +"' myid='"+id1+"'>"+count+path1+"<h6>"+""+element1.title+"</h6></div>";
+   var divider = "<div class='divider_red' contenteditable='false' md5='"+$.md5( mytext ) +"' myid='"+id1+"'>"+count+path1+"<h6>"+""+element1.title+"</h6></div>";
    
    text = text + divider+"<div class='edit_text'>"+mytext+"</div>";
    

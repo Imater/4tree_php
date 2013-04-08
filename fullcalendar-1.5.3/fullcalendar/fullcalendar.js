@@ -504,6 +504,7 @@ function Calendar(element, options, eventSources) {
 	}
 	
 	
+	
 	function refetchEvents() {
 		fetchEvents(currentView.visStart, currentView.visEnd); // will call reportEvents
 	}

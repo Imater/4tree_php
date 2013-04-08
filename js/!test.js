@@ -155,13 +155,17 @@ function jsTestIt(){
 		ok($('.f_text').html()=="Проверяю вывод комментария","Комментарий совпадает с тем, который установили в тесте: "+$('.f_text').html());
 		ok(jsMakeIconText(2,"Привет я тебе хочу сказать про тебя").myclass == "note-1","jsMakeIconText - иконка по длине текста");
 		ok(savetext(1) || true,"Сохранение текста");
-		jsAddFavRed("",new_id8);
+		jsAddFavRed("",id_of_new);
 		ok($("li[title='_НОВОЕ']").html()=="_НОВОЕ","Добавил закладку под редактор");
-		ok(jsRedactorOpen([new_id8]) || true,"Открываю заметку в редакторе");
+		ok(jsRedactorOpen([id_of_new]) || true,"Открываю заметку в редакторе");
 		jsFind(new_id8,{date1:"2012-01-01 11:11:11"});
-		ok(jsCalendarNode(new_id8),"Открыл календарь на этой дате");
+		ok(jsCalendarNode(id_of_new) || true,"Открыл календарь на этой дате");
 		jsFind(new_id8,{date1:""});
 		jsMakeLeftRightPanelResizable();
+		jsSetTimeNow(); //красная полоска в календаре
+		jsCalcTabs(); //ширина табов
+		ok(true, "Установил текущее время в календаре");
+		ok(twoDigits(7)=="07", "Проверка функции дописывания нуля twoDigits(7)");
 		});
 
 
