@@ -255,6 +255,7 @@ function jsRefreshRedactor(d)
 
 function jsSaveElement(d)
 {
+	var need_to_add=false;
 	if(!d) return false;
 	
 	if( (!jsFind(d.id)) && (d.id>0) )  //если такого id нет, то создаю (создан в другом месте)
@@ -281,6 +282,7 @@ function jsSaveElement(d)
 			element.fav = 1;
 			element.title = "Новая заметка (new)";
 			jsSaveData(d.id);
+			need_to_add = true;
 			console.info("new-element",element);
 		}
 				
@@ -293,6 +295,7 @@ function jsSaveElement(d)
 	myelement.date1 = d.date1;
 	myelement.date2 = d.date2;
 	myelement.tab = d.tab;
+	myelement.time = parseInt(d.changetime)-1;
 	myelement.new = ""; //обнуляю new, чтобы скрыть иконку синхронизации
 	myelement.position = d.position.toString();
 	myelement.icon = d.node_icon;
@@ -301,6 +304,8 @@ function jsSaveElement(d)
 	myelement.remind = d.remind;
 	myelement.s = d.s;
 	myelement.text = d.text;
+	
+	if(need_to_add) jsAddToTree(d.id);
 
 	jsSaveData(d.id,d.old_id,"dontsync"); //не надо, так как есть уже в jsFind
 	

@@ -1260,7 +1260,7 @@ function sqldate(UNIX_timestamp){ //показываю время в виде my
  }
 
 
-function jsTitleClick(ntitle) //клик по Названию дела. ntitle = $(".ntitle"). Нужно для определения двойного клика.
+function jsTitleClick(ntitle,from_n_title) //клик по Названию дела. ntitle = $(".ntitle"). Нужно для определения двойного клика.
 {
 	if (ntitle.attr("contenteditable")==true) return true;
 	
@@ -1269,7 +1269,11 @@ function jsTitleClick(ntitle) //клик по Названию дела. ntitle 
 	else 
 		{
 		needtoedit = false;
-		ntitle.parents("li").click();
+		if(!from_n_title) ntitle.parents("li:first").click(); //противный клик
+		var id = ntitle.attr("myid");
+		$(".panel li").removeClass("selected");
+		jsSelectNode( id ,'tree');
+		jsOpenNode( id ); //открываю панель
 		}
 	
 	lastclickelement = ntitle.html();
@@ -2755,7 +2759,7 @@ setTimeout(function(){
 		$(".highlight").contents().unwrap();
 
 //		console.info("liclick");
-		isTree = $("#top_panel").hasClass("panel_type1");
+		var isTree = $("#top_panel").hasClass("panel_type1");
 		
 		nowtime = new Date();
 
@@ -3222,10 +3226,10 @@ $('#tree_back').bind("contextmenu",function(e){
   	return true;
   	});	
   	
-     
+  /////lilili title click   
   $("#mypanel").delegate(".n_title","click", function () {
-  	if( ($("#mypanel .n_title[contenteditable=true]").length > 0) ) { console.info(1); return true; }
-  	jsTitleClick($(this));
+  	if( ($(".selected .n_title[contenteditable=true]").length > 0) ) { console.info(1); return true; }
+  	jsTitleClick($(this),"from_panel");
   	return false;
   	});
   	
@@ -4211,18 +4215,31 @@ function jsAddDo(arrow, myparent, mytitle, date1, date2)
  
  sender = $(".selected");
  if(!sender) return true;
+
+ var isTree = $("#top_panel").hasClass("panel_type1");
  
  if(arrow == 'down')
  	{
- 	panel = sender.parents(".panel").attr('id').replace("panel_","");
+	 	if(isTree) {
+		 	panel = sender.parents("ul:first").attr("myid");
+	 	} else {
+		 	panel = sender.parents(".panel").attr('id').replace("panel_","");
+		}
  	}
  if(arrow == 'right')
  	{
  	panel = node_to_id( sender.attr('id') );
- 	sender.parents(".panel").nextAll(".panel").not("#panel_"+panel).remove();
- 	sender.find(".node_img").addClass('folder_closed').html("<div class='countdiv'>1</div>").removeClass("node_img");
- 	iii = $("#panel_"+panel+" li").length; 
-	if(iii==0) $("#mypanel").append("<div id='panel_"+panel+"' class='panel'><ul></ul></div>");
+ 	
+ 		if(isTree) {
+	  		if( $(".ul_childrens[myid="+panel+"]").length==0 )
+  			$("#top_panel #node_"+panel).append("<ul class='ul_childrens' myid="+panel+"></ul>");
+ 			sender.find(".node_img").addClass('folder_closed').html("<div class='countdiv'>1</div>").removeClass("node_img");
+ 		} else {
+ 			sender.parents(".panel").nextAll(".panel").not("#panel_"+panel).remove();
+ 			sender.find(".node_img").addClass('folder_closed').html("<div class='countdiv'>1</div>").removeClass("node_img");
+ 			iii = $("#panel_"+panel+" li").length; 
+ 			if(iii==0) $("#mypanel").append("<div id='panel_"+panel+"' class='panel'><ul></ul></div>");
+ 		}
  	}
 
  if(arrow == "new")
@@ -4244,9 +4261,15 @@ function jsAddDo(arrow, myparent, mytitle, date1, date2)
  
 if(arrow != "new")	
 	{
-	parent = sender.parents(".panel").attr("id").replace("panel_","");
-	count = sender.parents(".panel ul").children("li").length;
-	newposition = $(".selected").next(".divider_li").attr("pos");
+	 	if(isTree) {
+		 	parent = sender.parents("ul:first").attr("myid");
+	 	} else {
+		 	parent = sender.parents(".panel").attr('id').replace("panel_","");
+		}
+
+	var count = sender.parents(".panel ul").children("li").length;
+	newposition = parseInt($(".selected").next(".divider_li").attr("pos"));
+	if(!newposition) newposition = count;
 	}
 else
 	{
@@ -4292,6 +4315,7 @@ else
 		}
 	jsSaveData(new_id);
 	jsRefreshTreeFast(new_id,arrow,date1);	
+	if(isTree) jsAddToTree(new_id);
 	$('#calendar').fullCalendar( 'refetchEvents' ); 	
 		li = $("#mypanel #node_"+new_id);
 		ntitle = li.find(".n_title");
@@ -4320,7 +4344,7 @@ return new_id;
 
 function jsGo(arrow)
 {
-		isTree = $("#top_panel").hasClass("panel_type1");
+		var isTree = $("#top_panel").hasClass("panel_type1");
 
 if(arrow=='up')
 	{
@@ -4713,7 +4737,7 @@ function jsOpenNode(id,nohash,iamfrom) //открыть заметку с ном
 			},1000);
 		}
 		
-		isTree = $("#top_panel").hasClass("panel_type1");
+		var isTree = $("#top_panel").hasClass("panel_type1");
 		
 		myli = $("#top_panel #node_"+id);
 		
@@ -5119,7 +5143,7 @@ function jsShowTreePanel() //запускается единожды
 		  	fullscreen_mode = false;
 			}
 		
-		isTree = $("#top_panel").hasClass("panel_type1");
+		var isTree = $("#top_panel").hasClass("panel_type1");
 		//перехожу на заметку в hash
 		if(!isTree)
 		  	if(!(!id))
@@ -5308,7 +5332,7 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 		    	{ 
 		    	if( localStorage.getItem("d_length") ) jsSaveData(need_to_save_id); 
 		    	else jsSaveData(1);
-		    	if(changed_fields!="s," && changed_fields!="position," ) $("#node_"+id+" .sync_it_i").removeClass("hideit");
+		    	if(changed_fields!="s," && changed_fields!="position," ) $("#node_"+id+" .sync_it_i:first").removeClass("hideit");
 		    	},80); //сохряню этот элемент в localStorage через 80 миллисекунд
 
 		}
@@ -6165,20 +6189,27 @@ if ( ($("#mypanel .n_title[contenteditable=true]").length > 0) || ($("#mypanel #
 
 var scrollleft = $("#mypanel").scrollLeft();
 
-$(".panel").quickEach( function() 
-	{ 
-	if( $(this).attr('id') )
-		{
-		myselected = node_to_id( $(this).find(".selected").attr('id') ); 
-		myold_selected = node_to_id( $(this).find(".old_selected").attr('id') ); 
-		old_scroll = $(this).scrollTop();
-		jsShowTreeNode( $(this).attr("id").replace("panel_","") ); 
-		$(this).scrollTop(old_scroll);
-		$("#node_"+myselected).addClass("selected").removeClass("tree-closed").addClass("tree-open"); 
-		$("#node_"+myold_selected).addClass("old_selected").removeClass("tree-closed").addClass("tree-open"); 
-		
-		}
-	});
+var isTree = $("#top_panel").hasClass("panel_type1");
+
+if(isTree) {
+	jsRefreshOneFolder(1);
+} else {
+
+		$(".panel").quickEach( function() 
+			{ 
+			if( $(this).attr('id') )
+				{
+				myselected = node_to_id( $(this).find(".selected").attr('id') ); 
+				myold_selected = node_to_id( $(this).find(".old_selected").attr('id') ); 
+				old_scroll = $(this).scrollTop();
+				jsShowTreeNode( $(this).attr("id").replace("panel_","") ); 
+				$(this).scrollTop(old_scroll);
+				$("#node_"+myselected).addClass("selected").removeClass("tree-closed").addClass("tree-open"); 
+				$("#node_"+myold_selected).addClass("old_selected").removeClass("tree-closed").addClass("tree-open"); 
+				
+				}
+			});
+  }
 $('#calendar').fullCalendar( 'refetchEvents' ); 
 $("#mypanel").stop().scrollLeft(scrollleft);
 jsFixScroll(2);
@@ -6214,7 +6245,7 @@ function jsReorder(dropto)
 
 function jsShowTreeNode(parent_node,isTree,other_data)
 {
-	
+	var where_to_add;
 	if(other_data)
 	  {	  
 	  		if(parent_node!=-2)  	$(".search_panel_result ul").html('');
@@ -6297,7 +6328,7 @@ function compare2(a,b) {
 		  		{
 		  		if ($("#panel_"+parent_node).length != 1) //если панель ещё не открыта
 		  			{
-		  			$("#mypanel").append("<div id='panel_"+parent_node+"' class='panel'><ul></ul></div>");
+		  			$("#mypanel").append("<div id='panel_"+parent_node+"' class='panel'><ul myid='"+parent_node+"'></ul></div>");
 		  			pwidth = $.cookie('pwidth');
 		  			if(!pwidth) pwidth = 300;
 		  			$("#mypanel .panel:last").width(pwidth);
@@ -6337,14 +6368,14 @@ function compare2(a,b) {
 				  		 "</div>";
 		    }
 
-		  if(isTree) where_to_add = $("ul[myid="+parent_node+"]");
-		  else where_to_add = $("#panel_"+parent_node+" ul");
+		  if(isTree) var where_to_add = $("ul[myid="+parent_node+"]");
+		  else var where_to_add = $("#panel_"+parent_node+" ul");
 		  
 		  mytitle = data.title;
 
 		  if(parent_node==-1) //функция отображения результатов поиска//
 		  	{
-		  	where_to_add = $(".search_panel_result ul");
+		  	var where_to_add = $(".search_panel_result ul");
 		  	var ans = jsFindPath(data.id);
 		  	if(ans)
 			  	var add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
@@ -6378,7 +6409,7 @@ function compare2(a,b) {
 
 		  if(parent_node==-2)
 		  	{
-		  	where_to_add = $(".combo_list ul");
+		  	var where_to_add = $(".combo_list ul");
 		  	var ans = jsFindPath(data.id);
 		  	if(ans)
 			  	add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
@@ -6427,8 +6458,8 @@ function compare2(a,b) {
 		  
 		  iii=iii+1;
 	  	});
-	myli = "<div class='divider_li' pos='"+iii+"' myid='"+parent_node+"'></div>";
- 	where_to_add.append(myli);
+//	myli = "<div class='divider_li' pos='"+iii+"' myid='"+parent_node+"'></div>";
+// 	where_to_add.append(myli);
 	  	
 	  	
 	  jsPrepareDate();
@@ -6457,15 +6488,65 @@ function compare2(a,b) {
 	
 }
 
+function jsAddToTree(id_node)
+{
+	if($("#node_"+id_node).length) return true; //если элемент уже есть, то добавлять не нужно
+
+	var isTree = $("#top_panel").hasClass("panel_type1");
+	console.info("ADD TO TREE = ",id_node);
+	var element = jsFind(id_node);
+	
+	var render_node = jsRenderOneElement( jsFind(id_node) );
+	
+    if(isTree) {
+    	where_to_add = $("ul[myid="+element.parent_id+"]");
+    } else {
+    	where_to_add = $("#panel_"+element.parent_id+" ul");
+    }
+
+	where_to_add.find(".divider_li:last").remove();
+	var iii = element.position;
+	var divider = "<div class='divider_li' pos='"+(iii+0.1)+"' myid='"+element.parent_id+"'></div>";
+	
+	var before_div = where_to_add.find(".divider_li[pos='"+iii+".1']");
+	if(before_div.length)	$(render_node + divider).insertBefore(before_div);
+	else where_to_add.append(render_node + divider);
+
+}
+
+function jsRefreshOneFolder(panel_id)
+{
+	elements = $("#mypanel li").clone();
+	var len=elements.length;
+	for(var i=0;i<len;i++)
+		{
+		var id = node_to_id( $(elements[i]).attr("id") );
+		var changetime_from_base = jsFind(id).time;
+		var changetime_from_screen = $(elements[i]).attr("time");
+		
+		if(changetime_from_base != changetime_from_screen) //если элемент на экране не совпадает с базой
+			{
+			var isFolderOpen = $(elements[i]).hasClass("tree-open");
+			jsRefreshOneElement(id);
+			if(isFolderOpen) $("#mypanel #node_"+id).addClass("tree-open");
+			console.info("Обновляю один элемент - "+id);
+			}
+		
+		}
+	
+}
+
 function jsRefreshOneElement(myid)
 {
    
-   el = $("#node_"+myid);
-   make_class="";
+   var el = $("#node_"+myid);
+   var make_class="";
    if (el.hasClass("selected")) make_class = "selected";
    if (el.hasClass("old_selected")) make_class = "old_selected";
    el.prev(".divider_li").remove();
+   var myul = el.find("ul:first").clone(); //сохраняю вложенный список
    el.replaceWith( jsRenderOneElement( jsFind(myid) ) );
+   $(myul).appendTo("#node_"+myid); //вставляю вложенный список обратно
    if(make_class!="") 
    		{
 	    $("#node_"+id).addClass(make_class);
@@ -6483,7 +6564,7 @@ function jsRenderOneElement(data,iii,parent_node)
 		  info = jsInfoFolder(data,parent_node);
 		  
 		  myli = "<div class='divider_li' pos='"+(data.position-0.9)+"' myid='"+data.parent_id+"'></div>"; //разделитель
-		  myli +=  "<li id='node_"+data.id+"' myid='"+data.id+"' class='tree-closed "+info.isFolder+"'>";
+		  myli +=  "<li id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='tree-closed "+info.isFolder+"'>";
 		  myli += "<div class='tcheckbox fav_color_"+data.fav+"' title='"+data.id+"'>"+info.comment_count+"</div>" + info.icon_share;
 		  myli += "<div myid='"+childdate[1]+"' childdate='"+childdate[0]+"' title='"+data.date1+childdate[2]+
 		  		  "' class='date1'></div>";

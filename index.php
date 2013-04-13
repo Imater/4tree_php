@@ -236,7 +236,7 @@ if(isset($_GET['test']))
 	<div id="main_window">
 	  <div class="place_of_top">
 	    
-		<div id="top_panel" class="effect2 panel_type3">
+		<div id="top_panel" class="effect2 panel_type1">
 
 	<div class="header_toolbar">
 			<div id="main_menu"><div class="h_button round_left round_right"><i class="icon-align-justify"></i></div>
