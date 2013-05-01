@@ -236,7 +236,7 @@ if(isset($_GET['test']))
 	<div id="main_window">
 	  <div class="place_of_top">
 	    
-		<div id="top_panel" class="effect2 panel_type1">
+		<div id="top_panel" class="effect2 panel_type3">
 
 	<div class="header_toolbar">
 			<div id="main_menu"><div class="h_button round_left round_right"><i class="icon-align-justify"></i></div>
@@ -418,7 +418,7 @@ if(isset($_GET['test']))
 					</div>
 					<div class="red_new_window" style="" title="Открыть в новом окне"><i class="icon-forward"></i></div>
 					<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>	
-					<div class="wiki_back_button" title="Вернуться назад в wiki"><i class="icon-left-bold"></i></div>
+					<div id="wiki_back_button" title="Вернуться назад в wiki"><i class="icon-left-bold"></i></div>
 					
 	  			
 	  		</div>

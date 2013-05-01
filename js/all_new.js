@@ -44,7 +44,7 @@ var DB_INTERFACE = function(){  //singleton
 		    	return d.promise();
 		    	}
 		    
-		    this.clear_all_data = function() //сохраняю my_all_data в базу данных
+		    this.clear_all_data = function() //очищаю всю базу данных
 		    	{
 		    	var d=$.Deferred();
 		    	if( JSON.stringify(db.getSchema().stores).indexOf('"tree"') != -1 ) //если таблицы tree нет
@@ -54,7 +54,7 @@ var DB_INTERFACE = function(){  //singleton
 		    	return d.promise();
 		    	}
 
-		    this.clear_tree_data = function() //сохраняю my_all_data в базу данных
+		    this.clear_tree_data = function() //Очищаю таблицу в базе данных "tree"
 		    	{
 		    	var d=$.Deferred();
 		    	
@@ -62,6 +62,13 @@ var DB_INTERFACE = function(){  //singleton
 		    		{
 		    		db.clear("tree").done(function(){ d.resolve(); });
 		    		}
+		    	return d.promise();
+		    	}
+		    	
+		    this.FindByParent = function(parent_id)
+		    	{
+		    	var d=$.Deferred();
+		    	db.executeSql("SELECT * FROM tree WHERE 1273 = 1273").done(function(records){ d.resolve(records) });
 		    	return d.promise();
 		    	}
 		    	
@@ -1527,7 +1534,7 @@ function jsOpenWikiPage(parent_id,mytitle)
 		jsOpenPath(mynewdata.id);
 		jsFixScroll(2);
 		}
-	$(".wiki_back_button").show().attr("myid",parent_id);
+	$("#wiki_back_button").show().attr("myid",parent_id);
 	myr.setFocus();
 }
 
@@ -1546,7 +1553,7 @@ $(".chat_box").draggable({appendTo: "body", handle: ".chat_header"});
 
 jsRerememberPomidor();
 
-$("body").delegate(".wiki_back_button","click",function()
+$("body").delegate("#wiki_back_button","click",function()
 	{ 
 	var myid = $(this).attr("myid");
 	$(this).hide();
@@ -2755,21 +2762,25 @@ setTimeout(function(){
 		
 	//Клик в LI открывает детей этого объекта LILILI
 	$('#mypanel').delegate("li","click", function () {
-		if($(this).find("#minicalendar").length) return true;
+
+		var nowtime = jsNow();
+		var dif_between_click = nowtime - lastclick;
+		lastclick = jsNow();
+		
+//		if($(this).find("#minicalendar").length) return true;
 		$(".highlight").contents().unwrap();
 
 //		console.info("liclick");
 		var isTree = $("#top_panel").hasClass("panel_type1");
-		
-		nowtime = new Date();
 
 		if(isTree)
-		  if( (nowtime-lastclick)<150 ) 
+		  if( (dif_between_click)<150 ) 
 			{
-			id = node_to_id( $(this).attr("id") );
+			console.info("nowtime-lastclick",dif_between_click);
+			var id = node_to_id( $(this).attr("id") );
 			$(".panel li").removeClass("selected");
-			jsSelectNode( id ,'tree');
 			jsOpenNode( id ); //открываю панель
+			jsSelectNode( id ,'tree');
 			return false;
 			}
 
@@ -2784,7 +2795,7 @@ setTimeout(function(){
 			if( isTree && ($(this).find(".folder_closed").length!=0) )
 				{
 				$(this).find(".date1").hide();
-				timelong = parseInt($(this).find(".countdiv").html(),10)*25;
+				timelong = parseInt($(this).find(".countdiv").html(),10)*15;
 				if(timelong>1000) timelong=1000;
 				if(timelong<300) timelong=300;
 				$(this).find("ul:first").slideDown(timelong,function(){ $(this).find(".date1[title!='']").show(); });
@@ -2795,7 +2806,7 @@ setTimeout(function(){
 			if(isTree)
 				{
 				$(this).removeClass("tree-open").addClass("tree-closed");
-				$(this).find("ul:first").slideUp(300);
+				$(this).find("ul:first").slideUp(100);
 				}
 			else
 				{
@@ -3381,7 +3392,7 @@ last_local_sync = jsNow()+5000;
 	preloader = $('#myloader').krutilka("show");
 
   myr = $('#redactor').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+main_user_id, lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+main_user_id, autoresize:true, 
-  			buttonsAdd: ['|', 'button1'], 
+  			buttonsAdd: ['|', 'button1','checkbox'], 
             buttonsCustom: {
                 button1: {
                     title: 'Спойлер (скрытый текст)', 
@@ -3389,8 +3400,18 @@ last_local_sync = jsNow()+5000;
                       { 
 //                      console.info(obj,event,key);
 					  myr.execCommand('insertHtml',"<p><div class='spoiler_header'><b>&nbsp;Скрытый текст<br></b></div><div class='spoiler' style='display: block; '><div>Скрытый<br>текст</div></div></p>&nbsp;");
+                      }
+                        
+                },
+                checkbox: {
+                    title: 'Галочка', 
+                    callback: function(obj, event, key) 
+                      { 
+//                      console.info(obj,event,key);
+					  myr.execCommand('insertHtml',"<input type='checkbox'>&nbsp;");
                       }  
                 }
+                
             }
      });
    $(".redactor_toolbar").insertBefore(".redactor_box");
@@ -4720,7 +4741,7 @@ else document.title = "4tree.ru";
 
 function jsOpenNode(id,nohash,iamfrom) //открыть заметку с номером
 {
-	$(".wiki_back_button").hide();
+	$("#wiki_back_button").hide();
 
 	clearTimeout(show_help_timer);
 	if(!nohash)
@@ -4734,7 +4755,7 @@ function jsOpenNode(id,nohash,iamfrom) //открыть заметку с ном
 			ignorehashchange = true; //делаю так, чтобы изменение хэша не привело к переходу на заметку
 			setTimeout( function() { ignorehashchange=false; }, 100 );
 			if(window.location.hash.indexOf("edit")==-1) if(num_id) window.location.hash = num_id.toString(36); 
-			},1000);
+			},5000);
 		}
 		
 		var isTree = $("#top_panel").hasClass("panel_type1");
@@ -6514,6 +6535,62 @@ function jsAddToTree(id_node)
 
 }
 
+function jsSnapShotMake()
+{
+	var snapshot={};
+	var tree_open = $(".tree-open");
+	
+	snapshot.tree_open = []; //открытые папки
+	var len = tree_open.length;
+	for(var i=0;i<=len;i++)
+	   {
+	   if(tree_open[i]) snapshot.tree_open.push( $(tree_open[i]).attr("id") );
+	   }
+
+	snapshot.tree_selected = $(".selected").attr("id");	  //выбранные
+
+	snapshot.tree_old_selected = []; //ранее выбранные папки
+	var tree_old_selected = $(".old_selected");
+	var len = tree_old_selected.length;
+	for(var i=0;i<=len;i++)
+	   {
+	   if(tree_old_selected[i]) snapshot.tree_old_selected.push( $(tree_old_selected[i]).attr("id") );
+	   }
+
+	snapshot.tree_scroll = {};
+	var tree_panel = $(".panel");
+	var len = tree_panel.length;
+	for(var i=0;i<=len;i++)
+	   {
+	   if(tree_panel[i]) snapshot.tree_scroll[$(tree_panel[i]).attr("id")] = ( $(tree_panel[i]).scrollTop() );
+	   }
+	  
+	return snapshot;
+	
+}
+
+function jsSnapShotApply(snapshot)
+{
+	$(".selected").removeClass(".selected");
+	$(".old_selected").removeClass(".old_selected");
+	$(".tree_open").removeClass("tree_open");
+
+	$.each(snapshot.tree_open, function(i,el){
+		$("#"+el).click();
+	})
+	
+	$.each(snapshot.tree_old_selected, function(i,el){
+		$("#"+el).addClass("old_selected");
+	})
+
+	$.each(snapshot.tree_scroll, function(i,el){
+		$("."+i).scrollTop(el);
+	})
+	
+	
+}
+
+
 function jsRefreshOneFolder(panel_id)
 {
 	elements = $("#mypanel li").clone();
@@ -6746,7 +6823,7 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 //				revertDuration: 500  //  original position after the drag
 			});
 			
-	$( "#mypanel li,.divider_li" ).not("ui-droppable").droppable({
+	$( "#mypanel .n_title,.divider_li" ).not("ui-droppable").droppable({
 			activeClass: "ui-can-recieve",
 			hoverClass: "ui-can-hover",
 			over: function (event, ui) {
@@ -7538,8 +7615,8 @@ function jsSelectNode(id,nohash,iamfrom) //открыть заметку во в
 		{
 	 	jsRedactorOpen([id],iamfrom); 
 	 	jsShowAllComments(id);
-	 	},70 );
-	jsCalendarNode(id);
+	 	jsCalendarNode(id);
+	 	},300 );
 
 }
 
@@ -7765,14 +7842,14 @@ $.each(wiki_words, function(i,myword){
 	});
 if(need_refresh) 
 	{
-    console.info("saved_1",savedRange,savedRange2);
+//    console.info("saved_1",savedRange,savedRange2);
 	myr.setCode(newtxt);
 	note_saved = false;
-    console.info("saved_2",savedRange,savedRange2);
+//    console.info("saved_2",savedRange,savedRange2);
     rangy.restoreSelection(aa);
     savetext(1);
     jsParseWikiLinks($(".redactor_").attr("myid"));
-    console.info("saved_3",savedRange,savedRange2);
+//    console.info("saved_3",savedRange,savedRange2);
 	}
 }
 

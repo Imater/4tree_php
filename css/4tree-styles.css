@@ -1687,14 +1687,16 @@ padding-top: 3px;
 {
 width:0.9em;
 display: inline-block;
-        -webkit-transition: all 300ms ease-in-out;
-        -moz-transition: all 300ms ease-in-out;
-        -o-transition: all 300ms ease-in-out;
-        -ms-transition: all 300ms ease-in-out;
+        -webkit-transition: all 100ms;
+        -moz-transition: all 100ms;
+        -o-transition: all 100ms;
+        -ms-transition: all 100ms;
 }
 
 .tree-open > .icon-play-div
 {
+margin-left: -2px;
+margin-right: 2px;
 -webkit-transform: rotate(90deg);
        -moz-transform: rotate(90deg);
         -ms-transform: rotate(90deg);
@@ -1920,7 +1922,7 @@ display: none;
 	color: black;
 }
 
-.wiki_back_button
+#wiki_back_button
 {
 display: none;
 position: absolute;

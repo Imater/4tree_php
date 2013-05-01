@@ -174,7 +174,7 @@ var RLANG = {
 					"img", "video", "audio", "iframe", "object", "embed", "param", "blockquote",
 					"mark", "cite", "small", "ul", "ol", "li", "hr", "dl", "dt", "dd", "sup", "sub",
 					"big", "pre", "code", "figure", "figcaption", "strong", "em", "table", "tr", "td",
-					"th", "tbody", "thead", "tfoot", "h1", "h2", "h3", "h4", "h5", "h6", "h30", "wiki"],
+					"th", "tbody", "thead", "tfoot", "h1", "h2", "h3", "h4", "h5", "h6", "h30", "wiki","input"],
 
 			toolbarExternal: false, // ID selector
 
