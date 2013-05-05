@@ -109,6 +109,7 @@ if(isset($_GET['confirm']))
 	<script src="js/rangy-core.js"></script>
 	<script src="js/rangy-selectionsaverestore.js"></script>
 	<script src="jsredactor/redactor/redactor.js"></script>
+	<script src="js/aes.js"></script>
 
 <!--	<script src="js/jszip.js"></script> -->
 

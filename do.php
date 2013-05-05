@@ -1772,14 +1772,18 @@ if($GLOBALS['user_id'])
 	    else $date2 = $sql['date2'];
 	    
 	    $answer[$i]['date2']=$date2;
+	    
+	    $text_md5 = substr(md5($sql['text']),0,5);
 
-	    $alldata = $sql['id'].$sql['title'].$sql['text'].$date1.
+	    $alldata = $sql['id'].$sql['title'].$text_md5.$date1.
     				  $date2.$did;
+    				  
     	$longtext[$sql['id']] = substr(md5( $alldata ),0,5);
     	
-    	if($sql['id']==6679 && false)
+    	if($sql['id']==6796 && false)
     		{
 	    		echo $alldata;
+	    		echo " *".md5($sql['text'])."* ";
 	    		echo "<hr>".substr(md5( $alldata ),0,5)."<hr>";
 	    	}
 	}

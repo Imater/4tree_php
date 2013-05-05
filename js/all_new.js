@@ -14,12 +14,390 @@ var timestamp=new Date().getTime(),start_sync_when_idle=false,there_was_message_
 var hoverListener,is_changed,only_save=false,main_user_id;
 var db;
 
-var DB_INTERFACE = function(){  //singleton
+var API_4TREE = function(global_table_name,need_log){  //singleton
+	 if ( (typeof arguments.callee.instance=='undefined') || true)
+	 {
+	  arguments.callee.instance = new function()
+		  {
+		  var my_all_data;
+		  var db, last_log_time=jsNow(), log_i=1;
+		  var this_db = this;
+		  var LENGTH_OF_LONG_TEXT = 200; //длина, после которой текст считается длинным и переносится в другую базу
+		  var settings = {show_did:false};
+		  
+		  this.log = function(x1,x2,x3,x4,x5) { //логирование любых 5 параметров в консоль
+		    	var time_dif = jsNow()-last_log_time;
+		    	last_log_time=jsNow();
+		      if(need_log) { 
+		      	console.info(log_i+". log("+time_dif+"ms): ",x1?x1:" ",x2?x2:" ",x3?x3:" ",x4?x4:" ",x5?x5:" "); 
+		      	log_i++;
+		      }
+		  }
+
+		  this.js_my_all_data = function(set_my_all_data) //установка главного массива снаружи
+		  	{
+		  	if(set_my_all_data) my_all_data = set_my_all_data;
+		  	return my_all_data;
+		  	}
+
+		  this.js_InitDB = function() //инициализация базы данных
+	  		{
+		  	//схема структуры базы данных
+		  	var author_store_schema = { //схема базы данных
+	      	  name: global_table_name,  //для каждой таблицы своя схема
+	      	  keyPath: 'id', // optional, 
+	      	  autoIncrement: false // optional. 
+	      	};
+		  	
+		  	var texts_store_schema = { //схема базы данных
+	      	  name: global_table_name+"_texts",  //для каждой таблицы своя схема
+	      	  keyPath: 'id', // optional, 
+	      	  autoIncrement: false // optional. 
+	      	};
+
+		  	schema = {
+		  	  stores: [author_store_schema,texts_store_schema]
+		  	}; 
+
+		  		  	
+		  	db = new ydn.db.Storage('_all_tree', schema);
+		  	
+		  	this_db.log("(js_InitDB) База данных инициализированна");
+		  	} //js_InitDB
+		  		  	
+		  this.jsFind = function(id,fields) //поиск любого элемента или установка его значений
+			{
+			var record;
+			//this_db.log("start_find: "+id);
+			var answer = my_all_data.filter(function(el,i) 
+				{ 
+				return el && el.parent_id && el.id==id;
+				} );
+			//this_db.log("finish_find: "+id);
+			
+			
+  		    if(answer[0] && fields) { //если нужно присваивать значения
+  		       var is_changed = false;
+  		       record = answer[0];
+  		       //поле, где записаны все изменённые не синхронизированные поля:
+  		       var changed_fields = record["new"]; 
+  		       $.each(fields, function(namefield,newvalue) 
+  		       	{ 		
+  		       	if(record[namefield]!=newvalue) 
+  		       		{
+  		       		is_changed = true;
+  		       		record[namefield] = newvalue;
+  		       		//console.info("need_save: ",namefield," = ",newvalue);
+  		   	   	  if((changed_fields.indexOf(namefield+",")==-1) && (changed_fields.indexOf("tmp_")==-1))
+  		   	   	  		{ 
+  		   	   	  		changed_fields = changed_fields + namefield + ","; 
+  		   	   	  		}
+  		       		}
+  		       	});
+  		       	
+  		       if(is_changed) {
+  		         record["new"] = changed_fields;
+
+  		         //если не меняли время вручную и это не временное поле
+  		         if( (changed_fields.indexOf("time,")==-1) && (changed_fields.indexOf("tmp_")==-1) ) 
+  		             {
+  		             record.time = parseInt(jsNow(),10); //ставлю время изменения (для синхронизации)
+  		             }
+  		         else
+  		             {
+  		             record["new"] = "";
+  		             }
+
+  		         db.put(global_table_name,record).done(function(){ 
+  		         	//this_db.log("Сохранил в базе элемент "+id,record); 
+  		         });
+  		       } 
+
+		  	}
+			
+			
+			return answer[0];
+			} //jsFind
+			
+		 //находит или меняет текст. Если текст длинный, закидывает в базу _texts
+		 //api4tree.jsFindLongText(6796).done(function(text){console.log(text);})
+		 this.jsFindLongText = function(id, newtext) 
+		     {
+		    	var d=$.Deferred();
+		    	
+		    	if(newtext) { //если текст изменился
+
+					var element = this_db.jsFind(id);
+
+	 	  		    if(newtext.length==0) 
+	       		       element["tmp_txt_md5"] = "";
+	       		    else
+	       		       element["tmp_txt_md5"] = hex_md5(newtext).substr(0,5); //md5 штамп текста, для сверки с сервером
+
+
+					if(newtext.length>LENGTH_OF_LONG_TEXT) { //если текст длинный
+
+						element.text = strip_tags(newtext).substr(0,LENGTH_OF_LONG_TEXT/2);
+						element.text_is_long = 1;
+			    		db.put(global_table_name,element).done(function(){
+			    			this_db.log("Сохранил превью длинного текста", newtext);
+				    		d.promise(newtext);
+			    		});
+
+			    		db.put(global_table_name+"_texts",{id:id.toString(),text:newtext}).done(function(){
+			    			this_db.log("Сохранил длинный текст", newtext);
+				    		d.promise(newtext);
+			    		});
+					} else { //если текст короткий
+						element.text = newtext;
+						element.text_is_long = 0;
+			    		db.put(global_table_name,element).done(function(){
+			    			this_db.log("Сохранил короткий текст", newtext);
+				    		d.promise(newtext);
+			    		});
+			    		db.remove(global_table_name+"_texts",id).done(function(){this_db.log("Удалил длинный текст")});
+		    		}
+		    		
+		    	} else {
+			  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
+			  		return d.resolve(record?record.text:"");
+			  		});
+			  	}
+			  	return d.promise();
+			} //jsFindLongText
+		   	
+		 this.jsFindByParent = function(parent_id) //поиск всех элементов родителя
+		     {
+			var answer = my_all_data.filter(function(el,i) 
+				{ 
+				if((settings.show_did==false) && (el.did!=0)) return false;
+				return el && el.parent_id==parent_id;
+				});
+			return answer;
+			}
+		     
+		 this.jsUpdateNextAction = function(id) //кэширует в базе tmp_next (id следующего по дате дела)
+		     {
+			 this_db.log("Start filter Date");
+			 var answer = my_all_data.filter(function(el,i) 
+			     { 
+			     if(el.tmp_nextdate) {  //стираю временные поля установленные ранее
+			 		this_db.jsFind(element.id,{tmp_nextdate:"",
+		     								   tmp_next_id:"", 
+		     								   tmp_next_title:""});
+			     }
+			     if((settings.show_did==false) && (el.did!=0)) return false;
+			     return el && el.date1!="";
+			     });
+			 this_db.log("Найдено "+answer.length+" записей с датой");
+			 
+			 $.each(answer,function(i,el){ //обходим все элементы с датой
+				 var id_parent = el.id;
+				 var j=0;
+				 while(j<1000) //не больше 1000 уровней вложенности, чтобы исключить бесконечность
+				 	{
+				 	old_id = id_parent;
+				 	element = this_db.jsFind(id_parent);
+				 	id_parent=element.parent_id;
+				 	
+				 	if( ((!element.tmp_nextdate) || (element.tmp_nextdate > el.date1)) && (el.id!=element.id)) {
+//				 		element.tmp_nextdate = el.date1; //устанавливаю новые поля
+//				 		element.tmp_next_id = el.id;
+//				 		element.tmp_next_title = el.title;
+				 		this_db.jsFind(element.id,{tmp_nextdate:el.date1,
+				 								   tmp_next_id:el.id, 
+				 								   tmp_next_title:el.title});
+				 		}
+				 	
+				 	if((id_parent==1) || (!id_parent)) break;
+				 	j++;
+				 	}
+			 });
+			 this_db.log("finish jsUpdateNextAction");
+			 } //jsUpdateNextAction
+		     
+		 this.jsUpdateChildrenCnt = function(id) //кэширует в базе tmp_childrens, для быстрой работы (кол-во детей)
+		     {
+			this_db.log("start jsUpdateChildrenTmpCnt");
+			if(!id) { //если нужно обработать все элементы базы
+					var answer = my_all_data.filter(function(el,i) 
+					    { 
+					    el.tmp_childrens = this_db.jsFindByParent(el.id).length;
+					    });
+				} else { //если нужно посчитать детей только id родителя
+					this_db.jsFind(id,{tmp_childrens:this_db.jsFindByParent(id).length});
+				}
+			this_db.log("finish jsUpdateChildrenTmpCnt");
+			} //jsUpdateChildrenCnt
+		   	
+		 this.js_LoadAllDataFromServer = function() //загружаю данные с сервера в внутреннюю базу данных
+		     {
+	  			setTimeout(function(){ this_db.log("Тип базы данных: "+db.getType());},500 );
+		  		this_db.log("Начинаю загрузку с сервера");
+
+		  		db.clear(global_table_name).done(function(){
+			  	var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id=test"; 
+		  		$.getJSON(lnk,function(data){
+		  		   this_db.log("Загружено с сервера ",Object.size(data.all_data)," элементов");
+		  		   
+		  		   var long_texts=[]; //длинные тексты храню в отдельной базе данных
+		  		   my_all_data = $.map(data.all_data, function (value, key) { 
+		  		   value["new"] = "";
+
+		  		   if(value["text"].length==0) 
+		  		   	  value["tmp_txt_md5"] = "";
+		  		   else
+		  		      value["tmp_txt_md5"] = hex_md5(value["text"]).substr(0,5); //md5 штамп текста, для сверки с сервером
+
+		  		   if(value["text"].length>LENGTH_OF_LONG_TEXT) 
+		  		   		{
+		  		   		long_texts.push({id:value.id, text:value.text});
+		  		   		value.text = strip_tags(value.text).substr(0,LENGTH_OF_LONG_TEXT/2);
+		  		   		value.text_is_long = 1;
+		  		   		}
+		  		   else value.text_is_long = 0;
+		  		   	
+		  		   return value; });
+		  			
+		  			db.put(global_table_name, my_all_data).then( //сохраняю главный массив
+		  			  function(ids) {
+		  			    this_db.log(ids.length+' записей записано в базу = '+this_db.SizeOfObject(my_all_data)+'b');
+		  				  		    	
+		  			  }, function(e) {
+		  			    throw e;
+		  			  });
+
+		  			db.put(global_table_name+"_texts", long_texts).then( //сохраняю длинные тексты
+		  			  function(ids) {
+		  			    this_db.log(ids.length+' длинных текстов записано в базу = '+this_db.SizeOfObject(long_texts)+'b');
+		  				long_texts="";//очищаю память  
+		  				$(this_db).triggerHandler({type:"StartMe",value:"TEST"});		    	
+		  			  }, function(e) {
+		  			    throw e;
+		  			  });
+		  			  
+		  			});
+		  			}); //clear(4tree_db)
+//		  	this_db.jsUpdateNextAction();
+//		  	this_db.jsUpdateChildrenCnt();
+	  		} //js_loadAllDataFromServer
+		     
+		 this.js_LoadAllFromLocalDB = function() //загружаю в массив все данные из локальной DB
+		     {
+	  		var d=new $.Deferred();
+	  				this_db.log("Начинаю загрузку данных из локальной DB");
+		    		db.values(global_table_name,null,Number.MAX_VALUE).done(function(records) {
+		    			this_db.log("Загрузил из локальной DB: " + records.length + " записей");
+		    			my_all_data = records;
+		    			d.resolve();
+		    			});
+	  		return d.promise();
+	  		} //js_LoadAllFromLocalDB
+		     
+		 this.SizeOfObject = function( object )  //грубый подсчёт размера массива объектов
+		     {
+			 		var objectList = [];
+			 		var recurse = function( value )
+			 		{
+			 		    var bytes = 0;
+			 		
+			 		    if ( typeof value === 'boolean' ) {
+			 		        bytes = 4;
+			 		    }
+			 		    else if ( typeof value === 'string' ) {
+			 		        bytes = value.length * 2;
+			 		    }
+			 		    else if ( typeof value === 'number' ) {
+			 		        bytes = 8;
+			 		    }
+			 		    else if
+			 		    (
+			 		        typeof value === 'object'
+			 		        && objectList.indexOf( value ) === -1
+			 		    )
+			 		    {
+			 		        objectList[ objectList.length ] = value;
+			 		
+			 		        for( i in value ) {
+			 		            bytes+= 8; // an assumed existence overhead
+			 		            bytes+= recurse( value[i] )
+			 		        }
+			 		    }
+			 		
+			 		    return bytes;
+			 		}
+			 		return recurse( object );
+			} //roughSizeOfObject
+		     
+		 //api4tree.js_Calculate_md5_from_local_DB().done(function(x){console.info(x)})
+	     this.js_Calculate_md5_from_local_DB = function() //вычисляю md5 всех данных из локальной DB
+         	{
+         	var d=$.Deferred();
+         	db.values(global_table_name,null,Number.MAX_VALUE).done(function(records) {
+         	   var longtext=[],len;
+    	       for(var i=0; len = records.length, i<len; i=i+1 )
+    	       	{
+    	       	var el = records[i];
+    	       	var alldata = (el.id?el.id:"") + (el.title?el.title:"") + (el.text?el.text.substr(0,100):"") + 
+    	       				  (el.date1?el.date1:"") + (el.date2?el.date2:"") + 
+    	       				  (el.did?el.did:"");
+    	       	//alldata = el.id+":"+(el.title?el.title:"")+", ";
+    	       	
+    	 		var mymd5 = hex_md5( alldata ).substr(0,5);
+
+    	       	if(el.id==6796) console.info("1038",alldata,mymd5);
+    	 		
+    	       	longtext.push({ id:el.id, md5:mymd5 });
+    	       	}
+         	  d.resolve(longtext);
+         	  });
+         	return d.promise();
+         	}
+		     
+	     this.js_Compare_md5_local_vs_server = function() //сверяю md5 сервера с локальной DB
+	     	{
+	     	var d=$.Deferred();
+	     	var sync_id = jsGetSyncId();
+	     	//передаю время, чтобы заполнить время последней синхронизации
+	     	var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id+"&only_md5=1"; 
+	     
+	     	$.getJSON(lnk,function(data){
+	         	this_db.js_Calculate_md5_from_local_DB().done(function(md5)
+	         		{ 
+	         			var test_ok = "выполнил успешно.";
+	     	    		$.each(md5, function(i,el)
+	     		    		{ 
+	     		    		if( (el.id>0) && (el.md5!=data.md5[el.id]) )
+	     		    			{
+	     			    		console.info("!!!!!MD5!!!!!Данные на сервере не совпадают"+
+	     			    					 " с локальными:",el.id,el.md5, data.md5[el.id],jsFind(el.id)); 
+	     			    		
+	     			    		trampampam = this_db.jsFind(el.id,{lsync:0}); //восстанавливаю целостность, забирая элемент с сервера
+	     			    		//jsSync();
+	     			    		test_ok = "ПРОВАЛИЛ!!!!!!!!! :( ИСПРАВЛЯЮ :).";
+	     			    		}
+	     		    		});
+	     		    console.info("Сверку с сервером по md5 "+test_ok);
+   	     	    	d.resolve(test_ok);
+	         		});
+	         	});
+	         return d.promise();
+	     	}
+		      		
+		 this.js_InitDB(); //инициализирую соединение с базой
+		  	
+		 }
+	 }
+	 return arguments.callee.instance;
+}
+
+///////////////////////////////////////////////////////////////////////////////////
+var DB_INTERFACE = function(global_table_name){  //singleton
 	 if (typeof arguments.callee.instance=='undefined')
 	 {
 	  arguments.callee.instance = new function()
 		  {
-//		    var db = new ydn.db.Storage('_all_tree');    
+		    var db = new ydn.db.Storage('4tree_db');    
 	    	console.info("tree_db started"); 
 		    
 		    this.calculate_md5 = function() //проверяю целостность данных
@@ -93,6 +471,7 @@ var DB_INTERFACE = function(){  //singleton
 		    	
 		    this.compare_md5_local_and_server = function()
 		    	{
+		    	return true;
 		    	var d=$.Deferred();
 		    	var sync_id = jsGetSyncId();
 		    	//передаю время, чтобы заполнить время последней синхронизации
@@ -1003,7 +1382,7 @@ function jsCreateDo(whereadd,title) // ищу элемент по названи
 	element.del = 0;
 	element.tab = 0;
 	element.fav = 0;
-	element.new = "title,";
+	element["new"] = "title,";
 	element.time = jsNow();
 	element.lsync = jsNow()-1;
 	element.user_id = main_user_id;
@@ -3345,10 +3724,20 @@ $('#tree_back').bind("contextmenu",function(e){
 //////////////////////////////////DO FIRST///////////////////////////////////////
 function jsDoFirst() //функция, которая выполняется при запуске
 {
-//jsTestDate();
-tree_db = new DB_INTERFACE;
-db = new ydn.db.Storage('_all_tree');    
+$(".makedone").hide();
+api4tree = new API_4TREE("4tree_db","need_log");
+api4tree.js_LoadAllFromLocalDB().done(function(){ 
+	api4tree.log("Таблица загружена!"); 
+	jsDoAfterLoad();
+	}); //загружаю таблицу из памяти
+}
 
+function jsDoAfterLoad()
+{
+//jsTestDate();
+tree_db = new DB_INTERFACE("tree"); //стартую интерфейс работы с локальной базой браузера
+
+db = new ydn.db.Storage('4tree_db');    
 main_user_id = $.cookie("4tree_user_id");
 _connect(main_user_id);
 
@@ -3568,9 +3957,9 @@ function jsStartSync(how_urgent,iamfrom) //how_urgent = now - если синх�
 
 function jsUnNew() //убираем список изменённых полей после синхронизации. Лучше убирать их по мере синхронизации! Перенести в jsRefreshDo!
 {
-	var data = my_all_data.filter(function(el,i) { if(el.new) return el.new!=""; } );
+	var data = my_all_data.filter(function(el,i) { if(el["new"]) return el["new"]!=""; } );
 	$.each(data, function(i,node){
-		node.new="";
+		node["new"]="";
 		});
 	
 }
@@ -3583,7 +3972,7 @@ function jsDry(data) //убираем все данные, кроме измен
 		var changed_fields = node['new'];
 		var element = new Object;
 		element.id = node.id;
-		if((node.id<0) || (node.new=="") )  
+		if((node.id<0) || (node["new"]=="") )  
 			{
 			element = jsFind(node.id);
 			answer1.push(element);
@@ -3612,7 +4001,7 @@ function jsDryComments(data) //убираем все данные, кроме и
 		changed_fields = node['new'];
 		element = new Object;
 		element.id = node.id;
-		if((node.id<0) || (node.new=="") )  
+		if((node.id<0) || (node["new"]=="") )  
 			{
 			element = jsFindComment(node.id);
 			answer1.push(element);
@@ -3688,7 +4077,7 @@ sync_id = jsGetSyncId();
 //Что изменилось после последней синхронизации//////////////////////////////////
 lastsync_time_client = jsFindLastSync();
 
-var data = my_all_data.filter(function(el) { if(el) return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>el.lsync) || ((el.new!="") && (el.new)) ); } );
+var data = my_all_data.filter(function(el) { if(el) return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>el.lsync) || ((el["new"]!="") && (el["new"])) ); } );
 
 console.info("@@@@@@@@_need_to_sync = ",data);
 
@@ -3858,7 +4247,7 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
 			element.user_id = main_user_id; //уверен? а вдруг это дело добавил другой юзер?
 			element.remind = 0;
-			element.new = "";
+			element["new"] = "";
 			element.s = 0;
 			element.tab = 0;
 			element.fav = 1;
@@ -3909,7 +4298,7 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
 	myelement.date1 = d.date1;
 	myelement.date2 = d.date2;
 	myelement.tab = d.tab;
-	myelement.new = ""; //обнуляю new, чтобы скрыть иконку синхронизации
+	myelement["new"] = ""; //обнуляю new, чтобы скрыть иконку синхронизации
 	myelement.position = d.position.toString();
 	myelement.icon = d.node_icon;
 	myelement.lsync = parseInt(d.lsync);
@@ -3924,7 +4313,7 @@ function jsSaveElementData(d) //сохраняю элемент в LocalStorage
 		}
 	else 
 		{
-		myelement.new = "text,";
+		myelement["new"] = "text,";
 		myelement.lsync = 0;
 		console.info("USER CHANGED TEXT");
 //		myelement.lsync = jsNow()-200000;
@@ -4217,7 +4606,7 @@ function jsAddComment(tree_id,parent_id,text)
 	element.tree_id = tree_id;
 	element.text = text;
 	element.del = 0;
-	element.new = "";
+	element["new"] = "";
 	element.time = jsNow();
 	element.add_time = jsNow();
 	element.lsync = jsNow()-1;
@@ -5343,7 +5732,7 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 		    }
 		else
 			{
-			answer[0].new = "";
+			answer[0]["new"] = "";
 			}
 			
 		    clearTimeout(mytimer[need_to_save_id]);
@@ -5407,7 +5796,7 @@ if(answer.length>0 && fields) //если нужно присваивать зн�
 		    }
 		else
 			{
-			answer[0].new = "";
+			answer[0]["new"] = "";
 			}
 			
 		    clearTimeout(mytimer[need_to_save_id]);
@@ -5586,7 +5975,7 @@ if(id==-5) //отборы
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
-		element.new = "";
+		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
 		element.user_id = main_user_id;
@@ -5612,7 +6001,7 @@ if(id==-6) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
-		element.new = "";
+		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
 		element.user_id = main_user_id;
@@ -5638,7 +6027,7 @@ if(id==-7) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
-		element.new = "";
+		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
 		element.user_id = main_user_id;
@@ -5664,7 +6053,7 @@ if(id==-8) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
-		element.new = "";
+		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
 		element.user_id = main_user_id;
@@ -5690,7 +6079,7 @@ if(id==-9) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
-		element.new = "";
+		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
 		element.user_id = main_user_id;
@@ -5716,7 +6105,7 @@ if(id==-10) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
-		element.new = "";
+		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
 		element.user_id = main_user_id;
@@ -5743,7 +6132,7 @@ if(id==-3)
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
-		element.new = "";
+		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
 		element.user_id = main_user_id;
@@ -5779,7 +6168,7 @@ if(id)
 			   	element.del = 0;
 			   	element.tab = 0;
 			   	element.fav = 0;
-			   	element.new = "";
+			   	element["new"] = "";
 			   	element.time = 0;
 				element.user_id = id;
 			   	element.lsync = 1;
@@ -5792,6 +6181,16 @@ if(id)
 
 }
 
+
+/**
+Подбирает элементы, подходящие под критерии
+@constructor
+@this {jsFindByTreeId}
+@return Все объекты подходящие под условия
+@param tree_id - id записи
+@param parent_id - parent_id записи
+@requires jsFind
+**/
 function jsFindByTreeId(tree_id,parent_id)
 {
 if(!tree_id) return false;	
@@ -6710,7 +7109,7 @@ function jsInfoFolder(data,parent_node) //заполняет массив дан
 		  	}
 
 ////////////
-		  if( ((data.lsync - data.time) > 0) || (data.new=="position,"))
+		  if( ((data.lsync - data.time) > 0) || (data["new"]=="position,"))
 			  var hideit = " hideit";
 		  else
 			  var hideit = "";
