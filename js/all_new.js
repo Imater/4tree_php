@@ -449,7 +449,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 	     	}
 	     	
-	     	function jsGetSyncId() //уникальный код для браузера (нужен для синхронизации)
+	     function jsGetSyncId() //уникальный код для браузера (нужен для синхронизации)
 	     	{
 	     	///////////////////////////////////////////////////////////////////////////////
 	     	//Устанавливаю индентификационный код (емайл + текущее время + инфо о браузере)
@@ -465,7 +465,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	}
 	     	
 	     	
-	     	function jsFindLastSync()  //нахожу время последней синхронизации, ориентируюсь на поле .time и .lsync
+	     function jsFindLastSync()  //нахожу время последней синхронизации, ориентируюсь на поле .time и .lsync
 	     	{
 	     	var maxt = 0; 
 	     	var mint = Number.MAX_VALUE; 
@@ -487,6 +487,35 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	if(mint<maxt) return mint;
 	     	else return maxt;
 	     	}
+	     	
+	     function jsChangeNewId(from_server_data) //заменяет отрицательный id на положительный
+	     	{
+	     	    var all_children = this_db.jsFindByParent(from_server_data.old_id);
+	     	    var old_id = from_server_data.old_id;
+	     	    var new_id = from_server_data.id;
+	     	    $.each(all_children,function(i,ddd) //заменяю всем детям отрицательный parent_id на новый
+	     	     	{
+	     	     	this_db.jsFind(ddd.id,{ parent_id: new_id, "new":"" }); //new - не даст пересинхронизацию
+	     	     	});
+	     	
+	     		this_db.jsFind(old_id, {id : new_id, "new":""});
+	     	
+	     		$("#panel_"+old_id).attr("id","panel_"+new_id); //заменяю индексы видимых панелей
+	     		$('.redactor_editor[myid='+old_id+']').attr("myid", new_id);
+	     	    $('.divider_red[myid="'+old_id+'"]').attr('myid',new_id);
+	     	    $(".makedone[myid="+old_id+"]").attr("myid",new_id); //заменяю индексы makedone
+	     	    $("#node_"+old_id).attr("id", "node_"+new_id).find(".tcheckbox").attr("title", new_id);
+	     	    
+	     		var id = parseInt(window.location.hash.replace("#",""),36); //меняем хэш в адресной строке
+	     		if(id==old_id) 
+	     			{
+	     			$(window).unbind('hashchange');
+	     			window.location.hash = new_id.toString(36); 
+	     			$(window).bind('hashchange', jsSethash );
+	     			}
+	     		
+	     	}
+	     	
 	     	
 	     	
 	     this.jsSync = function(save_only) { //синхронизация данных с сервером
@@ -548,7 +577,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					     			jsChangeNewId(d);
 					     		}
    				 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); //скрываю зелёный кружок
-   				 	    	this_db.jsFind(d.id,{lsync: data.lsync, "new":""});
+   				 	    	this_db.log("synced", this_db.jsFind(d.id,{lsync: data.lsync, "new":""}) );
 					     	});
 				     	}
 				     } //if success
