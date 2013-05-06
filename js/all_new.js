@@ -101,6 +101,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
   		       		{
   		       		is_changed = true;
   		       		record[namefield] = newvalue;
+
+  		       		if(namefield=="text") {
+		 	  		    if(newvalue.length==0) 
+		       		       record["tmp_txt_md5"] = "";
+		       		    else
+		       		       record["tmp_txt_md5"] = hex_md5(newvalue).substr(0,5); //md5 штамп текста, для сверки с сервером
+  		       		}
+  		       		
   		       		//console.info("need_save: ",namefield," = ",newvalue);
   		   	   	  if((changed_fields.indexOf(namefield+",")==-1) && (namefield.indexOf("tmp_")==-1))
   		   	   	  		{ 
@@ -113,7 +121,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
   		         record["new"] = changed_fields;
 
   		         //если не меняли время вручную и это не временное поле
-  		         if( (changed_fields.indexOf("time,")==-1) && (changed_fields.indexOf("tmp_")==-1) ) 
+  		         if( (changed_fields.indexOf("new,")==-1) && (changed_fields.indexOf("time,")==-1) && (changed_fields.indexOf("tmp_")==-1) ) 
   		             {
   		             record.time = parseInt(jsNow(),10); //ставлю время изменения (для синхронизации)
   		             }
@@ -441,6 +449,46 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 	     	}
 	     	
+	     	function jsGetSyncId() //уникальный код для браузера (нужен для синхронизации)
+	     	{
+	     	///////////////////////////////////////////////////////////////////////////////
+	     	//Устанавливаю индентификационный код (емайл + текущее время + инфо о браузере)
+	     	var sync_id = localStorage.getItem("sync_id"); 
+	     	if(!sync_id) 
+	     		{
+	     		var time_id = $.cookie("4tree_email_md") + '-' + jsNow() + '-' + navigator.userAgent;
+	     		sync_id = $.md5(time_id).substr(0,5)+"@"+sqldate( jsNow() )+"";
+	     		localStorage.setItem("sync_id",sync_id);
+	     		sync_id = localStorage.getItem("sync_id");
+	     		}
+	     	return sync_id;
+	     	}
+	     	
+	     	
+	     	function jsFindLastSync()  //нахожу время последней синхронизации, ориентируюсь на поле .time и .lsync
+	     	{
+	     	var maxt = 0; 
+	     	var mint = Number.MAX_VALUE; 
+	     	
+	     	if(my_all_data)
+	     	{
+	     	var m_len = my_all_data.length;
+	     	for(i=0;i<m_len;i++) 
+	     		{ 
+	     		if(!my_all_data[i]) continue;
+	     		var lsync = my_all_data[i].lsync; 
+	     		var changetime = my_all_data[i].time; 
+	     		if(lsync>maxt) maxt=lsync; 
+	     		if(changetime>lsync) 
+	     			if( mint>changetime ) mint=parseInt(changetime,10); 
+	     		}
+	     	}
+	     	
+	     	if(mint<maxt) return mint;
+	     	else return maxt;
+	     	}
+	     	
+	     	
 	     this.jsSync = function(save_only) { //синхронизация данных с сервером
 			
 			if(sync_now) { 
@@ -460,27 +508,53 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			});
 			
 			var local_data_changed_tmp = [];
-			var dfdArray = [];
+			var dfdArray = []; //массив для объектов работы с асинхронными функциями
 			
-			$.each(local_data_changed,function(i,el){
+			$.each(local_data_changed,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
 				local_data_changed_tmp[el.id]=el;
 				if(el.tmp_text_is_long==1) {
 					dfdArray.push( this_db.jsFindLongText(el.id).done(function(longtext){
 						this_db.log(el.id, longtext.length); 
-						local_data_changed_tmp[el.id].text = longtext;
+						local_data_changed_tmp[el.id].text = longtext; //длинные тексты отправляю в массив
 					}) );
 				};
 			});
 			
-			$.when.apply( null, dfdArray ).then( function(x){ 
-				console.info("!!!!DEF DID!!!!");
-			
+			$.when.apply( null, dfdArray ).then( function(x){ //выполняю тогда, когда все длинные тексты считаны
 				this_db.log("Отправляю на сервер "+Object.size(local_data_changed_tmp)+" элементов");
 				
 				//"высушиваю" данные и превращаю в JSON строку:
 				var local_data_changed_json_dry = JSON.stringify( jsDry(local_data_changed) ); 	
 				
 				this_db.log("Высушил данные, отправляю на сервер:",	local_data_changed_json_dry);	
+				
+				var changes = 'changes='+encodeURIComponent(local_data_changed_json_dry)+'&confirm=';
+
+				if(!save_only) var what_to_do = "save_and_load";
+				else var what_to_do = "save_only";
+				
+				var lastsync_time_client = jsFindLastSync();
+				
+				var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do;
+				
+				this_db.log(lnk);
+				
+				$.postJSON(lnk,changes,function(data,j,k){ //////////////A J A X/////////////////
+				     if(j=="success") {
+				     	this_db.log("Получен ответ от сервера: ",data);
+				     	if(data.saved) { //данные, которые сервер успешно сохранил. Отмечаю им lsync = jsNow().
+					     	$.each(data.saved,function(i,d) {
+					     		if(d.old_id) { //если нужно присвоить выданный id вместо отрицательного
+					     			jsChangeNewId(d);
+					     		}
+   				 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); //скрываю зелёный кружок
+   				 	    	this_db.jsFind(d.id,{lsync: data.lsync, "new":""});
+					     	});
+				     	}
+				     } //if success
+				}); //postJSON
+				
+				
 			}); //$.when
 			
 			startSync("finish");	
