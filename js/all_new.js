@@ -128,6 +128,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    	if(newtext) { //если текст изменился
 
 					var element = this_db.jsFind(id);
+					if(!element) { d.resolve(); return d.promise(); }
 
 	 	  		    if(newtext.length==0) 
 	       		       element["tmp_txt_md5"] = "";
@@ -141,19 +142,19 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 						element.text_is_long = 1;
 			    		db.put(global_table_name,element).done(function(){
 			    			this_db.log("Сохранил превью длинного текста", newtext);
-				    		d.promise(newtext);
+				    		d.resolve(newtext);
 			    		});
 
 			    		db.put(global_table_name+"_texts",{id:id.toString(),text:newtext}).done(function(){
 			    			this_db.log("Сохранил длинный текст", newtext);
-				    		d.promise(newtext);
+				    		d.resolve(newtext);
 			    		});
 					} else { //если текст короткий
 						element.text = newtext;
 						element.text_is_long = 0;
 			    		db.put(global_table_name,element).done(function(){
 			    			this_db.log("Сохранил короткий текст", newtext);
-				    		d.promise(newtext);
+				    		d.resolve(newtext);
 			    		});
 			    		db.remove(global_table_name+"_texts",id).done(function(){this_db.log("Удалил длинный текст")});
 		    		}
@@ -338,7 +339,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	       for(var i=0; len = records.length, i<len; i=i+1 )
     	       	{
     	       	var el = records[i];
-    	       	var alldata = (el.id?el.id:"") + (el.title?el.title:"") + (el.text?el.text.substr(0,100):"") + 
+    	       	var alldata = (el.id?el.id:"") + (el.title?el.title:"") + (el.tmp_txt_md5?el.tmp_txt_md5:"") + 
     	       				  (el.date1?el.date1:"") + (el.date2?el.date2:"") + 
     	       				  (el.did?el.did:"");
     	       	//alldata = el.id+":"+(el.title?el.title:"")+", ";
@@ -370,7 +371,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     		    		if( (el.id>0) && (el.md5!=data.md5[el.id]) )
 	     		    			{
 	     			    		console.info("!!!!!MD5!!!!!Данные на сервере не совпадают"+
-	     			    					 " с локальными:",el.id,el.md5, data.md5[el.id],jsFind(el.id)); 
+	     			    					 " с локальными:",el.id,el.md5, data.md5[el.id],api4tree.jsFind(el.id)); 
 	     			    		
 	     			    		trampampam = this_db.jsFind(el.id,{lsync:0}); //восстанавливаю целостность, забирая элемент с сервера
 	     			    		//jsSync();

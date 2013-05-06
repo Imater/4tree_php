@@ -1773,7 +1773,8 @@ if($GLOBALS['user_id'])
 	    
 	    $answer[$i]['date2']=$date2;
 	    
-	    $text_md5 = substr(md5($sql['text']),0,5);
+	    if($sql['text']=="") $text_md5="";
+	    else $text_md5 = substr(md5($sql['text']),0,5);
 
 	    $alldata = $sql['id'].$sql['title'].$text_md5.$date1.
     				  $date2.$did;
