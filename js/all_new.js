@@ -19,11 +19,25 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		  var my_all_data;
-		  var db, last_log_time=jsNow(), log_i=1;
-		  var this_db = this;
-		  var LENGTH_OF_LONG_TEXT = 200; //длина, после которой текст считается длинным и переносится в другую базу
-		  var settings = {show_did:false};
+		  var my_all_data,
+		  	  sync_now = false, //true - если идёт синхронизация
+		  	  sync_now_timer,
+		      db, //объект соединения с базой
+		      last_log_time=jsNow(), //время последнего вывода лога
+		      log_i=1, //номер лога
+		      this_db = this, //эта функция
+		      LENGTH_OF_LONG_TEXT = 200, //длина, после которой текст считается длинным и переносится в другую базу
+		      settings = {show_did:false}; //все параметры
+		  
+		  function jsIsOnline() //проверка, есть ли интернет
+		  	{ 
+		  	if (navigator.onLine == false) { //если интернета нет
+			   		jsTitle("Интернет соединение отстутствует. Работаем локально.", 10000); 
+			   		return false;
+		       } else {
+		       		return true;
+		       }
+		    }
 		  
 		  this.log = function(x1,x2,x3,x4,x5) { //логирование любых 5 параметров в консоль
 		    	var time_dif = jsNow()-last_log_time;
@@ -65,7 +79,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	this_db.log("(js_InitDB) База данных инициализированна");
 		  	} //js_InitDB
 		  		  	
-		  this.jsFind = function(id,fields) //поиск любого элемента или установка его значений
+		  this.jsFind = function(id,fields,save_anyway) //поиск любого элемента или установка его значений
 			{
 			var record;
 			//this_db.log("start_find: "+id);
@@ -83,12 +97,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
   		       var changed_fields = record["new"]; 
   		       $.each(fields, function(namefield,newvalue) 
   		       	{ 		
-  		       	if(record[namefield]!=newvalue) 
+  		       	if( (record[namefield]!=newvalue) || save_anyway) 
   		       		{
   		       		is_changed = true;
   		       		record[namefield] = newvalue;
   		       		//console.info("need_save: ",namefield," = ",newvalue);
-  		   	   	  if((changed_fields.indexOf(namefield+",")==-1) && (changed_fields.indexOf("tmp_")==-1))
+  		   	   	  if((changed_fields.indexOf(namefield+",")==-1) && (namefield.indexOf("tmp_")==-1))
   		   	   	  		{ 
   		   	   	  		changed_fields = changed_fields + namefield + ","; 
   		   	   	  		}
@@ -137,27 +151,19 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 
 					if(newtext.length>LENGTH_OF_LONG_TEXT) { //если текст длинный
-
-						element.text = strip_tags(newtext).substr(0,LENGTH_OF_LONG_TEXT/2);
-						element.text_is_long = 1;
-			    		db.put(global_table_name,element).done(function(){
-			    			this_db.log("Сохранил превью длинного текста", newtext);
-				    		d.resolve(newtext);
-			    		});
+						var short_text = strip_tags(newtext).substr(0,LENGTH_OF_LONG_TEXT/2);
+						this_db.jsFind(id,{ text:short_text, tmp_text_is_long:1 },"save_anyway");
 
 			    		db.put(global_table_name+"_texts",{id:id.toString(),text:newtext}).done(function(){
 			    			this_db.log("Сохранил длинный текст", newtext);
 				    		d.resolve(newtext);
 			    		});
 					} else { //если текст короткий
-						element.text = newtext;
-						element.text_is_long = 0;
-			    		db.put(global_table_name,element).done(function(){
-			    			this_db.log("Сохранил короткий текст", newtext);
-				    		d.resolve(newtext);
-			    		});
+						this_db.jsFind(id, { text:newtext, tmp_text_is_long:0 });
 			    		db.remove(global_table_name+"_texts",id).done(function(){this_db.log("Удалил длинный текст")});
 		    		}
+		    		
+		    		
 		    		
 		    	} else {
 			  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
@@ -233,11 +239,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		   	
 		 this.js_LoadAllDataFromServer = function() //загружаю данные с сервера в внутреннюю базу данных
 		     {
+			    if(!jsIsOnline) return true; //есть ли интернет
 	  			setTimeout(function(){ this_db.log("Тип базы данных: "+db.getType());},500 );
 		  		this_db.log("Начинаю загрузку с сервера");
 
 		  		db.clear(global_table_name).done(function(){
-			  	var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id=test"; 
+			    var sync_id = jsGetSyncId();
+			    var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id; 
 		  		$.getJSON(lnk,function(data){
 		  		   this_db.log("Загружено с сервера ",Object.size(data.all_data)," элементов");
 		  		   
@@ -254,9 +262,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  		   		{
 		  		   		long_texts.push({id:value.id, text:value.text});
 		  		   		value.text = strip_tags(value.text).substr(0,LENGTH_OF_LONG_TEXT/2);
-		  		   		value.text_is_long = 1;
+		  		   		value.tmp_text_is_long = 1;
 		  		   		}
-		  		   else value.text_is_long = 0;
+		  		   else value.tmp_text_is_long = 0;
 		  		   	
 		  		   return value; });
 		  			
@@ -357,6 +365,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     
 	     this.js_Compare_md5_local_vs_server = function() //сверяю md5 сервера с локальной DB
 	     	{
+		    if(!jsIsOnline) { d.resolve(); return d.promise(); } //есть ли интернет
 	     	var d=$.Deferred();
 	     	var sync_id = jsGetSyncId();
 	     	//передаю время, чтобы заполнить время последней синхронизации
@@ -384,6 +393,100 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	         	});
 	         return d.promise();
 	     	}
+	     	
+	     function jsDry(data) //убираем все данные, кроме изменённых, чтобы экономить трафик в POST
+	     {
+	         var answer1 = new Array();
+	         $.each(data, function(i,node){
+	         	var changed_fields = node['new'];
+	         	var element = new Object;
+	         	element.id = node.id;
+	         	if((node.id<0) || (node["new"]=="") )  
+	         		{
+	         		element = jsFind(node.id);
+	         		answer1.push(element);
+	         		changed_fields = "";
+	         		}
+	         	else
+	         	$.each(node, function(keyname, keyvalue)
+	         		{
+	         		if(changed_fields)
+	         		  if(( changed_fields.indexOf(keyname+',') != -1 ) || keyname=="time" || keyname=="lsync1" )
+	         			{
+	         			element[keyname] = keyvalue;
+	         			}
+	         		});
+	         	if(changed_fields) answer1.push(element);
+	         	});
+	         
+	         return answer1;
+	     }
+	     	
+	     function startSync(status) //отображает статусы начала и окончания синхронизации
+	     	{
+	     	if(status=="start") {
+				preloader.trigger("show");
+				$(".icon-cd").css("color","#517c5d");
+				this_db.log("Начинаю синхронизацию.");
+				sync_now = true;
+				clearTimeout(sync_now_timer);
+				sync_now_timer = setTimeout(function(){ sync_now = false; }, 60000); //если синхр.не прошла сама
+			} else {
+				preloader.trigger("hide");
+				$(".icon-cd").css("color","#888");
+				this_db.log("Синхронизация завершена.");
+				sync_now = false;
+				clearTimeout(sync_now_timer);
+			}
+			
+	     	}
+	     	
+	     this.jsSync = function(save_only) { //синхронизация данных с сервером
+			
+			if(sync_now) { 
+				this_db.log("Синхронизация уже идёт. Отменяю новый вызов."); 
+				return true; 
+			} else {
+				if(!jsIsOnline()) return true;
+				startSync("start"); //показываю пользователю, что синхронизация началась	
+			}
+			var sync_id = jsGetSyncId();
+			
+			var local_data_changed = my_all_data.filter(function(el) { //данные, которые буду отправлять на сервер
+				if(el) return ( (el.parent_id<-1000) || 
+								(el.id<-1000) || 
+								(el.time>=el.lsync) || 
+								((el.new!="") && (el.new)) ); 
+			});
+			
+			var local_data_changed_tmp = [];
+			var dfdArray = [];
+			
+			$.each(local_data_changed,function(i,el){
+				local_data_changed_tmp[el.id]=el;
+				if(el.tmp_text_is_long==1) {
+					dfdArray.push( this_db.jsFindLongText(el.id).done(function(longtext){
+						this_db.log(el.id, longtext.length); 
+						local_data_changed_tmp[el.id].text = longtext;
+					}) );
+				};
+			});
+			
+			$.when.apply( null, dfdArray ).then( function(x){ 
+				console.info("!!!!DEF DID!!!!");
+			
+				this_db.log("Отправляю на сервер "+Object.size(local_data_changed_tmp)+" элементов");
+				
+				//"высушиваю" данные и превращаю в JSON строку:
+				var local_data_changed_json_dry = JSON.stringify( jsDry(local_data_changed) ); 	
+				
+				this_db.log("Высушил данные, отправляю на сервер:",	local_data_changed_json_dry);	
+			}); //$.when
+			
+			startSync("finish");	
+						
+			return true;			
+	     } //jsSync
 		      		
 		 this.js_InitDB(); //инициализирую соединение с базой
 		  	
