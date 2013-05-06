@@ -190,6 +190,44 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				});
 			return answer;
 			}
+		 
+		 this.jsAddDo = function(parent_id,title,date1,date2) //добавление нового элемента в базу
+		 	 {
+		     	var new_line = my_all_data.length;
+		     	my_all_data[new_line]=new Object(); 
+		     	var element = my_all_data[new_line];
+		     	
+		     	var new_id = -parseInt(1000000+Math.random()*10000000);
+		     	
+		     	if(!date1) element.date1 = "";
+		     	else element.date1 = date1;
+		     
+		     	if(!date2) element.date2 = "";
+		     	else element.date2 = date2;
+		     	
+		     	element.id = new_id.toString();
+		     	element.icon = "";
+		     	element.img_class = "note-clean";
+		     	element.parent_id = parent_id.toString();
+		     	element.position = 0;
+		     	element.text = "";
+		     	element.did = "";
+		     	element.del = 0;
+		     	element.tab = 0;
+		     	element.fav = 0;
+		     	element.time = jsNow();
+		     	element.lsync = jsNow()-1;
+		     	element.user_id = main_user_id;
+		     	element.remind = 0;
+		     	element["new"] = "";
+		     	element.s = 0;
+		     	element.title = title;
+
+	     		db.put(global_table_name,element).done(function(){ this_db.log("Новый элемент записан в базу: "+element.id); });
+
+		 	 return element;
+		 	 }
+		     		  
 		     
 		 this.jsUpdateNextAction = function(id) //кэширует в базе tmp_next (id следующего по дате дела)
 		     {
@@ -411,7 +449,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	         	element.id = node.id;
 	         	if((node.id<0) || (node["new"]=="") )  
 	         		{
-	         		element = jsFind(node.id);
+	         		element = this_db.jsFind(node.id);
 	         		answer1.push(element);
 	         		changed_fields = "";
 	         		}
@@ -464,7 +502,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	return sync_id;
 	     	}
 	     	
-	     	
 	     function jsFindLastSync()  //нахожу время последней синхронизации, ориентируюсь на поле .time и .lsync
 	     	{
 	     	var maxt = 0; 
@@ -498,7 +535,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	     	this_db.jsFind(ddd.id,{ parent_id: new_id, "new":"" }); //new - не даст пересинхронизацию
 	     	     	});
 	     	
-	     		this_db.jsFind(old_id, {id : new_id, "new":""});
+	     		element = this_db.jsFind(old_id);
+	     		if(element) {
+		     		element.id=new_id;					//заменяю id, сохраняю в базе и удаляю старый id
+		     		db.put(global_table_name,element).done(function(){ 
+		    			db.remove(global_table_name,old_id.toString()).done(function(){this_db.log("Удалил элемент с -id: ",old_id)});
+  		        	});
+  		        }
+	     		
+	     		
+	     		
 	     	
 	     		$("#panel_"+old_id).attr("id","panel_"+new_id); //заменяю индексы видимых панелей
 	     		$('.redactor_editor[myid='+old_id+']').attr("myid", new_id);
@@ -515,8 +561,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     			}
 	     		
 	     	}
-	     	
-	     	
 	     	
 	     this.jsSync = function(save_only) { //синхронизация данных с сервером
 			
