@@ -705,8 +705,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 	 if ( (typeof arguments.callee.instance=='undefined') || true)
 	 {
 	  arguments.callee.instance = new function(){
-		 var this_db = this;
-		 
+
 		 this.log = function(x1,x2,x3,x4,x5) { //логирование любых 5 параметров в консоль
 		 	var time_dif = jsNow()-last_log_time;
 		    last_log_time=jsNow();
@@ -716,33 +715,18 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		    }
 		 } //log
 		 
-		 this.jsFindPath = function(element){ //поиск всех родителей
-		 		 var parent_id = element.parent_id;
-		 		 var answer = [];
-		 		 var j=0,textpath="";
-				 while(j<1000) {//не больше 1000 уровней вложенности, чтобы исключить бесконечность
-					answer.push({path:{id:"parent_id", title:element.title}});
-				 	textpath =  element.title+" → "+textpath;
-				 	element = api4tree.jsFind(parent_id);
-				 	parent_id=element.parent_id;
-				 	if((parent_id==1) || (!parent_id)) {
-					 	answer.push({id:"parent_id", title:element.title});
-					 	textpath =  element.title+" → "+textpath;
-				 		break;
-				 	}
-				 	j++;
-				 }
-				 
-				 	
-			return {path:answer.reverse(), textpath:textpath};
-		 	} //jsFindPath
-		 			 
+		 function jsFindPath = function(id){
+		 	
+		 	}
+		 
 		 function jsInfoFolder(data,parent_node){ //заполняет массив данными элемента
 		 	var mytitle = data.title;
 		 	if(parent_node==-1) //панель поиска
 		 	  {
-		 	  var ans = this_db.jsFindPath(data).textpath;
-		 	  var add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
+		 	  var ans = jsFindPath(data.id);
+		 	  if(ans)
+		 	    	var add_text = '<br><span class="search_path">'+jsTextPath( ans )+'</span>';
+		 	  else var add_text = '';
 		 	  length = $(".search_panel_result").width()*2.3;
 		 	  var findtext = $('#textfilter').val();
 		 	  var text = jsFindText(data.text,findtext,length);
