@@ -621,16 +621,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					     			jsChangeNewId(d);
 					     		}
    				 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); //скрываю зелёный кружок
-   				 	    	this_db.log("synced", this_db.jsFind(d.id,{lsync: data.lsync, "new":""}) );
+   				 	    	this_db.log("synced", this_db.jsFind(d.id,{"new":"",lsync: data.lsync},"save_anyway") );
 					     	});
 				     	}
 				     } //if success
+				startSync("finish");	
 				}); //postJSON
 				
 				
 			}); //$.when
-			
-			startSync("finish");	
 						
 			return true;			
 	     } //jsSync
