@@ -1,5 +1,93 @@
 	var new_id8,id_of_new;
 
+
+function jsTestIt2()
+{
+	$("#qunit-tests").html("");
+	
+	var my_all_data = api4tree.js_my_all_data();
+	var db = new ydn.db.Storage("_all_tree");
+
+	test("Разные мелкие функции", function(){
+		ok(api4tree.jsIsOnline(),"jsIsOnline. Internet connection ok");
+		ok(api4tree.js_InitDB(),"js_InitDB. База инициализирована.");
+	});
+
+	test("api4tree.each(jsFind)", function(){
+		var answer=[];
+		$.each(my_all_data, function(i,el){
+			if(el) {
+				answer.push(api4tree.jsFind(el.id));
+			}
+		});
+		ok(answer.length,"Просканировал каждый из "+answer.length+" элементов");
+	});
+
+	test("api4tree.jsFind(id,{s:'1'})", function(){
+		var answer=0;
+		$.each(my_all_data, function(i,el){
+			if(el) {
+				answer += parseInt(api4tree.jsFind(el.id,{"new":"",s:"1"}).s);
+			}
+		});
+		ok(answer>0,"Присвоил s=1 и сложил все элементы: Сумма = "+answer);
+	});
+
+	test("api4tree.jsFind(id,{s:'2'})", function(){
+		var answer=0;
+		$.each(my_all_data, function(i,el){
+			if(el) {
+				answer += parseInt(api4tree.jsFind(el.id,{"new":"",s:"2"}).s);
+			}
+		});
+		ok(answer>0,"Присвоил s=2 и сложил все элементы: Сумма = "+answer);
+	});
+
+	
+
+	test("api4tree.jsFind(id,{s:'0'})", function(){
+		var answer=0;
+		$.each(my_all_data, function(i,el){
+			if(el) {
+				answer += parseInt(api4tree.jsFind(el.id,{"new":"",s:"0"}).s);
+			}
+		});
+		ok(answer==0,"Присвоил s=0 и сложил все элементы: Сумма = "+answer);
+	});
+	
+	test("api4tree.each( jsFindByParent() )",function(){
+		var answer=[];
+		$.each(my_all_data, function(i,el){
+			if(el) {
+				answer.push(api4tree.jsFindByParent(el.id));
+			}
+		});
+		ok(answer.length,"Просканировал каждый из "+answer.length+" элементов");
+	});
+
+	test("api4tree.js_LoadAllDataFromServer", function(){
+		var load = api4tree.js_LoadAllDataFromServer();
+		load.done(function(){ start(); });
+		stop();
+		ok(true,"Загрузка данных с сервера прошла успешно");
+	});
+
+	test("api4tree.jsFindLongText(id,{text:longtext})", function(){
+		var textlength=0;
+		api4tree.jsFindLongText(599,document.body.innerText+document.body.innerText+jsNow());
+		api4tree.jsFindLongText(599).done(function(x){ textlength = x.length;  
+				api4tree.jsSync().done(function(){
+					start();
+					ok(true,"Синхронизация прошла успешно. Длина текста: "+textlength);
+				});
+		});
+		
+		stop();
+	});
+	
+}
+
+
 function jsTestIt(){
 	$("#qunit-tests").html("");
 	

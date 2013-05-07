@@ -105,11 +105,10 @@ if(isset($_GET['confirm']))
 
 	<script src="js/all_new.js"></script>
 	<script src="js/!sync_modul.js"></script>
-	<script src="js/zvt-ydn.db-dev-0.4.6.js"></script>
+	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
 	<script src="js/rangy-core.js"></script>
 	<script src="js/rangy-selectionsaverestore.js"></script>
 	<script src="jsredactor/redactor/redactor.js"></script>
-	<script src="js/aes.js"></script>
 
 <!--	<script src="js/jszip.js"></script> -->
 
