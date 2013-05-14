@@ -172,7 +172,8 @@
     };
     iOSCheckbox.prototype.initialPosition = function() {
       var containerWidth, offset;
-      containerWidth = this._getDimension(this.container, "width");
+      containerWidth = 100;
+      //this._getDimension(this.container, "width");
       this.offLabel.css({
         width: containerWidth - this.containerRadius
       });

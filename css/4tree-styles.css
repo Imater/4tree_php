@@ -2,6 +2,11 @@
 #adea65 - тёмный зелёный
 #ccf4a0 - светлый зелёный
 */
+/* webkit-tap-highlight-color */
+body { -webkit-tap-highlight-color: rgba(0,0,0,0); }
+
+/* To set it to none use a totally transparent RGBA */
+body:link { -webkit-tap-highlight-color: rgba(0,0,0,0); }
 
 .note_part
 {
@@ -73,7 +78,7 @@ background-image:url("../img/textures/17.png");
 /* background: #ccf4a0; */
 font-family: Arial,Verdana;
 margin: 0px;
-overflow-x: none;
+/* overflow-y: hidden; */
 font-size: 1em;
 height: 100%;
 }
@@ -2401,6 +2406,12 @@ font-size: 12px;
 .pomidor_now
 {
 color: #a9ff8e !important;
+opacity: 1 !important;
+}
+
+#root-menu-div .pomidor_now
+{
+color: #208600 !important;
 opacity: 1 !important;
 }
 

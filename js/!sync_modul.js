@@ -30,6 +30,8 @@ if(when_need_sync=="soon")
 
 function jsSync(save_only)
 {
+	return api4tree.jsSync(save_only);
+	
 	if (navigator.onLine == false) //если интернета нет
 		{ jsTitle("Интернет отсутствует, попробуйте синхронизироваться позже", 5000); }
 

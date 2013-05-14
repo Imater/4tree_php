@@ -4,12 +4,15 @@
 <!-- 1browser_manifest -->
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+
 <meta charset="utf-8">
 
 <head>
 <title>4tree.ru — мои дела</title>
 <meta name="description" content="Сайт для ведения дел, заметок, календаря и так далее. Инструмент таймменеджмента, где всё нужное собранно в одном месте."/>
 <meta name="keywords" content="gtd, 4tree.ru, заметки, задачи, гтд, таймменеджмент, хранение заметок, календарь"/>
+
+
 
 <link rel="search" type="application/opensearchdescription+xml" title="4tree.ru Добавление дел" href="/SearchEngineInfo.xml" />
 
@@ -103,6 +106,7 @@ if(isset($_GET['confirm']))
 	-->
 
 
+	<script src="js/js_regallkeys.js"></script>
 	<script src="js/all_new.js"></script>
 	<script src="js/!sync_modul.js"></script>
 	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
@@ -114,7 +118,6 @@ if(isset($_GET['confirm']))
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 
-
 if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 
 </script>
@@ -124,6 +127,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 
 <body onResize="onResize();">
 
+<div id="load_screen" style="background-image:url('./img/textures/17.png');top:0px;bottom:-1px;left:0px;right:0px;background-color:white;position:absolute;z-index:999;padding-top:185px;"><center><div id='pload_text'>Загружаю...</div><br><div id="progress_bar" style="width:300px;overflow:hidden;background-color:rgb(151,252,0);height:5px;margin-top:25px;border:1px solid #000;border-radius:3px;"><div id="inside_bar" style="float:left;background-color:rgb(36,150,0);height:10px;margin-left:-3px;display:inline-block;width:10px;"></div></div><a style="color:rgb(65,109,0);margin-top:300px;display:block" href="./4tree.php"><h2>4tree.ru</h2></a></div></center></div>
 
 <?
 if(isset($_GET['test']))
@@ -279,21 +283,22 @@ if(isset($_GET['test']))
 			        </li>  
 			        <li>Таймер
 			            <ul>  
-			                <li>1 минута</li>  
-			                <li><b>5 минут</b></li>  
-			                <li>10 минут</li>  
-			                <li><b>15 минут</b></li>  
-			                <li>20 минут</li>  
-			                <li><b>25 минут</b></li>  
-			                <li>30 минут</li>  
-			                <li>40 минут</li>  
-			                <li>50 минут</li>  
-			                <li>60 минут</li>  
-			                <li>90 минут</li>  
+			                <li><a class="timer_button" time="-1">1 минута</a></li>  
+			                <li><a class="timer_button" time="-5"><b>5 минут</b></a></li>  
+			                <li><a class="timer_button" time="-10">10 минут</a></li>  
+			                <li><a class="timer_button" time="-15"><b>15 минут</b></a></li>  
+			                <li><a class="timer_button" time="-20">20 минут</a></li>  
+			                <li><a class="timer_button" time="-25"><b>25 минут</b></a></li>  
+			                <li><a class="timer_button" time="-30">30 минут</a></li>  
+			                <li><a class="timer_button" time="-40">40 минут</a></li>  
+			                <li><a class="timer_button" time="-50">50 минут</a></li>  
+			                <li><a class="timer_button" time="-60">60 минут</a></li>  
+			                <li><a class="timer_button" time="-90">90 минут</a></li>  
+			                <li><a class="timer_button" time="-120">120 минут</a></li>  
 			                <li></li>
 			                <li>Что такое pomidorro?</li>  
 			                <li></li>
-			                <li>Отменить таймер</li>  
+			                <li><a id="cancel_timer" time="0">Отменить таймер</a></li>  
 			            </ul>  
 			        </li>  
 			        <li>Синхронизация
@@ -436,7 +441,7 @@ if(isset($_GET['test']))
      <div id="pomidor_scale">&nbsp;</div>
      <div id="pomidor_bottom">&nbsp;</div>
 
-		 <div id="pomidoro_icon">
+		 <div id="pomidoro_icon" time="0">
 		 <i id="pomidor1" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
 		 <i id="pomidor2" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
 		 <i id="pomidor3" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
