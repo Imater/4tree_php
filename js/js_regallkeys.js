@@ -5,28 +5,7 @@ var QueryString;
 
 function jsRegAllKeyOld() //все общие delegate и регистрация кнопок. Нужно указать точнее родительские элементы.
 {
-	 $('body').delegate(".todayweek","click", function ()
-	   {
-	   lnk = "#edit_current_week";
-	   open_in_new_tab(lnk);
-	   return false;
-	   });
 		
-	 $('body').delegate(".todaydate","click", function ()
-	   {
-	    if(old_before_diary==0)
-	    	{
-		    old_before_diary = 0;
-		    //$(".selected").attr("myid");
-			jsDiaryPath( jsNow()+diaryrewind*24*60*60*1000 );
-			}
-		else
-			{
-			api4panel.jsOpenPath(old_before_diary);
-			old_before_diary=0;
-			}
-		return false;
-	   });
 	   
 	 $('body').delegate("#diaryleft","click", function ()
 	   {
@@ -321,7 +300,7 @@ setTimeout(function(){
 	   	
 	   var id = api4tree.node_to_id( $(this).parents("li").attr("id") );
 	   	   
-	   if(!$("#mypanel #node_"+id).hasClass("selected")) jsTitleClick($(this).nextAll(".n_title"));
+	   if(!$("#mypanel #node_"+id).hasClass("selected")) api4panel.jsTitleClick($(this).nextAll(".n_title"));
 	   		   
 	   if( $(this).parents("#mypanel").length || $(this).parents(".search_panel_result").length )
 	   	   {
@@ -527,6 +506,7 @@ setTimeout(function(){
 		
 	//Клик в LI открывает детей этого объекта LILILI
 	$('#mypanel').delegate("li","mousedown", function () {
+		if( $(this).find(".ntitle").attr("contenteditable") ) return true;
 		console.info("li mousedown");
 		var nowtime = jsNow();
 		var dif_between_click = nowtime - lastclick;
@@ -1001,7 +981,12 @@ $('#tree_back').bind("contextmenu",function(e){
   	
   /////lilili title click   
   $("#mypanel").delegate(".n_title","mousedown", function () {
-  	jsTitleClick($(this),"from_panel");
+  	var edit_now = $(this).attr("contenteditable");
+  	if (edit_now) 
+  		{ 
+  		return false; 
+  		}
+  	api4panel.jsTitleClick($(this),"from_panel");
   	return false;
   	});
   	

@@ -23,6 +23,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  var my_all_data,
 		  	  recursive_array=[],
 		  	  scrolltimer,
+		  	  old_before_diary,
 		  	  sync_now = false, //true - если идёт синхронизация
 		  	  sync_now_timer,
 		      db, //объект соединения с базой
@@ -33,6 +34,148 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      LENGTH_OF_LONG_TEXT = 300, //длина, после которой текст считается длинным и переносится в другую базу
 		      settings = {show_did:false}; //все параметры
 		 
+    	  //определяет номер недели у любой даты (new Date()).getWeek() 
+    	  Date.prototype.getWeek = function () {  
+    	      // Create a copy of this date object  
+    	      var target  = new Date(this.valueOf());  
+    	    
+    	      // ISO week date weeks start on monday  
+    	      // so correct the day number  
+    	      var dayNr   = (this.getDay() + 6) % 7;  
+    	    
+    	      // ISO 8601 states that week 1 is the week  
+    	      // with the first thursday of that year.  
+    	      // Set the target date to the thursday in the target week  
+    	      target.setDate(target.getDate() - dayNr + 3);  
+    	    
+    	      // Store the millisecond value of the target date  
+    	      var firstThursday = target.valueOf();  
+    	    
+    	      // Set the target to the first thursday of the year  
+    	      // First set the target to january first  
+    	      target.setMonth(0, 1);  
+    	      // Not a thursday? Correct the date to the next thursday  
+    	      if (target.getDay() != 4) {  
+    	          target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);  
+    	      }  
+    	    
+    	      // The weeknumber is the number of weeks between the   
+    	      // first thursday of the year and the thursday in the target week  
+    	      return 1 + Math.ceil((firstThursday - target) / 604800000); 
+    	      // 604800000 = 7 * 24 * 3600 * 1000  
+    	  }  
+    	      
+    	  //определяет сколько дней прошло с начала года
+    	  Date.prototype.getDOY = function() {
+    	  	var onejan = new Date(this.getFullYear(),0,1);
+    	  	return Math.ceil((this - onejan + 1) / 86400000);
+    	  }
+    	  
+    	  //определяет путь до дневника и переходит на эту дату jsDiaryPath(new Date())
+    	  this.jsDiaryPath = function(mydate,dontopen) {
+    		  var quartil = new Array(1,1,1,2,2,2,3,3,3,4,4,4); //номера кварталов
+    		  var weekname = new Array('воскресение','понедельник','вторник','среда',
+    		  						   'четверг','пятница','суббота');
+    		  var monthname = new Array('январь','февраль','март','апрель','май','июнь','июль',
+    		  							'август','сентябрь','октябрь','ноябрь','декабрь');
+    		  var weather = new Array('зима','зима','весна','весна','весна','лето',
+    		  						  'лето','лето','осень','осень','осень','зима');
+    		  
+    		  var today = new Date(mydate);
+    		  
+    		  var year = today.getFullYear();
+    		  var weathername_text = weather[today.getMonth()];
+    		  var monthname_text = monthname[today.getMonth()];
+    		  var month = today.getMonth()+1; if(month<10) month = "0"+month;
+    		  var quartilname_text = quartil[today.getMonth()];
+    		  var weekname_text = weekname[today.getDay()];
+    		  var weeknum = today.getWeek();
+    		  var day = today.getDate(); if(day<10) day = "0"+day;
+    		  
+    		  if(false) return new Date(t[0], t[1] - 1, t[2], t[3] || 0, t[4] || 0, t[5] || 0);          
+    		  
+    		  var path = ["_ДНЕВНИК",year+" год", 
+    		  			  quartilname_text + " квартал", 
+    		  			  monthname_text +" ("+weathername_text+")", 
+    		  			  weeknum + " неделя", 
+    		  			  day +"."+ (month) + "."+year+" - "+weekname_text+" ("+today.getDOY()+")"];
+    		  
+    		  var id = api4tree.jsCreate_or_open(path);
+    		  
+    		  if(!dontopen) api4panel.jsOpenPath( id );
+    		  return id;
+    	  }
+    	  
+    	  //открывает если есть или создаёт jsCreate_or_open(["Мужики","Блондины","Петя-блондин"])
+    	  this.jsCreate_or_open = function(path) {
+    	  	var parent_id=1;
+    	  	var p_len = path.length;
+    	  	for(var i=0;i<p_len;i++)
+    	  		{
+    	  		var id = api4tree.jsFindByTitle(parent_id, path[i]);  //ищу запись у родителя
+    	  		if(!id) var id = this_db.jsAddDo(parent_id, path[i]).id; //создаю, если нет такой записи
+    	  		
+    	  		if(path[i].indexOf(" неделя")!=-1) var my_week_num = id;
+    	  		parent_id = id;
+    	  		}
+    	  	return id;	
+		  }
+		  
+		  this.jsFindByTitle = function(parent_id, title) {
+		      var elements = my_all_data.filter(function(el){ 
+		      	return (el && el.parent_id && el.parent_id==parent_id && el.did==0 && el.del==0 && el.title && el.title.indexOf(title)!=-1); 
+		      });
+		      
+		      if(elements.length) return elements[0].id;
+		  }
+		  
+		  //Добавляет текст в дневник
+		  this.jsDiaryTodayAddPomidor = function(text) { 
+		  	var d = new $.Deferred();
+		 	var id = this_db.jsDiaryPath( jsNow(), "dont_open" ); //id текущего дня в дневнике
+		 	api4editor.jsSaveAllText();
+		 	this_db.jsFindLongText(id).always(function(old_text){
+		 		var new_text = old_text;
+		 		var text_div = $("<div>"+old_text+"</div>");
+		 		var my_pomidor = text_div.find(".my_pomidors");
+		 		if(!my_pomidor.length) {
+		 			var descript = "Успешно выполненные блоки работы по 25 минут (Система Pomodorro)";
+		 			new_text = "<div class='my_pomidors' title='"+descript+"'><ol></ol></div>"+new_text;
+		 			text_div = $("<div>"+new_text+"</div>");
+			 		my_pomidor = text_div.find(".my_pomidors");
+		 		}
+		 		
+		 		if(old_text=="") text_div.append("<p>&nbsp;</p>");
+		 		
+		 		var time = new Date();
+		 		var stime = time.getHours()+":"+
+		 			((time.getMinutes().toString().length==1)?("0"+time.getMinutes()):time.getMinutes());
+		 		
+		 		my_pomidor.find("ol").append("<li><i class='icon-record'></i> "+text+"<b>"+stime+"</b></li>");
+		 		
+		 		global_id = id;
+		 		
+		 		this_db.jsFindLongText(global_id, text_div.html()).always(function(){
+		 		});
+		 		
+		 		if($("#redactor").attr("myid")==global_id) { //если заметка дневника сейчас открыта
+			 		setTimeout(function(){ 
+				 		api4editor.jsRedactorOpen([global_id],"diary_add_pomidor","dont-save-before");
+			 		}, 700);
+			 	}
+		 		
+		 		return d.resolve(text_div);
+		 		
+		 	});
+		  return d.promise();
+		  }
+		  
+		  //Пересчитывает помидорки в дневнике
+		  this.jsRecalculatePomidors = function() { 
+		  	
+		  }
+
+
 		  //преобразование #node_id в id
 		  this.node_to_id = function(id) {
 			  if(id) return id.replace("node_", "");
@@ -450,8 +593,32 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      var id = api4tree.node_to_id( $(this).parents("li:first").attr("id") );
 			      api4editor.jsRedactorOpenRecursive(id);
 			      return false;
-			  })
-		  
+			  });
+
+			  //клик по кнопке "текущая неделя"
+			  $('#diary_panel').on("click", ".todayweek", function() {
+			    var lnk = "#edit_current_week";
+			    api4others.open_in_new_tab(lnk);
+			    return false;
+			  });
+			    
+			  $('body').delegate(".todaydate","click", function ()
+			    {
+			     if(old_before_diary==0)
+			     	{
+			        old_before_diary = 0;
+			         //$(".selected").attr("myid");
+			     	this_db.jsDiaryPath( jsNow()+diaryrewind*24*60*60*1000 );
+			     	}
+			     else
+			     	{
+			     	api4panel.jsOpenPath(old_before_diary);
+			     	old_before_diary=0;
+			     	}
+			     return false;
+			    });
+			    
+			  
 		  }
 		  
 		  //кнопки редактора
@@ -745,7 +912,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     			} else { //если текст короткий
    		    		start_sync_when_idle = true; //запустим синхронизацию, когда пользователь будет бездействовать
     				this_db.jsFind(id, { text:newtext, tmp_text_is_long:0 }, save_anyway);
-    	    		db.remove(global_table_name+"_texts",id).done(function(){this_db.log("Удалил длинный текст")});
+    	    		db.remove(global_table_name+"_texts",id).done(function(){});
         		}
         	} else {
         		var myelement = jsFind(id);
@@ -1327,6 +1494,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 var this_db = this,
 		     last_log_time=jsNow(), //время последнего вывода лога
 		     log_i=1,
+		     lastclickelement, lastclick, //время последнего клика по title
 		     hash_timer,
 		     mypanel =$("#mypanel"); //номер лога
 		     
@@ -1349,6 +1517,41 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		      	log_i++;
 		    }
 		 } //log
+		 
+		 //клик по Названию дела. ntitle = $(".ntitle"). Нужно для определения двойного клика.
+		 this.jsTitleClick = function(ntitle,from_n_title) {
+		 	if (ntitle.attr("contenteditable")==true) return true;
+		 	
+		 	var nowtime = new Date();
+		 	if(((nowtime-lastclick)<1500) && (lastclickelement == ntitle.html())) needtoedit = true;
+		 	else 
+		 		{
+		 		var needtoedit = false;
+		 		if(!from_n_title) ntitle.parents("li:first").click(); //противный клик
+		 		var id = ntitle.attr("myid");
+		 		this_db.jsOpenNode( id ); //открываю панель
+		 		this_db.jsSelectNode( id ,'tree');
+		 		}
+		 	
+		 	lastclickelement = ntitle.html();
+		 	
+		 	//запоминаю время последнего клика, чтобы переходить в режим редактирования только при двойном клике
+		 	lastclick = new Date(); 
+		 
+		 	if( needtoedit )
+		 		{
+		 	  	ntitle.attr("contenteditable","true").attr("spellcheck","false").focus(); 
+		 	  	ntitle.attr("old_title",ntitle.html());
+		 	  	setTimeout(function(){ document.execCommand('selectAll',false,null); },70);
+
+		 	  	}
+		 	else 
+		 		{
+		 	    //document.execCommand('unselect');
+		 		return true;
+		 		}
+		 
+		 }
 		 
 		 //поиск всех родителей
 		 this.jsFindPath = function(element) { 
@@ -1672,7 +1875,6 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 
 		 }
 		 
-		 
 		 //функция отображения панели для дерева		 
 		 this.jsShowTreeNode = function(parent_node,isTree,other_data) {
 		 	var where_to_add; //панель, куда будем добавлять данные
@@ -1825,8 +2027,6 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	 	},50 );
 		 
 		 }
-		 
-
 
 	  } //arguments.callee.instance
 	 } //if typeof
@@ -1889,8 +2089,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  }
 		  
 		  //открывает заметки в редакторе [12,4556,4433]
-		  this.jsRedactorOpen = function(some_ids,iamfrom) {
-			this_db.jsSaveAllText(); //сохраняю старый текст
+		  this.jsRedactorOpen = function(some_ids,iamfrom,dont_save) {
+			if(!dont_save) this_db.jsSaveAllText(); //сохраняю старый текст
 			var all_texts = [];
 			var dfdArray = []; //для одновременного завершения асинхронных функций
 			
@@ -2432,8 +2632,11 @@ var API_4OTHERS = function() {
        	      	        	if(!last_title) last_title = "Мой проект";
 
     	      	        	var answer = prompt("Прошло 25 минут.\n\nКак описать эту \"помидорку\" в сегодняшнем дневнике?", last_title);
-    	      	        	localStorage.setItem("pomidor_last_title", answer);
-    	      	        	api4tree.log("Тут я добавлю в дневник Помидорку с описанием: "+answer);
+    	      	        	if(answer) {
+	    	      	        	localStorage.setItem("pomidor_last_title", answer);
+				  				api4tree.log("Тут я добавлю в дневник Помидорку с описанием: "+answer);
+				  				api4tree.jsDiaryTodayAddPomidor(answer);
+				  				}
     	      	        }
     	  
 			  			if(confirm(joke +text+ "\n\nЗапустить таймер Pomodoro?")) {
@@ -3330,91 +3533,6 @@ function jsMakeShortRecur() //обработка формы выбора пов�
 	
 }
 
-Date.prototype.getWeek = function () {  //определяет номер недели у любой даты (new Date()).getWeek() 
-    // Create a copy of this date object  
-    var target  = new Date(this.valueOf());  
-  
-  	console.info(target);
-  
-    // ISO week date weeks start on monday  
-    // so correct the day number  
-    var dayNr   = (this.getDay() + 6) % 7;  
-  
-    // ISO 8601 states that week 1 is the week  
-    // with the first thursday of that year.  
-    // Set the target date to the thursday in the target week  
-    target.setDate(target.getDate() - dayNr + 3);  
-  
-    // Store the millisecond value of the target date  
-    var firstThursday = target.valueOf();  
-  
-    // Set the target to the first thursday of the year  
-    // First set the target to january first  
-    target.setMonth(0, 1);  
-    // Not a thursday? Correct the date to the next thursday  
-    if (target.getDay() != 4) {  
-        target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);  
-    }  
-  
-    // The weeknumber is the number of weeks between the   
-    // first thursday of the year and the thursday in the target week  
-    return 1 + Math.ceil((firstThursday - target) / 604800000); // 604800000 = 7 * 24 * 3600 * 1000  
-}  
-    
-Date.prototype.getDOY = function() {
-var onejan = new Date(this.getFullYear(),0,1);
-return Math.ceil((this - onejan + 1) / 86400000);
-}
-
-function jsDiaryPath(mydate,dontopen)  //определяет путь до дневника и переходит на эту дату jsDiaryPath(new Date())
-{
-var quartil = new Array(1,1,1,2,2,2,3,3,3,4,4,4);
-var weekname = new Array('воскресение','понедельник','вторник','среда','четверг','пятница','суббота');
-var monthname = new Array('январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь');
-var weather = new Array('зима','зима','весна','весна','весна','лето','лето','лето','осень','осень','осень','зима');
-
-var today = new Date(mydate);
-
-var year = today.getFullYear();
-var weathername_text = weather[today.getMonth()];
-var monthname_text = monthname[today.getMonth()];
-var month = today.getMonth()+1; if(month<10) month = "0"+month;
-var quartilname_text = quartil[today.getMonth()];
-var weekname_text = weekname[today.getDay()];
-var weeknum = today.getWeek();
-var day = today.getDate(); if(day<10) day = "0"+day;
-
-      //when t[3], t[4] and t[5] are missing they defaults to zero
-if(false)      return new Date(t[0], t[1] - 1, t[2], t[3] || 0, t[4] || 0, t[5] || 0);          
-
-
-var path = ["_ДНЕВНИК",year+" год", quartilname_text + " квартал" , monthname_text +" ("+weathername_text+")", weeknum + " неделя", day +"."+ (month) + "."+year+" - "+weekname_text+" ("+today.getDOY()+")"];
-
-var id = jsCreate_or_open(path);
-
-if(!dontopen) api4panel.jsOpenPath( id );
-return path;
-
-}
-
-//path = ["_ДНЕВНИК",year+" год", quartilname_text + " квартал" , monthname_text +" ("+weathername_text+")", weeknum + " неделя", day +"."+ (today.getMonth()+1) + "."+year+" - "+weekname_text+" ("+today.getDOY()+")"];
-var my_week_num = "";
-function jsCreate_or_open(path) //открывает если есть или создаёт jsCreate_or_open(["Мужики","Блондины","Петя-блондин"])
-{
-	sync_now = true;
-	var id=1;
-	var p_len = path.length;
-	for(var i=0;i<p_len;i++)
-		{
-		id = jsCreateDo(id,path[i]);
-		if(path[i].indexOf(" неделя")!=-1) var my_week_num = id;
-		console.info("path=",id,path[i]);
-		}
-	sync_now = false;
-	//jsRefreshTree();
-	
-	return id;	
-}
 
 var allmynotes,allmydates;
 function jsGetAllMyNotes() //заполняю массив allmynotes,allmydates всеми непустыми заметками из дневника (для календариков)
@@ -3502,48 +3620,6 @@ else return [false,""];
 
 }
 
-function jsCreateDo(whereadd,title) // ищу элемент по названию у указанного родителя, если не нахожу, создаю новый. Нужно для календаря, чтобы не создавать дату, если она уже есть. Поиск только по первым 13 символам jsCreateDo(4296,"Новое поле"); Проверить, сохраняется ли информация в localStorage
-{
-	var parent = whereadd; //номер родителя
-	var newposition;
-	
-	var answer = my_all_data.filter(function(el,i) { if(el.parent_id) return ((el.parent_id==whereadd) && (el.del!=1)); } );	
-	if(answer.length) newposition = answer.length;
-	else newposition = 0;
-	
-	var answer = answer.filter(function(el,i) { if(el.title) return ( (strip_tags(el.title).indexOf(title.substr(0,13))!=-1) && (el.del!=1) ); } );	
-		
-	
-	if(answer!="") return answer[0].id; //если элемент с таким именем уже найден возвращаю id и прерываюсь
-	
-	var new_id = -parseInt(1000000+Math.random()*10000000,10);
-		
-	var new_line = my_all_data.length;
-	my_all_data[new_line]=new Object(); 
-	var element = my_all_data[new_line];
-	element.date1 = "";
-	element.date2 = "";
-	element.icon = "";
-	element.id = new_id;
-	element.img_class = "note-clean";
-	element.parent_id = parseInt(whereadd);
-	element.position = newposition.toString();
-	element.text = "";
-	element.did = "";
-	element.del = 0;
-	element.tab = 0;
-	element.fav = 0;
-	element["new"] = "title,";
-	element.time = jsNow();
-	element.lsync = jsNow()-1;
-	element.user_id = main_user_id;
-	element.s = 0;
-	element.remind = 0;
-	element.title = "";
-	jsFind(new_id,{title:title});
-	return new_id;
-
-}
 
 function jsMakeTabs() //создаю закладки из всех дел написанных большими буквами
 {
@@ -3780,41 +3856,6 @@ function sqldate(UNIX_timestamp){ //показываю время в виде my
      var time = year+"-"+month+'-'+date+' '+hour+':'+min+':'+sec;
      return time;
  }
-
-function jsTitleClick(ntitle,from_n_title) //клик по Названию дела. ntitle = $(".ntitle"). Нужно для определения двойного клика.
-{
-	console.info(ntitle.attr("contenteditable"),ntitle);
-	if (ntitle.attr("contenteditable")==true) return false;
-	
-	var nowtime = new Date();
-	if(((nowtime-lastclick)<1000) && (lastclickelement == ntitle.html())) needtoedit = true;
-	else 
-		{
-		needtoedit = false;
-		if(!from_n_title) ntitle.parents("li:first").click(); //противный клик
-		var id = ntitle.attr("myid");
-//		$(".panel li").removeClass("selected");
-		jsOpenNode( id ); //открываю панель
-		jsSelectNode( id ,'tree');
-		}
-	
-	lastclickelement = ntitle.html();
-	
-	lastclick = new Date(); //запоминаю время последнего клика, чтобы переходить в режим редактирования только при двойном клике
-
-	if( needtoedit )
-		{
-	  	ntitle.attr("contenteditable","true").attr("spellcheck","false").focus(); 
-	  	ntitle.attr("old_title",ntitle.html());
-	  	document.execCommand('selectAll',false,null);
-	  	}
-	else 
-		{
-	    document.execCommand('unselect');
-		return true;
-		}
-
-}
 
 function jsStartShare(id,need_to_off) //функция для кнопки поделиться. Делает запрос на сервер и заполняет форму в makedone.
 {
