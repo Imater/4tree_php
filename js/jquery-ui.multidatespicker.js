@@ -143,13 +143,15 @@ var my_current_date;
 						var highlight_class = gotThisDate ? 'ui-state-highlight' : custom[1];
 						var selectable_date = !(isDisabledCalendar || isDisabledDate || (areAllSelected && !highlight_class));
 						
-						if($(this).hasClass("diary_calendar")) finddate = jsDiaryFindDateNote(date);
+						if($(this).hasClass("diary_calendar")) 
+							finddate = api4tree.jsDiaryFindDateNote(date);
 						if( ($(this).hasClass("minicalendarinside")) || ($(this).hasClass("makedonecalendar"))  ) 
 							{
-							finddate = jsDiaryFindDateDate(date);
+							finddate = api4tree.jsDiaryFindDateDate(date);
 							}
 
-						if( finddate[0] ) highlight_class = highlight_class + ' ui-has-note';
+						if( finddate[0] ) 
+							highlight_class = highlight_class + ' ui-has-note';
 						
 						if( date == my_current_date ) alert(date);
 						

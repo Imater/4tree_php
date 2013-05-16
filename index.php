@@ -112,7 +112,9 @@ if(isset($_GET['confirm']))
 	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
 	<script src="js/rangy-core.js"></script>
 	<script src="js/rangy-selectionsaverestore.js"></script>
+	<script src="js/jquery-ui.multidatespicker.js"></script>
 	<script src="jsredactor/redactor/redactor.js"></script>
+	<script src="js/iphone-style-checkboxes.js"></script>
 
 <!--	<script src="js/jszip.js"></script> -->
 
@@ -245,8 +247,7 @@ if(isset($_GET['test']))
 	<div class="header_toolbar">
 			<div id="main_menu"><div class="h_button round_left round_right"><i class="icon-align-justify"></i></div>
 			    <ul>  
-					<li><a class="show_hidden_do">Скрыть выполненные дела</a></li>
-					<li><a class="show_childdate_do">Скрыть дату следующего действия у папки</a></li>
+					<li><input type="checkbox" class="on_off" id="on_off_hide_did"></input><a class="show_hidden_do">Скрыть выполненные дела</a></li>
 			        <li></li> <!-- separator -->  
 			        <li><a class="m_zoom_in">Увеличить масштаб дерева<span class="m_key">alt <i class="icon-plus-circle"></i></span></a></li>  
 			        <li><a class="m_zoom_out">Уменьшить масштаб дерева<span class="m_key">alt <i class="icon-minus-circle"></i></span></a></li>  

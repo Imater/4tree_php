@@ -1,4 +1,5 @@
 .iPhoneCheckContainer {
+  display: inline-block;
   position: relative;
   height: 18px;
   cursor: pointer;

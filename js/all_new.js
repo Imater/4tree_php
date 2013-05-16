@@ -25,7 +25,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	  scrolltimer,
 		  	  old_before_diary,
 		  	  sync_now = false, //true - если идёт синхронизация
-		  	  sync_now_timer,
+		  	  sync_now_timer, maketimer,
+		  	  allmynotes, allmydates, //заметки и даты для календариков
 		      db, //объект соединения с базой
 		      last_log_time=jsNow(), //время последнего вывода лога
 		      log_i=1, //номер лога
@@ -33,6 +34,83 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      MAX_VALUE = 1000000000000000; //максимальное кол-во в базе
 		      LENGTH_OF_LONG_TEXT = 300, //длина, после которой текст считается длинным и переносится в другую базу
 		      settings = {show_did:false}; //все параметры
+		      
+		  //заполняю массив allmynotes,allmydates всеми непустыми заметками из дневника (для календариков)
+		  this.jsGetAllMyNotes = function() {
+		      if(!my_all_data) return false;
+		      allmynotes = my_all_data.filter(function(el,i) { //все заметки длиннее 3 символов (без тегов)
+		        if(el && el.title && (el.del!=1) && (el.title.indexOf(" - ")!=-1) && (el.title[el.title.length-1]==")") && (strip_tags(el.text).length>3)) return true;
+		      	});	
+		      	
+		      allmydates = my_all_data.filter(function(el,i) { //все дела с датами (нужно для календариков)
+  	            if(!el) return false;
+		      	if(el.date1) 
+		      		if ((el.del!=1) && (el.date1!="")) return true;
+		      });	
+		      return [allmynotes,allmydates];
+		  }
+		      
+		 //поиск всех заметок на эту дату (нужно для календариков)
+		 this.jsDiaryFindDateNote = function(date) { 
+			  if(!my_all_data || !allmynotes) return false;
+			  
+			  var today = date;
+			  var year = today.getFullYear();
+			  var month = today.getMonth()+1; if(month<10) month = "0"+month;
+			  var day = today.getDate(); if(day<10) day = "0"+day;
+			  
+			  var finddate = day +"."+ (month) + "."+year+" - ";
+			  
+			  var answer = allmynotes.filter(function(el,i) {
+			      if(el.parent_id) return (el.title.indexOf(finddate)!=-1); 
+			  });	
+			  
+			  if(answer.length!=0) {
+			      var text = answer[0].text;
+			      text = text.replace("</p>"," ");
+			      text = text.replace("</div>"," ");
+			      text = text.replace("<br>"," ");
+			      text = text.replace("</li>"," ");
+			      var mytext = strip_tags(text); 
+			  //	mytext = mytext.replace("@@@","___\r");
+			      return [true,mytext]; 
+			      }
+			       
+			  else return [false,""];
+		 }
+
+		 //поиск всех событий назначенных на эту дату (нужен для календариков)
+		 this.jsDiaryFindDateDate = function(date) { 
+			  if(!my_all_data || !allmydates) return false;
+			  
+			  var today = date;
+			  var year = today.getFullYear();
+			  var month = today.getMonth()+1; if(month<10) month = "0"+month;
+			  var day = today.getDate(); if(day<10) day = "0"+day;
+			  
+			  var finddate = year +"-"+ (month) + "-"+ day +" ";
+			  
+			  var answer = allmydates.filter(function(el,i) 
+			      { 
+			      if(el.parent_id) return (el.date1.indexOf(finddate)!=-1); 
+			      });	
+			  
+			  
+			  if(answer.length!=0) 
+			      { 
+			      var mytext = "";
+			      var a_len = answer.length;
+			      for(i=0;i<a_len;i=i+1)
+			      	{
+			      	mytext = mytext + "— "+answer[i].title;
+			      	if(i!=answer.length-1) mytext = mytext+"\r";
+			      	}
+			      return [true,mytext]; 
+			      }
+			       
+			  else return [false,""];
+		 }
+		      
 		 
     	  //определяет номер недели у любой даты (new Date()).getWeek() 
     	  Date.prototype.getWeek = function () {  
@@ -172,9 +250,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //Пересчитывает помидорки в дневнике
 		  this.jsRecalculatePomidors = function() { 
-		  	
 		  }
-
 
 		  //преобразование #node_id в id
 		  this.node_to_id = function(id) {
@@ -205,6 +281,25 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	return recursive_array;
 		  	
 		  }//jsRecursive
+		  
+ 		  //
+		  this.jsLoadUserSettings = function() { 
+			  //скрываю панель настройки
+			  $(".makedone").hide();		  
+		  	  //показывать ли выполненные дела
+		  	  var get_show_did = localStorage.getItem('show_did');
+		  	  if(get_show_did=="true") { 
+		  	  	settings.show_did = true; 
+		  	  	$("#on_off_hide_did").attr("checked",true); 
+		  	  } else { 
+		  	  	settings.show_did = false; 
+		  	  	$("#on_off_hide_did").removeAttr("checked"); 
+		  	  }
+		  	  
+		  	  
+		  	  
+		  }
+		  
 
 		  //все перетаскиваемые элементы
 		  function jsMakeDraggable() {
@@ -354,7 +449,64 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  }
 		  
 		  //кнопки в меню элемента
-		  function jsMakeMakedoneKeys() {
+		  this.jsMakeMakedoneKeys = function() {
+
+		      //дата и время - поле ввода в панели makedone
+			  $("#makedatetime").datetimeEntry({datetimeFormat: "W N Y / H:M",
+			  					 spinnerImage:""}).change(function(){
+	   			  clearTimeout(maketimer);
+	   			  if(!$("#makedate").is(":visible") ) return true;
+	   			  maketimer = setTimeout(function() {
+		      	  	  	var my_time_id = $(".makedone").attr("myid");
+		      		   	var mydate = $("#makedatetime").datetimeEntry('getDatetime');
+		   			    $('.makedonecalendar').datepicker("setDate", mydate);
+		      		   	var my_current_date = mydate;
+		      		   	date1 = mydate.toMysqlFormat();
+		      		   	if(date1!=api4tree.jsFind(my_time_id).date1){
+		      	  	  			api4tree.jsFind(my_time_id,{ date1:date1 });
+		      		  			jsTitle("Дата и время сохранены",5000);
+		      		  			$( ".makedonecalendar" ).multiDatesPicker('resetDates'); //снимаю выделение
+		      	  	  			jsRefreshTree();
+		      	  	  			jsPlaceMakedone(my_time_id);
+		      	  	  			jsCalendarNode(my_time_id);
+		      	  	  	}
+	      	  	  },400);
+	      	 });
+
+
+		  	  //календарик для makedone
+		  	  this_db.jsGetAllMyNotes();
+			  $(".makedonecalendar").datepicker({
+			    	numberOfMonths: 13,
+			    	showButtonPanel: false,
+			    	dateFormat:"dd.mm.yy",
+			    	showWeek:true,
+			    	beforeShowDay : function(date) {
+			    	  var highlight_class = "ui-has-note";
+			    	  var finddate = api4tree.jsDiaryFindDateDate(date);
+			    	  if( finddate[0] ) highlight_class = 'ui-has-note';
+			    	  else highlight_class = "";
+			    	  
+			    	  return [true, highlight_class, finddate[1]];
+			    	},
+			    	onSelect:function(dateText, inst) {
+    	  				var my_time_id = $(".makedone").attr("myid");
+    	  				
+    	  				var dd = dateText.split('.');
+    	  				
+    	  				var date1 = dd[2]+'-'+dd[1]+'-'+dd[0];
+    				 	var myold_date = $("#makedatetime").datetimeEntry('getDatetime').toMysqlFormat();
+    				 	
+    				 	var my_dd = myold_date.split(" ");
+    				 	
+    				 	var new_date = date1+" "+my_dd[1];
+    					var mydate = Date.createFromMysql(new_date);
+    				    $("#makedatetime").datetimeEntry("setDatetime",mydate);
+    					$( ".makedonecalendar" ).multiDatesPicker('resetDates'); //снимаю выделение
+			    	}
+			  });			
+
+
 		  	  //иконки для заголовка элемента
 			  $("#root-menu-div").on("click",".fav_icon",function(){
 			      var fav = $(this).find("i").attr("class");
@@ -582,6 +734,50 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      		
 			      return false;
 			  });
+			  
+			  $("body").delegate(".open_calendars","click",function() {
+			      $(this).toggleClass("active");
+			      if( $(this).hasClass("active") )
+			      	{
+			      	this_db.jsGetAllMyNotes();
+			      	if(!$(".diary_calendar").hasClass("hasDatepicker")) 
+			      	  {
+			      	  var currentdate = new Date();		
+			      	  $(".diary_calendar").multiDatesPicker({
+			      			numberOfMonths: 13,
+			      			defaultDate:currentdate,
+			      			showButtonPanel: false,
+			      			dateFormat:"dd.mm.yy",
+			      			showWeek:true,
+			      			onSelect:function(dateText, inst) 
+			      			  { 
+			      			  var mydates = $( ".diary_calendar" ).multiDatesPicker('getDates');
+			      			  $( ".diary_calendar" ).multiDatesPicker('resetDates'); //снимаю выделение
+			      			  var need_date = mydates[0];
+			      			  need_date = need_date.split(".");
+			      			  
+			      			  var mydate = new Date(need_date[1]+"."+need_date[0]+"."+need_date[2]);
+			      			  this_db.jsDiaryPath( mydate+1 );
+			      			  console.info(mydate);
+			      			  }
+			      			});
+			       	  $(".diary_calendar .ui-icon-circle-triangle-w").click(); //перематываю на один месяц назад
+			      	  }
+			      	
+			      	$(".diary_calendar").slideDown(300, function() { $(".redactor_editor").css({bottom:210}); } );
+			      	$(".diary_arrow").show();
+			      	}
+			      else
+			      	{
+			      	$(".redactor_editor").css({bottom:27});
+			      	$(".diary_calendar").slideUp(300);
+			      	$(".diary_arrow").hide();
+			      	}
+			      return false;
+			  });
+			  
+			  
+			  
 		  
 			  $('#root-menu-div').delegate(".show_all_in_redactor","click", function () {
 			      var id = $(".makedone").attr("myid");
@@ -604,17 +800,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    
 			  $('body').delegate(".todaydate","click", function ()
 			    {
-			     if(old_before_diary==0)
-			     	{
-			        old_before_diary = 0;
-			         //$(".selected").attr("myid");
-			     	this_db.jsDiaryPath( jsNow()+diaryrewind*24*60*60*1000 );
-			     	}
-			     else
-			     	{
-			     	api4panel.jsOpenPath(old_before_diary);
-			     	old_before_diary=0;
-			     	}
+		     	 this_db.jsDiaryPath( jsNow() );
 			     return false;
 			    });
 			    
@@ -728,20 +914,130 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 		  }
 		  
+		  //пункты меню
+		  function jsMakeMenuKeys() {
+			  $('body').delegate(".show_hidden_do","click", function() {
+			    if(!settings.show_did) {
+		    		settings.show_did = true;
+    	    		localStorage.setItem('show_did',settings.show_did);
+					$(".show_hidden_do").html("Скрыть выполненные дела"); 
+			    } else {
+		    		settings.show_did = false;
+    	    		localStorage.setItem('show_did',settings.show_did);
+    	     	    $(".show_hidden_do").html("Показывать выполненные дела"); 
+			    }
+			    jsRefreshTree();
+			    return false;
+			  });
+			    		
+			  $("#root-menu-div").on("click", ".m_refresh_all", function () {
+			  	this_db.js_LoadAllDataFromServer().done(function(){
+				  	jsRefreshTree();
+				  	jsTitle("Данные загружены с сервера заново",10000);
+			  	});
+			    return false;
+			  });
+
+			  $('.on_off').iphoneStyle({ checkedLabel: 'да', uncheckedLabel: 'нет',         
+				  onChange: function(element,value) {
+				    if(is_rendering_now) return true;
+				  	var id_element = element.attr("id");
+				    
+				    if(id_element == "on_off_hide_did") {
+					   if(value) { //
+						   console.info("Показываю дела",value);
+						   settings.show_did = true;
+						   localStorage.setItem('show_did',settings.show_did);
+					   } else {
+						   console.info("Скрываю дела",value);
+						   settings.show_did = false;
+						   localStorage.setItem('show_did',settings.show_did);
+					   }
+					   jsRefreshTree(); //обновляю дерево
+				    }
+
+				    //чекбоксы в makedone
+				    var id = element.parents(".makedone").attr("myid");
+				    var node = jsFind(id);
+				    if(!id || !node) return false;
+				  
+				  	if(id_element == "on_off_did") { //did - undid
+				  	   if(value) {
+				    		jsMakeDid(id);
+				  	   } else {
+				    		jsMakeUnDid(id);
+				  	   }
+				  	}
+				  
+				  	if(id_element == "on_off_date") { //дата начала
+				  	   if(value) {
+				  	   		$("#makedate").slideDown(200);
+				    	    setTimeout(function(){ 
+				    	    	$("#makedatetime").change(); jsRefreshTree(); jsPlaceMakedone(id); 
+				    	    },300);
+				    		$('#calendar').fullCalendar( 'refetchEvents' ); 
+				  	   } else {
+				  	   		$("#makedate").slideUp(200);
+				    	    this_db.jsFind(id, { date1:"", date2:"", remind:0 });
+				    	    setTimeout(function(){ jsRefreshTree(); jsPlaceMakedone(id); },300);
+				    		$('#calendar').fullCalendar( 'refetchEvents' ); 
+				  	   }
+				  	}
+				  
+				  	if(id_element == "on_off_sms") { //переключатель SMS
+				  	   if(value) {
+				       		this_db.jsFind(id,{ remind: 15 });
+				    	    setTimeout(function(){ jsRefreshTree(); jsPlaceMakedone(id); },300);
+				  	   } else {
+				       		this_db.jsFind(id,{ remind: 0 });
+				    	    setTimeout(function(){ jsRefreshTree(); jsPlaceMakedone(id); },300);
+				  	   		}
+				  	   }
+				  	   
+				  	if(id_element == "on_off_share") { //поделиться
+				  	   if(value) {
+				  	   		$(".makesharediv").slideDown(200,function(){ if( parseInt($("#makesharestat_count span").text(),10)>0 ) $("#makesharestat_count").show(); });
+				  	   		$("#makeshare").focus().select();
+				    		jsStartShare(id,1);
+				  	   		console.info("share_on!!!",is_rendering_now);
+				  	   		jsTitle("Нажмите ctrl+c, чтобы скопировать ссылку в буфер", 10000);
+				  	   } else {
+				    		$("#makesharestat_count").hide();   
+				    		jsStartShare(id,0);
+				  	   		$(".makesharediv").slideUp(200);
+				  	   }
+				  	}
+				  	   
+				    jsPlaceMakedone(id);
+				  	} //onchange iphoneStyle
+          });
+			     
+			  
+		  } //jsMakeMenuKeys
+		  
 	      //РЕГИСТРАЦИЯ ВСЕХ КНОПОК И СОБЫТИЙ
 		  this.jsRegAllKeys = function() {
+			var options = {minWidth: 420, arrowSrc: 'b_menu/demo/arrow_right.gif'};
+			$('#main_menu').menu(options);
+			
+			var options = {minWidth: 320, arrowSrc: 'b_menu/demo/arrow_right.gif'};
+			$('#makedone_menu').menu(options);
+			
+			var options = {minWidth: 320, arrowSrc: 'b_menu/demo/arrow_right.gif'};
+			add_menu = $('#add_menu').menu(options);
+		  
 			jsMakeIdleFunction(); //при бездействии системы
 			jsMakeDraggable(); //перетаскиваемые элементы  
 			api4others.jsMakePomidorKeys(); //система Помидорро
 			api4editor.jsMakeWikiKeys(); //клики по ссылкам wiki
 			jsMakeChatKeys(); //клики связанные с чатом
 			jsMakeSidePanelsKeys(); //боковые панели
-			jsMakeMakedoneKeys(); //кнопки меню элемента (где дата и поделиться)
 			jsMakeCommentKeys(); //кнопки для комментариев
 			jsMakeFavTabsKeys(); //кнопки нижних закладок под календарём и панелями
 			jsMakeCalenarKeys(); //кнопки календариков и календаря
 			jsMakeEditorKeys(); //кнопки редактора
 			jsMakeRecurKeys(); //кнопки для панели настройки регулярных задач
+			jsMakeMenuKeys(); //кнопки для меню
 			jsRegAllKeyOld();
 			   
 		  } //jsRegAllKeys
@@ -982,7 +1278,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			   							  tmp_next_id:"", 
 			   							  tmp_next_title:""});
 			    }
-			    if((settings.show_did==false) && (el.did!=0)) return false;
+			    if((el.del==1) || (el.did!=0)) return false;
 			    return el && el.date1!="";
 			});
 			
@@ -995,6 +1291,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    while(j<1000) {//не больше 1000 уровней вложенности, чтобы исключить бесконечность
 			    	old_id = id_parent;
 			    	element = this_db.jsFind(id_parent);
+			    	if(!element) {j++; console.info(id_parent,"!!!Не обнаружен"); continue;}
 			    	id_parent=element.parent_id;
 			    	
 			    	if( ((!element.tmp_nextdate) || (element.tmp_nextdate > el.date1)) && (el.id!=element.id)) {
@@ -3534,91 +3831,7 @@ function jsMakeShortRecur() //обработка формы выбора пов�
 }
 
 
-var allmynotes,allmydates;
-function jsGetAllMyNotes() //заполняю массив allmynotes,allmydates всеми непустыми заметками из дневника (для календариков)
-{
-return true;
-allmynotes = my_all_data.filter(function(el,i)  //все заметки длиннее 3 символов (без тегов)
-	{ 
-    if(!el) return false;
-	if(el.title) 
-		if ((el.del!=1) && (el.title.indexOf(" - ")!=-1) && (el.title[el.title.length-1]==")"))
-			if((strip_tags(el.text).length>3)) return true;
-	});	
-allmydates = my_all_data.filter(function(el,i) //все дела с датами (нужно для календариков)
-	{ 
-    if(!el) return false;
-	if(el.date1) 
-		if ((el.del!=1) && (el.date1!="")) return true;
-	});	
-return allmynotes;
-}
 
-function jsDiaryFindDateNote(date)  //поиск всех заметок на эту дату (нужно для календариков)
-{
-if(!my_all_data || !allmynotes) return false;
-
-var today = date;
-var year = today.getFullYear();
-var month = today.getMonth()+1; if(month<10) month = "0"+month;
-var day = today.getDate(); if(day<10) day = "0"+day;
-
-var finddate = day +"."+ (month) + "."+year+" - ";
-
-var answer = allmynotes.filter(function(el,i) 
-	{ 
-	if(el.parent_id) return (el.title.indexOf(finddate)!=-1); 
-	});	
-
-
-if(answer.length!=0) 
-	{ 
-	var text = answer[0].text;
-	text = text.replace("</p>"," ");
-	text = text.replace("</div>"," ");
-	text = text.replace("<br>"," ");
-	text = text.replace("</li>"," ");
-	var mytext = strip_tags(text); 
-//	mytext = mytext.replace("@@@","___\r");
-	return [true,mytext]; 
-	}
-	 
-else return [false,""];
-
-}
-
-function jsDiaryFindDateDate(date)  //поиск всех событий назначенных на эту дату (нужен для календариков)
-{
-if(!my_all_data || !allmydates) return false;
-
-var today = date;
-var year = today.getFullYear();
-var month = today.getMonth()+1; if(month<10) month = "0"+month;
-var day = today.getDate(); if(day<10) day = "0"+day;
-
-var finddate = year +"-"+ (month) + "-"+ day +" ";
-
-var answer = allmydates.filter(function(el,i) 
-	{ 
-	if(el.parent_id) return (el.date1.indexOf(finddate)!=-1); 
-	});	
-
-
-if(answer.length!=0) 
-	{ 
-	var mytext = "";
-	var a_len = answer.length;
-	for(i=0;i<a_len;i=i+1)
-		{
-		mytext = mytext + "— "+answer[i].title;
-		if(i!=answer.length-1) mytext = mytext+"\r";
-		}
-	return [true,mytext]; 
-	}
-	 
-else return [false,""];
-
-}
 
 
 function jsMakeTabs() //создаю закладки из всех дел написанных большими буквами
@@ -4072,6 +4285,7 @@ function jsDoFirst() //функция, которая выполняется п�
 jsProgressStep();
 api4tree = new API_4TREE("4tree_db", "need_log");
 var mydb = api4tree.js_InitDB(); //инициализирую соединение с базой
+api4tree.jsLoadUserSettings() //загружаю установки пользователя
 jsProgressStep();
 api4panel = new API_4PANEL($("#mypanel"), "need_log");
 api4editor = new API_4EDITOR($("#redactor"), "need_log");
@@ -4089,7 +4303,8 @@ api4tree.js_LoadAllFromLocalDB().done(function(){
 	api4tree.jsSync();
 	progress_load=200;
 	jsProgressStep();
-	setTimeout(function() { jsProgressStep(); $("#load_screen").fadeOut(200); },500);
+	api4tree.jsMakeMakedoneKeys(); //кнопки меню элемента (где дата и поделиться)
+	setTimeout(function() { jsProgressStep(); $("#load_screen").fadeOut(200); },200); //отображаю страницу
 	}); //загружаю таблицу из памяти
 }
 
@@ -4122,27 +4337,6 @@ last_local_sync = jsNow()+5000;
 
 	jsSetDiaryDate(0); //устанавливаю сегодняшнюю дату в дневнике в заголовке
 
-	if($.cookie('sh')=="false") show_hidden=false;
-	else show_hidden=true;
-
-	if($.cookie('sd')=="false") show_childdate=false;
-	else show_childdate=true;
-	
-	if(!show_hidden) 
-		{ 
-		setTimeout(function(){
-			$(".show_hidden_do").html("Показать выполненные дела"); 
-			},200);
-		}
-
-	if(!show_childdate) 
-		{ 
-		setTimeout(function(){
-			$(".show_childdate_do").html("Показывать дату следующего действия у папки"); 
-			},200);
-		}
-	
-
 	
 	preloader = $('#myloader').krutilka("show");
 
@@ -4155,14 +4349,6 @@ last_local_sync = jsNow()+5000;
 
 	
 	
-	var options = {minWidth: 420, arrowSrc: 'b_menu/demo/arrow_right.gif'};
-	$('#main_menu').menu(options);
-
-	var options = {minWidth: 320, arrowSrc: 'b_menu/demo/arrow_right.gif'};
-	$('#makedone_menu').menu(options);
-
-	var options = {minWidth: 320, arrowSrc: 'b_menu/demo/arrow_right.gif'};
-	add_menu = $('#add_menu').menu(options);
 		
 	jsZoomTree(-2000); //размер шрифта в дереве
 	
@@ -7416,6 +7602,7 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 		
 	$("#mypanel li").not("ui-draggable").draggable({
 				zIndex: 999,
+				delay:400,
 				revert: false,      // will cause the event to go back to its
 				helper:"clone",
 				appendTo: "#content1"

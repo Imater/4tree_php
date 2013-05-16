@@ -42,6 +42,7 @@ margin-right: 5px;
 .my_pomidors i
 {
 color:rgb(226,1,1);
+font-size: 19px !important;
 }
 
 .pomodorro_header
@@ -4839,4 +4840,11 @@ height: auto;
 position: absolute;
 bottom: 130px;
 top: 0px;
+}
+
+#root-menu-div .iPhoneCheckContainer
+{
+margin-bottom: -4px;
+margin-right: 3px;
+float: right;
 }
