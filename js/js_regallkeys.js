@@ -8,62 +8,6 @@ function jsRegAllKeyOld()
 {
 
 
-		 $('*').undelegate("#textfilter", "keyup").delegate("#textfilter", "keyup", function(event) 
-			{
-					
-					clearTimeout(tttt);
-					tttt = setTimeout(function()
-					         {
-									    	var searchstring = $('#textfilter').val();
-									    	
-									    	if(searchstring.length<3) return true;
-
-									         var tt = '';
-									         try {
-											 tt = ' = '+eval( $('#textfilter').val().replace(",",".") ); 
-											 } catch (e) {
-											   tt = '';
-											 }
-									    	if(tt!='') 
-									    		{ 
-									    		jsTitle(tt,100000); 
-									    		//return true; 
-									    		}
-									    	
-					var comment_ids_found=new Array;		
-					var data = my_all_comments.filter(function(el)
-						{
-						if( el.text.toLowerCase().indexOf(searchstring.toLowerCase())!=-1 )
-							if(comment_ids_found.indexOf(el.tree_id)==-1) comment_ids_found.push( el.tree_id );
-						});				
-									    	
-			    	var data = my_all_data.filter(function(el) //поиск удовлетворяющих поисковой строке условий
-		        		{ 
-		        		if(!(!el.title)) 
-		        		  return ( (el.title.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ||
-		        		   		   (el.text.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ||
-		        		   		   comment_ids_found.indexOf(el.id)!=-1 ); 
-		        		});
-
-									    	jsShowTreeNode(-1,false,data);
-									    	
-											setTimeout( function() 
-												{ 
-												jsPrepareDate(); 
-												jsHighlightText(); 
-												},50 );
-									    	
-					         if(searchstring!='') 
-					         	{ 
-					         	$("#tab_find").click();
-					         	$("#search_empty").fadeIn(200); 
-					         	}
-					         
-					         }, 300);
-
-			return false;
-		
-			});
 
 
 

@@ -466,7 +466,7 @@ if(isset($_GET['test']))
 
 	
 	<div id="search_panel">
-  		<input type="text" id="textfilter">
+  		<input type="text" id="search_filter">
   	</div>
 	
 </div>
