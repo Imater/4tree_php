@@ -462,66 +462,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		        return false;
 			 }); //tcheckbox.click
 			  
-			  //Клик в LI открывает детей этого объекта LILILI
-			  $('#mypanel').delegate("li","mousedown", function () {
-			      if( $(this).find(".ntitle").attr("contenteditable") ) return true; //если редактируется
-			      console.info("li mousedown");
-			      var nowtime = jsNow();
-			      var dif_between_click = nowtime - lastclick;
-			      lastclick = jsNow();
-			      
-			      var isTree = $("#top_panel").hasClass("panel_type1");
-			  
-			      if(isTree)
-			        if( (dif_between_click)<150 ) 
-			      	{
-			      	console.info("nowtime-lastclick",dif_between_click);
-			      	var id = api4tree.node_to_id( $(this).attr("id") );
-			      	$(".panel li").removeClass("selected");
-			      	jsOpenNode( id ); //открываю панель
-			      	jsSelectNode( id ,'tree');
-			      	return false;
-			      	}
-			  
-			      
-			      if( $(this).hasClass('tree-closed') ) 
-			      	{
-			      	id = api4tree.node_to_id( $(this).attr("id") );
-			      	jsOpenNode( id ); //открываю панель
-			      	jsSelectNode( id ,'tree');
-			      	$(this).removeClass("tree-closed").addClass("tree-open");
-			  
-			      	if( isTree && ($(this).find(".folder_closed").length!=0) )
-			      		{
-			      		$(this).find(".date1").hide();
-			      		timelong = parseInt($(this).find(".countdiv").html(),10)*15;
-			      		if(timelong>1000) timelong=1000;
-			      		if(timelong<300) timelong=300;
-			      		$(this).find("ul:first").slideDown(timelong,function(){ $(this).find(".date1[title!='']").show(); });
-			      		}
-			      	}
-			      else
-			      	{
-			      	if(isTree)
-			      		{
-			      		$(this).removeClass("tree-open").addClass("tree-closed");
-			      		$(this).find("ul:first").slideUp(100);
-			      		}
-			      	else
-			      		{
-			      		$(this).removeClass("tree-open").addClass("tree-closed");
-			      		id = api4tree.node_to_id( $(this).attr("id") );
-			      		jsOpenNode( id ); //открываю панель
-			      		jsSelectNode( id ,'tree');
-			      		$(this).removeClass("tree-closed").addClass("tree-open");
-			      		}
-			      	}
-			  
-			      $(".highlight").contents().unwrap();
-			      return false;
-			      }); //lili
-			  
-			  
 			  //при случайном нажатии в разделитель между title в панели
 			  $("#mypanel").delegate(".divider","click",function() {
 			      return false;
@@ -978,7 +918,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  }
 		  
 		  //кнопки для быстрого добавления дел и поиска
-		  function jsMakeAddDoKeys() {
+		  function jsMakeAddDoAndSearchKeys() {
 		  	  //клик в быстрое добавление дел
 			  $('#add_do_panel').delegate("input","click", function () {
 			      if(!$(this).hasClass("active")) {
@@ -989,25 +929,49 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      //last_input_click = jsNow();
 			      return true;
 		      });
-
+			  //при покидании add_do, свернуть его
 			  $('#add_do_panel').delegate("input","blur", function () {
 		      	  $(this).removeClass("active");
 			      return true;
 		      });
-			      
+			  //при клике в поиск    
 			  $('#search_panel').delegate("input","click", function () {
 			      $(this).addClass("active");
 			      $(".search_panel_result").slideDown(500);
 			      return false;
 		      });
-
+			  //при покидании поиска
 			  $('#search_panel').delegate("input","blur", function () {
 		      	  $(this).removeClass("active");
 			      return true;
 		      });
+		      
+			  //при нажатии кнопок в быстрое добавление дел		      
+			  $('#add_do_panel').undelegate("#add_do", "keyup").delegate("#add_do", "keyup", function(event) {
+			     if(event.keyCode==27) { //отмена добавления нового дела
+			    	$("#add_do").blur();
+			    	$("#wrap").click(); //убираю полноэкранный div
+			    	return false;
+			     }
+			     if(event.keyCode==13) { //добавление нового дела
+			     	api4tree.jsAddDo( "to_new_folder", $("#add_do").val() ); //кладу элемент в папку новое
+			     	jsRefreshTree();
+			    	return false;
+			     }
+			    		
+			     clearTimeout(tttt);
+			     tttt = setTimeout(function(){
+			     mynewdate = jsParseDate( $("#add_do").val() );
+			     if( mynewdate.date == "") { $(".header_text").html(""); return true; }
+			     $(".header_text").html( mynewdate.date.jsDateTitleFull() );
+			     $(".header_text").attr( "title", mynewdate.date.jsDateTitleFull() );
+			     jsTitle(mynewdate.title,15000);
+			     },150);
+			     return false;
+			     });
 			      
 			  
-		  }
+		  } //jsMakeAddDoAndSearchKeys
 		  
 		  //кнопки связанные с календарём
 		  function jsMakeCalenarKeys() {
@@ -1332,6 +1296,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			jsMakeDraggable(); //перетаскиваемые элементы  
 			api4others.jsMakePomidorKeys(); //система Помидорро
 			api4editor.jsMakeWikiKeys(); //клики по ссылкам wiki
+			jsMakeAddDoAndSearchKeys(); //кнопки для быстрого добавления дел
+			api4panel.jsRegAllKeys(); //регистрирую кнопки панели
 			jsMakePanelKeys(); //клавиши панели
 			jsMakeChatKeys(); //клики связанные с чатом
 			jsMakeSidePanelsKeys(); //боковые панели
@@ -1340,7 +1306,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			jsMakeCalenarKeys(); //кнопки календариков и календаря
 			jsMakeEditorKeys(); //кнопки редактора
 			jsMakeRecurKeys(); //кнопки для панели настройки регулярных задач
-			jsMakeAddDoKeys(); //кнопки для быстрого добавления дел
 			jsMakeMenuKeys(); //кнопки для меню
 			jsRegAllKeyOld();
 			   
@@ -1538,11 +1503,27 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 
 		 //добавление нового элемента в базу к родителю parent_id
 		 this.jsAddDo = function(parent_id,title,date1,date2) {
+ 
 			var new_id = -parseInt(1000000+Math.random()*10000000);
 			
 			var new_line = my_all_data.length;
 			my_all_data[new_line]=new Object(); 
 			var element = my_all_data[new_line];
+
+			//если новый элемент нужно положить в папку "_НОВОЕ"
+		 	if(parent_id=="to_new_folder") {
+		     	var parent_id = api4tree.jsCreate_or_open(["_НОВОЕ"]);
+			 	var mynewdate = jsParseDate(title).date;
+			 	if(mynewdate!="") {
+				 	date1 = mynewdate.toMysqlFormat();
+				 	if(title.toLowerCase().indexOf("смс")!=-1 || 
+				 	   title.toLowerCase().indexOf("sms")!=-1 || 
+				 	   title.toLowerCase().indexOf("напомни")!=-1 ) {
+				 	   		element.remind = 15;
+				 	}
+				}
+		 	} //to_new_folder
+
 			
 			element.id = new_id.toString();
 			element.title = title;
@@ -2105,6 +2086,55 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 //регистрация всех кнопок и обработки событий связанных с деревом
 		 this.jsRegAllKeys = function() {
 			 
+		    //Клик в LI открывает детей этого объекта LILILI
+    	    $('#mypanel').delegate("li","mousedown", function () {
+    	        if( $(this).find(".ntitle").attr("contenteditable") ) return true; //если редактируется
+    	        var dif_between_click = jsNow() - lastclick;
+    	        lastclick = jsNow();
+    	        
+    	        var isTree = $("#top_panel").hasClass("panel_type1");
+    	    
+    	        if(isTree) { //если это дерево
+    	          if( (dif_between_click)<150 ) {
+    	        	var id = api4tree.node_to_id( $(this).attr("id") );
+    	        	$(".panel li").removeClass("selected");
+    	        	api4panel.jsOpenNode( id ); //открываю панель
+    	        	api4panel.jsSelectNode( id ,'tree');
+    	        	return false;
+    	        	}
+    	        }
+    	        
+    	        if( $(this).hasClass('tree-closed') ) { //если ветка свёрнута
+    	        	var id = api4tree.node_to_id( $(this).attr("id") );
+    	        	api4panel.jsOpenNode( id ); //открываю панель
+    	        	api4panel.jsSelectNode( id ,'tree');
+    	        	$(this).removeClass("tree-closed").addClass("tree-open");
+    	    
+    	        	if( isTree && ($(this).find(".folder_closed").length!=0) ) {
+    	        		$(this).find(".date1").hide();
+    	        		var timelong = parseInt($(this).find(".countdiv").html(),10)*15; 
+    	        		if(timelong>1000) timelong=1000; //большие ветки дольше
+    	        		if(timelong<300) timelong=300;   //маленькие ветки открываются быстрее
+    	        		$(this).find("ul:first").slideDown(timelong,function(){ 
+    	        			$(this).find(".date1[title!='']").show(); 
+    	        		});
+    	        	}
+    	        } else { //если ветка уже открыта, закрываю её
+    	        	if(isTree) {
+    	        		$(this).removeClass("tree-open").addClass("tree-closed");
+    	        		$(this).find("ul:first").slideUp(100);
+    	        	} else {
+    	        		$(this).removeClass("tree-open").addClass("tree-closed");
+    	        		var id = api4tree.node_to_id( $(this).attr("id") );
+    	        		api4panel.jsOpenNode( id ); //открываю панель
+    	        		api4panel.jsSelectNode( id ,'tree');
+    	        		$(this).removeClass("tree-closed").addClass("tree-open");
+    	        	}
+    	        }
+    	    
+    	        $(".highlight").contents().unwrap();
+    	        return false;
+    	    }); //lili
 
 			 
 		 }

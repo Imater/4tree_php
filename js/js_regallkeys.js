@@ -7,31 +7,6 @@ var QueryString;
 function jsRegAllKeyOld() 
 {
 
-		 $('*').undelegate("#add_do", "keyup").delegate("#add_do", "keyup", function(event) 
-			{
-			if(event.keyCode==27) //отмена добавления нового дела
-				{
-	  	   		$("#add_do").blur();
-  		   		$("#wrap").click(); 
-  		   		return false;
-  		   		};
-			if(event.keyCode==13) //добавление нового дела
-				{
-				jsAddDo( "new", 599, $("#add_do").val() ); //почему 599?
-				jsRefreshTree();
-  		   		return false;
-  		   		};
-  		   		
-			clearTimeout(tttt);
-			tttt = setTimeout(function(){
-			mynewdate = jsParseDate( $("#add_do").val() );
-			if( mynewdate.date == "") { $(".header_text").html(""); return true; }
-			$(".header_text").html( mynewdate.date.jsDateTitleFull() );
-			$(".header_text").attr( "title", mynewdate.date.jsDateTitleFull() );
-			jsTitle(mynewdate.title,15000);
-			},150);
-			return false;
-			});
 
 		 $('*').undelegate("#textfilter", "keyup").delegate("#textfilter", "keyup", function(event) 
 			{
