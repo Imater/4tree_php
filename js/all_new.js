@@ -1279,27 +1279,52 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					   }
 					});				
 					   			    	
+					var dfdArray = []; //массив для объектов работы с асинхронными функциями
+					var element_founded = [];
+					$.each(my_all_data,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
+					    if(el) {
+					    	var done_element = this_db.jsFindLongText(el.id).done(function(longtext){
+								if( (longtext && 
+								    (longtext.toLowerCase().indexOf(searchstring)!=-1)) ||
+									(el && el.title && el.title.toLowerCase().indexOf(searchstring)!=-1) ){
+										 var new_i = element_founded.length;
+										 element_founded[new_i] = el;
+										 element_founded[new_i].text = longtext;
+					    		}
+					    	});
+					    	
+					    	dfdArray.push( done_element );
+					    };
+					});
+					
+					//выполняю тогда, когда все длинные тексты считаны
+					$.when.apply( null, dfdArray ).then( function(x){ 
+						console.info("!!!!!!!!!",element_founded);
+						api4panel.jsShowTreeNode(-1,false,element_founded);
+						if(element_founded.length>0) {
+							jsTitle("Найдено: " + element_founded.length + " шт ("+searchstring+")",5000);
+						}
+						   			    	
+						setTimeout( function() {
+						    jsPrepareDate();  //обрабатываю даты в поиске
+						    jsHighlightText(); //подсвечиваю поисковое слово
+						},50 );
+						   			    	
+						if( (searchstring!='') && data ) { 			   
+						    $("#tab_find").click();
+						    $("#search_empty").fadeIn(200); 
+						}
+					});
+					
 					//поиск удовлетворяющих поисковой строке условий
-					var data = my_all_data.filter(function(el) { 
+/*					var data = my_all_data.filter(function(el) { 
 					   if(!(!el.title)) 
 					     return ( (el.title.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ||
 					      		   (el.text.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ||
 					      		   comment_ids_found.indexOf(el.id)!=-1 ); 
-					   });
-					
-					jsShowTreeNode(-1,false,data);
-					   			    	
-					setTimeout( function() {
-   						jsPrepareDate();  //обрабатываю даты в поиске
-   						jsHighlightText(); //подсвечиваю поисковое слово
-   					},50 );
-					   			    	
-		            if( (searchstring!='') && data ) { 			   
-    	            	$("#tab_find").click();
-    	            	$("#search_empty").fadeIn(200); 
-    	            }
+					   }); */
 	     		          
-	     		 }, 300);
+	     		 }, 500);
 			  
 			     return false;
 			  
@@ -2703,7 +2728,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 } //jsInfoFolder
 		 
 		 //возвращает один элемент для отображения в дереве
-		 this.jsRenderOneElement = function(data, parent_node) {
+		 this.jsRenderOneElement = function(data, ii, parent_node) {
 		 	var info = jsInfoFolder(data,parent_node);
 		 	var position = parseInt((data.position - 0.9)*100)/100;
 		 	myli = "<div class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'></div>"; //разделитель
@@ -2822,7 +2847,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	console.info("ADD TO TREE = ",id_node);
 		 	var element = api4tree.jsFind(id_node);
 		 	
-		 	var render_node = jsRenderOneElement( element );
+		 	var render_node = api4panel.jsRenderOneElement( element );
 		 	
 		     if(isTree) {
 		     	where_to_add = $("ul[myid="+element.parent_id+"]");
@@ -2896,7 +2921,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 		  	var where_to_add = $(".search_panel_result ul");
 		 		  	}
 		 		 		  	  		 
-		 		  where_to_add.append( jsRenderOneElement(data,i,parent_node) );
+		 		  where_to_add.append( api4panel.jsRenderOneElement(data,i,parent_node) );
 		 	}); //each(mydata)
 
  	 	    api4panel.jsPrepareDate();
@@ -2921,7 +2946,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	
 		 	jsMakeDrop();
 		 	
-		 }
+		 } //jsShowTreeNode
 		 
 		 //открыть заметку с номером, если она на экране (make .selected)
 		 this.jsOpenNode = function(id,nohash,iamfrom) {
