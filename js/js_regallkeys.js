@@ -7,240 +7,6 @@ var QueryString;
 function jsRegAllKeyOld() 
 {
 
-
-	 //нажатие на кнопку вызова меню настройки элемента
-	 //mousedown быстее, чем click
-	 $('#mypanel').delegate(".tcheckbox","click", function (e)
-	   {
-	   	console.info("tcheckbox mousedown");
-//	   	e.preventDefault();
-	   	is_rendering_now = true;
-//	   	setTimeout(function(){ is_rendering_now = false; },100);
-	   	
-	   var id = api4tree.node_to_id( $(this).parents("li").attr("id") );
-	   	   
-	   if(!$("#mypanel #node_"+id).hasClass("selected")) api4panel.jsTitleClick($(this).nextAll(".n_title"));
-	   		   
-	   if( $(this).parents("#mypanel").length || $(this).parents(".search_panel_result").length )
-	   	   {
-	   	   jsPlaceMakedone(id);
-			  $("#mypanel").scroll(function()
-			  		{
-			    	if($(".makedone").is(":visible")) 
-			    		jsPlaceMakedone( $(".makedone").attr("myid") );
-			    	});
-			  $(".panel").scroll(function()
-			  		{
-			    	if($(".makedone").is(":visible")) 
-			    		jsPlaceMakedone( $(".makedone").attr("myid") );
-			    	});
-	   	   
-		   }
-		
-		
-	   var element = api4tree.jsFind(id);
-
-	   date1 = element.date1;
-	   
-	   if(date1=="")  //устанавливаю дату
-	   	  { 
-	   	  mydate = new Date(); 
-	   	  mydate = new Date(mydate.getTime()+60*60000); //новые дела - по умолчанию через час
-	   	  $("#makedate").hide();
-		  if($("#on_off_date").prop("checked")==true)
-		  		{ 
-				  $("#on_off_date").prop("checked",false); $("#on_off_date").iphoneStyle("refresh");
-				}
-	   	  }
-	   else
-		  {
-		  mydate = Date.createFromMysql(date1);
-	   	  $("#makedate").show();
-		  if($("#on_off_date").prop("checked")==false)
-		  		{ 
-				  $("#on_off_date").prop("checked",true); $("#on_off_date").iphoneStyle("refresh");
-				}
-		  }
-		$("#makedatetime").datetimeEntry("setDatetime",mydate);
-
-	   if(element.did=="")  //устанавливаю переключатель выполнения дела
-	   	  { 
-		  if($("#on_off_did").prop("checked")==true) 
-		  		{ 
-		  		$("#on_off_did").prop("checked",false); $("#on_off_did").iphoneStyle("refresh");
-		  		}
-	   	  }
-	   else
-		  {
-		  if($("#on_off_did").prop("checked")==false) 
-		  		{ 
-				  $("#on_off_did").prop("checked",true); $("#on_off_did").iphoneStyle("refresh");
-				}
-		  }
-
-	   if(parseInt(element.remind,10)==0)  //устанавливаю переключатель SMS напоминалки
-	   	  { 
-		  if($("#on_off_sms").prop("checked")==true) 
-		  		{ 
-		  		$("#on_off_sms").prop("checked",false); $("#on_off_sms").iphoneStyle("refresh");
-		  		}
-	   	  }
-	   else
-		  {
-		  if($("#on_off_sms").prop("checked")==false) 
-		  		{ 
-				  $("#on_off_sms").prop("checked",true); $("#on_off_sms").iphoneStyle("refresh");
-				}
-		  }
-		
-		jsStartShare(id);
-		
-		return false;
-	   });
-		
-
-
-
-	
-//	autosave_timer = setTimeout(function() { jsRefreshDo(); },5000 );
-
-	$("body").delegate(".divider","click",function()
-		{
-		return false;
-		});
-		
-	$("#mypanel").delegate(".makedate,.date1","click",function()
-		{
-		if($(this).hasClass("fromchildren")) 
-			{
-			id=$(this).attr("myid");
-			api4panel.jsOpenPath(id);
-			return false;
-			}
-		else
-			{
-			$(this).parent("li").find(".tcheckbox").click();
-			}
-		return false;		
-		}); //date1 click
-		
-		
-	
-
-	$("body").delegate(".fullscreen_button","click",function()
-		{
-		panel = $(this).parent("div");
-		if(!panel.hasClass("fullscreen")) 
-			{
-			panel.addClass("fullscreen");
-			$(this).addClass("icon-resize-small");
-			}
-		else 
-			{
-			panel.removeClass("fullscreen");
-			$(this).removeClass("icon-resize-small");
-			}
-		onResize();
-		return false;
-		})
-
-	//клик в быстрые табы
-	$('.basket_panel,#fav_tabs,#fav_tabs + .favorit_menu,.tree_history,.search_panel_result').delegate("li","click", function () {
-		api4panel.jsOpenPath( $(this).attr("myid") );
-		setTimeout(function(){ jsHighlightText() },1000);
-		return false;
-		});
-
-    //клик в табы под редактором
-	$('#fav_red,#fav_red_mini').delegate("li","click", function () {
-		
-		id = $(this).attr("myid");
-		if(id==-1) id = jsOpenDiary(); //если нужно открыть дневник
-		
-		api4panel.jsOpenPath( id, 'fav_red' );
-		return false;
-		});
-
-
-	$('#add_do_panel').delegate("input","click", function () {
-		if(!$(this).hasClass("active"))
-			{
-			$(this).addClass("active");
-			$(this).focus();
-		  	document.execCommand('selectAll',false,null);
-			}
-		last_input_click = jsNow();
-		return true;
-		});
-
-	$('#search_panel').delegate("input","click", function () {
-		$(this).addClass("active");
-//	  	$("#wrap").append("<div class='all_screen_click'></div>");
-//		$(".search_panel_result").slideDown(500);
-
-		return false;
-		});
-		
-		
-	//Клик в LI открывает детей этого объекта LILILI
-	$('#mypanel').delegate("li","mousedown", function () {
-		if( $(this).find(".ntitle").attr("contenteditable") ) return true;
-		console.info("li mousedown");
-		var nowtime = jsNow();
-		var dif_between_click = nowtime - lastclick;
-		lastclick = jsNow();
-		
-		var isTree = $("#top_panel").hasClass("panel_type1");
-
-		if(isTree)
-		  if( (dif_between_click)<150 ) 
-			{
-			console.info("nowtime-lastclick",dif_between_click);
-			var id = api4tree.node_to_id( $(this).attr("id") );
-			$(".panel li").removeClass("selected");
-			jsOpenNode( id ); //открываю панель
-			jsSelectNode( id ,'tree');
-			return false;
-			}
-
-		
-		if( $(this).hasClass('tree-closed') ) 
-			{
-			id = api4tree.node_to_id( $(this).attr("id") );
-			jsOpenNode( id ); //открываю панель
-			jsSelectNode( id ,'tree');
-			$(this).removeClass("tree-closed").addClass("tree-open");
-	
-			if( isTree && ($(this).find(".folder_closed").length!=0) )
-				{
-				$(this).find(".date1").hide();
-				timelong = parseInt($(this).find(".countdiv").html(),10)*15;
-				if(timelong>1000) timelong=1000;
-				if(timelong<300) timelong=300;
-				$(this).find("ul:first").slideDown(timelong,function(){ $(this).find(".date1[title!='']").show(); });
-				}
-			}
-		else
-			{
-			if(isTree)
-				{
-				$(this).removeClass("tree-open").addClass("tree-closed");
-				$(this).find("ul:first").slideUp(100);
-				}
-			else
-				{
-				$(this).removeClass("tree-open").addClass("tree-closed");
-				id = api4tree.node_to_id( $(this).attr("id") );
-				jsOpenNode( id ); //открываю панель
-				jsSelectNode( id ,'tree');
-				$(this).removeClass("tree-closed").addClass("tree-open");
-				}
-			}
-
-		$(".highlight").contents().unwrap();
-		return false;
-		});
-
 		 $('*').undelegate("#add_do", "keyup").delegate("#add_do", "keyup", function(event) 
 			{
 			if(event.keyCode==27) //отмена добавления нового дела
@@ -535,7 +301,7 @@ $('#tree_back').bind("contextmenu",function(e){
 	   if (confirm('Удалить "'+title+'" ?'+child_text)) 
 		  jsDeleteDo( id_element );
 		else return false;
-     $(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(300);
+     $(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
      $.Menu.closeAll();
 	 return false;
 	 });
@@ -566,7 +332,7 @@ $('#tree_back').bind("contextmenu",function(e){
 			$("input.active").removeClass("active");
 			$(".header_text").html("").attr("title","");
 			}
-		$(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(300);
+		$(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
 		$.Menu.closeAll();
   		jsTitle("");
 //  		$(".add_new_do").slideUp(500);
@@ -580,7 +346,7 @@ $('#tree_back').bind("contextmenu",function(e){
 	$(".send_mail_form").slideUp(500);
   	$(".search_panel_result,.search_arrow").slideUp(200);
 	$("#minicalendar").remove();
-	$(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(300);
+	$(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
 	$.Menu.closeAll();
   	return false;
   	});
