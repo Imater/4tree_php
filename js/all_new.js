@@ -1,5 +1,6 @@
 //v1.01
-var note_saved=false,myr,t1,t2,my_all_data,my_all_comments,my_all_share,my_all_frends,remember_old_panel="top_panel";
+var note_saved=false,myr,t1,t2,my_all_data,my_all_comments,my_all_share,
+	my_all_frends,remember_old_panel="top_panel";
 var main_x = 50; //ширина левой панели в процентах
 var main_y = 250;//высота верхней панели в пикселях
 var preloader,tree_font = 1,clicknow,add_menu;
@@ -22,10 +23,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  {
 		  var my_all_data,
 		  	  recursive_array=[],
-		  	  scrolltimer,
+		  	  scrolltimer, 
+		  	  mymetaKey, //нажата ли клавиша Win или Cmd
 		  	  old_before_diary,
+		  	  member_old_id = false, //для запоминания id выбранной заметки на время пользования дневником
 		  	  sync_now = false, //true - если идёт синхронизация
-		  	  sync_now_timer, maketimer, timer_add_do, search_timer,
+		  	  sync_now_timer, maketimer, timer_add_do, search_timer, show_help_timer,
 		      is_rendering_now = false,	//чтобы чекбоксы календаря не срабатывали во время смены значений
 		  	  allmynotes, allmydates, //заметки и даты для календариков
 		      db, //объект соединения с базой
@@ -51,8 +54,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      return [allmynotes,allmydates];
 		  }
 		      
-		 //поиск всех заметок на эту дату (нужно для календариков)
-		 this.jsDiaryFindDateNote = function(date) { 
+		  //поиск всех заметок на эту дату (нужно для календариков)
+		  this.jsDiaryFindDateNote = function(date) { 
 			  if(!my_all_data || !allmynotes) return false;
 			  
 			  var today = date;
@@ -80,8 +83,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  else return [false,""];
 		 }
 
-		 //поиск всех событий назначенных на эту дату (нужен для календариков)
-		 this.jsDiaryFindDateDate = function(date) { 
+		  //поиск всех событий назначенных на эту дату (нужен для календариков)
+		  this.jsDiaryFindDateDate = function(date) { 
 			  if(!my_all_data || !allmydates) return false;
 			  
 			  var today = date;
@@ -111,7 +114,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			       
 			  else return [false,""];
 		 }
-		      
 		 
     	  //определяет номер недели у любой даты (new Date()).getWeek() 
     	  Date.prototype.getWeek = function () {  
@@ -181,7 +183,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     		  
     		  var id = api4tree.jsCreate_or_open(path);
     		  
-    		  if(!dontopen) api4panel.jsOpenPath( id );
+    		  if(!dontopen) 
+    		  	api4panel.jsOpenPath( id );
     		  return id;
     	  }
     	  
@@ -209,10 +212,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  }
 		  
 		  //Добавляет текст в дневник
-		  this.jsDiaryTodayAddPomidor = function(text) { 
+		  this.jsDiaryTodayAddPomidor = function(text, color) { 
 		  	var d = new $.Deferred();
 		 	var id = this_db.jsDiaryPath( jsNow(), "dont_open" ); //id текущего дня в дневнике
 		 	api4editor.jsSaveAllText();
+		 	if(!color) color = "rgb(226,1,1);"; //красная помидорка
+		 	else color = "rgb(48, 134, 0);"; //если помидорка добавлена вручную, она зелёная
 		 	this_db.jsFindLongText(id).always(function(old_text){
 		 		var new_text = old_text;
 		 		var text_div = $("<div>"+old_text+"</div>");
@@ -230,7 +235,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 		var stime = time.getHours()+":"+
 		 			((time.getMinutes().toString().length==1)?("0"+time.getMinutes()):time.getMinutes());
 		 		
-		 		my_pomidor.find("ol").append("<li><i class='icon-record'></i> "+text+"<b>"+stime+"</b></li>");
+		 		my_pomidor.find("ol").append("<li><i class='icon-record' style='color:"+color+"'></i> "+
+		 									  text+"<b>"+stime+"</b></li>");
 		 		
 		 		global_id = id;
 		 		
@@ -1425,9 +1431,20 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    return false;
 			  });
 			    
+			  //переход в дневник и обратно
 			  $('body').delegate(".todaydate","click", function ()
 			    {
-		     	 this_db.jsDiaryPath( jsNow() );
+			     if(!member_old_id) {
+	   			     member_old_id = api4tree.node_to_id( $(".selected").attr('id') );
+	   			     console.info("Запомнил "+member_old_id);
+	   				 this_db.jsDiaryPath( jsNow() );
+			     	 setTimeout(function(){ $(".redactor_").focus(); },200);
+   			     } else {
+	   			     console.info("Вспомнил "+member_old_id);
+	   			     api4panel.jsOpenPath(member_old_id);
+	   			     member_old_id = false;
+   			     }
+
 			     return false;
 			    });
 			    
@@ -1642,17 +1659,215 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 		  } //jsMakeMenuKeys
 		  
+		  function jsMakeHelpKeys(key_help){
+		  	  if($("#hotkeyhelper ul").html()!="") return true;
+		  	  console.info("START KEY HELP", key_help);
+		  	  var myhtml = "";
+			  $.each(key_help, function(i,el) {
+				  console.info(el.key, el.title);
+				  if(el.title=="") {
+				  	myhtml +="<div class='help_divider'></div>";
+				  } else {
+				  	myhtml += "<li><b>alt </b><span class='help_plus'>+</span><b>"+el.key+
+				  			"</b><span class='help_title'>- "+el.title+"</span></li>";
+				  }
+			  });
+			  $("#hotkeyhelper ul").html(myhtml);
+		  }
+		  
+		  //обработка клавиш клавиатуры
+		  function jsMakeWindowKeyboardKeys() {
+
+			  $(window).keyup(function(e){
+			    
+			  	 if((e.keyCode==91)) { //Cmd
+			  	 	mymetaKey = false;
+			     }
+			  
+			  	 if((e.keyCode==16)) { //shift - убирает даты родителей
+			    	//$(".fromchildren").hide();
+			  	 	}
+			  	
+			  	 if((e.keyCode==18)) //alt - при отпускании, скрывает подсказку
+			  	 	{
+			  	 	clearTimeout(show_help_timer);
+			  	 	$("#hotkeyhelper").hide();
+			  	 	}
+			    });
+			  
+			  $(window).keydown(function(e){
+		  	     var key_help = [];
+			  	 clearTimeout(show_help_timer); //скрываю alt подсказку
+			  	 
+			     console.info("нажата клавиша", e.keyCode);
+			  
+			  	 if(e.keyCode==91) { mymetaKey = true; } //регистрируем глобально, что нажата Win или Cmd
+			  	 
+			  	 if((e.altKey==true) && (e.keyCode==18)) { //нажатый альт вызывает помощь по горячим клавишам
+			  	 	show_help_timer = setTimeout(function(){ $("#hotkeyhelper").show(); },700);
+		  	 	 }
+			  
+			     key_help.push({key:"D",title:"открыть дневник"});
+			  	 if( (e.altKey==true) && (e.keyCode==68) )  { //D - открыть дневник
+			    	   e.preventDefault();
+			      	   $(".todaydate").click();
+		         }
+			  
+			     key_help.push({key:"A",title:"добавить дело"});
+			  	 if( (e.altKey==true) && (e.keyCode==65) )  { //A - быстрое добавление дел
+				       e.preventDefault();
+				  	   if(!$("#add_do").hasClass("active")) {
+				  	   		$("#add_do").click();
+		  	   		   } else {
+				  	   		if( $("#add_do").is(":focus") ) {
+				      	   		$("#add_do").blur();
+				      	   		$("#wrap").click();
+			      	   		} else {
+				      	   		$("#add_do").focus();
+				    		  	document.execCommand('selectAll',false,null);
+				      	   	}
+				  	   }
+				  	   return false;
+			  	 }
+			       
+			     key_help.push({key:"R",title:"синхронизировать с сервером"});
+			  	 if( (e.altKey==true) && (e.keyCode==82) ) { //alt+R - обновляю дерево
+			       e.preventDefault();
+			  	   $(".m_refresh")[0].click();
+			  	   return false;
+		  	     }
+
+			     key_help.push({key:"P",title:"добавить одну Pomidorro"});
+			  	 if( (e.altKey==true) && (e.keyCode==80) ) { //alt+P - обновляю дерево
+			       e.preventDefault();
+      	           var last_title = localStorage.getItem("pomidor_last_title");
+  	      	       if(!last_title) last_title = "Мой проект";
+     	           var answer = prompt("Ручное добавление 25 минутного блока работы.\n\nКак описать эту \"помидорку\" в сегодняшнем дневнике?", last_title);
+    	      	   if(answer) { 
+   	      	        	localStorage.setItem("pomidor_last_title", answer);
+    	      	   		api4tree.jsDiaryTodayAddPomidor(answer,"green"); 
+    	      	   		}
+			  	   return false;
+			  	 }
+			     key_help.push({key:"F",title:"развернуть редактор"});
+			     key_help.push({key:"",title:""});
+			  	 if( (e.altKey==true) && (e.keyCode==70) ) { //alt+F - полноэкранный режим редактора
+			       e.preventDefault();
+			  	   $(".fullscreen_editor").click();
+			  	   return false;
+			  	 }
+			     key_help.push({key:"1",title:"вид №1"});
+			  	 if( (e.altKey==true) && (e.keyCode==49) ) {
+			       e.preventDefault();
+			  	   $("#v1").click();
+			  	 }
+			     key_help.push({key:"2",title:"вид №2"});
+			  	 if( (e.altKey==true) && (e.keyCode==50) ) {
+			       e.preventDefault();
+			  	   $("#v3").click();
+			  	 }
+			     key_help.push({key:"3",title:"вид №3"});
+			  	 if( (e.altKey==true) && (e.keyCode==51) ) {
+			       e.preventDefault();
+			  	   $("#v2").click();
+			  	 }
+			     key_help.push({key:"4",title:"вид №4"});
+			     key_help.push({key:"",title:""});
+			  	 if( (e.altKey==true) && (e.keyCode==52) ) {
+			       e.preventDefault();
+			  	   $("#v4").click();
+			  	 }
+			  	   
+			     key_help.push({key:"+",title:"увеличить шрифт"});
+			  	 if( (e.altKey==true) && ((e.keyCode==187) || (e.keyCode==61) || (e.keyCode==231)) ) {
+			       e.preventDefault();
+			  	   $(".m_zoom_in")[0].click();
+			  	 }
+
+			     key_help.push({key:"–",title:"уменьшить шрифт"});
+			  	 if( (e.altKey==true) && ((e.keyCode==189) || (e.keyCode==173) ) ) {
+			       e.preventDefault();
+			  	   $(".m_zoom_out")[0].click();
+			  	 }
+
+			     key_help.push({key:"0",title:"шрифт по умолчанию"});
+			     key_help.push({key:"",title:""});
+			  	 if( (e.altKey==true) && (e.keyCode==48) ) {
+			       e.preventDefault();
+			  	   $(".m_zoom_default")[0].click();
+			  	 }
+			  	   
+			     key_help.push({key:"<i class='icon-down-bold'></i>",title:"добавить дело вниз"});
+			  	 if( ((e.altKey==true) || (e.ctrlKey==true) ) && (e.keyCode==40) ) { //alt + вниз
+			       e.preventDefault();
+			  	   jsAddDo('down');
+			  	 }
+			     key_help.push({key:"<i class='icon-right-bold'></i>",title:"добавить дело вправо"});
+			  	 if( ((e.altKey==true) || (e.ctrlKey==true) ) && (e.keyCode==39) ) { //alt + вправо
+			       e.preventDefault();
+			  	   jsAddDo('right');
+			  	 }
+			  	   
+			  if( (!($("input").is(":focus"))) && 
+			  	  (!($(".redactor_editor").is(":focus"))) && 
+			  	  (!($("#redactor").is(":focus"))) && 
+			  	  ($(".n_title[contenteditable='true']").length==0) && 
+			  	  (!$(".comment_enter_input").is(":focus")) ) { //если мы не в редакторе
+
+			     if( (e.altKey==false) && (e.keyCode==13) ) { //enter - запускаем редактирование
+			        e.preventDefault();
+			       	var ntitle = $(".selected").find(".n_title");
+			      	ntitle.attr("contenteditable","true").attr("spellcheck","false").focus(); 
+			      	ntitle.attr("old_title",ntitle.html());
+			      	document.execCommand('selectAll',false,null);
+			     }
+			  	 if( (e.altKey==false) && (e.keyCode==40) ) { //вниз
+			       e.preventDefault();
+			       jsGo('down');
+			  	 }
+			  	 if( (e.altKey==false) && (e.keyCode==38) ) { //вверх
+			       e.preventDefault();
+			       jsGo('up');
+			  	 }
+			  	 if( (e.altKey==false) && (e.keyCode==37) ) { //влево
+			       e.preventDefault();
+			       jsGo('left');
+			  	 }
+			  	 if( (e.altKey==false) && (e.keyCode==39) ) { //вправо
+			       e.preventDefault();
+			       jsGo('right');
+			  	 }
+			  
+			  	 if( (e.metaKey==false) && (e.keyCode==46) ) { //кнопка Del
+			       e.preventDefault();
+			       var title = $(".selected .n_title").html();
+			       if(title) {
+				       if (confirm('Удалить "'+title+'"?')) {
+				    	  jsDeleteDo($(".selected"));
+				       }
+				   }
+			  	 }
+			    } //если мы не в редакторе
+			  	   
+			  	 jsMakeHelpKeys(key_help); //заполнение подсказки клавиш
+			 }); //keydown
+			  
+			  
+		  }
+		  
 	      //РЕГИСТРАЦИЯ ВСЕХ КНОПОК И СОБЫТИЙ
 		  this.jsRegAllKeys = function() {
-			var options = {minWidth: 420, arrowSrc: 'b_menu/demo/arrow_right.gif'};
-			$('#main_menu').menu(options);
-			
-			var options = {minWidth: 320, arrowSrc: 'b_menu/demo/arrow_right.gif'};
-			$('#makedone_menu').menu(options);
-			
-			var options = {minWidth: 320, arrowSrc: 'b_menu/demo/arrow_right.gif'};
-			add_menu = $('#add_menu').menu(options);
 		  
+		  	(function startDropDownMenu(){
+				var options = {minWidth: 420, arrowSrc: 'b_menu/demo/arrow_right.gif'};
+				$('#main_menu').menu(options);
+				
+				var options = {minWidth: 320, arrowSrc: 'b_menu/demo/arrow_right.gif'};
+				$('#makedone_menu').menu(options);
+				
+				var options = {minWidth: 320, arrowSrc: 'b_menu/demo/arrow_right.gif'};
+				add_menu = $('#add_menu').menu(options);
+		  	})(); //запускает выпадающее меню
 			jsMakeIdleFunction(); //при бездействии системы
 			jsMakeDraggable(); //перетаскиваемые элементы  
 			api4others.jsMakePomidorKeys(); //система Помидорро
@@ -1668,6 +1883,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			jsMakeEditorKeys(); //кнопки редактора
 			jsMakeRecurKeys(); //кнопки для панели настройки регулярных задач
 			jsMakeMenuKeys(); //кнопки для меню
+			jsMakeWindowKeyboardKeys(); //регистрация всех горячих клавиш
 			jsRegAllKeyOld();
 			   
 		  } //jsRegAllKeys

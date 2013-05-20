@@ -423,7 +423,7 @@ if(isset($_GET['test']))
 						</ul>
 					</div>
 					<div class="red_new_window" style="" title="Открыть в новом окне"><i class="icon-forward"></i></div>
-					<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>	
+					<div class="fullscreen_button fullscreen_editor icon-resize-full" title="На весь экран"></div>	
 					<div id="wiki_back_button" title="Вернуться назад в wiki"><i class="icon-left-bold"></i></div>
 					
 	  			
@@ -489,21 +489,8 @@ if(isset($_GET['test']))
 
 
 <div id="hotkeyhelper">
-	<h2>Горячие клавиши <b>alt</b> + </h2>
-	<ul>
-		<li><b>F</b><span>- развернуть заметку на весь экран</span></li>
-		<li><b>S</b><span>- сохранить заметку</span></li>
-		<li><b>D</b><span>- открыть дневник</span></li>
-		<li><b>1</b><span>- вид №1</span></li>
-		<li><b>2</b><span>- вид №2</span></li>
-		<li><b>3</b><span>- вид №3</span></li>
-		<li><b>4</b><span>- вид №4</span></li>
-		<li><b> <i class="icon-down-bold"></i></b><span>- добавить дело вниз</span></li>
-		<li><b> <i class="icon-right-bold"></i></b><span>- добавить дело вправо</span></li>
-		<li><b><i class="icon-plus-circle"></i></b><span>- увеличить шрифт</span></li>
-		<li><b><i class="icon-minus-circle"></i></b><span>- уменьшить шрифт</span></li>
-		<li><b>0</b><span>- шрифт по умолчанию</span></li>
-	</ul>
+	<h4>Горячие клавиши</h4>
+	<ul></ul>
 </div>
 
 <div class="basket_panel panel popup bottom">

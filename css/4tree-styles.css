@@ -1986,7 +1986,7 @@ padding-bottom: 20px;
 position: fixed;
 bottom:60px;
 left: 80px;
-width: 400px;
+width: 350px;
 background-image:url(../img/textures/17.png); 
 z-index: 99999999999;
 }
@@ -2000,12 +2000,39 @@ padding: 0px;
 
 #hotkeyhelper li
 {
-padding: 5px;
+padding: 3px;
 }
 
-#hotkeyhelper h2
+#hotkeyhelper li i
+{
+margin-top: 2px;
+display: inline-block;
+margin-left: 3px;
+}
+
+#hotkeyhelper .help_title
+{
+margin-left: 10px;
+font-size: 14px;
+}
+
+#hotkeyhelper .help_plus
+{
+font-size: 11px;
+color: black;
+}
+
+#hotkeyhelper h4
 {
 text-align: center;
+margin: 0px;
+margin-bottom: 5px;
+color: gray;
+}
+
+#hotkeyhelper .help_divider
+{
+height: 20px;
 }
 
 #hotkeyhelper li b
@@ -2013,14 +2040,14 @@ text-align: center;
 border-radius: 5px;
 border: 1px solid #888;
 display: inline-block;
-width: 30px;
-height: 23px;
-padding-top: 3px;
-padding-bottom: 0px;
-font-size: 1.2em;
+width: 35px;
+height: 18px;
+padding-top: 1px;
+margin-right: 7px;
+margin-left: 5px;
+font-size: 15px;
 text-align: center;
 vertical-align: middle;
-margin-right: 20px;
 background: white;
 -moz-box-shadow: 1px 3px 3px #444;
 -webkit-box-shadow: 1px 3px 3px #444;
