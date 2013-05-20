@@ -7,43 +7,6 @@ var QueryString;
 function jsRegAllKeyOld() 
 {
 
-
-
-
-	
-if(false)
-$('#tree_back').bind("contextmenu",function(e){
-
-	$(".tree_history ul").html('').show();
-  	$(".all_screen_click").remove();
-  	$("#wrap").append("<div class='all_screen_click'></div>");
-    
-    $.each(tree_history.reverse(),function(e){ $(".tree_history ul").append('<li path="'+this.path+'">'+this.time + ' — ' + this.title+'</li>'); });
-	tree_history.reverse();
-	
-  	$(this).find("ul:first").slideDown(200);
-
-    return false;
-	}); 
-
-
-  $("body").delegate(".makedel","click", function () {
-  	   id = $(".makedone").attr("myid");
-	   title = jsFind(id).title;
-	   id_element = $("#mypanel #node_"+id);
-	   
-	   childrens = jsFindByParent(id,true).length;
-	   if(childrens > 0) child_text = "\r\rСодержимое папки ("+childrens+" шт.), тоже будет удалено.";
-	   else child_text = "";
-	   
-	  if(title)
-	   if (confirm('Удалить "'+title+'" ?'+child_text)) 
-		  jsDeleteDo( id_element );
-		else return false;
-     $(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
-     $.Menu.closeAll();
-	 return false;
-	 });
 	   	  
 
 
