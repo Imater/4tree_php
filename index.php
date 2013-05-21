@@ -115,8 +115,8 @@ if(isset($_GET['confirm']))
 	<script src="js/jquery-ui.multidatespicker.js"></script>
 	<script src="jsredactor/redactor/redactor.js"></script>
 	<script src="js/iphone-style-checkboxes.js"></script>
-
-<!--	<script src="js/jszip.js"></script> -->
+	<script src="js/jszip.js"></script>
+<!--	 -->
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 
@@ -247,7 +247,7 @@ if(isset($_GET['test']))
 	<div class="header_toolbar">
 			<div id="main_menu"><div class="h_button round_left round_right"><i class="icon-align-justify"></i></div>
 			    <ul>  
-					<li><input type="checkbox" class="on_off" id="on_off_hide_did"></input><a class="show_hidden_do">Скрыть выполненные дела</a></li>
+					<li><input type="checkbox" class="on_off" id="on_off_hide_did"></input><a class="show_hidden_do">Показывать выполненные дела</a></li>
 			        <li></li> <!-- separator -->  
 			        <li><a class="m_zoom_in">Увеличить масштаб дерева<span class="m_key">alt <i class="icon-plus-circle"></i></span></a></li>  
 			        <li><a class="m_zoom_out">Уменьшить масштаб дерева<span class="m_key">alt <i class="icon-minus-circle"></i></span></a></li>  
@@ -304,8 +304,8 @@ if(isset($_GET['test']))
 			        </li>  
 			        <li>Синхронизация
 			        	<ul>
-				        	<li><a class="m_refresh">Обновить дерево<span class="m_key">alt+"R"</span></a></li>  
-				        	<li><a class="m_refresh_all">Обновить дерево полностью<span class="m_key"></span></a></li>  
+				        	<li><a class="m_refresh">Синхронизировать с сервером<span class="m_key">alt+"R"</span></a></li>  
+				        	<li><a class="m_refresh_all">Загрузить дерево с сервера<span class="m_key"></span></a></li>  
 				        </ul>
 				    </li>
 				    <li>
@@ -406,7 +406,7 @@ if(isset($_GET['test']))
 
 	  		</div>
 	  		<div class="resize_me"></div>
-	  		<div class="sos"><i class="icon-cd"></i><div id="myloader"></div></div>
+	  		<div class="sos" title="Синхронизация / Размер окон"><i class="icon-cd"></i><div id="myloader"></div></div>
 	  		<div class="bottom_right animate_me">
 	  			<textarea id="redactor">
 	  			</textarea>
@@ -443,13 +443,13 @@ if(isset($_GET['test']))
      <div id="pomidor_bottom">&nbsp;</div>
 
 		 <div id="pomidoro_icon" time="0">
-		 <i id="pomidor1" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+		 <i id="pomidor1" time="-25" class="icon-leaf-1" title="Работа 25 минут" text="Далее 25 минут работы."></i>
 		 <i id="pomidor2" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
-		 <i id="pomidor3" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+		 <i id="pomidor3" time="-25" class="icon-leaf-1" title="Работа 25 минут" text="Далее 25 минут работы."></i>
 		 <i id="pomidor4" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
-		 <i id="pomidor5" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+		 <i id="pomidor5" time="-25" class="icon-leaf-1" title="Работа 25 минут" text="Далее 25 минут работы."></i>
 		 <i id="pomidor6" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
-		 <i id="pomidor7" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+		 <i id="pomidor7" time="-25" class="icon-leaf-1" title="Работа 25 минут" text="Далее 25 минут работы."></i>
 		 <i id="pomidor8" time="-15" class="icon-glass" title="Отдых 15 минут" text="Далее отдых 15 минут."></i>
 		 </div>
   </div>

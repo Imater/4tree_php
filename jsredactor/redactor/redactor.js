@@ -823,8 +823,8 @@ var RLANG = {
 						{ 
 						note_saved=false;
 					    last_editor_click_time = jsNow();
-						savetext(1); 
-						}, 500 );
+						api4editor.jsSaveAllText();
+						}, 1000 );
 
 
 				var key = e.keyCode || e.which;
@@ -921,16 +921,16 @@ if(!need_text)
 	          preloader.trigger('hide');
 	          if($(".redactor_editor:focus").hasClass("comment_enter_input"))
 	          	{
-	          	var insert_red = myr_comment;
+	          	var insert_red = myr_comment; //???
 	          	}
 	          else
 	          	{
-	          	var insert_red = myr;
+	          	var insert_red = $("#redactor");
 	          	}
-              insert_red.insertHtml('<img title="Загружено из буфера обмена '+Date()+'"'+" src="+xhr.response+">"); 
+              insert_red.insertHtml('<img title="Из буфера обмена '+Date()+'"'+" src="+xhr.response+">"); 
 			  clearTimeout(my_autosave);
               note_saved=false;
-			  my_autosave = setTimeout( function() { savetext(1); }, 100 );
+			  my_autosave = setTimeout( function() { api4editor.jsSaveAllText(); }, 100 );
               };
            
            var formData = new FormData();
@@ -1067,8 +1067,12 @@ if(!need_text)
 				}
 
 				// tab
-				if (this.opts.shortcuts && !e.shiftKey && key === 9)
+				if (this.opts.shortcuts && !e.shiftKey && key === 9 )
 				{
+					this.$editor.html(html).blur(); //добавлено мной
+//					$("#mypanel").click();
+//					alert(1);
+					return false;
 					if (pre === false)
 					{
 						this.shortcuts(e, 'indent'); // Tab

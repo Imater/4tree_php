@@ -4875,3 +4875,16 @@ margin-bottom: -4px;
 margin-right: 3px;
 float: right;
 }
+
+#download-zip-div
+{
+position: absolute;
+left: 0px;
+right: 0px;
+top:0px;
+bottom: 0px;
+background: white;
+text-align: center;
+padding-top:200px;
+z-index: 30;
+}
