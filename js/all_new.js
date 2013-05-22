@@ -22,7 +22,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		  var my_all_data,
+		  var my_all_data, my_all_comments,
 		  	  recursive_array=[],
 		  	  scrolltimer, 
 		  	  mymetaKey, //нажата ли клавиша Win или Cmd
@@ -423,7 +423,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 		var stime = time.getHours()+":"+
 		 			((time.getMinutes().toString().length==1)?("0"+time.getMinutes()):time.getMinutes());
 		 		
-		 		my_pomidor.find("ol").append("<li><span style='display:inline-block;width:100%;'><i class='icon-leaf-1' style='color:"+color+"'></i> "+
+		 		my_pomidor.find("ol").append("<li><span style='display:inline-block;width:100%;vertical-align:top;'><i class='icon-leaf-1' style='color:"+color+"'></i> "+
 		 									  text+"<b>"+stime+"</b></span></li>");
 		 		
 		 		global_id = id;
@@ -731,8 +731,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //	   jsShowBasket();
 		  }
 		  
-		  
-		  
 		  //парсер даты (позвонить послезавтра)
 		  this.jsParseDate = function(title) {
 		  	var answer = "";
@@ -1028,7 +1026,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    localStorage.setItem('main_tree_font',tree_font);			
 		  
 		  }
-		  
 		  
 		  //кнопки панели дерева
 		  function jsMakePanelKeys() {
@@ -1801,7 +1798,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 						    jsHighlightText(); //подсвечиваю поисковое слово
 						},50 );
 						   			    	
-						if( (searchstring!='') && data ) { 			   
+						if( (searchstring!='') && element_founded ) { 			   
 						    $("#tab_find").click();
 						    $("#search_empty").fadeIn(200); 
 						}
@@ -2456,6 +2453,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	return my_all_data;
 		  }
 
+		  //установка главного массива комментариев снаружи и возврат его значения
+		  this.js_my_all_comments = function(set_my_all_comments) {
+		  	if(set_my_all_comments) my_all_comments = set_my_all_comments;
+		  	return my_all_comments;
+		  }
+
 		  //инициализация базы данных
 		  this.js_InitDB = function() {
 		  	//схема структуры базы данных
@@ -2471,8 +2474,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	      	  autoIncrement: false // optional. 
 	      	};
 
+		  	var comments_store_schema = { //схема базы данных комментариев
+	      	  name: global_table_name+"_comments",  //для каждой таблицы своя схема
+	      	  keyPath: 'id', // optional, 
+	      	  autoIncrement: false // optional. 
+	      	};
+
 		  	var schema = {
-		  	  stores: [author_store_schema,texts_store_schema]
+		  	  stores: [author_store_schema, texts_store_schema, comments_store_schema]
 		  	}; 
 		  		  	
 		  	db = new ydn.db.Storage('_all_tree', schema);
@@ -2564,6 +2573,109 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 			return answer;
 		  } //jsFind
+		  
+		  //находит комментарий
+		  this.jsFindComment = function(id,fields,save_anyway) {
+		  	var d = new $.Deferred();
+		  	
+			var answer = my_all_comments.filter(function(el,i) {
+				return el && el.id==id;
+			})[0];
+			
+			if(answer) { //если комментарий найден
+			  	var my_element = [];
+				my_element.push(answer);
+				db.get(global_table_name+"_comments",id.toString()).done(function(record) {
+   	  				my_element[0].text = record?record.text:"";
+
+
+
+   	  				if(answer && fields) { //если нужно присваивать значения
+   	  				   var record;
+   	  				   var is_changed = false;
+   	  				   var fields_changed = JSON.stringify(fields);
+   	  				   record = answer;
+   	  				   //поле, где записаны все изменённые не синхронизированные поля:
+   	  				   var changed_fields = record["new"]; 
+   	  				   $.each(fields, function(namefield,newvalue) 
+   	  				   	{ 		
+   	  				   	if( (record[namefield]!=newvalue) || save_anyway) 
+   	  				   		{
+   	  				   		is_changed = true;
+   	  				   		record[namefield] = newvalue;
+   	  				
+   	  				   		if(namefield=="text") {
+   	  				  		    if(newvalue.length==0) 
+   	  				   		       record["tmp_txt_md5"] = "";
+   	  				   		    else
+   	  				   		       record["tmp_txt_md5"] = hex_md5(newvalue).substr(0,5); //md5 штамп текста, для сверки с сервером
+   	  				   		}
+   	  				   		
+   	  				   		//console.info("need_save: ",namefield," = ",newvalue);
+   	  				   	  if((changed_fields.indexOf(namefield+",")==-1) && (namefield.indexOf("tmp_")==-1))
+   	  				   	  		{ 
+   	  				   	  		changed_fields = changed_fields + namefield + ","; 
+   	  				   	  		}
+   	  				   		}
+   	  				   	});
+   	  				   	
+   	  				   if(is_changed) {
+   	  				     record["new"] = changed_fields;
+   	  				
+   	  				     //если не меняли время вручную и это не временное поле
+   	  				     if( ((changed_fields.indexOf("new,")==-1) && (changed_fields.indexOf("time,")==-1) && (fields_changed.indexOf("tmp_")==-1) && (save_anyway != "dont_sync")) || (save_anyway=="need_sync")) 
+   	  				         {
+   	  				         //если не скроллинг
+   	  				         if(changed_fields!="s,") $("#node_"+id+" .sync_it_i").removeClass("hideit"); 
+   	  				         record.time = parseInt(jsNow(),10); //ставлю время изменения (для синхронизации)
+   	  				         start_sync_when_idle = true;
+   	  				         }
+   	  				     else
+   	  				         {
+   	  				         record["new"] = "";
+   	  				         }
+   	  				     
+   	  				     var after_save1 = function() {};
+   	  				     var after_save2 = function() {};
+   	  				     
+   	  				     if( (typeof fields.did   != "undefined") || //если нужно будет пересчитать следующие действия
+   	  				         (typeof fields.title != "undefined") ||
+   	  				         (typeof fields.date1 != "undefined") ||
+   	  				         (typeof fields.date2 != "undefined") ||
+   	  				         (typeof fields.del   != "undefined") ||
+   	  				         (typeof fields.id    != "undefined") ) {
+   	  				     	after_save1 = function() { this_db.jsUpdateNextAction(); };
+   	  				     }
+   	  				
+   	  				     if(typeof fields.parent_id != "undefined") { //если нужно пересчитать детей у родителей всего дерева
+   	  				         	after_save1 = function() { this_db.jsUpdateChildrenCnt(); };
+   	  				     }
+   	  				
+   	  				     if( (typeof fields.did   != "undefined") || //если нужно будет пересчитать детей у родителя
+   	  				         (typeof fields.del   != "undefined") ||
+   	  				         (typeof fields.date1 != "undefined") ||
+   	  				         (typeof fields.date2 != "undefined") ||
+   	  				         (typeof fields.id    != "undefined") ) {
+   	  				         	after_save2 = function() { this_db.jsUpdateChildrenCnt( record.parent_id ); };
+   	  				     }
+   	  				
+   	  				     //сохраняю в локальную базу данных    
+   	  				     db.put(global_table_name,record).done(function(){ after_save1(); after_save2(); });
+   	  				   } 
+   	  				
+   	  				}
+
+
+
+
+   	  				d.resolve(my_element[0]);
+   	  			});
+   	  		} else {
+	   	  		d.resolve();
+   	  		}
+			
+			return d.promise();
+		  }
 			
 		 //находит или меняет текст. Если текст длинный, закидывает в базу _texts
 		 //api4tree.jsFindLongText(6796).done(function(text){console.log(text);})
@@ -2611,6 +2723,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  	}
     	  	return d.promise();
 		 } //jsFindLongText
+		 
+		 
+		 this.jsFindLongTextComment = function(id) {
+			 var d = $.Deferred();
+   	  		 db.get(global_table_name+"_comments",id.toString()).done(function(record) {
+   	  		 	d.resolve(record?record:"");
+   	  		 	});
+   	  		 return d.promise();
+			 
+		 }
 		   	
 		 //поиск всех элементов родителя  	
 		 this.jsFindByParent = function(parent_id) {
@@ -2619,6 +2741,75 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				return el && el.del!=1 && el.parent_id==parent_id;
 			});
 			return answer;
+		 }
+
+		 //отбор комментариев по tree_id без текстов
+		 this.jsFindByTreeIdCommentFast = function(tree_id) {
+		  	var d = new $.Deferred();
+		  	
+			var myanswers = my_all_comments.filter(function(el,i) {
+				return el && el.tree_id==tree_id;
+			});
+			
+			return myanswers;
+		 }
+
+		 //отбор комментариев по tree_id с текстами
+		 this.jsFindByTreeIdComment = function(tree_id) {
+		  	var d = new $.Deferred();
+		  	
+			var myanswers = my_all_comments.filter(function(el,i) {
+				return el && el.tree_id==tree_id;
+			});
+			
+			if(myanswers) { //если комментарий найден
+				var dfdArray = [];
+				var my_elements =[];
+				$.each(myanswers, function(i, element){
+					var id = element.id;
+					var done_element = this_db.jsFindLongTextComment(id.toString()).done(function(record) {
+	   	  				my_elements.push( record ); 
+	   	  			});
+	   	  			dfdArray.push( done_element );
+   	  			}); //each
+
+   	  			$.when.apply( null, dfdArray ).then( function(x){ //выполняю тогда => все длинные тексты считаны
+   	  			    d.resolve(my_elements);
+   	  			});
+   	  		 } else {
+	   	  		 d.resolve(); //если ничего не найдено
+   	  		 } //if(answer)
+
+			return d.promise();
+		 }
+
+		 //отбор комментариев по parent_id		 
+		 this.jsFindByParentComment = function(parent_id) {
+		  	var d = new $.Deferred();
+		  	
+			var myanswers = my_all_comments.filter(function(el,i) {
+				return el && el.parent_id==parent_id;
+			});
+			
+			if(myanswers) { //если комментарий найден
+				var dfdArray = [];
+				var my_elements =[];
+				$.each(myanswers, function(i, element){
+					var id = element.id;
+					var done_element = this_db.jsFindLongTextComment(id.toString()).done(function(record) {
+	   	  				my_elements.push( record ); 
+	   	  			});
+	   	  			dfdArray.push( done_element );
+   	  			}); //each
+
+   	  			$.when.apply( null, dfdArray ).then( function(x){ //выполняю тогда => все длинные тексты считаны
+   	  			    d.resolve(my_elements);
+   	  			});
+   	  		 } else {
+	   	  		 d.resolve(); //если ничего не найдено
+   	  		 } //if(answer)
+
+			return d.promise();
 		 }
 		 
 		 //добавление нового элемента в базу к родителю parent_id
@@ -2714,6 +2905,22 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 });
 			 this_db.log("finish jsUpdateNextAction");
 		 } //jsUpdateNextAction
+		    
+		 //кэширует в базе кол-во комментариев
+		 this.jsUpdateCommentsCnt = function(id) {
+			this_db.log("start jsUpdateCommentsTmpCnt: id="+id);
+			if(!id) { //если нужно обработать все элементы базы
+				var answer = my_all_data.filter(function(el,i){ 
+			        if(el) {
+			    	   	var tmp_comments = this_db.jsFindByTreeIdCommentFast(el.id).length;
+			    	   	this_db.jsFind(el.id.toString(),{tmp_comments:tmp_comments});
+			    	}
+			    });
+			} else { //если нужно посчитать детей только id родителя
+				this_db.jsFind(id.toString(),{tmp_comments:jsFindByTreeIdCommentFast(el.id).length});
+			}
+			this_db.log("finish jsUpdateCommentsTmpCnt");
+		 }
 		     
 		 //кэширует в базе tmp_childrens, для быстрой работы (кол-во детей)
 		 this.jsUpdateChildrenCnt = function(id) {
@@ -2738,7 +2945,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	setTimeout(function(){ this_db.log("Тип базы данных: "+db.getType());},500 );
 		 	this_db.log("Удаляю локальную DB");
 		 	
-		 	db.clear(global_table_name).done(function(){
+		 	db.clear(global_table_name+"_comments").done(function(){
+		 	   db.clear(global_table_name).done(function(){
 		 	    this_db.log("Удалил локальную DB. Читаю данные с сервера.");
 		 	    var sync_id = this_db.jsGetSyncId();
 		 	    var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id; 
@@ -2773,6 +2981,25 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		        	   }
 		      	   }); //each
 		      	   this_db.log("Создал массив. Сохраняю локально.");
+		      	   
+		      	   if(data.comments) {
+			      	    my_all_comments = [];
+		      	   		$.each(data.comments, function(i, value) {
+			      	   		value["new"]="";
+			      	   		value["lsync"] = lsync_now;
+			      	   		my_all_comments.push(value);
+		      	   		});
+			      	   	db.put(global_table_name+"_comments", my_all_comments).then(function(ids){
+							console.info("saved_comments",ids);
+							my_all_comments = [];
+							$.each(data.comments, function(i, value) {
+							    value["text"]="";
+							    my_all_comments.push(value);
+							});
+							console.info(my_all_comments);
+			      	   	});
+			      	   	
+		      	   }
 		   
 		      	   db.put(global_table_name, my_all_data).then(function(ids) { //сохраняю главный массив
 		      	       this_db.log(ids.length+' записей записано в лок.базу = '+this_db.SizeOfObject(my_all_data)+'b');
@@ -2786,8 +3013,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	       this_db.jsUpdateNextAction();
 		      	       jsProgressStep();
 		      	       this_db.jsUpdateChildrenCnt();
+		      	       this_db.jsUpdateCommentsCnt();
 		      	       jsProgressStep();
-		      	         
 		      	       d.resolve();
 		      	       $(this_db).triggerHandler({type:"SyncIsFinished",value:jsNow()});		    	
 		      	   }, function(e) {
@@ -2795,7 +3022,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	   });
 
 		 	    }); //getJSON
-		 	}); //clear(4tree_db)
+		 	  }); //clear(4tree_db)
+		 	}); //comments_db_clear
 			return d.promise();
 	  	 } //js_loadAllDataFromServer
 		     
@@ -2820,10 +3048,25 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	    				})(d);
 
 		    			} else {
+
+   					    //загружаю комментарии
+   						db.values(global_table_name+"_comments",null,MAX_VALUE).done(function(records) {
+   							my_all_comments = [];
+   							var len=records.length;
+   							for(var i=0; i<len; i++) {
+   								rec = records[i];
+   								rec.text = "";
+	   							my_all_comments.push( rec );
+   							}
+   							console.info(api4tree.SizeOfObject(my_all_comments));
+   						});
+
     					jsProgressStep();
    						this_db.jsUpdateChildrenCnt();
    						jsProgressStep();
    						this_db.jsUpdateNextAction();		    						
+
+
 		    			d.resolve();
 		    			}
 		    		});
@@ -3573,8 +3816,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	  		icon_share = "<div title='"+frend_share[0]["fio"]+" ("+frend_share[0]["email"]+")\nделится с вами СВОЕЙ веткой' class='share_img'><img src='"+frend_share[0]["foto"]+"'></div>";
 		 	  	}
 		 	  
-		 	var comment_count = jsFindByTreeId(data.id,-1).length;
-		 	if (comment_count==0) comment_count="";
+		 	var comment_count = data.tmp_comments?data.tmp_comments:"";
 		 		    
 		 return {comment_count:comment_count?comment_count:"",
 		 	     countdiv:countdiv, //кол-во элементов внутри папки
@@ -3774,7 +4016,6 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			$.each( mydata, function(i,dd) {
 				if(parseInt(dd.position,10) != j && dd.did=="") { //если позиция не корректная
 					api4tree.jsFind(dd.id,{position : j});
-					console.info("Переделал одну позицию (сортировка) = ",dd.id);
 				}
 				if(dd.did=="") j++;
 			});
