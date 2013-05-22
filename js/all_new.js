@@ -4084,7 +4084,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  this.jsRedactorOpenRecursive = function(id) {
 		    var this_id = api4tree.jsFind(id).id;
 		    var elements_from_recursive = api4tree.jsRecursive(id);
-			var amount = parseInt(recursivedata.length,10);
+//			var amount = parseInt(recursivedata.length,10);
 	   		var need_open = [];
 	   		
 	   		need_open.push(this_id);
