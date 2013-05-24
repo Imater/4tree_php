@@ -1689,7 +1689,7 @@ function jsShowCalendar() //отображаю календарь
 			    	today.setSeconds(0);
 			    	}
 			   
-			   jsFind(event.id,{ date1 : today.toMysqlFormat() });
+			   api4tree.jsFind(event.id,{ date1 : today.toMysqlFormat() });
 			   jsRefreshTree();
 			   
 			  
@@ -2037,22 +2037,6 @@ if(type==0)
 	}
 }
 
-function RestMin(restsec) //сколько осталось минут
-{
-var dots=":",my_nul;
-
-var min = parseInt(restsec/60,10);
-
-var sec = parseInt(restsec-min*60,10);
-
-	     if (sec<'10') my_nul = '0';
-	     else my_nul = '';
-
-
-var answer = min + dots + my_nul + sec + " — осталось";
-
-return answer;
-}
 
 if (!Array.prototype.filter)
 {

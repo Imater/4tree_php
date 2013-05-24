@@ -921,7 +921,7 @@ if(!need_text)
 	          preloader.trigger('hide');
 	          if($(".redactor_editor:focus").hasClass("comment_enter_input"))
 	          	{
-	          	var insert_red = myr_comment; //???
+	          	var insert_red = $('.comment_enter_input'); //???
 	          	}
 	          else
 	          	{
