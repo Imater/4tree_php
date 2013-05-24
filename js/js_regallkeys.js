@@ -77,70 +77,6 @@ function jsCloneChat(user_id) //клонирую чат из template
 
 var last_message_sync_time = 0;
 
-function _manageEvent(eventMessage) {
-      var chat = $("#chat");
-      if (eventMessage != '') {
-//        var values = $.parseJSON(eventMessage);
-//        console.info("mymessage-type",eventMessage);
-        if( eventMessage.type == "need_refresh_now" ) { 
-        		api4tree.jsSync(); 
-        		setTimeout(function(){ alert("Пришло новое письмо!");},800); 
-        }
-        if( eventMessage.type == "need_refresh_id" ) //сообщение о изменившихся данных от do.php
-        	{ 
-        	there_was_message_about_change = true;
-        	var mysync_id = api4tree.jsGetSyncId();
-        	if(mysync_id!=eventMessage.sync_id) //не нужно обновлять, если сообщение пришло благодаря этому клиенту
-        		{
-	        		if( jsNow() - last_message_sync_time > 2000 )
-	        			{
-	        			 setTimeout(function()
-	        			 	{ 
-		        			last_message_sync_time = jsNow();
-	        			 	if($("#mypanel .n_title[contenteditable=true]").length == 0) jsSync(); 
-	        			 	},300); 
-	        			 jsTitle("Ваши данные изменились на другом комьютере. Обновляю.",5000); 
-	        			}
-	        		console.info(eventMessage.sync_id,eventMessage.txt);
-        		}
-        	}
-      }
-    };
-
-function _statuschanged(state) {
-      if (state == PushStream.OPEN) {
-        $(".offline").hide();
-        $(".online").show();
-        $("#mode").html(pushstream.wrapper.type);
-//        console.info("Связь с сервером",5000);
-      } else {
-        $(".offline").show();
-        $(".online").hide();
-        $("#mode").html("");
-//        console.info("Связь с сервером прервана",5000);
-      }
-    };
-
-function _connect(channel) {
-      if(!channel) return true;
-      pushstream.removeAllChannels();
-      try {
-        pushstream.addChannel(channel);
-        pushstream.connect();
-      } catch(e) {alert(e)};
-
-      $("#chat").val('');
-    }
-
-PushStream.LOG_LEVEL = 'debug';
-var pushstream = new PushStream({
-      host: "4do.me", //window.location.hostname
-      port: window.location.port,
-      modes: "websocket|longpolling|eventsource|stream" //websocket|eventsource|stream
-    });
-
-pushstream.onmessage = _manageEvent;
-pushstream.onstatuschange = _statuschanged;
 
 var progress_load=0;
 function jsProgressStep()
@@ -252,58 +188,6 @@ function jsDelComment(comment_id)
 		}
 }
 
-function jsShowAllComments(tree_id) //показываю все комментарии
-{
-return true;
-	$("#comment_enter_place").append( $("#comment_enter") );
-	element = api4tree.jsFind(tree_id);
-	if(!element) return false;
-	var comments_count = jsFindByTreeId(tree_id,-1).length;
-	myhtml = '<h3><i class="icon-comment"></i> Комментарии ('+comments_count+')</h3>';
-	jsShowComments(tree_id, 0);	
-	if(comments_count==0 || !comments_count) comments_count = "";
-	$("#node_"+tree_id).find(".tcheckbox").html(comments_count);
-
-	myhtml += "";
-	$("#tree_comments_container").html(myhtml);
-	onResize();
-	if( $("#tree_news").is(":visible") ) jsShowNews(0);
-	
-}
-function jsShowComments(tree_id, parent_id) //рекурсивно заполняет глобальную переменную myhtml сообщениями комментариев
-{
-	var source = $("#comment_template").html();
-	template = Handlebars.compile(source);
-	
-	var chat = jsFindByTreeId(tree_id,parent_id);
-	var html = "";
-	$.each(chat, function(i,d)
-		{
-		var frend = jsFrendById(d.user_id);
-		d.foto = frend.foto;
-		d.name = frend.fio;
-		d.tree_title = "";
-
-		if(d.add_time=="0")  d.add_time_txt = "";
-		else
-			{
-			var add_time = new Date( parseInt(d.add_time) );
-			d.add_time_txt = add_time.jsDateTitleFull("need_short_format");
-			}
-		
-		myhtml += template(d);
-		
-		if(jsFindByParentComments(d.id).length>0)
-		  {
-		  myhtml +="<ul>";
-		  jsShowComments(tree_id, d.id);
-		  myhtml +="</ul>";
-		  }
-		
-		});
-		
-	
-}
 
 function jsShowChatHistory(tree_id) //возвращает комментарии являющиеся чатом (история) tree_id = "chat_11_12"
 {
@@ -371,16 +255,7 @@ function jsRefreshFrends()
 
 }
 
-function jsFrendById(user_id)
-{	
-	if(!my_all_frends) return false;
-	var answer = my_all_frends.filter(function(el,i) 
-			{ 
-			return el.user_id == user_id;
-			});
-	return answer[0];
 
-}
 
 function jsAddComment(tree_id,parent_id,text)
 {
@@ -2181,6 +2056,7 @@ return answer;
 
 if (!Array.prototype.filter)
 {
+  console.info(".FILTER IS NOT HERE");
   Array.prototype.filter = function(fun /*, thisp */)
   {
     if (this == null)

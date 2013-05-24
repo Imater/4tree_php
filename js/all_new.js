@@ -22,9 +22,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		  var my_all_data, my_all_comments,
+		  var my_all_data, my_all_comments, my_all_frends,
 		  	  recursive_array=[],
-		  	  scrolltimer, 
+		  	  scrolltimer, myhtml_for_comments ="",
 		  	  mymetaKey, //нажата ли клавиша Win или Cmd
 		  	  old_before_diary,
 		  	  member_old_id = false, //для запоминания id выбранной заметки на время пользования дневником
@@ -1277,7 +1277,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			$("body").delegate(".chat_send_button","click",function(){ //добавляю сообщение в чат
 			    var to_user_id = $(this).parents(".chat_box:first").attr("user_id");
 			    var text = $(this).parents(".chat_box:first").find(".redactor_editor").getCode();
-			    jsAddComment("chat_"+main_user_id+"_"+to_user_id,-1,text);
+			    api4tree.jsAddComment("chat_"+main_user_id+"_"+to_user_id,-1,text);
 			
 			    myhtml="";
 			 	var chat_html = jsShowChatHistory( "chat_"+main_user_id+"_"+to_user_id );
@@ -1550,7 +1550,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      if(comment_id) comment_id = comment_id.replace("comment_","");
 			      if(!comment_id) return false;
 			      jsDelComment( comment_id );
-			      jsShowAllComments(id);
+			      api4tree.jsShowAllComments(id);
 			      onResize();
 			      return false;
 			      });
@@ -1590,12 +1590,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			        		var comment_id = $(this).parents(".comment_box:first").attr("id");
 			        		if(comment_id) comment_id = comment_id.replace("comment_","");
 			        		else comment_id = 0;
-			        		jsAddComment( id , comment_id, txt );
+			        		api4tree.jsAddComment( id , comment_id, txt );
 			        	}
 			     $("#comment_enter_place").append( $("#comment_enter") );
 			     $(".comment_enter_input").setCode("");
 			     if(comment_id!=0) var old_scroll = $("#tree_comments_container").scrollTop();
-			     jsShowAllComments(id);
+			     api4tree.jsShowAllComments(id);
 			     if(comment_id==0) $("#tree_comments_container").scrollTop(999999999);
 			     else $("#tree_comments_container").scrollTop(old_scroll);
 			     $(".comment_enter_input").focus();
@@ -1605,14 +1605,20 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 $('.comment_box').delegate(".comment_like","click",function(){
 			     var id = $(this).attr("id").replace("");
 			     if(!id) return false;
-			     jsAddComment( id , 0, $(".comment_enter_input").html() );
+			     api4tree.jsAddComment( id , 0, $(".comment_enter_input").html() );
 			     $(".comment_enter_input").html("");
-			     jsShowAllComments(id);
+			     api4tree.jsShowAllComments(id);
 			     return false;
 			 });
 			 
+			 var rt;
 			 $("body").delegate(".comment_enter_input","keydown",function(event){
-			     console.info(event.keyCode, event);
+			     //console.info(event.keyCode, event);
+			     clearTimeout(rt);
+			     rt = setTimeout(function(){	
+			     	pushstream.sendMessage( $(".comment_enter_input").html() );
+				 	},500);
+				 	
 			     if( (event.keyCode == 13) && ( event.altKey || event.ctrlKey || event.metaKey ) )
 			     	{
 			     	event.preventDefault();
@@ -2191,7 +2197,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	     var key_help = [];
 			  	 clearTimeout(show_help_timer); //скрываю alt подсказку
 			  	 
-//			     console.info("нажата клавиша", e.keyCode);
+			     //console.info("нажата клавиша", e.keyCode);
 			  
 			  	 if(e.keyCode==91) { mymetaKey = true; } //регистрируем глобально, что нажата Win или Cmd
 			  	 
@@ -2239,6 +2245,20 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
    	      	        	localStorage.setItem("pomidor_last_title", answer);
     	      	   		api4tree.jsDiaryTodayAddPomidor(answer,"green"); 
     	      	   		}
+			  	   return false;
+			  	 }
+			     key_help.push({key:"G",title:"Стартовать таймер Pomidorro"});
+			  	 if( (e.altKey==true) && (e.keyCode==71) ) { //alt+G - обновляю дерево
+			       e.preventDefault();
+				   if(!$(".pomidor_now").attr('id')) {
+				       var id=1;				   	
+				   } else {
+	   	      	       var id = parseInt( $(".pomidor_now").attr('id').replace("pomidor",""),10 );
+	   	      	       if (id==8) id=0;
+	   	      	       id = id+1;
+   	      	       }
+	  			   $("#pomidoro_icon i").removeClass("pomidor_now");
+	  			   $("#pomidor"+id).addClass("pomidor_now").click();
 			  	   return false;
 			  	 }
 			     key_help.push({key:"F",title:"развернуть редактор"});
@@ -2574,6 +2594,36 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			return answer;
 		  } //jsFind
 		  
+		  this.jsAddComment = function(tree_id,parent_id,text) {
+		  	var new_id = -parseInt(1000000+Math.random()*10000000);
+		  
+		  	var new_line = my_all_comments.length;
+		  	my_all_comments[new_line]=new Object(); 
+		  	var element = my_all_comments[new_line];
+		  
+		  	element.id = new_id.toString();
+		  	element.parent_id = parseInt(parent_id);
+		  	element.tree_id = tree_id;
+		  	element.text = text;
+		  	element.del = 0;
+		  	element["new"] = "";
+		  	element.time = jsNow();
+		  	element.add_time = jsNow();
+		  	element.lsync = jsNow()-1;
+		  	element.user_id = main_user_id;
+		  	
+
+			db.put(global_table_name+"_comments",element).done(function(){ 
+				console.info("Новый элемент записан в базу: "+element.id); 
+				start_sync_when_idle=true;
+			});
+			
+			api4tree.jsUpdateCommentsCnt(element.parent_id);
+
+		    return new_id;
+		  }
+		  
+		  
 		  //находит комментарий
 		  this.jsFindComment = function(id,fields,save_anyway) {
 		  	var d = new $.Deferred();
@@ -2588,85 +2638,51 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				db.get(global_table_name+"_comments",id.toString()).done(function(record) {
    	  				my_element[0].text = record?record.text:"";
 
-
-
-   	  				if(answer && fields) { //если нужно присваивать значения
+   	  				if(fields) { //если нужно присваивать значения
    	  				   var record;
    	  				   var is_changed = false;
    	  				   var fields_changed = JSON.stringify(fields);
    	  				   record = answer;
    	  				   //поле, где записаны все изменённые не синхронизированные поля:
    	  				   var changed_fields = record["new"]; 
-   	  				   $.each(fields, function(namefield,newvalue) 
-   	  				   	{ 		
-   	  				   	if( (record[namefield]!=newvalue) || save_anyway) 
-   	  				   		{
+   	  				   $.each(fields, function(namefield,newvalue) {
+   	  				   	if( (record[namefield]!=newvalue) || save_anyway) {
    	  				   		is_changed = true;
    	  				   		record[namefield] = newvalue;
-   	  				
-   	  				   		if(namefield=="text") {
-   	  				  		    if(newvalue.length==0) 
-   	  				   		       record["tmp_txt_md5"] = "";
-   	  				   		    else
-   	  				   		       record["tmp_txt_md5"] = hex_md5(newvalue).substr(0,5); //md5 штамп текста, для сверки с сервером
-   	  				   		}
    	  				   		
-   	  				   		//console.info("need_save: ",namefield," = ",newvalue);
-   	  				   	  if((changed_fields.indexOf(namefield+",")==-1) && (namefield.indexOf("tmp_")==-1))
-   	  				   	  		{ 
+   	  				   		if((changed_fields.indexOf(namefield+",")==-1) && 
+   	  				   		   (namefield.indexOf("tmp_")==-1)) {
    	  				   	  		changed_fields = changed_fields + namefield + ","; 
-   	  				   	  		}
-   	  				   		}
-   	  				   	});
+   	  				   	    }
+   	  				   	}
+   	  				   }); //each(fields)
    	  				   	
    	  				   if(is_changed) {
    	  				     record["new"] = changed_fields;
    	  				
    	  				     //если не меняли время вручную и это не временное поле
-   	  				     if( ((changed_fields.indexOf("new,")==-1) && (changed_fields.indexOf("time,")==-1) && (fields_changed.indexOf("tmp_")==-1) && (save_anyway != "dont_sync")) || (save_anyway=="need_sync")) 
-   	  				         {
+   	  				     if( ((changed_fields.indexOf("new,")==-1) && 
+   	  				     	  (changed_fields.indexOf("time,")==-1) && 
+   	  				     	  (fields_changed.indexOf("tmp_")==-1) && 
+   	  				     	  (save_anyway != "dont_sync")) || 
+   	  				     	  (save_anyway=="need_sync")) {
    	  				         //если не скроллинг
    	  				         if(changed_fields!="s,") $("#node_"+id+" .sync_it_i").removeClass("hideit"); 
    	  				         record.time = parseInt(jsNow(),10); //ставлю время изменения (для синхронизации)
    	  				         start_sync_when_idle = true;
-   	  				         }
-   	  				     else
-   	  				         {
+   	  				     } else {
    	  				         record["new"] = "";
-   	  				         }
+   	  				     }
    	  				     
-   	  				     var after_save1 = function() {};
-   	  				     var after_save2 = function() {};
-   	  				     
-   	  				     if( (typeof fields.did   != "undefined") || //если нужно будет пересчитать следующие действия
-   	  				         (typeof fields.title != "undefined") ||
-   	  				         (typeof fields.date1 != "undefined") ||
-   	  				         (typeof fields.date2 != "undefined") ||
-   	  				         (typeof fields.del   != "undefined") ||
-   	  				         (typeof fields.id    != "undefined") ) {
-   	  				     	after_save1 = function() { this_db.jsUpdateNextAction(); };
-   	  				     }
-   	  				
-   	  				     if(typeof fields.parent_id != "undefined") { //если нужно пересчитать детей у родителей всего дерева
-   	  				         	after_save1 = function() { this_db.jsUpdateChildrenCnt(); };
-   	  				     }
-   	  				
-   	  				     if( (typeof fields.did   != "undefined") || //если нужно будет пересчитать детей у родителя
-   	  				         (typeof fields.del   != "undefined") ||
-   	  				         (typeof fields.date1 != "undefined") ||
-   	  				         (typeof fields.date2 != "undefined") ||
-   	  				         (typeof fields.id    != "undefined") ) {
-   	  				         	after_save2 = function() { this_db.jsUpdateChildrenCnt( record.parent_id ); };
-   	  				     }
+   	  				     var after_save1 = function() { this_db.jsUpdateCommentsCnt(record.tree_id)};
    	  				
    	  				     //сохраняю в локальную базу данных    
-   	  				     db.put(global_table_name,record).done(function(){ after_save1(); after_save2(); });
+   	  				     db.put(global_table_name+"_comments",record).done(function(){ 
+   	  				     	after_save1(); 
+   	  				     });
    	  				   } 
    	  				
-   	  				}
-
-
-
+   	  				} //if(fields)
 
    	  				d.resolve(my_element[0]);
    	  			});
@@ -2743,10 +2759,85 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			return answer;
 		 }
 
+
+
+		 //показываю все комментарии
+		 this.jsShowAllComments = function(tree_id) {
+		 	$("#comment_enter_place").append( $("#comment_enter") );
+		 	var element = api4tree.jsFind(tree_id);
+		 	if(!element) return false;
+		 	
+		 	var comments_count = this_db.jsFindByTreeIdCommentFast(tree_id).length;
+		 	
+		 	myhtml_for_comments = '<h3><i class="icon-comment"></i> Комментарии ('+comments_count+')</h3>';
+		 	
+		 	this_db.jsFindByTreeIdComment(tree_id).done(function(comments){
+		 	
+			 	this_db.jsShowComments(comments,tree_id, 0); //комменты добавляются в myhtml_for_comments
+			 	
+			 	if(comments_count==0 || !comments_count) comments_count = "";
+			 	$("#node_"+tree_id).find(".tcheckbox").html(comments_count);
+			 	myhtml_for_comments += "";
+			 	$("#tree_comments_container").html(myhtml_for_comments); //выводим на экран
+			 	onResize();
+			 	if( $("#tree_news").is(":visible") ) jsShowNews(0);
+			});
+		 }
+
+		 function jsFilterCommentsByParent(comments,parent_id) {
+			 	var answer = comments.filter(function(el,i) {
+			 	    return el && el.del!=1 && el.parent_id==parent_id;
+			 	});
+			 	return answer;
+		 }
+
+		 //рекурсивно заполняет глобальную переменную myhtml_for_comments сообщениями комментариев
+		 this.jsShowComments = function(comments,tree_id, parent_id) 
+		 {
+		 	var source = $("#comment_template").html();
+		 	template = Handlebars.compile(source);
+		 	
+			 	var this_level_comments = jsFilterCommentsByParent(comments, parent_id);
+			 	
+			 	$.each(this_level_comments, function(i,d)
+			 		{
+			 		var frend = this_db.jsFrendById(d.user_id);
+			 		d.foto = frend.foto;
+			 		d.name = frend.fio;
+			 		d.tree_title = "";
+			 
+			 		if(d.add_time=="0")  d.add_time_txt = "";
+			 		else
+			 			{
+			 			var add_time = new Date( parseInt(d.add_time) );
+			 			d.add_time_txt = add_time.jsDateTitleFull("need_short_format");
+			 			}
+			 		
+			 		myhtml_for_comments += template(d);
+			 		
+			 		if(jsFilterCommentsByParent(comments,d.id).length>0)
+			 		  {
+			 		  myhtml_for_comments +="<ul>";
+			 		  this_db.jsShowComments(comments,tree_id, d.id);
+			 		  myhtml_for_comments +="</ul>";
+			 		  }
+			 		
+			 	});
+		 }
+		 
+		 //информация о друге
+		 this.jsFrendById = function(user_id) {
+		 	if(!my_all_frends) return false;
+		 	var answer = my_all_frends.filter(function(el,i) 
+		 			{ 
+		 			return el.user_id == user_id;
+		 			});
+		 	return answer[0];
+		 }		 
+
 		 //отбор комментариев по tree_id без текстов
 		 this.jsFindByTreeIdCommentFast = function(tree_id) {
-		  	var d = new $.Deferred();
-		  	
+
 			var myanswers = my_all_comments.filter(function(el,i) {
 				return el && el.tree_id==tree_id;
 			});
@@ -2917,7 +3008,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	}
 			    });
 			} else { //если нужно посчитать детей только id родителя
-				this_db.jsFind(id.toString(),{tmp_comments:jsFindByTreeIdCommentFast(el.id).length});
+	    	   	var tmp_comments = this_db.jsFindByTreeIdCommentFast(id).length;
+				this_db.jsFind(id.toString(),{tmp_comments:tmp_comments});
 			}
 			this_db.log("finish jsUpdateCommentsTmpCnt");
 		 }
@@ -3058,17 +3150,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
    								rec.text = "";
 	   							my_all_comments.push( rec );
    							}
-   							console.info(api4tree.SizeOfObject(my_all_comments));
+   							jsProgressStep();
+   							this_db.jsUpdateChildrenCnt();
+   							jsProgressStep();
+   							this_db.jsUpdateNextAction();		    						
+   							d.resolve();
    						});
-
-    					jsProgressStep();
-   						this_db.jsUpdateChildrenCnt();
-   						jsProgressStep();
-   						this_db.jsUpdateNextAction();		    						
-
-
-		    			d.resolve();
-		    			}
+		    			} //else records.length != 0
 		    		});
 		    		
 	  		return d.promise();
@@ -3473,6 +3561,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 							 	   	need_refresh = true;
 						 	   } 
 					 	  });
+					 	}
+					 	
+					 	if(data.frends) {
+					 	   //my_all_share = data.frends.share;
+					 	   my_all_frends = data.frends.frends;
+					 	   //jsRefreshOneElement(-3);
+					 	   jsRefreshFrends();
 					 	}
 				     	
 				     	
@@ -4178,7 +4273,6 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	open_redactor_timer = setTimeout(function()
 		 		{
 		 	 	api4editor.jsRedactorOpen([id],iamfrom); 
-		 	 	jsShowAllComments(id);
 		 	 	jsCalendarNode(id);
 		 	 	jsAddFavRed("",id);
 		 	 	},50 );
@@ -4313,6 +4407,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 				myr.setCode( mytext ); //загружаю текст в редактор
 				$(".bottom_right>.redactor_box").scrollTop(scroll_top);
 				this_db.jsParseWikiLinks();
+		 	 	api4tree.jsShowAllComments(el.id); //показываю комментарии
+
 
 			});
 			  
@@ -4719,6 +4815,20 @@ var API_4OTHERS = function() {
       	        return pomidor_text[joke_id];
 		}
 		
+		function RestMin(restsec) {//сколько осталось минут
+			var dots=":",my_nul;
+			var min = parseInt(restsec/60,10);
+			var sec = parseInt(restsec-min*60,10);
+			
+		    if (sec<'10') { 
+		    	my_nul = '0';
+		    } else {
+		    	my_nul = '';
+		    }
+			return min + dots + my_nul + sec + " — осталось";
+		}
+		
+		
 		//запуск помидорки, если установленно время финиша
 		this.goPomidor = function() { 
 
@@ -4729,7 +4839,6 @@ var API_4OTHERS = function() {
 	      if ((!resttime) || (resttime<0)) { //если время уже давно вышло, сбрасываю
 	      	$("#pomidoro_icon i").removeClass("pomidor_now");
 	      	$("#pomidoro_icon").hide();
-	    	 console.info("resttime<","скрываю");
 	
 	      	localStorage.setItem("pomidor_id","0"); 
 	        localStorage.setItem("pomidor_endtime","0");
@@ -5330,6 +5439,7 @@ function jsSetDiaryDate(skipdays) {
 }
 	 
 //////////////////////////////////DO FIRST///////////////////////////////////////
+//эта функция запускается первой
 function jsDoFirst() { //функция, которая выполняется при запуске
 	jsProgressStep();
 	api4tree = new API_4TREE("4tree_db");
@@ -5360,7 +5470,8 @@ function jsDoFirst() { //функция, которая выполняется �
 		setTimeout(function() { jsProgressStep(); $("#load_screen").fadeOut(100); },50); //отображаю страницу
 		}); //загружаю таблицу из памяти
 } //jsDoFirst
-	 
+
+//запускается после загрузки всех данных из базы	 
 function jsDoAfterLoad() {
 	api4others.jsRerememberPomidor(); //вспоминает запущенные помидорки
 	
@@ -5413,8 +5524,8 @@ function jsDoAfterLoad() {
 }
 
 //показывает панель дерева	 
-function jsShowTreePanel() //запускается единожды
-{
+function jsShowTreePanel() {//запускается единожды
+
 	api4panel.jsShowTreeNode(1,false);
 		
 	if( window.location.hash.indexOf("edit") !=-1 ) {
@@ -5454,6 +5565,7 @@ function jsShowTreePanel() //запускается единожды
   		}
 	}
 
+
 } //jsShowTreePanel
 
 //добавляет закладку под редактор
@@ -5474,8 +5586,8 @@ function jsAddFavRed(mytitle,id) {
 }
 
 //выбирает блок текста вокруг найденного слова
-function jsFindText(text,findtext,length)
-{
+function jsFindText(text,findtext,length) {
+
 var text = text.substr(0,5000);
 text = text.replace("</p>"," \n");
 text = text.replace("</div>"," ");
@@ -5503,13 +5615,14 @@ if(i>0) answer = '…'+answer;
 if(length+findstart<text.length) answer = answer+'…';
 
 return answer;
+
 }
 
 var last_refresh;
 var need_to_re_refresh;
 //обновление дерева
-function jsRefreshTree()
-{
+function jsRefreshTree() {
+
 var myselected,myold_selected,old_scroll;
 last_refresh = jsNow();
 
@@ -5548,4 +5661,71 @@ if(isTree) {
 $('#calendar').fullCalendar( 'refetchEvents' ); 
 $("#mypanel").stop().scrollLeft(scrollleft);
 jsFixScroll(2);
+
 }
+
+
+function _manageEvent(eventMessage) {
+      var chat = $("#chat");
+      if (eventMessage != '') {
+//        var values = $.parseJSON(eventMessage);
+        console.info("@mymessage:",eventMessage);
+        $("#tree_news").html(eventMessage);
+        if( eventMessage.type == "need_refresh_now" ) { 
+        		api4tree.jsSync(); 
+        		setTimeout(function(){ alert("Пришло новое письмо!");},800); 
+        }
+        if( eventMessage.type == "need_refresh_id" ) //сообщение о изменившихся данных от do.php
+        	{ 
+        	there_was_message_about_change = true;
+        	var mysync_id = api4tree.jsGetSyncId();
+        	if(mysync_id!=eventMessage.sync_id) //не нужно обновлять, если сообщение пришло благодаря этому клиенту
+        		{
+	        		if( jsNow() - last_message_sync_time > 2000 )
+	        			{
+	        			 setTimeout(function()
+	        			 	{ 
+		        			last_message_sync_time = jsNow();
+	        			 	if($("#mypanel .n_title[contenteditable=true]").length == 0) jsSync(); 
+	        			 	},300); 
+	        			 jsTitle("Ваши данные изменились на другом комьютере. Обновляю.",5000); 
+	        			}
+	        		console.info(eventMessage.sync_id,eventMessage.txt);
+        		}
+        	}
+      }
+    };
+
+function _statuschanged(state) {
+      if (state == PushStream.OPEN) {
+        $(".icon-dot").show();
+        $(".icon-dot").attr("title","Online соединение установленно ("+pushstream.wrapper.type+")");
+      } else {
+        $(".icon-dot").hide();
+        $("#mode").html("");
+      }
+    };
+
+function _connect(channel) {
+      if(!channel) return true;
+      pushstream.removeAllChannels();
+      try {
+        pushstream.addChannel(channel);
+        pushstream.connect();
+      } catch(e) {alert(e)};
+
+      $("#chat").val('');
+    }
+
+PushStream.LOG_LEVEL = 'debug';
+//PushStream.LOG_OUTPUT_ELEMENT_ID = "tree_news";
+
+var pushstream = new PushStream({
+      host: "4do.me", //window.location.hostname
+      port: window.location.port,
+      modes: "websocket|longpolling" //websocket|longpolling|eventsource|stream
+    });
+
+pushstream.onmessage = _manageEvent;
+pushstream.onstatuschange = _statuschanged;
+

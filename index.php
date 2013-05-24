@@ -106,6 +106,7 @@ if(isset($_GET['confirm']))
 	-->
 
 
+	<script src="js/pushstream.js"></script>
 	<script src="js/js_regallkeys.js"></script>
 	<script src="js/all_new.js"></script>
 	<script src="js/!sync_modul.js"></script>
@@ -116,6 +117,7 @@ if(isset($_GET['confirm']))
 	<script src="jsredactor/redactor/redactor.js"></script>
 	<script src="js/iphone-style-checkboxes.js"></script>
 	<script src="js/jszip.js"></script>
+	
 <!--	 -->
 
 <script type="text/javascript">
@@ -457,6 +459,7 @@ if(isset($_GET['test']))
 
   <div class="open_calendars" title="Открыть календарь дневника"><i class="icon-calendar-inv"></i>
   </div><div id="diary_panel">
+  		<i class="icon-dot"></i>
 	    <div class="h_button"  title="Открыть день в дневнике"> <div class="todaydate">13 ноября</div>&nbsp;
 		</div>
 		<div class="h_button" title="Открыть неделю в дневнике (новое окно)"><div class="todayweek">(4 нед.)</div></div>

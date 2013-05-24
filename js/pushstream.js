@@ -156,11 +156,11 @@
         for (var i = 0; i < arguments.length; i++) {
           str += arguments[i] + " ";
         }
-        logElement.innerHTML += str + '\n';
+        logElement.innerHTML += str + '<br>';
 
-        var lines = logElement.innerHTML.split('\n');
+        var lines = logElement.innerHTML.split('<br>');
         if (lines.length > 100) {
-          logElement.innerHTML = lines.slice(-100).join('\n');
+          logElement.innerHTML = lines.slice(-100).join('<br>');
         }
       }
     }
