@@ -152,43 +152,6 @@ var NeedToRefresh = false;
 var sync_now=false;
 var sync_now_timer,myrefreshtimer;
 
-
-var del_timer;
-function jsDelCom(id) //удаление из базы определённого id и удаление его же в LocalStorage
-{
-		sync_now = true;
-		$.each(my_all_comments, function(i,el){
-    		if(el) if(el.id == id) { my_all_comments.splice(i,1); }
-    		});
-
-    	clearTimeout(del_timer);
-    	del_timer = setTimeout(function(){ jsSaveData(); },5000);
-    	
-		sync_now = false;
-}
-
-
-var myhtml="";
-function jsRefreshComments(tree_id)
-{
-	var old_scroll = $("#tree_comments_container").scrollTop();
-	jsShowAllComments(tree_id);
-	$("#tree_comments_container").scrollTop(old_scroll);
-}
-
-function jsDelComment(comment_id)
-{
-	if(jsFindByParentComments(comment_id).length>0) 
-		{
-		jsFindComment(comment_id,{text:"<font color='lightgray'>комментарий удалён</font>"});
-		}
-	else
-		{
-		jsFindComment(comment_id,{del:1});
-		}
-}
-
-
 function jsShowChatHistory(tree_id) //возвращает комментарии являющиеся чатом (история) tree_id = "chat_11_12"
 {
 	var source = $("#chat_template").html();
@@ -704,8 +667,12 @@ function jsSethash()
 			if(ignorehashchange) return false;
 		
 			check_hash_add_do();
-			
-	  		id = parseInt(window.location.hash.replace("#",""),36);
+			var myhash = window.location.hash;
+			if(myhash && myhash.indexOf("_")!=-1) {
+				var id = myhash;	
+			} else {
+		  		var id = parseInt(myhash.replace("#",""),36);
+		  	}
 	  		
 	  		if(("#"+id!=window.location.hash) && (id))
 	  			{

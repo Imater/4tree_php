@@ -42,187 +42,187 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      settings = {show_did:false}; //все параметры
 
 
-			  //собираю все события с датами для календаря
-			  this.jsGetEvents = function(start, end, callback) {
-			  setTimeout(function()
-			  	{
-			  	 var caldata2=[];
-			  	
-			  	 var caldata = my_all_data.filter(function(el) 
-			  			{ 
-			  		    if(!el) return false;
-			  			if(el.date1!="" && el.del!=1 ) return true; 
-			  			else return false;
-			  			} );
-			  	
-			  	var answer1=[];
-			  	var datenow = sqldate( jsNow() );
-			  			
-			  	$.each(caldata,function(i,d)
-			  		{
-			  		if(d.date1.indexOf("00:00:00")>-1) allday = true;
-			  		else allday = false;
-			  		
-			  		if(d.did=="")
-			  			var isdid = "";
-			  		else
-			  			var isdid = "did";
-			  		
-			  //		console.info(d);		
-			  		if(d.date1<datenow) isdid = isdid+" pasted";
-			  		
-			  		answer1.push({title:d.title, start:d.date1, end:d.date2, allDay:allday, id:d.id,className: isdid });	
-			  		});
-			  
-			  	$.each(caldata2,function(i,d)
-			  		{
-			  		console.info("c2=",d.id,d.date1);
-			  		
-			  		var element = api4tree.jsFind(d.id);
-			  		
-			  		if(d.date1.indexOf("00:00:00")>-1) var allday = true;
-			  		else var allday = false;
-			  		
-			  		if(element.did=="")
-			  			var isdid = "";
-			  		else
-			  			var isdid = "did";
-			  		answer1.push({title:element.title, start:d.date1, allDay:allday, id:element.id,className: isdid });	
-			  		});
-			  
-			  
-			  	callback(answer1);
-			  	},1);
-			  } 
+		  //собираю все события с датами для календаря
+    	  this.jsGetEvents = function(start, end, callback) {
+	    	  setTimeout(function() {
+	    	  	 var caldata2=[];
+	    	  	
+	    	  	 var caldata = my_all_data.filter(function(el) 
+	    	  			{ 
+	    	  		    if(!el) return false;
+	    	  			if(el.date1!="" && el.del!=1 ) return true; 
+	    	  			else return false;
+	    	  			} );
+	    	  	
+	    	  	var answer1=[];
+	    	  	var datenow = sqldate( jsNow() );
+	    	  			
+	    	  	$.each(caldata,function(i,d)
+	    	  		{
+	    	  		if(d.date1.indexOf("00:00:00")>-1) allday = true;
+	    	  		else allday = false;
+	    	  		
+	    	  		if(d.did=="")
+	    	  			var isdid = "";
+	    	  		else
+	    	  			var isdid = "did";
+	    	  		
+	    	  		if(d.date1<datenow) isdid = isdid+" pasted";
+	    	  		
+	    	  		answer1.push({title:d.title, start:d.date1, end:d.date2, 
+	    	  					  allDay:allday, id:d.id,className: isdid });	
+	    	  		});
+	    	  
+	    	  	$.each(caldata2,function(i,d)
+	    	  		{
+	    	  		console.info("c2=",d.id,d.date1);
+	    	  		
+	    	  		var element = api4tree.jsFind(d.id);
+	    	  		
+	    	  		if(d.date1.indexOf("00:00:00")>-1) var allday = true;
+	    	  		else var allday = false;
+	    	  		
+	    	  		if(element.did=="")
+	    	  			var isdid = "";
+	    	  		else
+	    	  			var isdid = "did";
+	    	  		answer1.push({title:element.title, start:d.date1, allDay:allday, id:element.id,className: isdid });	
+	    	  		});
+	    	  
+	    	  
+	    	  	callback(answer1);
+	    	  },1);
+    	  } 
 
-			  //сохраняет
-			  this.jsSaveTitle = function( sender, needsave )
-			  {
-			  	sender.removeAttr("contenteditable");
-			  	//.scrollTop(0);
-			  	console.info(sender.html(),"?");
-			  	if(needsave==1 && strip_tags(sender.html()) != "")
-			  	  {
-			  	  document.execCommand('unselect');
-			  	  if ( sender.html() != sender.attr("old_title") ) //если текст изменился
-			  	  		{
-			  	  		sender.attr("old_title",sender.html());
-			  	  		var id = api4tree.node_to_id( sender.parents("li").attr('id') );
-			  	  		
-			  	  		var fav = $("<div>"+sender.html()+"</div>").find("i").attr("class");
-			  	  		var title=sender.html();
-			  	  		title = strip_tags(title).trim().replace("<br>","");
-			  	  		window.title = "4tree.ru: "+title;
-			  	  		if(fav) title = "<i class='"+fav+"'></i> "+title;
-			  
-			  	  		
-			  	  		api4tree.jsFind(id,{ title : title });
-			  	  		//api4panel.jsRefreshOneElement(id);
-			  			api4others.jsSetTitleBack();
-			  			api4tree.jsMakeTabs();	
-			  //			if(id<0) jsStartSync("soon","IF NEW ELEMENT");
-			  			sender.removeAttr("old_title");
-			  			preloader.trigger('hide');
-			  	  		
-			  			}
-			  	  }
-			  	else
-			  	  {
-			  	  sender.html( sender.attr("old_title") ); //возвращаю текст обратно
-			  	  sender.removeAttr("old_title");
-			  	  jsTitle("Изменения отменены",5000);
-			  	  document.execCommand('unselect');
-			  
-			  	  }
-			  
-			  }
+		  //сохраняет название заметки
+    	  this.jsSaveTitle = function( sender, needsave ) {
+    	  
+    	  	sender.removeAttr("contenteditable");
+    	  	//.scrollTop(0);
+    	  	console.info(sender.html(),"?");
+    	  	if(needsave==1 && strip_tags(sender.html()) != "")
+    	  	  {
+    	  	  document.execCommand('unselect');
+    	  	  if ( sender.html() != sender.attr("old_title") ) //если текст изменился
+    	  	  		{
+    	  	  		sender.attr("old_title",sender.html());
+    	  	  		var id = api4tree.node_to_id( sender.parents("li").attr('id') );
+    	  	  		
+    	  	  		var fav = $("<div>"+sender.html()+"</div>").find("i").attr("class");
+    	  	  		var title=sender.html();
+    	  	  		title = strip_tags(title).trim().replace("<br>","");
+    	  	  		window.title = "4tree.ru: "+title;
+    	  	  		if(fav) title = "<i class='"+fav+"'></i> "+title;
+    	  
+    	  	  		
+    	  	  		api4tree.jsFind(id,{ title : title });
+    	  	  		//api4panel.jsRefreshOneElement(id);
+    	  			api4others.jsSetTitleBack();
+    	  			api4tree.jsMakeTabs();	
+    	  //			if(id<0) jsStartSync("soon","IF NEW ELEMENT");
+    	  			sender.removeAttr("old_title");
+    	  			preloader.trigger('hide');
+    	  	  		
+    	  			}
+    	  	  }
+    	  	else
+    	  	  {
+    	  	  sender.html( sender.attr("old_title") ); //возвращаю текст обратно
+    	  	  sender.removeAttr("old_title");
+    	  	  jsTitle("Изменения отменены",5000);
+    	  	  document.execCommand('unselect');
+    	  
+    	  	  }
+    	  
+    	  
+    	  }
 
+	      //создаю закладки из всех дел написанных большими буквами
+    	  this.jsMakeTabs = function() { 
+    		   //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
+    	  	   var data = my_all_data.filter(function(el) 
+    	  		    { 
+    	  		    if(!el) return false;
+    	  		      if(el.did==0) 
+    	  		      	if(el.del==0) 
+    	  		      	  if(el.user_id==main_user_id)
+    	  		      		if(el.title) 
+    	  		      		  if(el.title.indexOf("[@]")==-1)
+    		  		      		  if(el.title.indexOf("[[")==-1)
+    		  			  		  	if(el.parent_id>0) 
+    	  		      				{
+    	  		      				var shablon = /[a-z]|[а-я]+/; 
+    	  							var matches = el.title.match(shablon);
+    	  
+    	  		      				shablon = /(^\d{1,100})/; 
+    	  							var matches2 = el.title.match(shablon);
+    	  							
+    	  		      				if( !matches && !matches2 ) 
+    	  		      					return ( el.title==el.title.toUpperCase() ); 
+    	  		      				}
+    	  		    } );
+    	  
+    	  		function compare(a,b) {
+    	  		  if (parseFloat(a.tab) < parseFloat(b.tab))
+    	  		     return -1;
+    	  		  if (parseFloat(a.tab) > parseFloat(b.tab))
+    	  		    return 1;
+    	  		  return 0;
+    	  		}
+    	  
+    	  		data = data.sort(compare); //сортирую табы по полю tab
+    	  		
+    	  	var alltabs="<ul>";
+    	  	var d_len = data.length;
+    	  	for(i=0; i<d_len; i=i+1)
+    	  		{
+    	  		if(data[i].title.length>10) title = data[i].title;
+    	  		else title = "";
+    	  		alltabs = alltabs + "<li title='"+title+"' myid='"+
+    	  				  data[i].id+"'>"+api4others.jsShortText(data[i].title,20)+"</li>";
+    	  		}
+    	  	alltabs= alltabs+ "</ul>";
+    	  		
+    	  	$('#fav_tabs').html("").append(alltabs);	
+    	  
+    	  	this_db.jsCalcTabs();  //раcсчитываю ширину табов и перекидываю лишние в всплывающий список
+    	  }
 		      
-		      //создаю закладки из всех дел написанных большими буквами
-			  this.jsMakeTabs = function() { 
-				   //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
-			  	   var data = my_all_data.filter(function(el) 
-			  		    { 
-			  		    if(!el) return false;
-			  		      if(el.did==0) 
-			  		      	if(el.del==0) 
-			  		      	  if(el.user_id==main_user_id)
-			  		      		if(el.title) 
-			  		      		  if(el.title.indexOf("[@]")==-1)
-				  		      		  if(el.title.indexOf("[[")==-1)
-				  			  		  	if(el.parent_id>0) 
-			  		      				{
-			  		      				var shablon = /[a-z]|[а-я]+/; 
-			  							var matches = el.title.match(shablon);
-			  
-			  		      				shablon = /(^\d{1,100})/; 
-			  							var matches2 = el.title.match(shablon);
-			  							
-			  		      				if( !matches && !matches2 ) 
-			  		      					return ( el.title==el.title.toUpperCase() ); 
-			  		      				}
-			  		    } );
-			  
-			  		function compare(a,b) {
-			  		  if (parseFloat(a.tab) < parseFloat(b.tab))
-			  		     return -1;
-			  		  if (parseFloat(a.tab) > parseFloat(b.tab))
-			  		    return 1;
-			  		  return 0;
-			  		}
-			  
-			  		data = data.sort(compare); //сортирую табы по полю tab
-			  		
-			  	var alltabs="<ul>";
-			  	var d_len = data.length;
-			  	for(i=0; i<d_len; i=i+1)
-			  		{
-			  		if(data[i].title.length>10) title = data[i].title;
-			  		else title = "";
-			  		alltabs = alltabs + "<li title='"+title+"' myid='"+
-			  				  data[i].id+"'>"+api4others.jsShortText(data[i].title,20)+"</li>";
-			  		}
-			  	alltabs= alltabs+ "</ul>";
-			  		
-			  	$('#fav_tabs').html("").append(alltabs);	
-			  
-			  	this_db.jsCalcTabs();  //раcсчитываю ширину табов и перекидываю лишние в всплывающий список
-			  }
-		      
-			  this.jsCalcTabs = function() //устанавливает ширину табов у дневника и у избранных
-			  {
-			  clearTimeout(calctabs_timer);
-			  calctabs_timer = setTimeout(function()
-			  	{
-			  	$(".favorit_tabs").quickEach(function()
-			  		{
-			  				var this_tabs = $(this);
-			  				
-			  				var panel_width = this_tabs.parent('div').outerWidth();
-			  				
-			  				var all_w = 0;
-			  			
-			  				this_tabs.find("li").show();
-			  				this_tabs.next(".favorit_menu:first").find('ul').html('');
-			  				this_tabs.next(".favorit_menu:first").hide();
-			  				
-			  				this_tabs.find("li").quickEach(function(){
-			  					var current_w = $(this).outerWidth();
-			  					all_w = all_w + current_w;
-			  					
-			  					if(all_w>panel_width-25) 
-			  					  {
-			  					  this_tabs.next(".favorit_menu:first").show();
-			  					  ul = this_tabs.next(".favorit_menu:first").find('ul');
-			  					  $(this).hide().clone().appendTo(ul).show();
-			  					  }
-			  					
-			  					});
-			  		});
-			  		
-			  	},50);
-			  
-			  }
+		  this.jsCalcTabs = function() {//устанавливает ширину табов у дневника и у избранных
+    	  
+	    	  clearTimeout(calctabs_timer);
+	    	  calctabs_timer = setTimeout(function()
+	    	  	{
+	    	  	$(".favorit_tabs").quickEach(function()
+	    	  		{
+	    	  				var this_tabs = $(this);
+	    	  				
+	    	  				var panel_width = this_tabs.parent('div').outerWidth();
+	    	  				
+	    	  				var all_w = 0;
+	    	  			
+	    	  				this_tabs.find("li").show();
+	    	  				this_tabs.next(".favorit_menu:first").find('ul').html('');
+	    	  				this_tabs.next(".favorit_menu:first").hide();
+	    	  				
+	    	  				this_tabs.find("li").quickEach(function(){
+	    	  					var current_w = $(this).outerWidth();
+	    	  					all_w = all_w + current_w;
+	    	  					
+	    	  					if(all_w>panel_width-25) 
+	    	  					  {
+	    	  					  this_tabs.next(".favorit_menu:first").show();
+	    	  					  ul = this_tabs.next(".favorit_menu:first").find('ul');
+	    	  					  $(this).hide().clone().appendTo(ul).show();
+	    	  					  }
+	    	  					
+	    	  					});
+	    	  		});
+	    	  		
+	    	  	},50);
+    	  
+    	  
+    	  }
 		      
 		  //заполняю массив allmynotes,allmydates всеми непустыми заметками из дневника (для календариков)
 		  this.jsGetAllMyNotes = function() {
@@ -458,6 +458,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  if(id) return "node_"+id;
 		  }
 		  		  
+		  //выдаёт всех детей и внуков
 		  function recursive_by_parent(id) {
 			var answer = this_db.jsFindByParent(id,settings.show_did);
 			
@@ -467,7 +468,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			});
 		  return recursive_array;
 		  }
-		  	  
 		  
 		  //выбирает всех детей и внуков элемента id (44ms)
 		  this.jsRecursive = function(id) {
@@ -657,78 +657,52 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 		  }
 		  
-		  //ставлю выполнение у всех детей - рекурсивная функция 
-		  function jsMakeDidInside(id) 
-		  {
-		  	var mychildrens = this_db.jsFindByParent(id);
-		  	
-		  	if( mychildrens.length > 0 )
-		  		{
-		  		$.each(mychildrens,function(i,dd)
-		  		   {
-		  		   jsMakeDidInside(dd.id);
-		  		   var mydatenow = new Date();
-		  		   this_db.jsFind(dd.id,{ did:mydatenow.toMysqlFormat() });
-		  		   });
-		  		}
-		  	
-		  }
-		  
+		  //делает дело выполненным
 		  this.jsMakeDid = function(id) { //выполняю одно дело
 		  	   var mydatenow = new Date();
-		  	   this_db.jsFind(id,{ did:mydatenow.toMysqlFormat(), fav:0 });
-		  	   
-		  	   jsMakeDidInside(id); //выполняю рекурсивно всех детей
+		  	   var did_time = mydatenow.toMysqlFormat();
+		  	   var elements = api4tree.jsRecursive(id);
+		  	   $.each(elements,function(i,el){
+		  		   this_db.jsFind(el.id,{ did:did_time });
+		  		   $("#node_"+el.id+" .n_title").addClass("do_did");
+		  	   });
+
+		  	   this_db.jsFind(id,{ did:mydatenow.toMysqlFormat() });
+	  		   $("#node_"+id+" .n_title").addClass("do_did");
+
 		  	   var li = $("#mypanel #node_"+id);
-		  	   li.find(".n_title").addClass("do_did");
 		  	   clearTimeout(did_timeout);
-		  	   if(!show_hidden) 
-		  	   		{
-		  	   		sync_now = true;
+		  	   if(!settings.show_did) {
 		  	   		did_timeout = setTimeout(function() {
 		  				$(".do_did").parents("li").slideUp(300,function(){ 
-		  					api4panel.jsRefreshTree(); sync_now = false; 
+		  					jsRefreshTree(); 
 		  				});	   			
 	  	   			},10000);
-		  	   		}
-		  	   else jsRefreshTree();
+		  	   		jsTitle("Выполненные дела будут скрыты через 10 секунд",10000);
+		  	   } else {
+		  	   		jsRefreshTree();
+		  	   }
 		  	   $('#calendar').fullCalendar( 'refetchEvents' );
 		  	   api4tree.jsPlaceMakedone(id);
-		  //	   jsShowBasket();
-		  	   if(!show_hidden) 
-		  	   		{
-		  	   		jsTitle("Выполненные дела будут скрыты через 10 секунд",10000);
-		  	   		}
 		  }
 		  
-		  //делает дела выполненными
-		  function jsMakeUnDidInside(id) //снимаю выполнение у всех детей - рекурсивная функция
-		  {
-		  	var mychildrens = api4tree.jsFindByParent(id,true);
-		  	
-		  	if( mychildrens.length > 0 )
-		  		{
-		  		$.each(mychildrens,function(i,dd)
-		  		   {
-		  		   jsMakeUnDidInside(dd.id);
-		  		   jsFind(dd.id,{did:""});
-		  		   });
-		  		}
-		  }
 
-		  function jsMakeUnDid(id) //снимаю выполнение
-		  {
-		  	   clearTimeout(did_timeout);
-		  	   sync_now = false;
-		  	   jsFind(id,{ did:"", fav:0 });
-		  	   jsTitle("Отмена выполнения",5000);
-		  
-		  	   jsMakeUnDidInside(id); //рекурсивно снимаю выполнение
-		  	   setTimeout(function(){ jsRefreshTree(); 	$('#calendar').fullCalendar( 'refetchEvents' ); },200);
+		  //делает дело выполненным
+		  this.jsMakeUnDid = function(id) { //выполняю одно дело
+		  	   var elements = api4tree.jsRecursive(id);
+		  	   $.each(elements,function(i,el){
+		  		   this_db.jsFind(el.id,{ did:"" });
+		  		   $("#node_"+el.id+" .n_title").removeClass("do_did");
+		  	   });
+
+		  	   this_db.jsFind(id,{ did:"" });
 		  	   
-		  //	   li = $("#mypanel li[myid='"+id+"']");
-		  //	   if(!show_hidden) li.hide().slideDown(1000);
-		  //	   jsShowBasket();
+		  	   
+		  	   
+	  		   $("#node_"+id+" .n_title").removeClass("do_did");
+		  	   jsRefreshTree();
+		  	   $('#calendar').fullCalendar( 'refetchEvents' );
+		  	   api4tree.jsPlaceMakedone(id);
 		  }
 		  
 		  //парсер даты (позвонить послезавтра)
@@ -1525,6 +1499,25 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			  
 		  }
+
+		  this.jsDelComment = function(comment_id) {
+		  	var d = $.Deferred();
+		  	if(api4tree.jsFindByParentCommentFast(comment_id).length>0) 
+		  		{
+		  		var dfd = api4tree.jsFindComment(comment_id,{text:
+		  										"<font color='lightgray'>комментарий удалён</font>"});
+		  		dfd.done(function(){ d.resolve(); });
+		  		}
+		  	else
+		  		{
+		  		var dfd = api4tree.jsFindComment(comment_id,{del:1});
+		  		dfd.done(function(){ 
+		  			d.resolve(); 
+		  		});
+		  		}
+		  	return d.promise();
+		  }
+
 		  
 		  //кнопки для комментариев
 		  function jsMakeCommentKeys() {
@@ -1543,15 +1536,19 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      });
 			      
 			  $("#tree_comments").delegate(".comment_del","click",function(){
+				  var id = api4tree.node_to_id( $(".selected").attr('id') );
 			      if (!confirm('Удалить комментарий?')) return false;
 			      $(".comment_edit_now").removeClass("comment_edit_now");
 			      $("#comment_enter_place").append( $("#comment_enter") );
 			      var comment_id = $(this).parents(".comment_box:first").attr("id");
 			      if(comment_id) comment_id = comment_id.replace("comment_","");
 			      if(!comment_id) return false;
-			      jsDelComment( comment_id );
-			      api4tree.jsShowAllComments(id);
-			      onResize();
+			      api4tree.jsDelComment( comment_id ).done(function(){
+   		  			  api4tree.jsUpdateCommentsCnt(id);
+				      api4tree.jsShowAllComments(id);
+				      jsRefreshTree();
+					  onResize();
+			      });
 			      return false;
 			      });
 			  
@@ -1562,43 +1559,49 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      var comment_id = $(this).parents(".comment_box:first").attr("id");
 			      if(comment_id) comment_id = comment_id.replace("comment_","");
 			      if(!comment_id) return false;
-			      var this_comment = jsFindComment(comment_id);
-			      $(".comment_enter_input").setCode(this_comment.text);
-			      onResize();
+			      api4tree.jsFindComment(comment_id).done(function(this_comment){
+				      $(".comment_enter_input").setCode(this_comment.text);
+					  onResize();
+			      });
 			      return false;
 			      });
 			      
 			 $('#comment_enter').delegate(".comment_send_button","click",function(){
+			 	 var dfdArray = [];
 			     var id = api4tree.node_to_id( $(".selected").attr('id') );
 			     if( (!id) ) return false;
-			     txt = $(".comment_enter_input").getCode();
+			     var txt = $(".comment_enter_input").getCode();
 			     if(txt=="")	
 			     	{
 			     	if($(".comment_enter_input").html()=="") return false;
 			     	else txt = $(".comment_enter_input").getCode();
 			     	}
 			     
-			    	if($(".comment_edit_now").length) 
-			    		{
-			        		var comment_id = $(".comment_edit_now").attr("id");
-			        		if(comment_id) comment_id = comment_id.replace("comment_","");
-			        		console.info(comment_id,{text:txt});
-			        		jsFindComment(comment_id,{text:txt});
-			    		}
-			    	else
-			    		{
-			        		var comment_id = $(this).parents(".comment_box:first").attr("id");
-			        		if(comment_id) comment_id = comment_id.replace("comment_","");
-			        		else comment_id = 0;
-			        		api4tree.jsAddComment( id , comment_id, txt );
-			        	}
-			     $("#comment_enter_place").append( $("#comment_enter") );
-			     $(".comment_enter_input").setCode("");
-			     if(comment_id!=0) var old_scroll = $("#tree_comments_container").scrollTop();
-			     api4tree.jsShowAllComments(id);
-			     if(comment_id==0) $("#tree_comments_container").scrollTop(999999999);
-			     else $("#tree_comments_container").scrollTop(old_scroll);
-			     $(".comment_enter_input").focus();
+		    	 if($(".comment_edit_now").length) {
+   	         		var comment_id = $(".comment_edit_now").attr("id");
+   	         		if(comment_id) comment_id = comment_id.replace("comment_","");
+   	         		console.info(comment_id,{text:txt});
+   	         		var dfd = api4tree.jsFindComment(comment_id,{text:txt}).done(function(){
+   		         		console.info("Текст обновлён");
+   	         		});
+   	         		dfdArray.push( dfd );
+    	    	 } else {
+   	         		var comment_id = $(this).parents(".comment_box:first").attr("id");
+   	         		if(comment_id) comment_id = comment_id.replace("comment_","");
+   	         		else comment_id = 0;
+   	         		api4tree.jsAddComment( id , comment_id, txt );
+    	         }
+			        	
+				 $.when.apply( null, dfdArray ).then( function(x){ 
+				     $("#comment_enter_place").append( $("#comment_enter") );
+				     $(".comment_enter_input").setCode("");
+				     if(comment_id!=0) var old_scroll = $("#tree_comments_container").scrollTop();
+				     api4tree.jsShowAllComments(id);
+				     if(comment_id==0) $("#tree_comments_container").scrollTop(999999999);
+				     else $("#tree_comments_container").scrollTop(old_scroll);
+				     $(".comment_enter_input").focus();
+				     api4tree.jsSync();
+				 });
 			     return false;
 			 });
 			 
@@ -1614,16 +1617,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 var rt;
 			 $("body").delegate(".comment_enter_input","keydown",function(event){
 			     //console.info(event.keyCode, event);
-			     clearTimeout(rt);
-			     rt = setTimeout(function(){	
-			     	pushstream.sendMessage( $(".comment_enter_input").html() );
-				 	},500);
-				 	
-			     if( (event.keyCode == 13) && ( event.altKey || event.ctrlKey || event.metaKey ) )
-			     	{
+			     if( (event.keyCode == 13) && ( event.altKey || event.ctrlKey || event.metaKey ) ) {
 			     	event.preventDefault();
 			     	$(".comment_send_button").click();
-			    	 	}
+	    	 	 }
 			     return true;
 			 });
 			      
@@ -1976,8 +1973,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	  scrolltimer = setTimeout(function() {
 			      			var scroll = $(".bottom_right>.redactor_box").scrollTop();
 			      			var delta = scroll-api4tree.jsFind(id).s;
-			      			if( Math.abs(delta) > 100  ) api4tree.jsFind(id, { s:scroll });
-			    	  },10000);
+			      			if( Math.abs(delta) > 200  ) api4tree.jsFind(id, { s:scroll });
+			    	  },3000);
 			    	}
 			  });
 			   
@@ -2048,7 +2045,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //пункты меню
 		  function jsMakeMenuKeys() {
-
+			  var hide_timer;
 			  //меню добавления дел
 			  $("body").delegate(".add_do_down","click", function () {
 			    jsAddDo('down');
@@ -2092,11 +2089,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 						   console.info("Показываю дела",value);
 						   settings.show_did = true;
 						   localStorage.setItem('show_did',settings.show_did);
+						   clearTimeout(hide_timer);
 					   } else {
 						   console.info("Скрываю дела",value);
 						   settings.show_did = false;
 						   localStorage.setItem('show_did',settings.show_did);
+						   hide_timer = setTimeout(function(){ $(".do_did").parents("li:first").hide(); },1000);
+						   
 					   }
+					   api4tree.jsUpdateChildrenCnt();
 					   jsRefreshTree(); //обновляю дерево
 				    }
 
@@ -2516,6 +2517,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				return el && el.id==id;
 			})[0];
 			
+			var add_auto_folder = this_db.jsFindAutoFolder("", id);
+			if(add_auto_folder.length) {
+				answer = [];
+				$.each(add_auto_folder, function(i,el) {
+					answer.push(el);
+				});
+				answer = answer[0];
+			}
+			
+			
   		    if(answer && fields) { //если нужно присваивать значения
 			   var record;
   		       var is_changed = false;
@@ -2582,11 +2593,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	  		         (typeof fields.date1 != "undefined") ||
 	  		         (typeof fields.date2 != "undefined") ||
 	  		         (typeof fields.id    != "undefined") ) {
-	  		         	after_save2 = function() { this_db.jsUpdateChildrenCnt( record.parent_id ); };
+	  		         	after_save2 = function() { this_db.jsUpdateChildrenCnt( record.parent_id ); 
+	  		         	};
 		  		 }
 
 	  		     //сохраняю в локальную базу данных    
-  		         db.put(global_table_name,record).done(function(){ after_save1(); after_save2(); });
+	  		     if(record.id.indexOf("_")==-1) { //если это не синтетические папки
+  		         	db.put(global_table_name,record).done(function(){ after_save1(); after_save2(); });
+  		         }
   		       } 
 
 		  	}
@@ -2623,6 +2637,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    return new_id;
 		  }
 		  
+		  //находит комментарий
+		  this.jsFindCommentFast = function(id,fields,save_anyway) {
+		  	var d = new $.Deferred();
+		  	
+			var answer = my_all_comments.filter(function(el,i) {
+				return el && el.id==id;
+			})[0];
+			
+			return answer;
+		  }
 		  
 		  //находит комментарий
 		  this.jsFindComment = function(id,fields,save_anyway) {
@@ -2679,12 +2703,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
    	  				     //сохраняю в локальную базу данных    
    	  				     db.put(global_table_name+"_comments",record).done(function(){ 
    	  				     	after_save1(); 
+   	  					 	d.resolve(my_element[0]);
    	  				     });
    	  				   } 
    	  				
-   	  				} //if(fields)
-
-   	  				d.resolve(my_element[0]);
+   	  				} else {
+	   	  				d.resolve(my_element[0]);
+	   	  			}
    	  			});
    	  		} else {
 	   	  		d.resolve();
@@ -2741,13 +2766,160 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 } //jsFindLongText
 		 
 		 
-		 this.jsFindLongTextComment = function(id) {
+		 this.jsFindLongTextComment = function(id,newtext) {
 			 var d = $.Deferred();
    	  		 db.get(global_table_name+"_comments",id.toString()).done(function(record) {
-   	  		 	d.resolve(record?record:"");
+   	  		 	if(newtext) {
+   	  		 		record.text = newtext;
+   	  		 		db.put(global_table_name+"_comments",record).done(function(record) {
+   	  		 			console.info("Сохранил длинный текст = ", record.id);
+	   	  		 		d.resolve(record?record:"");
+   	  		 		});
+   	  		 	} else {
+   	  		 		d.resolve(record?record:"");
+   	  		 	}
    	  		 	});
    	  		 return d.promise();
 			 
+		 }
+		   	
+		 function clone(obj) {
+		     if (null == obj || "object" != typeof obj) return obj;
+		     var copy = obj.constructor();
+		     for (var attr in obj) {
+		         if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+		     }
+		     return copy;
+		 }		   	
+		   	
+		 this.jsFindAutoFolder = function(parent_id,id) {
+		 	 var answer=[];
+		 	 
+		 	 var shablon={};
+		 	 
+			 shablon.id = -1;
+			 shablon.title = "Title";
+			 shablon.date1 = "";
+			 shablon.date2 = "";
+			 shablon.icon = "";
+			 shablon.img_class = "note-clean";
+			 shablon.parent_id = parent_id?parent_id.toString():"";
+			 shablon.position = 1000;
+			 shablon.text = "";
+			 shablon.did = "";
+			 shablon.del = 0;
+			 shablon.tab = 0;
+			 shablon.fav = 0;
+			 shablon.time = jsNow();
+			 shablon.lsync = jsNow()+1;
+			 shablon.user_id = main_user_id;
+			 shablon.remind = 0;
+			 shablon["new"] = "";
+			 shablon.s = 0;
+			 shablon.tmp_childrens = 0;
+			 shablon.tmp_comments = 0;
+			 shablon.tmp_text_is_long = 0;
+		 	 
+		 	 
+			 if(parent_id==1 || id) {
+			 
+			 	 if(!id || id=="_contacts") {
+				 	 var element = clone( shablon );
+				 	 element.id = "_contacts";
+				 	 element.parent_id = 1;
+				 	 element.title = "<i class='icon-users'></i> Контакты";
+					 answer.push(element);
+				 }
+
+			 	 if(!id || id=="_filters") {
+				 	 var element = clone( shablon );
+				 	 element.id = "_filters";
+				 	 element.parent_id = 1;
+				 	 element.title = "<i class='icon-shuffle'></i> Отборы";
+				 	 element.tmp_childrens = 5;
+					 answer.push(element);
+				 }
+			 }
+
+			 if(parent_id=="_filters" || id) {
+			 
+			 	 if(!id || id=="_bytime") {
+				 	 var element = clone( shablon );
+				 	 element.id = "_bytime";
+				 	 element.parent_id = "_filters";
+				 	 element.position = 0;
+				 	 element.tmp_childrens = "100";
+				 	 element.title = "<i class='icon-clock-3'></i> 100 недавних изменений";
+					 answer.push(element);
+				 }
+
+			 	 if(!id || id=="_bydate1") {
+				 	 var element = clone( shablon );
+				 	 element.id = "_bydate1";
+				 	 element.parent_id = "_filters";
+				 	 element.position = 1;
+				 	 element.title = "<i class='icon-calendar'></i> По дате начала";
+					 answer.push(element);
+				 }
+
+			 	 if(!id || id=="_share") {
+				 	 var element = clone( shablon );
+				 	 element.id = "_share";
+				 	 element.parent_id = "_filters";
+				 	 element.position = 2;
+				 	 element.title = "<i class='icon-export'></i> Вы поделились";
+					 answer.push(element);
+				 }
+
+			 	 if(!id || id=="_email") {
+				 	 var element = clone( shablon );
+				 	 element.id = "_email";
+				 	 element.parent_id = "_filters";
+				 	 element.position = 3;
+				 	 element.title = "<i class='icon-mail-2'></i> Электронная почта";
+					 answer.push(element);
+				 }
+
+			 	 if(!id || id=="_wiki") {
+				 	 var element = clone( shablon );
+				 	 element.id = "_wiki";
+				 	 element.parent_id = "_filters";
+				 	 element.position = 4;
+				 	 element.title = "<i class='icon-link'></i> [[Wiki]] определения";
+					 answer.push(element);
+				 }
+
+			 } //filters
+			 
+			 if(parent_id=="_bytime") {
+				 var filtered_elements = my_all_data.filter(function(el,i) {
+				     if((settings.show_did==false) && (el.did!=0)) return false;
+				     return el && el.del!=1;
+				 });
+				 
+				 var clone_of_filtered = clone(filtered_elements);
+				 
+				 //сортировка по полю add_time
+				 function sort_by_change_time(a,b) {
+				   if (a.time < b.time)
+				      return 1;
+				   if (a.time > b.time)
+				     return -1;
+				 }
+				 
+				 clone_of_filtered.sort(sort_by_change_time);
+			 
+			 	$.each(clone_of_filtered, function(i,el){
+			 	  if(i<100) {
+				 	  el.position = i;
+				 	  el.parent_id = "_bytime";
+					  answer.push(el);
+				  }
+			 	});
+			 }
+			 
+
+			 return answer;
 		 }
 		   	
 		 //поиск всех элементов родителя  	
@@ -2756,6 +2928,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				if((settings.show_did==false) && (el.did!=0)) return false;
 				return el && el.del!=1 && el.parent_id==parent_id;
 			});
+			
+			var add_auto_folder = this_db.jsFindAutoFolder(parent_id);
+			if(add_auto_folder) {
+				$.each(add_auto_folder, function(i,el) {
+					answer.push(el);
+				});
+			}
+			
 			return answer;
 		 }
 
@@ -2763,16 +2943,26 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		 //показываю все комментарии
 		 this.jsShowAllComments = function(tree_id) {
+
 		 	$("#comment_enter_place").append( $("#comment_enter") );
 		 	var element = api4tree.jsFind(tree_id);
 		 	if(!element) return false;
 		 	
-		 	var comments_count = this_db.jsFindByTreeIdCommentFast(tree_id).length;
 		 	
-		 	myhtml_for_comments = '<h3><i class="icon-comment"></i> Комментарии ('+comments_count+')</h3>';
 		 	
 		 	this_db.jsFindByTreeIdComment(tree_id).done(function(comments){
-		 	
+			 	 var comments_count = this_db.jsFindByTreeIdCommentFast(tree_id).length;
+			 	 myhtml_for_comments = '<h3><i class="icon-comment"></i> Комментарии ('+comments_count+')</h3>';
+			 	
+				 //сортировка по полю add_time
+				 function sort_by_add_time(a,b) {
+				   if (a.add_time < b.add_time)
+				      return -1;
+				   if (a.add_time > b.add_time)
+				     return 1;
+				     
+				 }
+				comments = comments.sort(sort_by_add_time);
 			 	this_db.jsShowComments(comments,tree_id, 0); //комменты добавляются в myhtml_for_comments
 			 	
 			 	if(comments_count==0 || !comments_count) comments_count = "";
@@ -2839,6 +3029,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 this.jsFindByTreeIdCommentFast = function(tree_id) {
 
 			var myanswers = my_all_comments.filter(function(el,i) {
+				if(el.del == 1) return false;
 				return el && el.tree_id==tree_id;
 			});
 			
@@ -2902,6 +3093,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			return d.promise();
 		 }
+
+		 //отбор комментариев по parent_id		 
+		 this.jsFindByParentCommentFast = function(parent_id) {
+
+			var myanswers = my_all_comments.filter(function(el,i) {
+				if(el.del==1) return false;
+				return el && el.parent_id==parent_id;
+			});
+			
+			return myanswers;
+		 }
+
 		 
 		 //добавление нового элемента в базу к родителю parent_id
 		 this.jsAddDo = function(parent_id,title,date1,date2) {
@@ -3299,14 +3502,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     }
 	     	
 	     //убираем все данные, кроме изменённых, чтобы экономить трафик в POST
-	     function jsDry(data) {
+	     function jsDry(data,i_am_from_comments) {
 	         var answer1 = new Array();
 	         $.each(data, function(i,node){
 	         	var changed_fields = node['new'];
 	         	var element = new Object;
 	         	element.id = node.id;
 	         	if((node.id<0) || (node["new"]=="") ) { //если нужно отправить все данные
-	         		element = this_db.jsFind(node.id);
+	         		if(i_am_from_comments) {
+		         		element = node;	
+	         		} else {
+		         		element = this_db.jsFind(node.id);
+		         	}
 	         		answer1.push(element);
 	         		changed_fields = "";
 	         	} else {
@@ -3324,6 +3531,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	         
 	         return answer1;
 	     }
+
 	     	
 	     //отображает статусы начала и окончания синхронизации
 	     function startSync(status) { 
@@ -3357,7 +3565,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     }
 	     	
 	     //нахожу время последней синхронизации, ориентируюсь на поле .time и .lsync
-	     function jsFindLastSync() {
+	     this.jsFindLastSync = function() {
 	     	var maxt = 0; 
 	     	var mint = Number.MAX_VALUE,lsync,changetime; 
 	     	
@@ -3372,6 +3580,20 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     			if( mint>changetime ) mint=parseInt(changetime,10); 
 		     	}
 	     	}
+	     	
+		 	if(my_all_comments)
+		 	{
+		 	var mc_len = my_all_comments.length;
+		 	for(i=0;i<mc_len;i++) 
+		 		{ 
+		 		var lsync = my_all_comments[i].lsync; 
+		 		var changetime = my_all_comments[i].time; 
+		 		if(lsync>maxt) maxt=lsync; 
+		 		if(changetime>lsync) 
+		 			if( mint>changetime ) mint=parseInt(changetime,10); 
+		 		}
+		 	}
+	     	
 	     	
 	     	if(mint<maxt) return mint;
 	     	else return maxt;
@@ -3411,6 +3633,27 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
    			}
 	     		
 	     } //jsChangeNewId
+
+		 function jsChangeNewIdComments(d, lsync) { //заменяет отрицательный id на положительный
+		     
+		    var all_children = this_db.jsFindByParentCommentFast(d.old_id);
+		     
+		    $.each(all_children,function(i,ddd) {
+		      	this_db.jsFindComment(ddd.id,{parent_id:d.id},"dont_sync");
+	      	});		//заменяю всех отрицательных родителей на положительных
+		 
+		 	$(".comment_box[id=comment_"+d.old_id+"]").each(function()
+		     	{ 
+		     	$(this).attr("id","comment_"+d.id); 
+		     	});
+		 
+	      	this_db.jsFindComment(d.old_id,{id:d.id, lsync: lsync, new:""},"dont_sync").done(function(){
+   				db.remove(global_table_name+"_comments",d.old_id.toString()).done(function(){
+   					console.info("Удалил коммент с старым id<0: ",d.old_id);
+       			});
+	 		 });
+		 }
+
 
 		 //сохраняет изменения с сервера или добавляет новый элемент	     
 		 function jsSaveElement(d) {
@@ -3476,6 +3719,61 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	}
 		 
 		 }
+		 
+		 //сохранение комментариев
+		 function jsSaveElementComment(d) {
+		 	if(!d) return false;
+
+		 	var element = api4tree.jsFindCommentFast(d.id);
+		 	
+		 	//если такого id нет, то создаю (создан в другом месте)
+		 	if( (!element) && (d.id>0) ) {
+		 			var new_line = my_all_comments.length;
+		 			my_all_comments[new_line]=new Object(); 
+		 			var element = my_all_comments[new_line];
+		 			element.id = d.id;
+		 			element.parent_id = d.parent_id;
+		 			element.tree_id = d.tree_id;
+		 			element.add_time = d.add_time;
+		 			element.text = "";
+		 			element.time = parseInt(d.changetime);
+		 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
+		 			element.new = "";
+		 			console.info("new-element-comment",element);
+		 	}
+		 				
+		 	if(!element) return false;
+    	 	element.parent_id = d.parent_id;
+    	 	element.new = ""; //обнуляю new, чтобы скрыть иконку синхронизации
+    	 	element.lsync = parseInt(d.lsync);
+    	 	element.user_id = d.user_id;
+    	 	element.add_time = d.add_time;
+    	 	element.tree_id = d.tree_id;
+    	 	element.del = d.del;
+    	 	element.text = d.text;
+    	 	
+    	 	db.put(global_table_name+"_comments",element).done(function(){ 
+    	 	    console.info("Новый элемент записан в базу: "+element.id); 
+    	 	//    start_sync_when_idle=true;
+    	 	});
+		 
+//		 	jsSaveDataComment(d.id,d.old_id,"dontsync"); //не надо, так как есть уже в jsFind
+		 	
+		 
+		 }
+
+
+		 function jsDelCom(id) { //удаление из базы определённого id
+		 		$.each(my_all_comments, function(i,el){
+		     		if(el) if(el.id == id) { my_all_comments.splice(i,1); }
+		     		});
+			 	
+   	    		db.remove(global_table_name+"_comments",id).done(function(){
+   	    			console.info("del",id);
+   	    			api4tree.jsUpdateCommentsCnt();
+   	    		});
+		 }
+		 
 	     	
 	     //синхронизация данных с сервером
 	     this.jsSync = function(save_only) { 
@@ -3491,10 +3789,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			var sync_id = this_db.jsGetSyncId();
 			
 			var local_data_changed = my_all_data.filter(function(el) { //данные, которые буду отправлять на сервер
-				if(el) return ( (el.parent_id<-1000) || 
+				if(el) return (( (el.parent_id<-1000) || 
 								(el.id<-1000) || 
 								(el.time>=el.lsync) || 
-								((el.new!="") && (el.new)) ); 
+								((el.new!="") && (el.new)) ) && ( el.id.toString().indexOf("_")==-1 )); 
 			});
 			
 			var dfdArray = []; //массив для объектов работы с асинхронными функциями
@@ -3511,20 +3809,46 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				};
 			});
 			
+			//////////////////комментарии/////////////////
+			var local_comments_changed = my_all_comments.filter(function(el) { //изменившиеся комментарии
+				if(el) return ( (el.parent_id<-1000) || 
+								(el.id<-1000) || 
+								(el.time>=el.lsync) || 
+								((el.new!="") && (el.new)) ); 
+			});
+			
+			var local_comments_changed_tmp = [];
+			$.each(local_comments_changed,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
+				
+				if(el) {
+					dfdArray.push( this_db.jsFindLongTextComment(el.id).done(function(element){
+						this_db.log("COMMENT-CHANGED = ",el.id, element.text.length); 
+						var new_i = local_comments_changed_tmp.length;
+						local_comments_changed_tmp[new_i] = el;
+						local_comments_changed_tmp[new_i].text = element.text;
+					}) );
+				};
+			});
+			
+			///////////////////////////////////
 			$.when.apply( null, dfdArray ).then( function(x){ //выполняю тогда, когда все длинные тексты считаны
 				this_db.log("Отправляю на сервер "+Object.size(local_data_changed)+" элементов",local_data_changed,local_data_changed_tmp);
 				
+				
 				//"высушиваю" данные и превращаю в JSON строку:
 				var local_data_changed_json_dry = JSON.stringify( jsDry(local_data_changed_tmp) ); 	
+				var changes_comments = JSON.stringify( jsDry(local_comments_changed_tmp,"comment") ); 
 				
+			
 				this_db.log("Высушил данные, отправляю на сервер:",	local_data_changed_json_dry);	
 				
 				var changes = 'changes='+encodeURIComponent(local_data_changed_json_dry)+'&confirm=';
+				changes = changes + '&changes_comments='+encodeURIComponent(changes_comments);
 
 				if(!save_only) var what_to_do = "save_and_load";
 				else var what_to_do = "save_only";
 				
-				var lastsync_time_client = jsFindLastSync();
+				var lastsync_time_client = api4tree.jsFindLastSync();
 				
 				var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do;
 				
@@ -3540,9 +3864,23 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					     			jsChangeNewId(d);
 					     		}
    				 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); //скрываю зелёный кружок
-   				 	    	this_db.log("synced", this_db.jsFind(d.id,{"new":"",lsync: data.lsync},"save_anyway") );
+			 		   		var lsync = parseInt(data.lsync);
+   				 	    	this_db.log("synced", this_db.jsFind(d.id,{"new":"",lsync: lsync},"save_anyway") );
 					     	});
 				     	}
+				     	
+				     	//эти данные сохранены на сервере, можно отметить lsync = now()
+					 	if(data.saved_comments) {
+					 	   $.each(data.saved_comments,function(i,d) {
+				 		   		var lsync = parseInt(data.lsync);
+					 	       	if(d.old_id) { //если присвоен новый id
+					 	       		jsChangeNewIdComments(d,lsync); //заменяет отрицательный id на положительный
+				 	       		}
+				 		   		this_db.jsFindComment(d.id,{"new":"",lsync: lsync},"save_anyway");
+					 	       	});
+				     	}
+				     	
+				     	
 				     	
 				     	if(data.server_changes) { //обновляем изменения
 				     		$.each(data.server_changes, function(i,el) {
@@ -3552,6 +3890,23 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				     			need_refresh = true;
 				     		});
 				     	}
+
+					 	var myselected = api4tree.node_to_id( $(".selected").attr('id') ); 
+					 	if(data.server_changes_comments) {
+						 	//эти данные сохранены на сервере, можно отметить lsync = now()
+					 	 	$.each(data.server_changes_comments,function(i,d) { 
+					 	 	    	console.info(d);
+					 	 	    	jsSaveElementComment(d);
+					 	 	    	if(myselected == d.tree_id) {
+					 	 	    		api4tree.jsShowAllComments(d.tree_id);
+					 	 	    	}
+					 	 	    	if( $("#tree_news").is(":visible") ) jsShowNews(0);
+					 	 	    	//обновить панель комментариев
+					 	 	    	api4tree.jsUpdateCommentsCnt();
+					 	 	    	need_refresh = true;
+					 	 	    	my_console("Пришли новые комментарии с сервера: "+d.id);
+					 	 	    	});
+					 	}
 				     	
 					 	if(data.need_del) { //удаляем по команде сервера из массива и базы
 					 	  $.each(data.need_del,function(ii,dd) {
@@ -3563,13 +3918,29 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					 	  });
 					 	}
 					 	
+					 	if(data.need_del_comment)
+					 	  $.each(data.need_del_comment,function(ii,dd)
+					 	   {
+					 	   console.info("need_del_comment",dd);
+					 	   if(dd.command == 'del') 
+					 	   	{
+					 	   	jsDelCom(dd.id);
+					 	   	var myselected = api4tree.node_to_id( $(".selected").attr('id') ); 
+					 	   	api4tree.jsShowAllComments(myselected);
+					 	   	}
+					 	   need_refresh=true;
+					 	   });
+					 	
+					 	
 					 	if(data.frends) {
 					 	   //my_all_share = data.frends.share;
 					 	   my_all_frends = data.frends.frends;
 					 	   //jsRefreshOneElement(-3);
 					 	   jsRefreshFrends();
 					 	}
-				     	
+
+				     	//(компенсация часовых поясов за счёт единого времени от сервера в jsNow)
+					 	localStorage.setItem("time_dif",data.time_dif); 
 				     	
 				     } //if success
 				startSync("finish");
@@ -4086,6 +4457,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 function sort_by_title(a,b) {
 		   var aa = a.title?a.title:"_";
 		   var bb = b.title?b.title:"_";
+		   
+		   if( (a.id.toString().indexOf("_")!=-1) || (a.id.toString().indexOf("_")!=-1) ) return -1;
 
 		   aa.replace("январь","01").replace("февраль","02").replace("март","03").
 		        replace("апрель","04").replace("май","05").replace("июнь","06").
@@ -4131,12 +4504,16 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	} else { 
 		 		var mydata = api4tree.jsFindByParent(parent_node,null,true); 
 		 		var my_diary_id = api4tree.jsCreate_or_open(["_ДНЕВНИК"]);
+
 		 		if($("#node_"+my_diary_id).hasClass("old_selected")) {
 			 		mydata = mydata.sort(sort_by_title); //сортирую
 		 		} else {
 			 		mydata = mydata.sort(sort_by_position); //сортирую
 		 		}
-		 		mydata = jsReorder(mydata);
+		 		console.info("need_reorder",parent_node);
+		 		if((parent_node.toString().indexOf("_")==-1) && parent_node!=1) { //если это не синтетическая папка
+		 			mydata = jsReorder(mydata); //перенумирую элементы
+		 		}
 		 	}
 		 	
 		 	if(mydata.length==0) 
@@ -4227,7 +4604,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 			ignorehashchange = true; //делаю так, чтобы изменение хэша не привело к переходу на заметку
 		 			setTimeout( function() { ignorehashchange=false; }, 200 );
 		 			if(window.location.hash.indexOf("edit")==-1) if(num_id) window.location.hash = num_id.toString(36); 
-		 			},5000);
+		 			},1000);
 		 	}
 		 		
 	 		var isTree = $("#top_panel").hasClass("panel_type1");
@@ -5553,7 +5930,13 @@ function jsShowTreePanel() {//запускается единожды
     		return true;
     	}
     } else {
-      	var id = parseInt(window.location.hash.replace("#",""),36); ///перехожу на заметку указанную в hash
+
+		var myhash = window.location.hash;
+    	if(myhash && myhash.indexOf("_")!=-1) {
+    		var id = myhash.replace("#","");	
+    	} else {
+      		var id = parseInt(myhash.replace("#",""),36);///перехожу на заметку указанную в hash
+      	}
       	fullscreen_mode = false;
     }
 		
@@ -5686,7 +6069,7 @@ function _manageEvent(eventMessage) {
 	        			 setTimeout(function()
 	        			 	{ 
 		        			last_message_sync_time = jsNow();
-	        			 	if($("#mypanel .n_title[contenteditable=true]").length == 0) jsSync(); 
+	        			 	if($("#mypanel .n_title[contenteditable=true]").length == 0) api4tree.jsSync(); 
 	        			 	},300); 
 	        			 jsTitle("Ваши данные изменились на другом комьютере. Обновляю.",5000); 
 	        			}
