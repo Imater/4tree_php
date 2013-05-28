@@ -35,11 +35,50 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      db, //объект соединения с базой
 		      last_log_time=jsNow(), //время последнего вывода лога
 		      log_i=1, //номер лога
-		      tree_font=1,did_timeout,
+		      tree_font=1,did_timeout,files_link_from_texts = [],
 		      this_db = this, //эта функция
 		      MAX_VALUE = 1000000000000000; //максимальное кол-во в базе
 		      LENGTH_OF_LONG_TEXT = 300, //длина, после которой текст считается длинным и переносится в другую базу
 		      settings = {show_did:false}; //все параметры
+
+
+		  this.jsFindIdByLink = function(link) {
+		  	  link = link.toLowerCase();
+			  var answer = files_link_from_texts.filter(function(el,i){
+				  return el.links.indexOf(link)!=-1
+			  });
+			  return answer;
+		  }
+
+		  //собирает все ссылки и ссылки на картинке среди всех текстов
+		  this.jsFindFilesLinkFromTexts = function() {
+		      files_link_from_texts = [];
+		  
+		      var dfdArray = []; //массив для объектов работы с асинхронными функциями
+		      
+		      $.each(my_all_data,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
+		          if(el) {
+		          	var done_element = this_db.jsFindLongText(el.id).done(function(longtext){
+		      			if(longtext) {
+				  			var regex = /(src\=([^\s]*)\s)|(href\=([^\s]*)\s)/ig;
+				  			var src = longtext.match(regex);
+				  			if(src) {
+				  				if(el.id == 2257) console.info(el.id,src);
+				  				files_link_from_texts.push({id:el.id, links: (src[1]+src[0]+src[2]+src[3])});
+				  			}
+		      			}
+		          	});
+		          	
+		          	dfdArray.push( done_element );
+		          };
+		      });
+		      
+		      //выполняю тогда, когда все длинные тексты считаны
+		      $.when.apply( null, dfdArray ).then( function(x){ 
+		      	console.info("!!!!!!!!!",files_link_from_texts);
+		      });
+		      
+		  }
 
 
 		  //собираю все события с датами для календаря
@@ -1003,6 +1042,34 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //кнопки панели дерева
 		  function jsMakePanelKeys() {
+		  
+			  $("#tree_files_content").delegate(".one_foto","click", function () {
+			    var link = $(this).attr("link");
+			    var link_short = $(this).attr("link").substr(7,link.length-11); //чтобы найти любые размеры
+				var ids = api4tree.jsFindIdByLink(link_short);
+				console.info(link, ids)
+				if(ids.length) {
+					api4panel.jsOpenPath( ids[0].id, "divider_click" );
+					var need_open = [];
+					$.each(ids, function(i,el){ need_open.push(el.id) });
+					api4editor.jsRedactorOpen(need_open);
+					jsTitle("Фотография используется в заметках: "+ids.length+" раз",10000);
+					setTimeout(function(){ 
+						var images = $(".redactor_box img[src*='"+link_short+"']:first");
+						var links = $(".redactor_box a[href*='"+link_short+"']:first");
+
+						var mytop = 0;
+						if(links.length) mytop = links.offset().top;
+						if(images.length) mytop = images.offset().top;
+						var now_scroll = $(".redactor_box").scrollTop();
+						$(".redactor_box").scrollTo(images,800); 
+					}, 500);
+				} else {
+					api4others.open_in_new_tab(link);
+				}
+			  	return false;
+			  	});
+		  	
 
 			  $("body").delegate(".m_zoom_in","click", function () {
 			  	var step = parseFloat(0.02);
@@ -1422,7 +1489,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  $("#root-menu-div").on("click",".fav_color",function(){
 				 	var fav = $(this).attr("fav");
 				 	var id = $(".makedone").attr("myid");
-				 	if(id) { jsFind(id, {fav:fav}); api4panel.jsRefreshOneElement(id); }
+				 	if(id) { api4tree.jsFind(id, {fav:fav}); jsRefreshTree(); }
 				 	console.info(fav,id);
 				 	return false;
 			  });
@@ -1629,6 +1696,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //кнопки табов под редактором и календарём
 		  function jsMakeFavTabsKeys() {
+		  
+			  $('#files_header').delegate("li","click",function() {
+			      $('#files_header .active').removeClass("active");
+			      $(this).addClass("active");
+			      var mytype = $(this).attr("mytype");
+ 			      api4others.jsShowFiles(mytype);
+		      });
 		  	  //клик в табы под календарем
 			  $('#fav_calendar').delegate("li","click",function() {
 			      $('#fav_calendar .active').removeClass("active");
@@ -1646,6 +1720,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      	$(".search_panel_result").show();
 		      	  } else {
 			      	$(".search_panel_result").hide();
+			      }
+
+			      if( tab_name == "tab_files" ) {
+				    var mytype = $("#files_header .active").attr("mytype");
+	 			    api4others.jsShowFiles(mytype);
+			        
+			      	$("#tree_files_panel").show();
+		      	  } else {
+			      	$("#tree_files_panel").hide();
 			      }
 			  
 			      if( tab_name == "tab_news" ) {
@@ -2452,6 +2535,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  this.jsIsOnline = function() {
 		  	if (navigator.onLine == false) { //если интернета нет
 				jsTitle("Интернет соединение отстутствует. Работаю локально.", 10000); 
+				preloader.trigger("hide");
 			   	return false;
 		    } else {
 		       	return true;
@@ -2527,7 +2611,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			}
 			
 			
-  		    if(answer && fields) { //если нужно присваивать значения
+  		    if(answer && fields && (answer.id.toString().indexOf("_")==-1)) { //если нужно присваивать значения
 			   var record;
   		       var is_changed = false;
   		       var fields_changed = JSON.stringify(fields);
@@ -2598,9 +2682,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  		 }
 
 	  		     //сохраняю в локальную базу данных    
-	  		     if(record.id.indexOf("_")==-1) { //если это не синтетические папки
-  		         	db.put(global_table_name,record).done(function(){ after_save1(); after_save2(); });
-  		         }
+		         db.put(global_table_name,record).done(function(){ after_save1(); after_save2(); });
   		       } 
 
 		  	}
@@ -2912,7 +2994,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 	$.each(clone_of_filtered, function(i,el){
 			 	  if(i<100) {
 				 	  el.position = i;
-				 	  el.parent_id = "_bytime";
+//				 	  el.parent_id = "_bytime";
 					  answer.push(el);
 				  }
 			 	});
@@ -3681,7 +3763,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 			element.new = "";
 		 			element.s = 0;
 		 			element.tab = 0;
-		 			element.fav = 1;
+		 			element.fav = 0;
 		 			element.title = "Новая заметка (new)";
 		 			db.put(global_table_name,element).done(function(){ 
 		 			    this_db.log("Новый элемент записан в базу: "+element.id); 
@@ -4587,9 +4669,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 this.jsOpenNode = function(id,nohash,iamfrom) {
 		 	var element = api4tree.jsFind(id);
 	 		$("#mypanel .selected").addClass("old_selected").removeClass("selected");
-	 		var myli = $("#top_panel #node_"+id);
+	 		var myli = $("#top_panel #node_"+id+":last");
 	 		if(element) $("#panel_"+element.parent_id+" li").removeClass("old_selected");
 	 		myli.addClass("selected");
+	 		myli.parents(".panel").find("li").removeClass("old_selected");
 	 		
 		 	$("#wiki_back_button").hide();
 		 	clearTimeout(hash_timer);
@@ -4645,7 +4728,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 //выбрать заметку и загрузить в редакторе
 		 this.jsSelectNode = function(id,nohash,iamfrom) { //открыть заметку в календаре и в редакторе
 		 //	i_am_from - кто вызвал: redactor, calendar, tree, diary
-		 	mypanel.find("#node_"+id).addClass("selected");
+//		 	mypanel.find("#node_"+id).addClass("selected");
 		 	clearTimeout(open_redactor_timer);
 		 	open_redactor_timer = setTimeout(function()
 		 		{
@@ -4673,7 +4756,38 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	  this_db=this,
 		  	  last_log_time=jsNow(),
 		  	  log_i=1,
-		  	  scrolltimer;
+		  	  scrolltimer,
+		  	  text_history=[], history_i=0, old_text;
+
+		  var vcd = new diffable.Vcdiff(), delta;
+		  vcd.blockSize = 3; //setting blockSize to 20 (defaults to 20)
+		  	  
+
+		  this.savedif = function(id, old_text, new_text) {
+			  delta = vcd.encode(new_text, old_text);
+			  console.log(delta); // [3, 3, 'ghi', 0, 3]
+			  text_history.push({i:history_i,delta:delta});
+			  history_i += 1;
+			  return text_history;
+		  }
+		  
+		  this.save_text_dif_snapshot = function() {
+		  	  if($(".redactor_").html().length<20) return 0;
+			  if(!old_text) old_text = $(".redactor_").html();
+			  var answer = this_db.savedif(1, old_text, $(".redactor_").html());
+			  old_text = $(".redactor_").html();
+			  return answer;
+			  
+		  }
+		  
+		  this.restore_from_dif = function() {
+			  text_history.reverse();
+			  $.each(text_history, function(i,el){
+			  	  var nowtext = $(".redactor_").html();
+				  $(".redactor_").html( vcd.decode(nowtext, el.delta) );
+			  });
+			  text_history = [];
+		  }
 
 		  //логирование любых 5 параметров в консоль
 		  this.log = function(x1,x2,x3,x4,x5) { 
@@ -4687,8 +4801,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 
 		  //создаёт редактор на странице и регистрирует глобальную переменную myr
 		  this.initRedactor = function() {
-		  	myr = $('#redactor').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+main_user_id,
-		  		  lang:'ru', focus:false, fileUpload: './redactor/demo/scripts/file_upload.php?user='+main_user_id,
+		  	myr = $('#redactor').redactor({ imageUpload: 'do.php?save_file='+main_user_id,
+		  		  lang:'ru', focus:false, fileUpload: 'do.php?save_file='+main_user_id,
 		  		  autoresize:true, 
 		  		  buttonsAdd: ['|', 'button1','checkbox'], 
 		  	      buttonsCustom: {
@@ -4782,9 +4896,10 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 				}
 				
 				myr.setCode( mytext ); //загружаю текст в редактор
+			    setTimeout(function() {api4editor.save_text_dif_snapshot(mytext); }, 1000);
 				$(".bottom_right>.redactor_box").scrollTop(scroll_top);
 				this_db.jsParseWikiLinks();
-		 	 	api4tree.jsShowAllComments(el.id); //показываю комментарии
+		 	 	if(el) api4tree.jsShowAllComments(el.id); //показываю комментарии
 
 
 			});
@@ -4815,6 +4930,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  
 		  //сохраняет текст в DB и выбирает ему иконку
 		  function jsSaveOneTextIfChanged(id, md5text, text) {
+			    api4editor.save_text_dif_snapshot(text);
 		  		api4tree.jsFindLongText(id, text);
 		  		var note_class = api4panel.jsMakeIconText(text).myclass;
 		  		$("#node_"+id+" .node_img").attr("class", "node_img "+note_class);
@@ -5069,6 +5185,77 @@ var API_4OTHERS = function() {
 		   	   document.title = "4tree.ru";
 		   }
 	    }
+
+
+		function find_icon_for_file_type(filename_title) {
+			var ext = filename_title.split(".");
+			var extension = ext[ext.length-1].toLowerCase();
+			
+			var i_have_file_types = ["aac","ai","aiff","avi","bmp","c","cpp","css",
+									 "dat","dmg","doc","dotx","dwg","dxf","eps",
+									 "exe","flv","gif","h","hpp","html",
+									 "ics","iso","java","jpg","key","mid","mp3",
+									 "mp4","mpg","odf","ods","odt","otp","zip",
+									 "ots","ott","pdf","php","png","ppt","psd",
+									 "py","qt","rar","rb","rtf","sql","tga","tgz",
+									 "tiff","txt","wav","xls","xlsx","xml","yml"];
+			if(i_have_file_types.indexOf(extension)!=-1) {
+				var filename = "img/file-type-icons/32px/"+extension+".png";
+			} else {
+				var filename = "img/file-type-icons/32px/_blank.png";
+			}
+			
+			return "<img title='"+filename_title+"' class='file_icon' src='"+filename+
+				   "' height='16px' width='16px'>";
+		}
+
+		function readableFileSize(size) {
+			size = parseInt(size);
+		    var units = ['byte', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+		    var i = 0;
+		    while(size >= 1024) {
+		        size /= 1024;
+		        ++i;
+		    }
+		    return size.toFixed(1) + ' ' + units[i];
+		}
+		//показываю панель файлов
+		this.jsShowFiles = function(mytype) {
+		
+			api4tree.jsFindFilesLinkFromTexts();
+		
+			var lnk = "do.php?get_files="+mytype;
+		    var html = "";
+		    
+		    if(mytype=="all") html = "<ul class='files_list'>";
+		    				
+			$.getJSON(lnk,function(data){
+				$.each(data,function(i,el) {
+					if(mytype=="images") {
+						html += "<div class='one_foto' link='"+el.link+"'>"+
+									"<img src='"+el.preview1+"'>"+
+									"<div class='foto_delete' title='Удалить'><i class='icon-cancel'></i></div>"+
+								"</div>";
+					} else if (mytype=="all") {
+						var date1 = sqldate( parseInt(el.add_time) );
+						html += "<li><a href='"+el.link+"'>"+find_icon_for_file_type(el.filename)+
+							api4others.jsShortText(el.filename,30)+"</a>"+
+							"<div class='date1 fromchildren' title='"+date1+
+							"'></div>"+
+							"<div class='file_size'>"+readableFileSize(el.filesize)+
+							"</div>"+
+							"</li>";
+					}
+				});
+				
+				if(mytype=="all") html += "</ul>";
+				
+				$("#tree_files_content").html(html);
+				jsPrepareDate();
+				});
+		
+		}
+
 
 		//сокращает текст до определённой длины
 		this.jsShortText = function(text, lng) {
@@ -5844,8 +6031,11 @@ function jsDoFirst() { //функция, которая выполняется �
 		progress_load=200;
 		jsProgressStep();
 		api4tree.jsMakeMakedoneKeys(); //кнопки меню элемента (где дата и поделиться)
-		setTimeout(function() { jsProgressStep(); $("#load_screen").fadeOut(100); },50); //отображаю страницу
-		}); //загружаю таблицу из памяти
+		setTimeout(function() { 
+			jsProgressStep(); $("#load_screen").fadeOut(100);  
+			$("#tab_files").click();
+		},50); //отображаю страницу
+	}); //загружаю таблицу из памяти
 } //jsDoFirst
 
 //запускается после загрузки всех данных из базы	 
@@ -6053,7 +6243,6 @@ function _manageEvent(eventMessage) {
       if (eventMessage != '') {
 //        var values = $.parseJSON(eventMessage);
         console.info("@mymessage:",eventMessage);
-        $("#tree_news").html(eventMessage);
         if( eventMessage.type == "need_refresh_now" ) { 
         		api4tree.jsSync(); 
         		setTimeout(function(){ alert("Пришло новое письмо!");},800); 

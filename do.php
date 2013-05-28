@@ -9,8 +9,8 @@ $all_tree_id = "";
 
 include "db.php";
 
-  include 'hypher.php';
-  $hy_ru = new phpHypher('hyph_ru_RU.conf');
+//  include 'hypher.php';
+//  $hy_ru = new phpHypher('hyph_ru_RU.conf');
   
   $db2 = new PDO('mysql:dbname=h116;host=localhost;charset=utf8', $config["mysql_user"], $config["mysql_password"]);
   $db2 -> exec("set names utf8");
@@ -337,6 +337,41 @@ $sqlnews = "SELECT * FROM tree $where ORDER by parent_id";
   echo 'ok';
 exit;
 }
+
+if (isset($HTTP_GET_VARS['get_files'])) {
+	$type = $HTTP_GET_VARS['get_files'];
+	$answer = "";
+	if($type=="images") {
+		$sqlnews = "SELECT * FROM tree_files WHERE filetype LIKE 'image/%' AND user_id='".$user_id."'  ORDER by add_time DESC";
+		$result = mysql_query_my($sqlnews); 
+		$i=0;
+	    while (@$sql = mysql_fetch_array($result)) {
+	    	$answer[$i]["preview1"] = $sql["preview_big"];
+	    	$answer[$i]["link"] = $sql["link"];
+	    	$i++;
+		}
+	}
+
+	if($type=="all") {
+		$sqlnews = "SELECT * FROM tree_files WHERE filetype NOT LIKE 'image/%' AND user_id='".$user_id."' ORDER by add_time DESC";
+		$result = mysql_query_my($sqlnews); 
+		$i=0;
+	    while (@$sql = mysql_fetch_array($result)) {
+	    	$answer[$i]["preview1"] = $sql["preview_big"];
+	    	$answer[$i]["link"] = $sql["link"];
+	    	$answer[$i]["filename"] = $sql["filename"];
+	    	$answer[$i]["filesize"] = $sql["size"];
+	    	$answer[$i]["add_time"] = $sql["add_time"];
+	    	$i++;
+		}
+		
+	}
+
+	
+	echo json_encode($answer);
+	exit;	
+}
+
 
 function now()
 {
@@ -3050,7 +3085,204 @@ function my_path($id)
 return $path;
 }
 
-if (isset($HTTP_GET_VARS['save_blob'])) 
+function save_file_to_amazone($newname,$name_of_bucket) {
+	require_once 'AWS_44444/sdk.class.php';
+	
+	$bucket = 'upload.4tree.ru';
+	$keyname = $name_of_bucket;
+	$filepath = $newname;
+	//'1.jpg';
+	
+	// Define a megabyte.
+	define('MB', 1048576);
+	
+	// Instantiate the class
+	$s3 = new AmazonS3();
+	$s3->path_style = true;
+	$s3->set_region(AmazonS3::REGION_EU_W1);
+	
+	// 1. Initiate a new multipart upload. (Array parameter is optional)
+	$response = $s3->initiate_multipart_upload($bucket, $keyname, array(
+	    'acl' => AmazonS3::ACL_PUBLIC,
+	    'storage' => AmazonS3::STORAGE_REDUCED,
+	    'contentType' => strtolower($_FILES['file']['type']),
+		'headers' => array( // raw headers
+	        'Cache-Control' => 'max-age',
+	        'Content-Language' => 'en-US',
+	        'Expires' => gmdate( "D, d M Y H:i:s T", strtotime("+5 years") ),
+	    ),    
+	    'meta' => array(
+	        'param1' => '4tree'
+	    )
+	));
+	
+	if (!$response->isOK())
+	{
+	    throw new S3_Exception('Bad!');
+	}
+	
+	// Get the Upload ID.
+	$upload_id = (string) $response->body->UploadId;
+	
+	// 2. Upload parts.
+	// Get part list for a given input file and given part size.
+	// Returns an associative array.
+	$parts = $s3->get_multipart_counts(filesize($filepath), 5*MB);
+	
+	$responses = new CFArray(array());
+	
+	foreach ($parts as $i => $part)
+	{
+	    // Upload part and save response in an array.
+	    $responses[] = $s3->upload_part($bucket, $keyname, $upload_id, array(
+	        'fileUpload' => $filepath,
+	        'partNumber' => ($i + 1),
+	        'seekTo' => (integer) $part['seekTo'],
+	        'length' => (integer) $part['length'],
+	    ));
+	}
+	
+	// Verify that no part failed to upload, otherwise abort.
+	if (!$responses->areOK())
+	{
+	    // Abort an in-progress multipart upload
+	    $response = $s3->abort_multipart_upload($bucket, $keyname, $upload_id);
+	
+	    throw new S3_Exception('Failed!');
+	}
+	
+	// 3. Complete the multipart upload. We need all part numbers and ETag values.
+	$parts = $s3->list_parts($bucket, $keyname, $upload_id);
+	$response = $s3->complete_multipart_upload(
+	                             $bucket, $keyname, $upload_id, $parts);
+	
+	// Display the results
+	//print_r($response);
+	
+	return $response;
+	
+}
+
+
+
+
+/////////////////////сохранение файла на Amazone///////////////////////////
+if (isset($HTTP_GET_VARS['save_file'])) 
+{
+if(!$_FILES['file']['tmp_name']) exit;
+
+$today = date("m-Y"); 
+
+$uploads_dir = "data/u".$GLOBALS['user_id']."/".$today."";
+
+mkdir("data/u".$GLOBALS['user_id'],0777);
+mkdir("data/u".$GLOBALS['user_id']."/".$today,0777);
+mkdir($uploads_dir,0777);
+
+$rnd = rand(1,9999);
+$rnd .= "_".substr(md5( gmdate( "D, d M Y H:i:s T", strtotime("+5 years") ) ),0,8);
+
+if($_FILES['file']['type']=="image/png") {
+	$newname = $uploads_dir."/clip_".$rnd.".png";
+	$newname_preview1 = $uploads_dir."/clip_".$rnd."_p1.png";
+	$newname_preview2 = $uploads_dir."/clip_".$rnd."_p2.png";
+} else if( ($_FILES['file']['type']=="image/jpg") OR ($_FILES['file']['type']=="image/jpeg") ) { 
+	$newname = $uploads_dir."/clip_".$rnd.".jpg";
+	$newname_preview1 = $uploads_dir."/clip_".$rnd."_p1.jpg";
+	$newname_preview2 = $uploads_dir."/clip_".$rnd."_p2.jpg";
+
+} else if($_FILES['file']['type']=="image/gif") { 
+	$newname = $uploads_dir."/clip_".$rnd.".gif";
+	$newname_preview1 = $uploads_dir."/clip_".$rnd."_p1.gif";
+	$newname_preview2 = $uploads_dir."/clip_".$rnd."_p2.gif";
+} else {
+	$newname = $uploads_dir."/".$rnd."_".$_FILES['file']['name'];
+}
+
+move_uploaded_file($_FILES['file']['tmp_name'],$newname);
+
+$type = $_FILES['file']['type'];
+$filename = $_FILES['file']['name'];
+$now = now();
+$user_id = $GLOBALS['user_id'];
+$size = $_FILES['file']['size'];
+$sha1 = sha1_file($newname); //контрольная сумма файла, исключает дублирование закачки тех же файлов
+
+$sqlnews = "SELECT * FROM tree_files WHERE sha1='$sha1' LIMIT 1";
+$result = mysql_query_my($sqlnews); 
+@$sql = mysql_fetch_array($result);
+
+$answer="";
+
+if($sql) { //если файл с такой контольной суммой уже был
+
+	$filelink = $sql['link'];
+	$original_id = $sql['id'];
+	$preview_big = $sql['preview_big'];
+	$preview_litle = $sql['preview_litle'];
+
+	//если это чужой файл или у него другое имя, дублирую запись ещё раз, оставляя путь до файла
+	if( ($user_id!=$sql['user_id']) OR ($sql['filename']!=$filename) ) { 
+		$sqlnews = "INSERT INTO `tree_files` SET tree_id='1', filename='$filename', filetype='$type', 
+				add_time='$now', user_id='$user_id', size='$size', link='$filelink', sha1='$sha1', 
+				version = '1', dublicate_of = '$original_id', 
+				preview_big= '$preview_big', preview_litle='$preview_litle'";
+				
+		$result = mysql_query_my($sqlnews); 
+	}
+	$answer = array(
+        'filelink' => $filelink,
+        'filename' => $_FILES['file']['name']
+    );
+	
+	
+} else {
+
+$response = save_file_to_amazone($newname,$newname);
+
+if($newname_preview1) {
+	include "image_create_preview.php";
+	//делаем 2 превьюшки большую и маленькую
+	$preview1 = create_image_preview("/".$newname, 200, 200, "1:1");
+	$response1 = save_file_to_amazone($preview1, $newname_preview1);
+	
+	$preview2 = create_image_preview("/".$newname, 50, 50, "1:1");
+	$response2 = save_file_to_amazone($preview2, $newname_preview2);
+
+	$preview_big = "http://upload.4tree.ru/".$newname_preview1;
+	$preview_litle = "http://upload.4tree.ru/".$newname_preview2;
+}
+
+if ($response->isOK()) {
+	$filelink = "http://upload.4tree.ru/".$newname;
+	
+	$answer = array(
+		'filelink' => $filelink,
+		'filename' => $_FILES['file']['name']
+	);
+	
+	
+	
+	
+	$sqlnews = "INSERT INTO `tree_files` SET tree_id='1', filename='$filename', filetype='$type', 
+				add_time='$now', user_id='$user_id', size='$size', link='$filelink', sha1='$sha1', 
+				version = '1', dublicate_of = '0',
+				preview_big= '$preview_big', preview_litle='$preview_litle'";
+				
+	$result = mysql_query_my($sqlnews); 
+	
+	
+//    echo 'Object uploaded!';
+}
+}
+
+if($newname) unlink($newname);
+echo (json_encode($answer));
+
+exit;
+}
+
+if (isset($HTTP_GET_VARS['save_blob_old'])) 
 {
 $today = date("m-Y"); 
 
@@ -3069,6 +3301,7 @@ echo $newname;
 
 exit;
 }
+
 
 if (isset($HTTP_GET_VARS['set_reminder'])) 
 {

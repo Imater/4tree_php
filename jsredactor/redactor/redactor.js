@@ -912,9 +912,9 @@ if(!need_text)
            preloader.trigger('show');
            jsTitle('Загружаю картинку на сервер...');
 
-           
+          
            var xhr = new XMLHttpRequest();
-           xhr.open("POST","do.php?save_blob="+$('#redactor').attr('notes'),true);
+           xhr.open("POST","do.php?save_file="+$('#redactor').attr('notes'),true);
            xhr.responseType = "text";
            xhr.onload = function(e) 
               { 
@@ -927,10 +927,14 @@ if(!need_text)
 	          	{
 	          	var insert_red = $("#redactor");
 	          	}
-              insert_red.insertHtml('<img title="Из буфера обмена '+Date()+'"'+" src="+xhr.response+">"); 
-			  clearTimeout(my_autosave);
-              note_saved=false;
-			  my_autosave = setTimeout( function() { api4editor.jsSaveAllText(); }, 100 );
+	          var answer = JSON.parse(xhr.response);
+	          if(answer) {
+	          	var filename = answer.filelink;
+			  	insert_red.insertHtml('<img title="Из буфера обмена '+Date()+'"'+" src='"+filename+"'>"); 
+			  	clearTimeout(my_autosave);
+			  	note_saved=false;
+			  	my_autosave = setTimeout( function() { api4editor.jsSaveAllText(); }, 100 );
+			  	}
               };
            
            var formData = new FormData();
@@ -981,7 +985,7 @@ if(!need_text)
 						my_autosave = setTimeout( function() 
 							{ 
 					    	jsTitle("<i class='icon-record'></i> текст сохранён",2000);
-							savetext(1); 
+							api4editor.jsSaveAllText(1); 
 							}, 100 ); // Alt + s
 					}	
 
@@ -1039,7 +1043,7 @@ if(!need_text)
 						my_autosave = setTimeout( function() 
 							{ 
 					    	jsTitle("<i class='icon-record'></i> текст сохранён",2000);
-							savetext(1); 
+							api4editor.jsSaveAllText(1); 
 							}, 100 ); // Ctrl + s
 					}	
 				}
@@ -1548,7 +1552,9 @@ if(!need_text)
 
 		clearTimeout(my_autosave);
 		note_saved=false;
-		my_autosave = setTimeout( function() { savetext(1); }, 500 );		
+		my_autosave = setTimeout( function() { 
+			api4editor.jsSaveAllText(1); 
+		}, 500 );
 
 			if (this.opts.visual == false)
 			{

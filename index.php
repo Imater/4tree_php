@@ -117,6 +117,7 @@ if(isset($_GET['confirm']))
 	<script src="jsredactor/redactor/redactor.js"></script>
 	<script src="js/iphone-style-checkboxes.js"></script>
 	<script src="js/jszip.js"></script>
+	<script src="js/vcdiff.js"></script>
 	
 <!--	 -->
 
@@ -382,6 +383,17 @@ if(isset($_GET['test']))
 		  			</div>
 		  		</div>
 
+	  			<div id="tree_files_panel">
+	  				<div id="files_header">
+	  					<ul>
+	  						<li mytype="images" class="active">фотографии</li>
+	  						<li mytype="all">документы</li>
+	  					</ul>
+		  			</div>
+		  			<div id="tree_files_content">
+		  			</div>
+		  		</div>
+
 	  			<div id="tree_agenda">
 		  		</div>
 
@@ -392,8 +404,9 @@ if(isset($_GET['test']))
 				<div class="favorit_tabs" id="fav_calendar">
     				<ul>
     					<li id="tab_find"><i class="icon-search"></i> Поиск</li><li class="active" id="tab_calendar">
-    					<i class="icon-calendar"></i> Календарь</li><li id="tab_news">
-    					<i class="icon-clock"></i> Мои новости</li>
+    					<i class="icon-calendar"></i> Календарь</li><li id="tab_files">
+    					<i class="icon-attach-1"></i> Файлы</li><li id="tab_news">
+    					<i class="icon-clock"></i> Новости</li>
     					<!--<li style="display:none">
     					Параметры</li><li style="display:none">
     					Мой сайт</li><li style="display:none">
