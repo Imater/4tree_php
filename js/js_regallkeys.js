@@ -1,16 +1,19 @@
 
-function jsHighlightText()
+function jsHighlightText(remove)
 {
 		var searchstring = $('#search_filter').val();
-		if(!(searchstring.length>3)) 
+		if(searchstring.length<2 || remove) 
 			{ 
-			$(".highlight").contents().unwrap();
+			$(".search_panel_result").removeHighlight();
+			$(".comment_text").removeHighlight();
+			$(".redactor_").removeHighlight();
+			$("#mypanel .n_title").removeHighlight();
 			return true; 
 			}
-		$(".highlight").contents().unwrap();
+//		$(".highlight").contents().unwrap();
 		$(".search_panel_result").highlight(searchstring,"highlight"); 
 		$(".comment_text").highlight(searchstring,"highlight"); 
-//		$(".redactor_").highlight(searchstring,"highlight"); 
+		$(".redactor_").highlight(searchstring,"highlight"); 
 		$("#mypanel .n_title").highlight(searchstring,"highlight"); 
 }
 
@@ -242,140 +245,6 @@ function jsAddComment(tree_id,parent_id,text)
 
 }
 
-/* !Добавление нового дела */
-function jsAddDo(arrow, myparent, mytitle, date1, date2)
-{
- $.Menu.closeAll();
-
- localStorage.setItem('sync_time_server', jsNow()); 
- 
- sender = $(".selected");
- if(!sender) return true;
-
- var isTree = $("#top_panel").hasClass("panel_type1");
- 
- if(arrow == 'down')
- 	{
-	 	if(isTree) {
-		 	panel = sender.parents("ul:first").attr("myid");
-	 	} else {
-		 	panel = sender.parents(".panel").attr('id').replace("panel_","");
-		}
- 	}
- if(arrow == 'right')
- 	{
- 	panel = api4tree.node_to_id( sender.attr('id') );
- 	
- 		if(isTree) {
-	  		if( $(".ul_childrens[myid="+panel+"]").length==0 )
-  			$("#top_panel #node_"+panel).append("<ul class='ul_childrens' myid="+panel+"></ul>");
- 			sender.find(".node_img").addClass('folder_closed').html("<div class='countdiv'>1</div>").removeClass("node_img");
- 		} else {
- 			sender.parents(".panel").nextAll(".panel").not("#panel_"+panel).remove();
- 			sender.find(".node_img").addClass('folder_closed').html("<div class='countdiv'>1</div>").removeClass("node_img");
- 			iii = $("#panel_"+panel+" li").length; 
- 			if(iii==0) $("#mypanel").append("<div id='panel_"+panel+"' class='panel'><ul></ul></div>");
- 		}
- 	}
-
- if(arrow == "new")
- 	{
-	myparent = jsCreate_or_open(["_НОВОЕ"]);
- 	panel = myparent;
- 	}
-
-	if( (panel==-3) || (panel.toString().indexOf("user_")!=-1) ) { alert("Не могу создать дело в этой папке"); return true; }
-
-	$("#panel_"+panel).nextAll(".panel").remove();
-
- 	if(mytitle) title = strip_tags( mytitle );
- 	else
-	 	title = "Новая заметка";
-// console.info("add_to",panel);
-
-	var new_id = -parseInt(1000000+Math.random()*10000000);
- 
-if(arrow != "new")	
-	{
-	 	if(isTree) {
-		 	parent = sender.parents("ul:first").attr("myid");
-	 	} else {
-		 	parent = sender.parents(".panel").attr('id').replace("panel_","");
-		}
-
-	var count = sender.parents(".panel ul").children("li").length;
-	newposition = parseInt($(".selected").next(".divider_li").attr("pos"));
-	if(!newposition) newposition = count;
-	}
-else
-	{
-	count = 0;
-	newposition = 0;
-	}
-	
-	if(arrow=="right") { newposition = iii; sender.addClass("old_selected"); }
-	
-	new_line = my_all_data.length;
-	my_all_data[new_line]=new Object(); element = my_all_data[new_line];
-	if(!date1) element.date1 = "";
-	else element.date1 = date1;
-
-	if(!date2) element.date2 = "";
-	else element.date2 = date2;
-	
-	element.icon = "";
-	element.id = new_id;
-	element.img_class = "note-clean";
-	element.parent_id = parseInt(panel);
-	element.position = newposition.toString();
-	element.text = "";
-	element.did = "";
-	element.del = 0;
-	element.tab = 0;
-	element.fav = 0;
-	element.time = jsNow();
-	element.lsync = jsNow()-1;
-	element.user_id = main_user_id;
-	element.remind = 0;
-	element.s = 0;
-	element.title = title;
-	
-	if(arrow == "new") 
-		{
-		mynewdate = jsParseDate(title).date;
-		if(mynewdate!="")
-			{
-			element.date1 = mynewdate.toMysqlFormat();
-			if(title.toLowerCase().indexOf("смс")!=-1 || title.toLowerCase().indexOf("sms")!=-1 || title.toLowerCase().indexOf("напомни")!=-1 ) element.remind = 15;
-			}
-		}
-	jsSaveData(new_id);
-	jsRefreshTreeFast(new_id,arrow,date1);	
-	if(isTree) jsAddToTree(new_id);
-	$('#calendar').fullCalendar( 'refetchEvents' ); 	
-		li = $("#mypanel #node_"+new_id);
-		ntitle = li.find(".n_title");
-
-		jsRedactorOpen([new_id],"adddo");		
-
-		$("#mypanel li").removeClass("selected");
-		li.addClass("selected");
-		
-		
- if(arrow != "new")
-	  	ntitle.attr("contenteditable","true").attr("spellcheck","false").focus(); 
-	  	ntitle.attr("old_title",ntitle.html());
- if(arrow != "new")
-	  	document.execCommand('selectAll',false,null);
- else
- 	{
- 	api4panel.jsOpenPath(new_id);
- 	setTimeout(function() { myr.setFocus(); }, 500);
-	jsStartSync("soon","NEW DO");
- 	}
-
-return new_id;
-}
 
 function jsGo(arrow)
 {
@@ -626,13 +495,13 @@ function jsMakeView(view_type)
 
 function jsFixScroll(type,only_selected_panel)
 {
-//	console.info("fix_scroll",type);
+	console.info("fix_scroll",type,only_selected_panel);
 	
 	if(only_selected_panel) var add_id = ".old_selected,"
 	else var add_id = "";
 	$("#mypanel .panel").quickEach(function()
 		{ 
-		if(type==2) var add = ",.selected";
+		if(type==2) var add = ".selected";
 		else var add = "";
 		
 		var selected = $(this).find(add_id+add);
@@ -1316,14 +1185,6 @@ function jsRefreshOneFolder(panel_id)
 }
 
 
-jQuery.fn.highlight = function (str, className) {
-    var regex = new RegExp(str, "gi");
-    return this.each(function () {
-        this.innerHTML = this.innerHTML.replace(regex, function(matched) {
-            return "<span class=\"" + className + "\">" + matched + "</span>";
-        });
-    });
-};
 
 
 function jsMakeDrop() //обеспечивает элементам drag&drop
@@ -1337,12 +1198,21 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 				delay:400,
 				revert: false,      // will cause the event to go back to its
 				helper:"clone",
-				appendTo: "#content1"
+				appendTo: "#content1",
+				start: function(event, ui) {
+					console.info("start-drag");
+					$("#mypanel li").addClass("li_compact");
+				},
+				stop: function(event, ui) {
+					console.info("stop-drag");
+					$("#mypanel li").removeClass("li_compact");
+				}
 //				revertDuration: 500  //  original position after the drag
 			});
 			
 	$( "#mypanel .n_title,.divider_li" ).not("ui-droppable").droppable({
 			activeClass: "ui-can-recieve",
+			tolerance: "pointer",
 			hoverClass: "ui-can-hover",
 			over: function (event, ui) {
 				//$(this).click();
@@ -1355,18 +1225,25 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
             	
             	if(event.target.attributes.pos) //если уронили на разделитель
             		{
-	            	dropto_pos = event.target.attributes.pos.nodeValue;
+	            	dropto_pos = parseFloat(event.target.attributes.pos.nodeValue);
 	            	dropto_parent_id = event.target.attributes.myid.nodeValue;
 	            	dropto = event.target.attributes.myid.nodeValue;
 	            	draggable = ui.draggable[0].attributes.myid.nodeValue;
 
 	            	console.info("drop=",dropto,dropto_pos,draggable);
 
-	            	el = jsFind(dropto);
-					if(el) jsReorder( el.parent_id );
-					else return true;
+	            	el = api4tree.jsFind(dropto);
+//					if(el) jsReorder( el.parent_id );
+//					else return true;
 
-					jsFind(draggable,{ position:dropto_pos, parent_id : dropto_parent_id });
+					if(el.id && draggable && (draggable!=dropto_parent_id)) {
+						api4tree.jsFind(draggable,{ position:(dropto_pos-0.01), parent_id : dropto_parent_id });
+			   			setTimeout(function(){ 
+			   				jsRefreshTree(); 
+			   			},300);
+						
+					}
+
 
 					jsRefreshTree();
             		}
@@ -1375,20 +1252,21 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
             		if(!ui.draggable[0].attributes.myid) return true;
 	            	dropto = event.target.attributes.myid.nodeValue;
 	            	draggable = ui.draggable[0].attributes.myid.nodeValue;
-	            	console.info("dropto=",jsFind(dropto),jsFind(draggable));
 	            	
-	          	if(jsFind(draggable).share)
+	            	var drop_to_element = api4tree.jsFind(dropto);
+	            	
+/*	          	if(jsFind(draggable).share)
 	            	if( jsFind(dropto).share != jsFind(draggable).share ) 
-	            		{ alert("Вы не можете переместить чужую заметку к себе — "+jsFind(draggable).share+"!="+jsFind(dropto).share); return true; }
+	            		{ alert("Вы не можете переместить чужую заметку к себе — "+jsFind(draggable).share+"!="+jsFind(dropto).share); return true; }*/
 	            	
-	           		jsFind(draggable, {parent_id : dropto});
-			    	jsRefreshTree();
+	           		if(drop_to_element.id && (draggable!=dropto)) {
+	           			api4tree.jsFind(draggable, {parent_id : dropto});
+			   			setTimeout(function(){ 
+			   				jsRefreshTree(); 
+			   				api4panel.jsOpenPath(draggable);
+			   			},300);
+			   		}
 			    	
-	           		if(false)
-					var $txt = $.ajax({type: "POST",url: "server.php", data: dataString, success: function(t) 
-				       {
-			    	    jsTitle("Объект перемещён",5000);
-			           }});
 		           	}
             	$(".fc-cell-overlay").remove();
    				$(".ui-draggable-dragging").remove();
@@ -1557,6 +1435,7 @@ function jsShowCalendar() //отображаю календарь
 		calend = $('#calendar').fullCalendar({
 			editable:true,
 			firstHour: firstHour,
+			slotMinutes: 30,
 			timeFormat: 'H:mm',
 			axisFormat: 'H:mm',
 			contentHeight:361,
@@ -1567,7 +1446,7 @@ function jsShowCalendar() //отображаю календарь
         
         console.info(event.id,dayDelta,minuteDelta);
 
-		var el = jsFind(event.id);
+		var el = api4tree.jsFind(event.id);
 		
 		if(el.date2<el.date1) 
 			{
@@ -1583,7 +1462,7 @@ function jsShowCalendar() //отображаю календарь
 		mydate.setDate( mydate.getDate() + parseInt(dayDelta,10) );
 		
 		var mydate2 = mydate.toMysqlFormat();
-		jsFind(event.id,{date2:mydate2});
+		api4tree.jsFind(event.id,{date2:mydate2});
 		
 		console.info("newdate = ",mydate,mydate2);
         
@@ -1592,24 +1471,21 @@ function jsShowCalendar() //отображаю календарь
 			drop: function(date1,allday,ev,et)
 			  { 
 ////////////////После того как элемент дерева брошен на календарь, присваиваем дату при помощи AJAX и обновляем календарь			  			
-			  $.ajaxSetup({async: false});
 			 if(ev.target.attributes.myid) {
 			 	 var mynode = ev.target.attributes.myid.nodeValue;
 				
 				var newdate = date1.toMysqlFormat();
 				console.info("drop=",date1,allday,ev,et);
-				jsFind(mynode,{ date1:newdate });
+				api4tree.jsFind(mynode,{ date1:newdate });
 				jsRefreshTree();
-				jsSaveData(mynode);
-
-			     }
+				}
 			 else
 			 if(et.data)
  			   et.data.obj.each(function()
 			     { 
 			    var mynode = this.id;
 			    var mydate = encodeURIComponent(date1.toMysqlFormat());
-			    jsFind(mynode, { date1 : mydate });
+			    api4tree.jsFind(mynode, { date1 : mydate });
 			 	$('#calendar').fullCalendar( 'refetchEvents' ); 
 			    jsRefreshTree();
 			    
@@ -1624,7 +1500,6 @@ function jsShowCalendar() //отображаю календарь
 		 		  });
 			     });
 			  
-			    $.ajaxSetup({async: true});
 
 			  },
 			header: {
@@ -1695,10 +1570,11 @@ function jsShowCalendar() //отображаю календарь
 			 	}
 				
 				console.info(start.toMysqlFormat(),end.toMysqlFormat(), title);
-				jsAddDo("new",33,title, start.toMysqlFormat(),end.toMysqlFormat() );
+				api4tree.jsAddDo("to_new_folder",title, start.toMysqlFormat(),end.toMysqlFormat() );
 
 				};
-				//calend.fullCalendar('unselect');
+				calend.fullCalendar('unselect');
+				$('#calendar').fullCalendar( 'refetchEvents' ); 
 				
 			}
 			
@@ -2049,3 +1925,96 @@ if (!Array.prototype.filter)
  * @version 1.4.3.1
  */
 (function($){var h=$.scrollTo=function(a,b,c){$(window).scrollTo(a,b,c)};h.defaults={axis:'xy',duration:parseFloat($.fn.jquery)>=1.3?0:1,limit:true};h.window=function(a){return $(window)._scrollable()};$.fn._scrollable=function(){return this.map(function(){var a=this,isWin=!a.nodeName||$.inArray(a.nodeName.toLowerCase(),['iframe','#document','html','body'])!=-1;if(!isWin)return a;var b=(a.contentWindow||a).document||a.ownerDocument||a;return/webkit/i.test(navigator.userAgent)||b.compatMode=='BackCompat'?b.body:b.documentElement})};$.fn.scrollTo=function(e,f,g){if(typeof f=='object'){g=f;f=0}if(typeof g=='function')g={onAfter:g};if(e=='max')e=9e9;g=$.extend({},h.defaults,g);f=f||g.duration;g.queue=g.queue&&g.axis.length>1;if(g.queue)f/=2;g.offset=both(g.offset);g.over=both(g.over);return this._scrollable().each(function(){if(e==null)return;var d=this,$elem=$(d),targ=e,toff,attr={},win=$elem.is('html,body');switch(typeof targ){case'number':case'string':if(/^([+-]=)?\d+(\.\d+)?(px|%)?$/.test(targ)){targ=both(targ);break}targ=$(targ,this);if(!targ.length)return;case'object':if(targ.is||targ.style)toff=(targ=$(targ)).offset()}$.each(g.axis.split(''),function(i,a){var b=a=='x'?'Left':'Top',pos=b.toLowerCase(),key='scroll'+b,old=d[key],max=h.max(d,a);if(toff){attr[key]=toff[pos]+(win?0:old-$elem.offset()[pos]);if(g.margin){attr[key]-=parseInt(targ.css('margin'+b))||0;attr[key]-=parseInt(targ.css('border'+b+'Width'))||0}attr[key]+=g.offset[pos]||0;if(g.over[pos])attr[key]+=targ[a=='x'?'width':'height']()*g.over[pos]}else{var c=targ[pos];attr[key]=c.slice&&c.slice(-1)=='%'?parseFloat(c)/100*max:c}if(g.limit&&/^\d+$/.test(attr[key]))attr[key]=attr[key]<=0?0:Math.min(attr[key],max);if(!i&&g.queue){if(old!=attr[key])animate(g.onAfterFirst);delete attr[key]}});animate(g.onAfter);function animate(a){$elem.animate(attr,f,g.easing,a&&function(){a.call(this,e,g)})}}).end()};h.max=function(a,b){var c=b=='x'?'Width':'Height',scroll='scroll'+c;if(!$(a).is('html,body'))return a[scroll]-$(a)[c.toLowerCase()]();var d='client'+c,html=a.ownerDocument.documentElement,body=a.ownerDocument.body;return Math.max(html[scroll],body[scroll])-Math.min(html[d],body[d])};function both(a){return typeof a=='object'?a:{top:a,left:a}}})(jQuery);
+
+
+
+/*
+
+highlight v4
+
+Highlights arbitrary terms.
+
+<http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html>
+
+MIT license.
+
+Johann Burkard
+<http://johannburkard.de>
+<mailto:jb@eaio.com>
+
+*/
+
+jQuery.fn.highlight = function(pat) {
+ function innerHighlight(node, pat) {
+  var skip = 0;
+  if (node.nodeType == 3) {
+   var pos = node.data.toUpperCase().indexOf(pat);
+   if (pos >= 0) {
+    var spannode = document.createElement('span');
+    spannode.className = 'highlight';
+    var middlebit = node.splitText(pos);
+    var endbit = middlebit.splitText(pat.length);
+    var middleclone = middlebit.cloneNode(true);
+    spannode.appendChild(middleclone);
+    middlebit.parentNode.replaceChild(spannode, middlebit);
+    skip = 1;
+   }
+  }
+  else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {
+   for (var i = 0; i < node.childNodes.length; ++i) {
+    i += innerHighlight(node.childNodes[i], pat);
+   }
+  }
+  return skip;
+ }
+ return this.length && pat && pat.length ? this.each(function() {
+  innerHighlight(this, pat.toUpperCase());
+ }) : this;
+};
+
+jQuery.fn.removeHighlight = function() {
+ return this.find("span.highlight").each(function() {
+  this.parentNode.firstChild.nodeName;
+  with (this.parentNode) {
+   replaceChild(this.firstChild, this);
+   normalize();
+  }
+ }).end();
+};
+
+
+jQuery.uaMatch = function( ua ) {
+	ua = ua.toLowerCase();
+
+	var match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+		/(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+		/(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+		/(msie) ([\w.]+)/.exec( ua ) ||
+		ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+		[];
+
+	return {
+		browser: match[ 1 ] || "",
+		version: match[ 2 ] || "0"
+	};
+};
+
+// Don't clobber any existing jQuery.browser in case it's different
+if ( !jQuery.browser ) {
+	matched = jQuery.uaMatch( navigator.userAgent );
+	browser = {};
+
+	if ( matched.browser ) {
+		browser[ matched.browser ] = true;
+		browser.version = matched.version;
+	}
+
+	// Chrome is Webkit, but Webkit is also Safari.
+	if ( browser.chrome ) {
+		browser.webkit = true;
+	} else if ( browser.webkit ) {
+		browser.safari = true;
+	}
+
+	jQuery.browser = browser;
+}

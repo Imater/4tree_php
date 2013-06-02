@@ -20,6 +20,9 @@
 <link rel="shortcut icon" href="favicon1.png" type="image/x-icon" />
 <link rel="icon" href="favicon1.png" type="image/x-icon" />
 
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+
 <?
 require_once('compress_timestamp.php');         //load timestamp created by compress.php module sets field $compress_stamp=unix_timestamp 
 
@@ -75,7 +78,9 @@ if(isset($_GET['confirm']))
 
 ?>
 
+	<link rel="stylesheet" type="text/css" href="redactor900/redactor/redactor.css">
 	<link rel="stylesheet" type="text/css" href="css/4tree-styles.css">
+	<link rel="stylesheet" type="text/css" href="fullcalendar-1.6.1/fullcalendar/fullcalendar.css">
 
 
 <!--
@@ -106,6 +111,11 @@ if(isset($_GET['confirm']))
 	-->
 
 
+	<script src="js/loader.js"></script>
+	<script src="js/jquery.datetimeentry2.min.js"></script>
+	<script src="js/jquery.datetimeentry-ru.js"></script>
+	<script src="fullcalendar-1.6.1/fullcalendar/fullcalendar.js"></script>
+	<script src="b_menu/jquery.dimensions.min.js"></script>
 	<script src="js/pushstream.js"></script>
 	<script src="js/js_regallkeys.js"></script>
 	<script src="js/all_new.js"></script>
@@ -113,13 +123,19 @@ if(isset($_GET['confirm']))
 	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
 	<script src="js/rangy-core.js"></script>
 	<script src="js/rangy-selectionsaverestore.js"></script>
-	<script src="js/jquery-ui.multidatespicker.js"></script>
-	<script src="jsredactor/redactor/redactor.js"></script>
+<!--	<script src="js/jquery-ui.multidatespicker.js"></script> -->
+	<script src="redactor900/redactor/redactor.js"></script>
+	<script src="redactor900/redactor/ru.js"></script>
+	
 	<script src="js/iphone-style-checkboxes.js"></script>
 	<script src="js/jszip.js"></script>
 	<script src="js/vcdiff.js"></script>
 	
-<!--	 -->
+<!--	 
+	<script src="jsredactor/redactor/redactor.js"></script>
+	
+	
+-->
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 

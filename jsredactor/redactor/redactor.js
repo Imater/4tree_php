@@ -1333,10 +1333,12 @@ if(!need_text)
 		setCode: function(html)
 		{
 			html = this.stripTags(html);
-			this.$editor.html(html).focus();
+			this.$editor.html(html);
+			//.focus();
 
 			this.syncCode();
-			this.$editor.html(html).blur();
+			this.$editor.html(html);
+			//.blur();
 		},
 		getCode: function()
 		{
@@ -1394,6 +1396,11 @@ if(!need_text)
 			{
 				this.document.selection.createRange().pasteHTML(html);
 			}
+			note_saved=false;
+			my_autosave = setTimeout( function() { 
+			    api4editor.jsSaveAllText(1); 
+			}, 500 );
+			
 		},
 
 		destroy: function()

@@ -130,29 +130,28 @@ if (!file_exists($adir))
 
 file_compress('styles.css',
 		array('ui/css/smoothness/jquery-ui-1.8.21.custom.css',
-			  'fullcalendar/fullcalendar/fullcalendar.css',
-			  'jsredactor/redactor/redactor.css',
 			  'css/iphone.css',
 			  'fontello/css/fontello.css'
 			  ));
 
 file_compress('redactor.js',array('jsredactor/redactor/redactor.js'));
 
-file_compress('all.js',array('js/jquery.min.js',
-	'js/jquery.datetimeentry2.min.js',
-	'js/jquery.datetimeentry-ru.js',
+file_compress('all.js',array(
+	//'js/jquery.min.js',
+//	'js/jquery.datetimeentry2.min.js',
+//	'js/jquery.datetimeentry-ru.js',
 	'jstree/_lib/jquery.cookie.min.js',
-	'jstree/_lib/jquery.hotkeys.min.js',
-	'ui/js/jquery-ui-1.8.21.custom.min.js',
-	'fullcalendar/jquery/jquery-ui-1.8.23.custom.min.js',
-	'js/loader.js',
-	'b_menu/jquery.dimensions.min.js',
+//	'jstree/_lib/jquery.hotkeys.min.js',
+//	'ui/js/jquery-ui-1.8.21.custom.min.js',
+//	'fullcalendar-1.6.1/jquery/jquery-ui-1.10.2.custom.min.js',
+//	'js/loader.js',
+//	'b_menu/jquery.dimensions.min.js',
 	'b_menu/jquery.menu.js',
 	'js/iphone-style-checkboxes.js',
 //	'js/jquery-ui.multidatespicker.js',
 	'js/handlebars.js',
 	'js/ru.js',
-	'fullcalendar/fullcalendar/fullcalendar.js',
+//	'fullcalendar/fullcalendar/fullcalendar.js',
 //	'js/pushstream.js',
 //	'js/zvt-ydn.db-dev-0.4.6.js',
 	'js/md5.js',
