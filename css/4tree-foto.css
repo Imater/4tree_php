@@ -1,0 +1,170 @@
+#foto_editor {
+	position: absolute;
+	top:0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+background: url("../img/opacity-dark.png");
+z-index: 999999;
+}
+
+#foto_toolbar {
+	width: 265px;
+	height: 150px;
+	padding: 5px 15px;
+	background: black;
+	color: white;
+	position: absolute;
+	bottom:20px;
+	left: 40px;
+	border-radius: 10px;
+	border: 1px solid white;
+    -webkit-box-shadow:0px 1px 6px #000;
+       -moz-box-shadow:0px 1px 6px #000;
+            box-shadow:0px 1px 6px #000;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+	z-index: 3;	
+	opacity: 0.8;
+	
+}
+
+#foto_toolbar ul {
+	margin: 0px;
+	padding: 3px;
+	list-style: none;
+	margin-bottom: 10px;
+}
+
+#foto_toolbar li {
+	display: inline-block;
+	padding: 5px 6px;
+	width:20px;
+	font-size: 20px;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+#foto_toolbar li:hover {
+color:yellow;
+}
+
+#foto_toolbar li i.active {
+	color:red !important;
+}
+
+.color_sample {
+width: 18px;
+display: inline-block;
+height: 18px;
+border-radius: 18px;
+border: 1px solid rgb(77, 77, 77);
+margin: 2px;
+cursor: pointer;
+}
+
+.color_sample_bg {
+width: 18px;
+display: inline-block;
+height: 30px;
+border-radius: 3px;
+border: 1px solid rgb(77, 77, 77);
+margin: 2px;
+cursor: pointer;
+}
+
+.color_sample i{
+color: white;
+margin-top: -6px;
+display: block;
+position: absolute;
+margin-left: 1px;
+font-size: 19px;
+text-shadow: 1px 1px 2px #000;
+}
+
+.color_sample_bg i{
+color: white;
+margin-top: -7px;
+display: block;
+position: absolute;
+margin-left: -1px;
+font-size: 23px;
+text-shadow: 1px 1px 2px #000;
+}
+
+.background_colors {
+margin-top: 10px;	
+}
+
+#foto_toolbar_settings {
+	width: 225px;
+	height: 150px;
+	padding: 5px 15px;
+	background: black;
+	color: white;
+	position: absolute;
+	bottom:20px;
+	left: 355px;
+	border-radius: 10px;
+	border: 1px solid white;
+    -webkit-box-shadow:0px 1px 6px #000;
+       -moz-box-shadow:0px 1px 6px #000;
+            box-shadow:0px 1px 6px #000;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+	z-index: 2;	
+	opacity: 0.8;
+}
+
+#foto_toolbar_actions {
+	width: 225px;
+	height: 150px;
+	padding: 5px 15px;
+	background: black;
+	color: white;
+	position: absolute;
+	bottom:20px;
+	right: 20px;
+	border-radius: 10px;
+	border: 1px solid white;
+    -webkit-box-shadow:0px 1px 6px #000;
+       -moz-box-shadow:0px 1px 6px #000;
+            box-shadow:0px 1px 6px #000;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+	z-index: 2;	
+	opacity: 0.8;
+}
+
+#foto_toolbar_actions ul {
+	margin: 0px;
+	padding: 3px;
+	list-style: none;	
+}
+
+#foto_toolbar_actions li {
+	display: inline-block;
+	padding: 5px 6px;
+	font-size: 14px;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+
+#foto_canvas {
+	overflow: auto;
+	position: absolute;
+	left: 25px;
+	bottom: 40px;
+	right: 25px;
+	top:40px;
+	background: white;
+	background-repeat: no-repeat;
+    -webkit-box-shadow:2px 2px 6px #000;
+       -moz-box-shadow:2px 2px 6px #000;
+            box-shadow:2px 2px 6px #000;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+	z-index: 1;	
+}
