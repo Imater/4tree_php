@@ -795,7 +795,7 @@ color: white !important;
     position: absolute;
     left: 10px;
     right: 10px;
-    padding: 10px 10px 20px 15px !important;
+    padding: 15px 15px 20px 15px !important;
 }
 
 .bottom_right .redactor_editor:focus
@@ -830,7 +830,7 @@ color: white !important;
 }
 
 .redactor_editor table p {
-	font-size: 11px !important;
+	font-size: 12px !important;
 }
 
 .redactor_editor table td {
@@ -970,7 +970,7 @@ width: 3px;
 .redactor_toolbar
 {
 top:7px;
-left:22px;
+left:26px;
 border: none !important;
 background: none !important;
 }
@@ -1074,8 +1074,8 @@ color:black !important;
 .pasted,
 .pasted .fc-event-skin
 {
-opacity: 0.85;
-filter: alpha(opacity=80);
+opacity: 0.9;
+filter: alpha(opacity=90);
 border-color: #850003 !important;
 background-color: #fde2bf !important;
 color:black !important;
@@ -3380,7 +3380,7 @@ border-bottom: 3px double #c000c0;
 
 .fc-view-month
 {
-overflow-y: auto;
+overflow-y: auto !important;
 }
 
 .open_calendars
@@ -4694,14 +4694,25 @@ padding: 0px;
 
 #files_header li 
 {
-border-top-left-radius: 5px;
-border-top-right-radius: 5px;
+border-radius: 2px;
+font-size: 11px;
 cursor: pointer;
 color: #3f3f3f;
 display: inline-block;
-padding: 3px 10px 2px 10px;
-height: 20px;
+padding: 4px 10px 4px 10px;
 }
+
+#files_header li:hover
+{
+background: #EEE;
+}
+
+#files_header li.active
+{
+font-weight: bold;
+background: none;
+}
+
 
 #tree_files_content .files_list
 {
@@ -4756,11 +4767,6 @@ vertical-align: text-bottom;
 }
 
 
-#files_header li.active
-{
-color: black;
-background: white;
-}
 
 
 #tree_files_content .one_foto img
@@ -5198,6 +5204,14 @@ box-shadow: none !important;
 box-shadow: none !important;
 }
 
+.fc-state-hover {
+background: #eee !important;	
+}
+
+.fc-header-right {
+margin-right: 5px;
+}
+
 .fc-header {
 top:4px !important;
 box-shadow: none !important;
@@ -5210,11 +5224,93 @@ color: #666;
 overflow: hidden;
 }
 
+.calculator {
+font-size: 14px;
+padding: 6px 0px !important;
+font-family: Verdana, Arial;
+}
+
+.comment_founded {
+	font-size: 11px;
+	font-style: italic;
+	padding-top: 10px;
+	color:#444;
+}
+
+.add_do_panel_top {
+-moz-transition: all 0.1s;
+-webkit-transition: all 0.1s;
+-ms-transition: all 0.1s;
+-o-transition: all 0.1s;
+transition: all 0.1s;
+
+transition-delay: 0.1s;
+-webkit-transition-delay: 0.1s; /* Safari */
+
+padding: 0px 6px;
+opacity: 0;
+background: white;
+color: #888;
+font-size: 13px;
+position: absolute;
+width: 280px;
+border-bottom: 1px solid #CCC;
+height: 23px;
+}
 
 
+.panel ul::before {
+content: "+ добавить";
+display: block;
+padding-top: 1px;
+padding-left: 13px;
+font-weight: bold;
+color: #EEE;
+font-size: 13px;
+height: 19px;
+width: 100%;
+border-bottom: 1px solid #EEE;
+}
+
+.panel ul{
+margin-top: 3px;	
+}
+
+.add_do_panel_top i::before {
+margin: 0px;
+}
+
+.add_do_panel_top i {
+padding: 2px 4px;
+cursor: pointer;
+border-radius: 2px;
+line-height: 23px;
+}
+
+.add_do_panel_top i:hover {
+-moz-transition: all 0.1s;
+-webkit-transition: all 0.1s;
+-ms-transition: all 0.1s;
+-o-transition: all 0.1s;
+transition: all 0.1s;
+cursor: pointer;
+background: #EEE;
+}
 
 
+.add_do_panel_top:hover
+{
+-moz-transition: all 0.2s;
+-webkit-transition: all 0.2s;
+-ms-transition: all 0.2s;
+-o-transition: all 0.2s;
+transition: all 0.2s;
 
+transition-delay: 0.2s;
+-webkit-transition-delay: 0.2s; /* Safari */
+
+opacity: 1 !important;
+}
 
 
 

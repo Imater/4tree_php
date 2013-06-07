@@ -454,13 +454,15 @@ for ($i=0; $i<$countlines; $i++)
 		   		$result5 = mysql_query_my($sqlnews5); 
 		   		if($display) if(mysql_affected_rows()>0) echo "Удалил дублирующую запись (".mysql_affected_rows()." шт)<br>";
 		   		
-		   		$sqlnews="INSERT INTO `tree` (old_id,user_id,changetime,title) VALUES ('".$id."','".$GLOBALS['user_id']."','".ConvertFutureDate($now_time)."','".$changes[$i]['title']." (new)');";
+		   		$new_title = addslashes($changes[$i]['title']);
+		   		
+		   		$sqlnews="INSERT INTO `tree` (old_id,user_id,changetime,title) VALUES ('".$id."','".$GLOBALS['user_id']."','".ConvertFutureDate($now_time)."','".$new_title." (new)');";
 		   		$result = mysql_query_my($sqlnews); 
 		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
 		   		$id = mysql_insert_id();
 		   		if($display) echo "<b>Новый id</b> = ".$id."<br>";
 		   		
-		   		$sqlnews = "UPDATE tree SET parent_id =".$id." WHERE parent_id = '".$old_id."' ORDER by id DESC";	
+		   		$sqlnews = "UPDATE tree SET parent_id =".$id." WHERE parent_id = '".$old_id."'";	
 		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
 		   		
 		   		for($j=0; $j<$countlines;$j++) //заменяю parent_id где он отрицательный в самом массиве изменений

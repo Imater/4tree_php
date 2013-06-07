@@ -9,6 +9,11 @@
  * For event drag & drop, requires jQuery UI draggable.
  * For event resizing, requires jQuery UI resizable.
  */
+
+	// locals
+	var usedOverlays = [];
+	var unusedOverlays = [];
+
  
 (function($, undefined) {
 
@@ -2406,6 +2411,12 @@ function BasicView(element, calendar, viewName) {
 		var rowHeightLast;
 		var cell;
 			
+		if( $(".fc-view-month").length ) 
+			{
+			$(".fc-view-month").height(height);
+			bodyHeight = bodyHeight-50;
+			}
+			
 		if (opt('weekMode') == 'variable') {
 			rowHeight = rowHeightLast = Math.floor(bodyHeight / (rowCnt==1 ? 2 : 6));
 		}else{
@@ -4044,6 +4055,7 @@ function AgendaEventRenderer() {
 		var html = "<";
 		var url = event.url;
 		var skinCss = getSkinCss(event, opt);
+		var skinCssAttr = (skinCss ? " style='" + skinCss + "'" : '');
 		var classes = ['fc-event', 'fc-event-vert'];
 		if (isEventDraggable(event)) {
 			classes.push('fc-event-draggable');
@@ -4063,7 +4075,7 @@ function AgendaEventRenderer() {
 		}else{
 			html += "div";
 		}
-		html +=
+/*		html +=
 			" class='" + classes.join(' ') + "'" +
 			" style='position:absolute;z-index:8;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
 			">" +
@@ -4075,7 +4087,27 @@ function AgendaEventRenderer() {
 			htmlEscape(event.title) +
 			"</div>" +
 			"</div>" +
-			"<div class='fc-event-bg'></div>";
+			"<div class='fc-event-bg'></div>";*/
+			
+		html +=
+			" class='" + classes.join(' ') + "'" + "title = '"+event.title+"'" + "myid = '"+event.id+"'" +
+			" style='position:absolute;z-index:8;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
+			">" +
+			"<div class='fc-event-inner fc-event-skin'" + skinCssAttr + ">" +
+			"<div class='fc-event-head fc-event-skin'" + skinCssAttr + ">" +
+			"<div class='fc-event-time'>" +
+			htmlEscape(formatDates(event.start, event.end, opt('timeFormat'))) +
+			"</div>" +
+			"</div>" +
+			"<div class='fc-event-content'>" +
+			"<div class='fc-event-title'>" +
+			htmlEscape(event.title) +
+			"</div>" +
+			"</div>" +
+			"<div class='fc-event-bg'></div>" +
+			"</div>"; // close inner
+			
+			
 		if (seg.isEnd && isEventResizable(event)) {
 			html +=
 				"<div class='ui-resizable-handle ui-resizable-s'>=</div>";
@@ -4805,11 +4837,22 @@ function DayEventRenderer() {
 			}else{
 				html += "<div";
 			}
-			html +=
+/*			html +=
 				" class='" + classes.join(' ') + "'" +
 				" style='position:absolute;z-index:8;left:"+left+"px;" + skinCss + "'" +
 				">" +
-				"<div class='fc-event-inner'>";
+				"<div class='fc-event-inner'>"; */
+
+			html +=
+				" class='" + classes.join(' ') + "'" + "title = '"+event.title+"'" + "myid = '"+event.id+"'" +
+				" style='position:absolute;z-index:8;left:"+left+"px;" + skinCss + "'" +
+				">" +
+				"<div" +
+				" class='fc-event-inner fc-event-skin'" +
+				(skinCss ? " style='" + skinCss + "'" : '') +
+				">";
+				
+				
 			if (!event.allDay && seg.isStart) {
 				html +=
 					"<span class='fc-event-time'>" +
@@ -5211,6 +5254,8 @@ function SelectionManager() {
 }
 
 ;;
+
+
  
 function OverlayManager() {
 	var t = this;
@@ -5221,12 +5266,14 @@ function OverlayManager() {
 	t.clearOverlays = clearOverlays;
 	
 	
-	// locals
-	var usedOverlays = [];
-	var unusedOverlays = [];
 	
 	
 	function renderOverlay(rect, parent) {
+		var view_month_s = $(".fc-view-month").scrollTop();
+		var slot_scroll = $(".fc-view-month").scrollTop();
+		
+		rect.top += (view_month_s?view_month_s:0)+(slot_scroll?slot_scroll:0);
+		
 		var e = unusedOverlays.shift();
 		if (!e) {
 			e = $("<div class='fc-cell-overlay' style='position:absolute;z-index:3'/>");

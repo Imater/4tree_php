@@ -130,7 +130,7 @@ body .redactor_box_fullscreen {
 .redactor_editor blockquote,
 .redactor_editor pre {
 	margin: 0;
-	margin-bottom: 10px !important;
+	margin-bottom:4px !important;
 	border: none;
 	background: none;
 	box-shadow: none !important;
@@ -175,7 +175,7 @@ body .redactor_box_fullscreen {
 	font-weight: bold !important;
 }
 .redactor_editor code {
-	background-color: #d8d7d7 !important;
+	background-color: none !important;
 }
 .redactor_editor pre {
 	overflow: auto;

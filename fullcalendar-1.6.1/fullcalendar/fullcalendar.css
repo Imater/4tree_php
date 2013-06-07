@@ -252,7 +252,7 @@ html .fc,
 ------------------------------------------------------------------------*/
 	 
 .fc-event {
-	border: 1px solid #3a87ad; /* default BORDER color */
+	border: 1px solid #FFAD46; /* default BORDER color */
 	background-color: #3a87ad; /* default BACKGROUND color */
 	color: #fff;               /* default TEXT color */
 	font-size: .85em;
@@ -280,7 +280,7 @@ a.fc-event,
 	
 .fc-event-time,
 .fc-event-title {
-	padding: 0 1px;
+	padding: 0px 0px;
 	}
 	
 .fc .ui-resizable-handle {
@@ -292,7 +292,9 @@ a.fc-event,
 	line-height: 50%; /* */
 	}
 	
-	
+.fc-event-content {
+	padding: 0px 2px;
+}	
 	
 /* Horizontal Events
 ------------------------------------------------------------------------*/
@@ -305,15 +307,15 @@ a.fc-event,
 .fc-ltr .fc-event-hori.fc-event-start,
 .fc-rtl .fc-event-hori.fc-event-end {
 	border-left-width: 1px;
-	border-top-left-radius: 3px;
-	border-bottom-left-radius: 3px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
 	}
 
 .fc-ltr .fc-event-hori.fc-event-end,
 .fc-rtl .fc-event-hori.fc-event-start {
 	border-right-width: 1px;
-	border-top-right-radius: 3px;
-	border-bottom-right-radius: 3px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
 	}
 	
 /* resizable */
@@ -521,14 +523,14 @@ table.fc-border-separate {
 
 .fc-event-vert.fc-event-start {
 	border-top-width: 1px;
-	border-top-left-radius: 3px;
-	border-top-right-radius: 3px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
 	}
 
 .fc-event-vert.fc-event-end {
 	border-bottom-width: 1px;
-	border-bottom-left-radius: 3px;
-	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
 	}
 	
 .fc-event-vert .fc-event-time {

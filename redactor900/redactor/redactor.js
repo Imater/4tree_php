@@ -177,14 +177,14 @@
 			allowedTags: false,
 			deniedTags: ['html', 'head', 'link', 'body', 'meta', 'script', 'style', 'applet'],
 
-			boldTag: 'strong',
+			boldTag: 'b',
 			italicTag: 'em',
 
 			// private
 			buffer: [],
 			rebuffer: [],
 			textareamode: false,
-			emptyHtml: '<p>&#x200b;</p>',
+			emptyHtml: '',//'<p>&#x200b;</p>',
 			invisibleSpace: '&#x200b;',
 			alignmentTags: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H30', 'P', 'TD', 'DIV', 'BLOCKQUOTE'],
 			ownLine: ['area', 'body', 'head', 'hr', 'i?frame', 'link', 'meta', 'noscript', 'style', 'script', 'table', 'tbody', 'thead', 'tfoot'],
@@ -750,6 +750,13 @@
 
 			// before callback
 			html = this.callback('syncBefore', false, html);
+			
+			var html_div = $(html);
+			
+			if(html_div && html_div.hasClass("my_pomidors") && !html_div.nextAll("p").length) {
+				html += "<p>...</p>";
+				this.$editor.html(html);
+			}
 
 			this.$source.val(html);
 
@@ -970,7 +977,7 @@
 				var pre = false;
 
 				this.callback('keydown', e);
-
+				
 				// pre & down
 				if ((parent && $(parent).get(0).tagName === 'PRE') || (current && $(current).get(0).tagName === 'PRE'))
 				{
@@ -1394,6 +1401,7 @@
 		// FOCUS
 		focus: function()
 		{
+		console.info("FFOOOOOOOOKUS");
 			if (!this.browser('opera')) this.window.setTimeout($.proxy(this.focusSet, this, true), 1);
 			else this.$editor.focus();
 		},
@@ -2211,6 +2219,7 @@
 
 					var parent = this.getParent();
 					var $list = $(parent).closest('ol, ul');
+					if($list.parent(".my_pomidors")) $list="";
 
 					if ($list.length)
 					{
@@ -2394,6 +2403,7 @@
 		},
 		cleanRemoveSpaces: function(html, buffer)
 		{
+		return html;
 			if (buffer !== false)
 			{
 				// save code
@@ -2627,12 +2637,14 @@
 		},
 		cleanSavePreCode: function(html, encode)
 		{
-			var pre = html.match(/<(pre|code)(.*?)>([\w\W]*?)<\/(pre|code)>/gi);
+//			var pre = html.match(/<(pre|code)(.*?)>([\w\W]*?)<\/(pre|code)>/gi);
+			var pre = html.match(/<(pre)(.*?)>([\w\W]*?)<\/(pre)>/gi);
 			if (pre !== null)
 			{
 				$.each(pre, $.proxy(function(i,s)
 				{
-					var arr = s.match(/<(pre|code)(.*?)>([\w\W]*?)<\/(pre|code)>/i);
+//					var arr = s.match(/<(pre|code)(.*?)>([\w\W]*?)<\/(pre|code)>/i);
+					var arr = s.match(/<(pre)(.*?)>([\w\W]*?)<\/(pre)>/i);
 
 					arr[3] = arr[3].replace(/&nbsp;/g, ' ');
 					if (encode !== false) arr[3] = this.cleanEncodeEntities(arr[3]);
@@ -3555,7 +3567,7 @@
 
 			// remove empty
 			html = html.replace(/<img>/gi, '');
-			html = html.replace(/<[^\/>][^>][^img|param|source]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
+//			html = html.replace(/<[^\/>][^>][^img|param|source]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
 
 			html = html.replace(/\n{3,}/gi, '\n');
 
@@ -3569,7 +3581,7 @@
 			}
 
 			// remove empty finally
-			html = html.replace(/<[^\/>][^>][^img|param|source]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
+//			html = html.replace(/<[^\/>][^>][^img|param|source]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
 
 			// FF fix
 			if (this.browser('mozilla'))

@@ -22,6 +22,8 @@
 
 <script src="js/jquery-1.10.1.min.js"></script>
 <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>
+<script src="js/parser.js"></script>
 
 <?
 require_once('compress_timestamp.php');         //load timestamp created by compress.php module sets field $compress_stamp=unix_timestamp 
@@ -81,36 +83,10 @@ if(isset($_GET['confirm']))
 	<link rel="stylesheet" type="text/css" href="redactor900/redactor/redactor.css">
 	<link rel="stylesheet" type="text/css" href="css/4tree-styles.css">
 	<link rel="stylesheet" type="text/css" href="fullcalendar-1.6.1/fullcalendar/fullcalendar.css">
+	<link rel="stylesheet" type="text/css" href="css/4tree-foto.css">
 
-
-<!--
-	<link rel="stylesheet" href="jsredactor/redactor/redactor.css" />
-	<link rel="stylesheet" type="text/css" href="css/iphone.css">
-
-
-	<script src="js/jquery.min.js"></script>
-	<script src="js/jquery.datetimeentry2.min.js"></script>
-	<script src="js/jquery.datetimeentry-ru.js"></script>
-	<script src="jstree/_lib/jquery.cookie.min.js"></script>
-	<script src="jstree/_lib/jquery.hotkeys.min.js"></script>
-	<script src="ui/js/jquery-ui-1.8.21.custom.min.js"></script>
-	<script src="fullcalendar/jquery/jquery-ui-1.8.23.custom.min.js"></script>
-
-	<script src="js/loader.js"></script>
-	<script src="b_menu/jquery.dimensions.min.js"></script>
-	<script src="b_menu/jquery.menu.js"></script>
-	<script src="./js/jquery-ui.multidatespicker.js"></script>
-    <script type="text/javascript" src="./js/jquery.idle-timer.js"></script>
-	<script src="./js/jquery-ui.multidatespicker.js"></script>
-	<script src="./js/iphone-style-checkboxes.js"></script>
-	<script src="./js/handlebars.js"></script> 
-	<script src="js/ru.js"></script>
-	<script src="fullcalendar/fullcalendar/fullcalendar.js"></script>
-    <script src="js/pushstream.js" type="text/javascript" language="javascript" charset="utf-8"></script>
-	<script src="jsredactor/redactor/redactor.js"></script>
-	-->
-
-
+	<script src="fabric.js-1.1.0/dist/all.js"></script>
+	<script src="js/4tree-foto.js"></script>
 	<script src="js/loader.js"></script>
 	<script src="js/jquery.datetimeentry2.min.js"></script>
 	<script src="js/jquery.datetimeentry-ru.js"></script>
@@ -355,6 +331,9 @@ if(isset($_GET['test']))
 			  </div>
 		&nbsp;
 		&nbsp;
+		<div class="h_button" id="add_picture">
+			<i class="icon-feather" title="Граффити"></i>
+		</div>
 		<a id="blob-archive" style="display:none" href="">blob</a>
 			  
 	<div class='tree_history'><ul></ul></div>			  
@@ -390,7 +369,11 @@ if(isset($_GET['test']))
 			</div>
 				
 				
-				<div class="search_panel_result panel_type3"><ul></ul></div>
+				<div class="search_panel_result panel_type3">
+					<ul>
+					  <li>Введите фразу для поиска или <br>выражение для калькулятора: <i>2+(2^2)*(1+1)*10/2</i></li>
+					</ul>
+				</div>
 	  			<div class="search_arrow"></div>
 
 	  			<div id="tree_news">
@@ -836,6 +819,44 @@ if(isset($_GET['test']))
 <div class="sync_console">
 	<ul>
 	</ul>
+</div>
+
+<div id="foto_editor" style="display:none">
+	<div id="foto_toolbar" class="noselectable">
+		<ul>
+		 <li id="tool_pencil"><i class="icon-brush"></i></li>
+		 <li><i class="icon-picture-1"></i></li>
+		 <li><i class="icon-resize-small"></i></li>
+		 <li><i class="icon-stop"></i></li>
+		 <li><i class="icon-right-thin"></i></li>
+		 <li><i class="icon-play"></i></li>
+		 <li><i class="icon-font"></i></li>
+		 <li><i class="icon-record"></i></li>
+		 <li><i class="icon-palette"></i></li>
+		 <li><i class="icon-record"></i></li>
+		 <li><i class="icon-flow-line"></i></li>
+		 <li><i class="icon-vector"></i></li>
+		 <li><i class="icon-zoom-out"></i></li>
+		 <li><i class="icon-zoom-in"></i></li>
+		</ul>
+	</div>
+	
+	<div id="foto_toolbar_actions"  class="noselectable">
+		<ul>
+		 <li><i class="icon-floppy-1"></i> Сохранить граффити</li>
+		 <li><i class="icon-doc-text"></i> Вставить в редактор</li>
+		 <li><i class="icon-camera"></i> Добавить фото в граффити</li>
+		 <li><i class="icon-export"></i> В новое окно</li>
+		 <br>
+		 <li><i class="icon-cancel-1"></i> Скрыть окно</li>
+		</ul>
+	</div>
+
+	<div id="foto_toolbar_settings"  class="noselectable">
+	</div>
+	
+	<div id="foto_canvas" class="noselectable">
+	</div>
 </div>
 
 

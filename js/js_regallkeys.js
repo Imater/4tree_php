@@ -1,4 +1,19 @@
 
+
+function getWordAt(s, pos) {
+  // make pos point to a character of the word
+//  while (s[pos].toLowerCase() == s[pos].toUpperCase()) pos--;
+  // find the space before that word
+  // (add 1 to be at the begining of that word)
+  // (note that it works even if there is no space before that word)
+//  pos = s.lastIndexOf(" ", pos) + 1;
+  // find the end of the word
+  var end = s.indexOf(" ", pos);
+  if (end == -1) end = s.length; // set to length if it was the last word
+  // return the result
+  return s.substring(pos, end);
+}
+
 function jsHighlightText(remove)
 {
 		var searchstring = $('#search_filter').val();
@@ -12,8 +27,20 @@ function jsHighlightText(remove)
 			}
 //		$(".highlight").contents().unwrap();
 		$(".search_panel_result").highlight(searchstring,"highlight"); 
-		$(".comment_text").highlight(searchstring,"highlight"); 
 		$(".redactor_").highlight(searchstring,"highlight"); 
+
+		var longtext = $(".redactor_").html().toLowerCase();
+		var founded_match = diff_plugin.match_main( longtext, searchstring, 0 );
+		if(founded_match!=-1){
+			var searchstring_more = getWordAt(longtext, founded_match);
+			console.info("Founded_more:",searchstring_more);
+			if (searchstring_more != searchstring) {
+				$(".redactor_").not(":has('.highlight')").highlight(searchstring_more,"highlight"); 
+				$(".search_panel_result li").not(":has('.highlight')").highlight(searchstring_more,"highlight"); 
+			}
+
+		}
+		$(".comment_text").highlight(searchstring,"highlight"); 
 		$("#mypanel .n_title").highlight(searchstring,"highlight"); 
 }
 
@@ -278,7 +305,7 @@ if(arrow=='up')
 	if(prev.length==1) 
 		{
 		current.removeClass("selected");
-		prev.addClass("selected").mousedown();
+		prev.addClass("selected").click();
 		}
 	}
 
@@ -307,8 +334,8 @@ if(arrow=='down')
 	
 	if(prev.length==1) 
 		{
-//		current.removeClass("selected");
-		prev.addClass("selected").mousedown();
+		current.removeClass("selected");
+		prev.addClass("selected").click();
 		}
 	}
 
@@ -323,12 +350,12 @@ if(arrow=='right')
 			}
 		else
 			{
-			current.mousedown();
+			current.click();
 			}
 		}
 	else
 		{
-		current.parents(".panel").nextAll(".panel:first").find("li:first").mousedown();
+		current.parents(".panel").nextAll(".panel:first").find("li:first").click();
 		}
 	}
 if(arrow=="left")
@@ -339,7 +366,7 @@ if(arrow=="left")
 		{
 		if(current.hasClass("tree-open"))
 			{
-			current.mousedown();
+			current.click();
 			}
 		else
 			{
@@ -347,7 +374,7 @@ if(arrow=="left")
 		}
 	else
 		{
-		current.parents(".panel").prevAll(".panel:first").find("li.old_selected").mousedown();
+		current.parents(".panel").prevAll(".panel:first").find("li.old_selected").click();
 		}
 	}
 
@@ -495,7 +522,7 @@ function jsMakeView(view_type)
 
 function jsFixScroll(type,only_selected_panel)
 {
-	console.info("fix_scroll",type,only_selected_panel);
+//	console.info("fix_scroll",type,only_selected_panel);
 	
 	if(only_selected_panel) var add_id = ".old_selected,"
 	else var add_id = "";
@@ -1089,7 +1116,7 @@ function jsAddToTree(id_node)
 	console.info("ADD TO TREE = ",id_node);
 	var element = api4tree.jsFind(id_node);
 	
-	var render_node = jsRenderOneElement( jsFind(id_node) );
+	var render_node = api4panel.jsRenderOneElement( api4tree.jsFind(id_node) );
 	
     if(isTree) {
     	where_to_add = $("ul[myid="+element.parent_id+"]");
@@ -1169,7 +1196,7 @@ function jsRefreshOneFolder(panel_id)
 	for(var i=0;i<len;i++)
 		{
 		var id = api4tree.node_to_id( $(elements[i]).attr("id") );
-		var changetime_from_base = jsFind(id).time;
+		var changetime_from_base = api4tree.jsFind(id).time;
 		var changetime_from_screen = $(elements[i]).attr("time");
 		
 		if(changetime_from_base != changetime_from_screen) //если элемент на экране не совпадает с базой
@@ -1759,33 +1786,24 @@ function jsCalendarNode(id)
 		  	{ 
 				if((slot!=0) && (i_am_scroll == 1))
 					{
-					$('* #slot_scroll').quickEach(function() 
+					$('* #slot_scroll').each(function() 
 					  { 
 					  	if(slot<0) return true;
-					  	slot = $(this).find('.fc-slot'+slot);
-					  	if(slot.offset())
+					  	var slot2 = $(this).find('.fc-slot'+slot);
+					  	if(slot2.offset())
 					  	  {
-					  	    tn = $("#time_now_to").offset().top;
-							sc2 = slot.offset().top;
-							myheight = $(this).height();
-							
-							sc3 = $(this).offset().top;
-							sc4 = $(this).scrollTop();
-							event_height = $(".fc-event[myid="+id+"]").height();
-							var scr=sc4-(sc3-sc2)-event_height;
-							
-							more_down=0;
-							
-							scr = sc2-tn+100-more_down;
-							
-							$(this).stop().animate({ 'scrollTop': scr },800); 
+							var selected_event = $(".fc-event[myid="+id+"]:visible:first");
+							selected_event.addClass("event-selected");
+							var offset = $("#calendar").height()/2-80;
+							$(this).stop().scrollTo(selected_event[0],400,{offset:-offset}); 
 						  }
 					  });
 					}
 				else
 					i_am_scroll = 1;
 
-		  	setTimeout(function(){ $(".fc-event[myid="+id+"]").removeClass('event-selected').addClass('event-selected'); },20);
+				var selected_event = $(".fc-event[myid="+id+"]:visible:first");
+				selected_event.addClass("event-selected");
 		  	},100 );
 		  
 }

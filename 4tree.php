@@ -42,7 +42,7 @@ $(document).ready(jsDoFirst);
 		<a href="#" id="login_now">Вход</a><br>
 		<div id="login_form" class="myform">
 		  <h2>для входа введите:</h2>
-		  email: <input id="email_login" placeholder="4tree@4tree.ru" type="text"><br>
+		  email: <input id="email_login" placeholder="4tree@4tree.ru" type="email" name="email"><br>
 
 		<label for='regpwd'>Пароль:</label> <br />
 		<input type='password' id='log_pas' name='regpwd' />		
@@ -57,7 +57,7 @@ $(document).ready(jsDoFirst);
 		
 		<div id="reg_form" class="myform">
 		  <h2>всего 2 поля:</h2>
-		  email: <input id="reg_email" placeholder="4tree@4tree.ru" type="text"><br>
+		  email: <input id="reg_email" placeholder="4tree@4tree.ru" type="email" name="email"><br>
 
 		<label for='regpwd'>Пароль:</label> <br />
 		<div class='pwdwidgetdiv' id='thepwddiv'></div>
