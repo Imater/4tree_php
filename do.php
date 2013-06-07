@@ -1444,7 +1444,7 @@ $sqlnews = "SELECT *, (SELECT count(*) FROM tree WHERE user_id=".$GLOBALS['user_
     $answer[ $sql['parent_id'] ][$i]['position']=$sql["position"];
 
 	$text = mb_substr( strip_tags( $sql['text'] ), 0,300,'UTF-8');
-    $text = $hy_ru->hyphenate($text,'UTF-8');
+//    $text = $hy_ru->hyphenate($text,'UTF-8');
     $answer[ $sql['parent_id'] ][$i]['text']=$text;
 
 //    $answer[ $sql['parent_id'] ][$i]['count']=$sql['cnt'];
@@ -1765,7 +1765,7 @@ if($GLOBALS['user_id'])
     $answer[$i]['time']=(integer)$sql["changetime"];
 
 	$text = mb_substr( strip_tags( $sql['text'] ), 0,300,'UTF-8');
-    $text = $hy_ru->hyphenate($text,'UTF-8');
+//    $text = $hy_ru->hyphenate($text,'UTF-8');
     $answer[$i]['text']=$sql['text'];
 
 //    $answer[ $sql['parent_id'] ][$i]['count']=$sql['cnt'];
@@ -1964,7 +1964,7 @@ $sqlnews = "SELECT * FROM tree WHERE user_id=".$GLOBALS['user_id']." AND ((title
 
     
 	$text = mb_substr( strip_tags( $sql['text'] ), 0,300,'UTF-8');
-    $text = $hy_ru->hyphenate($text,'UTF-8');
+//    $text = $hy_ru->hyphenate($text,'UTF-8');
     $answer[$i]['text']=$text;
 
     $answer[$i]['path']=$sql['path'];
