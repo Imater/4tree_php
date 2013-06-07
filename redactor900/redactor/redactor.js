@@ -184,7 +184,7 @@
 			buffer: [],
 			rebuffer: [],
 			textareamode: false,
-			emptyHtml: '',//'<p>&#x200b;</p>',
+			emptyHtml: '<p>&#x200b;</p>',//'<p>&#x200b;</p>',
 			invisibleSpace: '&#x200b;',
 			alignmentTags: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H30', 'P', 'TD', 'DIV', 'BLOCKQUOTE'],
 			ownLine: ['area', 'body', 'head', 'hr', 'i?frame', 'link', 'meta', 'noscript', 'style', 'script', 'table', 'tbody', 'thead', 'tfoot'],
