@@ -4025,13 +4025,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	      			});
   	          	});
   	        }
-	   	
+	   	 
 	   		$("#panel_"+old_id).attr("id","panel_"+new_id); //заменяю индексы видимых панелей
 	   		$('.redactor_editor[myid='+old_id+']').attr("myid", new_id);
 	   		$('#redactor[myid='+old_id+']').attr("myid", new_id);
 	   	    $('.divider_red[myid="'+old_id+'"]').attr('myid',new_id);
 	   	    $(".makedone[myid="+old_id+"]").attr("myid",new_id); //заменяю индексы makedone
 	   	    $("#node_"+old_id).attr("id", "node_"+new_id).find(".tcheckbox").attr("title", new_id);
+	   		$('#calendar').fullCalendar( 'refetchEvents' ); 
 	   	    
 	   		var id = parseInt(window.location.hash.replace("#",""),36); //меняем хэш в адресной строке
 	   		if(id==old_id) {
