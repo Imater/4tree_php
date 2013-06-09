@@ -51,6 +51,6 @@ Options +FollowSymLinks
 RewriteRule ^[^/]+/?[0-9]$ web.php?short=$0 [L]
 RewriteRule ^([^/]).php$ /?page=$1 [L]
 
-#RewriteEngine On
-#RewriteCond %{HTTPS} off
-#RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
