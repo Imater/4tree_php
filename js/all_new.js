@@ -4162,7 +4162,57 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
    	    		});
 		 }
 		 
-	     var myrefreshtimer;
+		 function jsSaveBlobImage(blob_src) {
+			   var d= new $.Deferred();
+
+		 	   if(!blob_src || blob_src.toLowerCase().indexOf("http")==0) { //если файл не blob
+			 	   d.resolve(blob_src);
+			 	   return d.promise();
+		 	   }
+		 	   
+    		   var fd = new FormData();
+
+			   var xhr = new XMLHttpRequest();
+			   xhr.open('GET', blob_src, true);
+			   xhr.responseType = 'blob';
+			   xhr.onload = function(e) {
+			     if (this.status == 200) {
+			       var myBlob = this.response;
+			       
+			       if(!myBlob) { resolve(""); return d.promise(); }
+			       
+				   fd.append('file', myBlob);
+				   console.info(fd,myBlob);
+				   
+				   $.ajax({
+				       type: 'POST',
+				       url: 'do.php?save_file=clipboard',
+				       data: fd,
+				       processData: false,
+				       contentType: false
+				   }).done(function(data) {
+				          if(data=="") { d.resolve(); return false; }
+				   
+				          var answer = JSON.parse(data);
+				          if(answer) {
+				          	var filename = answer.filelink;
+				          	console.info("BLOB SAVED TO AMAZONE",filename);
+				          	d.resolve(filename);
+				    	  	}
+				   }); 
+			       
+			       
+			       
+			       
+			       // myBlob is now the blob that the object URL pointed to.
+			     }
+			   };
+			   xhr.send();
+
+			 return d.promise();
+		 }
+		 
+	     var myrefreshtimer,comment_tm;
 	     //синхронизация данных с сервером
 	     this.jsSync = function(save_only) { 
 			 if ( ($("#mypanel .n_title[contenteditable=true]").length > 0) ) 
@@ -4197,12 +4247,41 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			var local_data_changed_tmp = [];
 			$.each(local_data_changed,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
 				
+				
+				var blob_def = new $.Deferred();
+				dfdArray.push(blob_def);
+				console.info("1-PUSH");
+				
 				if(el) {
 					dfdArray.push( this_db.jsFindLongText(el.id).done(function(longtext){
 						this_db.log(el.id, longtext.length); 
-						var new_i = local_data_changed_tmp.length;
-						local_data_changed_tmp[new_i] = el;
-						local_data_changed_tmp[new_i].text = longtext;
+						var dfdArray_blob = [];
+
+						if(longtext && longtext.indexOf("tmp_img")!=-1) {
+							var blob_text = $("<div>"+longtext+"</div>");
+							
+							blob_text.find("img.tmp_img").each(function(i,el){
+								var blob_src = $(el).attr("src");
+								
+								var done_element = jsSaveBlobImage(blob_src).done(function(filename){
+									$(el).attr("src", filename).removeClass("tmp_img");
+								});
+								
+								console.info("2-PUSH");
+								dfdArray_blob.push( done_element );
+							});
+							
+							//когда все картинки загрузились на сервер
+						}
+						$.when.apply( null, dfdArray_blob ).then( function(x){
+							console.info("1-RESOLVE");
+							if(blob_text) longtext = blob_text.html(); //если были blob картинки
+							var new_i = local_data_changed_tmp.length;
+							local_data_changed_tmp[new_i] = el;
+							local_data_changed_tmp[new_i].text = longtext;
+							blob_def.resolve();
+						});
+							
 					}) );
 				};
 			});
@@ -4215,21 +4294,60 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 								((el.new!="") && (el.new)) ); 
 			});
 			
+
 			var local_comments_changed_tmp = [];
 			$.each(local_comments_changed,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
+				
+				var blob_def_comment = new $.Deferred();
+				dfdArray.push(blob_def_comment);
 				
 				if(el) {
 					dfdArray.push( this_db.jsFindLongTextComment(el.id).done(function(element){
 						this_db.log("COMMENT-CHANGED = ",el.id, element.text.length); 
-						var new_i = local_comments_changed_tmp.length;
-						local_comments_changed_tmp[new_i] = el;
-						local_comments_changed_tmp[new_i].text = element.text;
+						
+						var dfdArray_blob_comment = [];
+
+						if(element && element.text && element.text.indexOf("tmp_img")!=-1) {
+							var blob_text = $("<div>"+element.text+"</div>");
+							
+							blob_text.find("img.tmp_img").each(function(i,el){
+								var blob_src = $(el).attr("src");
+								
+								var done_element = jsSaveBlobImage(blob_src).done(function(filename){
+									$(el).attr("src", filename).removeClass("tmp_img");
+								});
+								
+								dfdArray_blob_comment.push( done_element );
+							});
+							
+							//когда все картинки загрузились на сервер
+						}
+						$.when.apply( null, dfdArray_blob_comment ).then( function(x){
+							if(blob_text) {
+								element.text = blob_text.html(); //если были blob картинки
+								api4tree.jsFindComment(el.id,{text:element.text}).done(function(x){
+									clearTimeout(comment_tm);
+									comment_tm = setTimeout(function(){
+									   	var myselected = api4tree.node_to_id( $(".selected").attr('id') ); 
+									   	api4tree.jsShowAllComments(myselected);
+									}, 1000);
+								});
+							}
+							var new_i = local_comments_changed_tmp.length;
+							local_comments_changed_tmp[new_i] = el;
+							local_comments_changed_tmp[new_i].text = element.text;
+							blob_def_comment.resolve();
+						});
+						
+						
+						
 					}) );
 				};
 			});
 			
 			///////////////////////////////////
 			$.when.apply( null, dfdArray ).then( function(x){ //выполняю тогда, когда все длинные тексты считаны
+				console.info("START SYNC!");
 				this_db.log("Отправляю на сервер "+Object.size(local_data_changed)+" элементов",local_data_changed,local_data_changed_tmp);
 				
 				
@@ -6727,4 +6845,80 @@ var pushstream = new PushStream({
 
 pushstream.onmessage = _manageEvent;
 pushstream.onstatuschange = _statuschanged;
+
+
+function jsDoPasteClipboard(e) {
+    console.info("my_paste",e);
+    var items = e.originalEvent.clipboardData.items;
+    
+    var need_text = false;
+    
+    /*if(e.originalEvent.getData("text/html").indexOf("xml")!=-1) 
+       		if (!confirm("Преобразовать документ Office в картинку?")) 
+       			need_text = true;*/
+    
+    //	if(need_text) return true;
+    //if (!confirm("Преобразовать документ Office в картинку?")) 
+    
+    if(!need_text) {
+
+       for (var i = 0; i < items.length; ++i) {
+    	   console.info("asFile = ",items[i].getAsFile());
+    		
+           if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {
+    		   e.stopPropagation();					
+               var blob = items[i].getAsFile();
+    
+               window.URL = window.URL || window.webkitURL;
+               var blobUrl = window.URL.createObjectURL(blob);
+     
+               //var img = document.createElement('img');
+               //img.src = blobUrl; 
+               
+              if($(".redactor_editor:focus").hasClass("comment_enter_input"))
+              	{
+              	var insert_red = $('.comment_enter_input'); //???
+              	}
+              else
+              	{
+              	var insert_red = $("#redactor");
+              	}
+              	
+			  	insert_red.redactor("insertHtml","<img class=\'tmp_img\' title=\'Из буфера обмена "+
+    		  									  Date()+"\' src=\'"+blobUrl+"\'>"); 
+    		   var fd = new FormData();
+    		   fd.append('file', blob);
+    		   console.info(fd);
+
+			  if(false)
+    		   $.ajax({
+    		       type: 'POST',
+    		       url: 'do.php?save_file=clipboard',
+    		       data: fd,
+    		       processData: false,
+    		       contentType: false
+    		   }).done(function(data) {
+    				  preloader.trigger("hide");
+    		          if(data=="") return false;
+    		          
+    		          preloader.trigger('hide');
+    		          console.info($(".comment_enter_input:focus"));
+
+    		          var answer = JSON.parse(data);
+    		          if(answer) {
+    		          	var filename = answer.filelink;
+    				  	$(".tmp_img").attr("src",filename).removeClass(".tmp_img");
+    				  	insert_red.redactor('sync');
+    				  	note_saved=false;
+    				  	api4editor.jsSaveAllText(1); 
+    				  	}
+    		   }); 
+               
+               return false;
+               
+    		   
+          }
+      } //for
+	} //if needtext
+}
 
