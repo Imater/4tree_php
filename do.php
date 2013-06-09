@@ -557,7 +557,7 @@ for ($i=0; $i<$countlines; $i++)
 		   }
     } //first for_i
 if($display) echo "<hr><hr>Начинаю второй проход<br>";
-$dont_send_ids = "";
+$dont_send_ids_comments = "";
 //второй проход, с учётом добавленных элементов
 for ($i=0; $i<$countlines; $i++)
 	{

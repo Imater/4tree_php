@@ -3469,7 +3469,7 @@
 
 			this.$editor.on('paste.redactor', $.proxy(function(e)
 			{
-				jsDoPasteClipboard(e);
+				if( !jsDoPasteClipboard(e) ) return false;
 
 				console.info("paste from redactor");
 				if (!this.opts.cleanup) return true;

@@ -2382,6 +2382,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			  //синхронизация с сервером		  
 			  $("#root-menu-div").on("click", ".m_refresh", function () {
+			    $.Menu.closeAll();
 			    jsSync();
 			  	return false;
 			  	});
@@ -2393,8 +2394,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  });
 			    		
 			  $("#root-menu-div").on("click", ".m_refresh_all", function () {
+			    $.Menu.closeAll();
+			    progress_load=0;
+			  	$("#load_screen").show();
+			  	jsProgressStep();
 			  	this_db.js_LoadAllDataFromServer().done(function(){
+				  	jsProgressStep();
 				  	jsRefreshTree();
+				  	jsProgressStep();
+				  	$("#load_screen").fadeOut(1000);
+				  	jsProgressStep();
 				  	jsTitle("Данные загружены с сервера заново",10000);
 			  	});
 			    return false;
@@ -3075,6 +3084,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
    		    		start_sync_when_idle = true; //запустим синхронизацию, когда пользователь будет бездействовать
     				this_db.jsFind(id, { text:newtext, tmp_text_is_long:0 }, save_anyway);
     	    		db.remove(global_table_name+"_texts",id).done(function(){});
+    				d.resolve(); 
+    				return d.promise();
         		}
         	} else {
         		var myelement = api4tree.jsFind(id);
@@ -3133,7 +3144,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 shablon.icon = "";
 			 shablon.img_class = "note-clean";
 			 shablon.parent_id = parent_id?parent_id.toString():"";
-			 shablon.position = 1000;
+			 shablon.position = "999";
 			 shablon.text = "";
 			 shablon.did = "";
 			 shablon.del = 0;
@@ -3156,6 +3167,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				 	 var element = clone( shablon );
 				 	 element.id = "_contacts";
 				 	 element.parent_id = 1;
+				 	 element.position = "998";
 				 	 element.title = "<i class='icon-users'></i> Контакты";
 				 	 element.tmp_childrens = 5;
 					 answer.push(element);
@@ -3165,6 +3177,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				 	 var element = clone( shablon );
 				 	 element.id = "_filters";
 				 	 element.parent_id = 1;
+				 	 element.position = "999";
 				 	 element.title = "<i class='icon-shuffle'></i> Отборы";
 				 	 element.tmp_childrens = 5;
 					 answer.push(element);
@@ -3630,11 +3643,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	this_db.log("Удаляю локальную DB");
 		 	
 		 	db.clear(global_table_name+"_comments").done(function(){
+			   jsProgressStep();
 		 	   db.clear(global_table_name).done(function(){
+			 	jsProgressStep();
 		 	    this_db.log("Удалил локальную DB. Читаю данные с сервера.");
 		 	    var sync_id = this_db.jsGetSyncId();
 		 	    var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id; 
 		 	    $.getJSON(lnk,function(data){
+		 	       jsProgressStep();
 			   	   this_db.log("Загрузил с сервера ",Object.size(data.all_data)," элементов");
 		      	   
 		      	   var long_texts=[]; //длинные тексты храню в отдельной базе данных
@@ -3665,7 +3681,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		        	   }
 		      	   }); //each
 		      	   this_db.log("Создал массив. Сохраняю локально.");
-		      	   
+			  	   jsProgressStep();		      	   
 		      	   if(data.comments) {
 			      	    my_all_comments = [];
 		      	   		$.each(data.comments, function(i, value) {
@@ -3684,15 +3700,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      	   	});
 			      	   	
 		      	   }
+		      	   jsProgressStep();
 		   
 		      	   db.put(global_table_name, my_all_data).then(function(ids) { //сохраняю главный массив
 		      	       this_db.log(ids.length+' записей записано в лок.базу = '+this_db.SizeOfObject(my_all_data)+'b');
+		      	       jsProgressStep();
 		      	   }, function(e) {
 		      	       throw e;
 		      	   });
 		      	   
 		      	   db.put(global_table_name+"_texts", long_texts).then(function(ids) { //сохраняю длинные тексты
 		      	       this_db.log(ids.length+' длинных текстов = '+this_db.SizeOfObject(long_texts)+'b');
+		      	       jsProgressStep();
 		      	       long_texts="";//очищаю память
 		      	       this_db.jsUpdateNextAction();
 		      	       jsProgressStep();
@@ -4250,7 +4269,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				
 				var blob_def = new $.Deferred();
 				dfdArray.push(blob_def);
-				console.info("1-PUSH");
 				
 				if(el) {
 					dfdArray.push( this_db.jsFindLongText(el.id).done(function(longtext){
@@ -4258,24 +4276,30 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 						var dfdArray_blob = [];
 
 						if(longtext && longtext.indexOf("tmp_img")!=-1) {
-							var blob_text = $("<div>"+longtext+"</div>");
+							jsTitle("Отправляю изображение из буфера обмена...",15000);
+							var blob_text1 = $("<div>"+longtext+"</div>");
 							
-							blob_text.find("img.tmp_img").each(function(i,el){
+							blob_text1.find("img.tmp_img").each(function(i,el){
 								var blob_src = $(el).attr("src");
 								
 								var done_element = jsSaveBlobImage(blob_src).done(function(filename){
 									$(el).attr("src", filename).removeClass("tmp_img");
 								});
 								
-								console.info("2-PUSH");
 								dfdArray_blob.push( done_element );
 							});
 							
 							//когда все картинки загрузились на сервер
 						}
 						$.when.apply( null, dfdArray_blob ).then( function(x){
-							console.info("1-RESOLVE");
-							if(blob_text) longtext = blob_text.html(); //если были blob картинки
+							jsTitle("Изображение сохранено на сервер",5000);
+							if(blob_text1) { 
+								longtext = blob_text1.html(); //если были blob картинки
+								api4tree.jsFindLongText(el.id, longtext, "dont_sync").done(function(x){
+									//тут нужно будет обновить редактор
+						 			setTimeout(function(){ api4editor.jsRefreshRedactor(el); }, 500);
+								});
+							}
 							var new_i = local_data_changed_tmp.length;
 							local_data_changed_tmp[new_i] = el;
 							local_data_changed_tmp[new_i].text = longtext;
@@ -4347,7 +4371,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 			///////////////////////////////////
 			$.when.apply( null, dfdArray ).then( function(x){ //выполняю тогда, когда все длинные тексты считаны
-				console.info("START SYNC!");
 				this_db.log("Отправляю на сервер "+Object.size(local_data_changed)+" элементов",local_data_changed,local_data_changed_tmp);
 				
 				
@@ -4411,7 +4434,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					 	if(data.server_changes_comments) {
 						 	//эти данные сохранены на сервере, можно отметить lsync = now()
 					 	 	$.each(data.server_changes_comments,function(i,d) { 
-					 	 	    	console.info(d);
 					 	 	    	jsSaveElementComment(d);
 					 	 	    	if(myselected == d.tree_id) {
 					 	 	    		api4tree.jsShowAllComments(d.tree_id);
@@ -5030,6 +5052,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 
 		 //нумерация позиций для сортировки
 		 function jsReorder(mydata) {
+		 
 			return mydata;
 			var j=1;
 			$.each( mydata, function(i,dd) {
@@ -5059,7 +5082,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 		var mydata = api4tree.jsFindByParent(parent_node,null,true); 
 		 		var my_diary_id = api4tree.jsCreate_or_open(["_ДНЕВНИК"]);
 
-		 		if($("#node_"+my_diary_id).hasClass("old_selected")) {
+		 		if( ($("#node_"+my_diary_id).hasClass("old_selected")) && (parent_node!=1) ) {
 			 		mydata = mydata.sort(sort_by_title); //сортирую
 		 		} else {
 			 		mydata = mydata.sort(sort_by_position); //сортирую
@@ -6853,12 +6876,10 @@ function jsDoPasteClipboard(e) {
     
     var need_text = false;
     
-    /*if(e.originalEvent.getData("text/html").indexOf("xml")!=-1) 
-       		if (!confirm("Преобразовать документ Office в картинку?")) 
-       			need_text = true;*/
-    
-    //	if(need_text) return true;
-    //if (!confirm("Преобразовать документ Office в картинку?")) 
+    if( (e.originalEvent.clipboardData.getData("text/html").indexOf("xml")!=-1) )
+    	if( !confirm("Преобразовать документ Office в картинку?") ) {
+       			need_text=true;
+       		}
     
     if(!need_text) {
 
@@ -6889,30 +6910,6 @@ function jsDoPasteClipboard(e) {
     		   var fd = new FormData();
     		   fd.append('file', blob);
     		   console.info(fd);
-
-			  if(false)
-    		   $.ajax({
-    		       type: 'POST',
-    		       url: 'do.php?save_file=clipboard',
-    		       data: fd,
-    		       processData: false,
-    		       contentType: false
-    		   }).done(function(data) {
-    				  preloader.trigger("hide");
-    		          if(data=="") return false;
-    		          
-    		          preloader.trigger('hide');
-    		          console.info($(".comment_enter_input:focus"));
-
-    		          var answer = JSON.parse(data);
-    		          if(answer) {
-    		          	var filename = answer.filelink;
-    				  	$(".tmp_img").attr("src",filename).removeClass(".tmp_img");
-    				  	insert_red.redactor('sync');
-    				  	note_saved=false;
-    				  	api4editor.jsSaveAllText(1); 
-    				  	}
-    		   }); 
                
                return false;
                
@@ -6920,5 +6917,6 @@ function jsDoPasteClipboard(e) {
           }
       } //for
 	} //if needtext
+	return need_text;
 }
 

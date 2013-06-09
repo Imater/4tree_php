@@ -5313,7 +5313,11 @@ opacity: 1 !important;
 }
 
 .tmp_img {
-opacity: 0.7;	
+opacity: 0.5;
+}
+
+.tmp_img:after {
+content: "Need sync...";
 }
 
 
