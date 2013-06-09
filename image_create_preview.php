@@ -170,6 +170,10 @@ $no_cache = true;
 		if(false) header("Content-type: $mime");
 		if(false) header('Content-Length: ' . strlen($data));
 		if(false) echo  $data;
+		
+		return $docRoot . '/' . $image; //если нужно вернуть оригинал изображения и уменьшать не надо
+		
+		
 		exit();
 	}
 	

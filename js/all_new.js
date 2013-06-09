@@ -2254,6 +2254,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //кнопки редактора
 		  function jsMakeEditorKeys() {
+
+
+		  
+		  
+		  
 			  $('.redactor_box').on("click",".divider_red", function () {
 			      var id = $(this).attr("myid");
 			      api4panel.jsOpenPath(id,"divider_click");
@@ -3115,6 +3120,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 this.jsFindAutoFolder = function(parent_id,id) {
 		 	 var answer=[];
 		 	 
+		 	 if(parent_id && (parent_id!=1) && ( parent_id.toString().indexOf("_")==-1 )) return answer;
+		 	 	
+		 	 if(id && ( id.toString().indexOf("_")==-1 )) return answer;
+		 	 	
 		 	 var shablon={};
 		 	 
 			 shablon.id = -1;
@@ -3148,6 +3157,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				 	 element.id = "_contacts";
 				 	 element.parent_id = 1;
 				 	 element.title = "<i class='icon-users'></i> Контакты";
+				 	 element.tmp_childrens = 5;
 					 answer.push(element);
 				 }
 
@@ -3159,6 +3169,65 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				 	 element.tmp_childrens = 5;
 					 answer.push(element);
 				 }
+			 }
+			 
+			 if(my_all_frends && (parent_id=="_contacts" || id)) {
+				 	
+				 if(!id) {
+				 	$.each(my_all_frends,function(i,frend){
+					 	 var element = clone( shablon );
+					 	 element.id = "user_"+frend.user_id;
+					 	 element.icon = frend.foto;
+					 	 element.parent_id = "_contacts";
+					 	 element.position = i;
+					 	 element.tmp_childrens = "3";
+					 	 element.user_id = frend.user_id;
+					 	 element.title = "<i class='icon-user'></i> "+frend.fio;
+						 answer.push(element);
+				 	});
+				 }
+			 }
+			 
+			 if(parent_id && parent_id.toString().indexOf("user_")!=-1) {
+				 		 var user_id = parent_id.toString().replace("user_","")
+				 		 var frend = api4tree.jsFrendById(user_id);
+				 		 
+					 	 var element = clone( shablon );
+					 	 element.id = "tree_of_"+user_id;
+					 	 element.parent_id = "user_"+user_id;
+					 	 element.position = 1;
+					 	 element.tmp_childrens = "2";
+					 	 element.user_id = user_id;
+					 	 if(frend.female == "1") {
+ 	 					 	 element.title = "<i class='icon-export-1'></i> поделилась со мной";
+					 	 } else {
+ 	 					 	 element.title = "<i class='icon-export-1'></i> поделился со мной";
+					 	 }
+						 answer.push(element);
+
+					 	 var element = clone( shablon );
+					 	 element.id = "i_am_share_to_"+user_id;
+					 	 element.parent_id = "user_"+user_id;
+					 	 element.position = 2;
+					 	 element.tmp_childrens = "2";
+					 	 element.user_id = user_id;
+					 	 if(frend.female == "1") {
+ 	 					 	 element.title = "<i class='icon-lock-open'></i> я делюсь с ней";
+					 	 } else {
+ 	 					 	 element.title = "<i class='icon-lock-open'></i> я делюсь с ним";
+					 	 }
+						 answer.push(element);
+
+					 	 var element = clone( shablon );
+					 	 element.id = "chat_to_"+user_id;
+					 	 element.parent_id = "user_"+user_id;
+					 	 element.position = 3;
+					 	 element.tmp_childrens = "2";
+					 	 element.user_id = user_id;
+					 	 element.title = "<i class='icon-chat-3'></i> Наши беседы";
+						 answer.push(element);
+						 
+						 
 			 }
 
 			 if(parent_id=="_filters" || id) {
@@ -5018,6 +5087,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 this.jsSelectNode = function(id,nohash,iamfrom) { //открыть заметку в календаре и в редакторе
 		 //	i_am_from - кто вызвал: redactor, calendar, tree, diary
 //		 	mypanel.find("#node_"+id).addClass("selected");
+			console.info("SELECT EXP");
 		 	clearTimeout(open_redactor_timer);
 		 	open_redactor_timer = setTimeout(function()
 		 		{
@@ -5147,11 +5217,10 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			
 		    $.each(some_ids,function(i,id) { //перебираем все id и находим тексты
     	    	dfdArray.push( api4tree.jsFindLongText(id).done(function(text){
-    	    	  	this_db.log(id, text.length);
     	    	  	var element = api4tree.jsFind(id);
     	    	  	if(element) {
     	    	  		var path = api4panel.jsFindPath(element);
-    	    	  		if(text=="") text = "<p>&nbsp;</p>";
+    	    	  		if(text=="") text = "<p>&#x200b;</p>";
 				  		all_texts.push({id:id, text:text, path:path, title:element.title, s:element.s});
     	    	  	}
     	    	}) );

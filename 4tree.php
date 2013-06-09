@@ -53,7 +53,7 @@ $(document).ready(jsDoFirst);
 
 
 
-		<a href="#" id="reg_now">Регистрация</a>
+		<a href="#" id="reg_now1">Регистрация (пока закрыта)</a>
 		
 		<div id="reg_form" class="myform">
 		  <h2>всего 2 поля:</h2>

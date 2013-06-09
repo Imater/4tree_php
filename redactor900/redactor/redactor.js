@@ -2492,7 +2492,9 @@
 
 			if (html.search(/<(table|div|pre|object)/gi) !== -1)
 			{
-				$.each(html.match(/<(table|div|pre|object)(.*?)>([\w\W]*?)<\/(table|div|pre|object)>/gi), function(i,s)
+				var matched = html.match(/<(table|div|pre|object)(.*?)>([\w\W]*?)<\/(table|div|pre|object)>/gi);
+			if(matched)	
+				$.each(matched, function(i,s)
 				{
 					z++;
 					safes[z] = s;
@@ -3305,6 +3307,7 @@
 		// INSERT
 		insertHtml: function (html, sync)
 		{
+			if(html=="") return true;
 			var current = this.getCurrent();
 			var parent = current.parentNode;
 
@@ -3322,7 +3325,11 @@
 
 			var currBlock = this.getBlock();
 
-			var htmlTagName = $html.contents()[0].tagName;
+			if($html.contents()[0])	{
+				var htmlTagName = $html.contents()[0].tagName;
+			} else {
+				var htmlTagName = "P";
+			}
 
 			// If the inserted and received text tags match
 			if ($html.contents().length == 1 && htmlTagName != 'P' && htmlTagName == currBlock.tagName || htmlTagName == 'PRE')
@@ -3462,6 +3469,104 @@
 
 			this.$editor.on('paste.redactor', $.proxy(function(e)
 			{
+
+
+
+
+				console.info("my_paste",e);
+				   var items = e.originalEvent.clipboardData.items;
+				
+				   last_local_sync = jsNow();
+				
+				   var need_text = false;
+				
+/*				   if(e.originalEvent.getData("text/html").indexOf("xml")!=-1) 
+				   		if (!confirm("Преобразовать документ Office в картинку?")) 
+				   			need_text = true;*/
+				
+				//	if(need_text) return true;
+				   //if (!confirm("Преобразовать документ Office в картинку?")) 
+				
+				if(!need_text)
+				{
+				   
+				   for (var i = 0; i < items.length; ++i) {
+						
+					   console.info("asFile = ",items[i].getAsFile());
+						
+				       if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {
+							e.stopPropagation();					
+				           var blob = items[i].getAsFile();
+				
+				           window.URL = window.URL || window.webkitURL;
+				           var blobUrl = window.URL.createObjectURL(blob);
+				 
+//				           var img = document.createElement('img');
+//				           img.src = blobUrl; 
+				           
+				           preloader.trigger('show');
+				           jsTitle('Загружаю картинку на сервер...');
+
+
+						   var fd = new FormData();
+						   fd.append('file', blob);
+						   console.info(fd);
+
+				          if($(".redactor_editor:focus").hasClass("comment_enter_input"))
+				          	{
+				          	var insert_red = $('.comment_enter_input'); //???
+				          	}
+				          else
+				          	{
+				          	var insert_red = $("#redactor");
+				          	}
+				          	
+						  	insert_red.redactor("insertHtml","<img class=\'tmp_img\' title=\'Из буфера обмена "+
+						  									  Date()+"\' src=\'"+blobUrl+"\'>"); 
+
+						   $.ajax({
+						       type: 'POST',
+						       url: 'do.php?save_file=clipboard',
+						       data: fd,
+						       processData: false,
+						       contentType: false
+						   }).done(function(data) {
+								  preloader.trigger("hide");
+						          if(data=="") return false;
+						          
+						          preloader.trigger('hide');
+//						          console.info($(".comment_enter_input:focus"));
+	
+						          var answer = JSON.parse(data);
+						          if(answer) {
+						          	var filename = answer.filelink;
+								  	$(".tmp_img").attr("src",filename).removeClass(".tmp_img");
+								  	insert_red.redactor('sync');
+								  	note_saved=false;
+								  	api4editor.jsSaveAllText(1); 
+								  	}
+						   });
+				           
+				           return false;
+				           
+						   
+				       	   }
+				   }
+				 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+				console.info("paste from redactor");
 				if (!this.opts.cleanup) return true;
 
 				this.selectionSave();
@@ -3499,6 +3604,7 @@
 		},
 		pasteClean: function(html)
 		{
+			if(html=="") return "";
 			// clean up pre
 			if (this.currentOrParentIs('PRE'))
 			{

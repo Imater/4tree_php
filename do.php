@@ -3173,6 +3173,7 @@ if (isset($HTTP_GET_VARS['save_file']))
 {
 if(!$_FILES['file']['tmp_name']) exit;
 
+
 $today = date("m-Y"); 
 
 $uploads_dir = "data/u".$GLOBALS['user_id']."/".$today."";
@@ -3239,7 +3240,6 @@ if($sql) { //если файл с такой контольной суммой �
 	
 	
 } else {
-
 $response = save_file_to_amazone($newname,$newname);
 
 if($newname_preview1) {
