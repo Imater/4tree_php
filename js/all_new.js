@@ -2068,7 +2068,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 								if( (comment_ids_found && comment_ids_found[el.id]) ||
 									(longtext && 
 								    ((longtext.toLowerCase().indexOf(searchstring)!=-1) ||
-								    ((diff_plugin.match_main(longtext.toLowerCase(),
+								    ((false && diff_plugin.match_main(longtext.toLowerCase(),
 								    searchstring,longtext.length)!=-1) && searchstring.length>3 && searchstring.toLowerCase() != searchstring.toUpperCase()) ) ) ||
 									(el && el.title && el.title.toLowerCase().indexOf(searchstring)!=-1) ){
 										 var new_i = element_founded.length;

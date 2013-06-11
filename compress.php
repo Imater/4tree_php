@@ -107,7 +107,7 @@ require_once('cssmin.php');		//load css minifier
 
 $fp = fopen("!versions.html", "r");
 $contents = fread($fp, filesize("!versions.html"));
-fclose($handle);
+fclose($fp);
 
 $lines = explode("\n", $contents);
 
@@ -118,6 +118,41 @@ for($i=0;$i<count($lines);$i++) {
  		break;
 	}
 }
+
+$fp = fopen("!browser_manifest.appcache_template", "r");
+$contents = fread($fp, filesize("!browser_manifest.appcache_template"));
+fclose($fp);
+$lines = explode("\n", $contents);
+
+for($i=0;$i<count($lines);$i++) {
+//	echo $lines[$i];
+	if(stristr($lines[$i],"# Version: ")) {
+		$lines[$i] = "# Version: ".$last_version;
+	}
+	if(stristr($lines[$i],"./min/styles_")) {
+		$lines[$i] = "./min/styles_".$last_version.".cssgz";
+	}
+	if(stristr($lines[$i],"./min/all_")) {
+		$lines[$i] = "./min/all_".$last_version.".jsgz";
+	}
+	if(stristr($lines[$i],"./index.php")) {
+		$lines[$i] = "./index.php?".$last_version;
+	}
+
+}
+
+
+$contents = implode("\n",$lines);
+$fp = fopen("!browser_manifest.appcache_template", "w");
+print_r( fwrite($fp, $contents) );
+fclose($fp);
+
+FOREACH (GLOB("*.appcache") AS $filename) {
+   ECHO "$filename size " . FILESIZE($filename) . "\n";
+   UNLINK($filename);
+}
+
+copy("!browser_manifest.appcache_template","!".$last_version."_manifest.appcache");
 
 $unix_timestamp = $last_version;
 

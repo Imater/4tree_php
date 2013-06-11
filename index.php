@@ -1,7 +1,16 @@
+<?php
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache"); // HTTP/1.0
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html lang="ru" class="" manifest="">
-<!-- 1browser_manifest -->
+<?
+require_once('compress_timestamp.php');                                       
+?>
+<html lang="ru" class="" manifest="!<? echo $compress_stamp; ?>_manifest.appcache">
+<!-- 1browser_manifest !!-->
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
 
@@ -24,7 +33,6 @@
 <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
 
 <?
-require_once('compress_timestamp.php');                                       
 if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)   
         $gz='gz';
  else
