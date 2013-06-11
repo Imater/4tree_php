@@ -1,3 +1,3 @@
- <?php
-$compress_stamp=1370583087;
+<?php
+$compress_stamp="v0.2.03";
 ?>

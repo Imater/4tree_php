@@ -105,6 +105,22 @@ $adir = "min";			//directory to store output, must not be one of the source dire
 require_once('jsmin.php');		//load javascript minifier	
 require_once('cssmin.php');		//load css minifier	
 
+$fp = fopen("!versions.html", "r");
+$contents = fread($fp, filesize("!versions.html"));
+fclose($handle);
+
+$lines = explode("\n", $contents);
+
+for($i=0;$i<count($lines);$i++) {
+	if($lines[$i][0]=="v") {
+		echo $lines[$i]."<br>";
+		$last_version = $lines[$i]; //определил версию из файла !versions.html
+ 		break;
+	}
+}
+
+$unix_timestamp = $last_version;
+
 //		Create target directory and write Apache htaccess file when no directory found 
 if (!file_exists($adir))
 	{
@@ -131,35 +147,45 @@ if (!file_exists($adir))
 file_compress('styles.css',
 		array('ui/css/smoothness/jquery-ui-1.8.21.custom.css',
 			  'css/iphone.css',
-			  'fontello/css/fontello.css'
+			  'fontello/css/fontello.css',
+			  "redactor900/redactor/redactor.css",
+			  "css/4tree-styles.css",
+			  "fullcalendar-1.6.1/fullcalendar/fullcalendar.css",
+			  "css/4tree-foto.css"
 			  ));
 
-file_compress('redactor.js',array('jsredactor/redactor/redactor.js'));
-
 file_compress('all.js',array(
-	//'js/jquery.min.js',
-//	'js/jquery.datetimeentry2.min.js',
-//	'js/jquery.datetimeentry-ru.js',
 	'jstree/_lib/jquery.cookie.min.js',
-//	'jstree/_lib/jquery.hotkeys.min.js',
-//	'ui/js/jquery-ui-1.8.21.custom.min.js',
-//	'fullcalendar-1.6.1/jquery/jquery-ui-1.10.2.custom.min.js',
-//	'js/loader.js',
-//	'b_menu/jquery.dimensions.min.js',
 	'b_menu/jquery.menu.js',
-	'js/iphone-style-checkboxes.js',
-//	'js/jquery-ui.multidatespicker.js',
 	'js/handlebars.js',
-	'js/ru.js',
-//	'fullcalendar/fullcalendar/fullcalendar.js',
-//	'js/pushstream.js',
-//	'js/zvt-ydn.db-dev-0.4.6.js',
+//	'js/ru.js',
 	'js/md5.js',
-	'js/sjcl.js',
-//	'js/rangy-core.js',
-//	'js/rangy-selectionsaverestore.js',
-	'js/jquery.idle-timer.js'
+//	'js/sjcl.js',
+	'js/jquery.idle-timer.js',
+	"diff_match_patch/javascript/diff_match_patch_uncompressed.js",
+	"js/parser.js",
+	"fabric.js-1.1.0/dist/all.js",
+	"js/4tree-foto.js",
+	"js/loader.js",
+	"js/jquery.datetimeentry2.min.js",
+	"js/jquery.datetimeentry-ru.js",
+	"fullcalendar-1.6.1/fullcalendar/fullcalendar.js",
+	"b_menu/jquery.dimensions.min.js",
+	"js/pushstream.js",
+	"js/js_regallkeys.js",
+	"js/all_new.js",
+	"js/!sync_modul.js",
+	"js/ztx-ydn.db-dev-0.6.2.js",
+	"redactor900/redactor/redactor.js",
+	"redactor900/redactor/ru.js",
+	"js/iphone-style-checkboxes.js",
+	"js/jszip.js",
+	"js/vcdiff.js",
+	"js/rangy-core.js",
+	"js/rangy-selectionsaverestore.js"
 	));
+	
+
 
 //'jstree/jquery.jstree.js',
 
@@ -179,7 +205,7 @@ file_compress('4tree.css',array('css/4tree.css','js/pwdwidget.css'));
 
 //		write new timestamp file compress_timestamp.php for php execution code
 $infofile='<?php'.PHP_EOL;
-$infofile.='$compress_stamp='.$unix_timestamp.';'.PHP_EOL;
+$infofile.='$compress_stamp="'.$unix_timestamp.'";'.PHP_EOL;
 $infofile.='?>'.PHP_EOL;
 file_put_contents ('compress_timestamp.php',$infofile,LOCK_EX);		//file loaded by ThreeColTemplate1.php to get unique stamp id
 
@@ -189,6 +215,7 @@ sleep(5);
 
 //		delete older files in library
 $unix_timestamp.='';		//make a string
+echo "<hr>";
 if (file_exists($adir) && $dh = opendir($adir)) 
 	{
 	while($fn = readdir($dh)) if ($fn[0] != ".")
@@ -206,6 +233,7 @@ else
 
 function file_compress($file_name,$file_input) {
 	global $unix_timestamp,$adir;
+	echo "<hr>";
 	$pos=strrpos($file_name,'.');				//get last . in file name
 	if ($pos==false)
 		die ('illogical response from strrpos');

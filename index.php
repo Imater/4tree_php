@@ -22,22 +22,15 @@
 
 <script src="js/jquery-1.10.1.min.js"></script>
 <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>
-<script src="js/parser.js"></script>
 
 <?
-require_once('compress_timestamp.php');         //load timestamp created by compress.php module sets field $compress_stamp=unix_timestamp 
-
-//<meta name="viewport" content="width=device-width">
-                                      
+require_once('compress_timestamp.php');                                       
 if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)   
         $gz='gz';
  else
         $gz=null;
 echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
 if(true )echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
-//if(true )echo '<script src="min/redactor_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
-//echo '<script src="min/all1_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 
 if(isset($_GET['test']))
 	{
@@ -50,13 +43,6 @@ if(isset($_GET['test']))
 
 ?>
 <? 
-
-//	$db = mysql_connect ($config[mysql_host], $config[mysql_user], $config[mysql_password]);
-//	mysql_query_my("SET NAMES utf8");
-//	mysql_select_db('h116',$db);   
-//	if (!$db) { echo "Ошибка подключения к SQL :("; exit();}
-    
-
 if(isset($_GET['confirm']))
    {	
 
@@ -80,38 +66,7 @@ if(isset($_GET['confirm']))
 
 ?>
 
-	<link rel="stylesheet" type="text/css" href="redactor900/redactor/redactor.css">
-	<link rel="stylesheet" type="text/css" href="css/4tree-styles.css">
-	<link rel="stylesheet" type="text/css" href="fullcalendar-1.6.1/fullcalendar/fullcalendar.css">
-	<link rel="stylesheet" type="text/css" href="css/4tree-foto.css">
 
-	<script src="fabric.js-1.1.0/dist/all.js"></script>
-	<script src="js/4tree-foto.js"></script>
-	<script src="js/loader.js"></script>
-	<script src="js/jquery.datetimeentry2.min.js"></script>
-	<script src="js/jquery.datetimeentry-ru.js"></script>
-	<script src="fullcalendar-1.6.1/fullcalendar/fullcalendar.js"></script>
-	<script src="b_menu/jquery.dimensions.min.js"></script>
-	<script src="js/pushstream.js"></script>
-	<script src="js/js_regallkeys.js"></script>
-	<script src="js/all_new.js"></script>
-	<script src="js/!sync_modul.js"></script>
-	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
-	<script src="js/rangy-core.js"></script>
-	<script src="js/rangy-selectionsaverestore.js"></script>
-<!--	<script src="js/jquery-ui.multidatespicker.js"></script> -->
-	<script src="redactor900/redactor/redactor.js"></script>
-	<script src="redactor900/redactor/ru.js"></script>
-	
-	<script src="js/iphone-style-checkboxes.js"></script>
-	<script src="js/jszip.js"></script>
-	<script src="js/vcdiff.js"></script>
-	
-<!--	 
-	<script src="jsredactor/redactor/redactor.js"></script>
-	
-	
--->
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 
@@ -304,7 +259,7 @@ if(isset($_GET['test']))
 				        </ul>
 				    </li>
 				    <li>
-				    	<font color="lightgray">версия 4tree.ru — <? include "!version.txt"; ?></font>
+				    	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank">Что нового в версии <b><? echo $compress_stamp; ?></b></a>
 				    </li>
 			    </ul>  
 			</div>  
