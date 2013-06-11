@@ -2282,7 +2282,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  //открыть историю изменений заметки
 			  $('#root-menu-div').on("click",".show_all_history_redactor", function () {
 			      var id = $(".makedone").attr("myid");
-			      var add = $.md5(id).substr(0,10);
+			      var add = hex_md5(id).substr(0,10);
 			      api4others.open_in_new_tab("web.php?note_history="+add+id);
 			      return false;
 			      });

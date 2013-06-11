@@ -87,6 +87,8 @@ if($q)
 
 <link rel="shortcut icon" href="favicon1.png" type="image/x-icon" />
 <link rel="icon" href="favicon1.png" type="image/x-icon" />
+
+<script src="js/jquery-1.10.1.min.js"></script>
     
     
 <?
@@ -107,9 +109,11 @@ echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
     
     
     
-	<link rel="stylesheet" href="jsredactor/redactor/redactor.css" />
+	<link rel="stylesheet" type="text/css" href="redactor900/redactor/redactor.css">
 	<link rel="stylesheet" type="text/css" href="css/4tree-styles.css">
-	<script src="jsredactor/redactor/redactor.js"></script>
+
+	<script src="redactor900/redactor/redactor.js"></script>
+	<script src="redactor900/redactor/ru.js"></script>
 	<script src="js/4tree-web.js"></script>
 
 <script type="text/javascript">

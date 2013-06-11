@@ -61,7 +61,7 @@ if(true)
      	$.getJSON("do.php?history="+note_history.substr(10,500),function(d,dd)
      		{ 
      		$(".webheader").html("Резервные копии заметки сохраняются при синхронизации");
-     		myr.setCode(d.text);
+     		myr.redactor("set",d.text);
      		document.title = d.title+" — История изменений";
      	    });
      	}
