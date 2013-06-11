@@ -4822,13 +4822,14 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 /////////////////////////////////////////////////
 		 	var icon_share = "";
 		 
-		 	if(my_all_frends)   
-		 	  if(data.user_id != main_user_id ) 
-		 	  	{
-		 	   	frend_share = my_all_frends.filter(function(el){ return el.user_id == data.user_id; });
-		 	    if(frend_share[0])
-		 	  		icon_share = "<div title='"+frend_share[0]["fio"]+" ("+frend_share[0]["email"]+")\nделится с вами СВОЕЙ веткой' class='share_img'><img src='"+frend_share[0]["foto"]+"'></div>";
+		 	if( data.user_id != main_user_id ) {
+		 	  	var this_frend = api4tree.jsFrendById(data.user_id);
+		 	  	if(this_frend) {
+		 	  		icon_share = "<div title='"+this_frend["fio"]+" ("+this_frend["email"]+
+		 	  					  ")\nделится с вами СВОЕЙ веткой' class='share_img'><img src='"+
+		 	  					  this_frend["foto"]+"'></div>";
 		 	  	}
+	 	  	}
 		 	  
 		 	var comment_count = data.tmp_comments?data.tmp_comments:"";
 		 		    
