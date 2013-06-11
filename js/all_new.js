@@ -29,6 +29,7 @@ var top_of_panel = "<div class='add_do_panel_top'>"+
     "<i class='icon-lamp'></i>"+
     "<i class='icon-steering-wheel'></i>"+
     "</div>";
+var top_of_panel = "";
 
 
 /////////////////////////////////////TREE//////////////////////////////////////////
