@@ -37,7 +37,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		  var my_all_data, my_all_comments, my_all_frends,
+		  var my_all_data, my_all_comments, my_all_frends, my_all_share,
 		  	  recursive_array=[],
 		  	  scrolltimer, myhtml_for_comments ="",
 		  	  mymetaKey, //нажата ли клавиша Win или Cmd
@@ -3184,6 +3184,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				 }
 			 }
 			 
+			 if(my_all_share && (parent_id.toString().indexOf("tree_of_")!=-1)) {
+			 	var frend_user_id = parent_id.replace("tree_of_","");
+			 	var share_tree_id = my_all_share.filter(function(el,i){
+				 	if(el.host_user == frend_user_id) {
+					 	answer.push(api4tree.jsFind(el.tree_id));
+				 		return true;
+				 	}
+			 	});
+			 console.info("Tree_share:",share_tree_id);
+
+			 }
+			 
 			 if(my_all_frends && (parent_id=="_contacts" || id)) {
 				 	
 				 if(!id) {
@@ -4474,6 +4486,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					 	if(data.frends) {
 					 	   //my_all_share = data.frends.share;
 					 	   my_all_frends = data.frends.frends;
+					 	   my_all_share = data.frends.share;
 					 	   //jsRefreshOneElement(-3);
 					 	   jsRefreshFrends();
 					 	}
