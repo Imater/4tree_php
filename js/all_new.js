@@ -3187,7 +3187,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				 }
 			 }
 			 
-			 if(my_all_share && (parent_id.toString().indexOf("tree_of_")!=-1)) {
+			 if(my_all_share && parent_id && (parent_id.toString().indexOf("tree_of_")!=-1)) {
 			 	var frend_user_id = parent_id.replace("tree_of_","");
 			 	var share_tree_id = my_all_share.filter(function(el,i){
 				 	if(el.host_user == frend_user_id) {
@@ -3199,7 +3199,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			 }
 			 
-			 if(my_all_frends && (parent_id=="_contacts" || id)) {
+			 if(my_all_frends && parent_id && (parent_id=="_contacts" || id)) {
 				 	
 				 if(!id) {
 				 	$.each(my_all_frends,function(i,frend){
@@ -3578,6 +3578,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     		  
 		 //кэширует в базе tmp_next (id следующего по дате дела)    
 		 this.jsUpdateNextAction = function(id) {
+		 	console.info("jsUpdateNextAction",id);
 			this_db.log("Start filter Date");
 			var answer = my_all_data.filter(function(el,i) {
 			    if(el.tmp_nextdate) {  //стираю временные поля установленные ранее
@@ -3619,6 +3620,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    
 		 //кэширует в базе кол-во комментариев
 		 this.jsUpdateCommentsCnt = function(id) {
+		 	console.info("jsUpdateCommentsCnt",id);
 			this_db.log("start jsUpdateCommentsTmpCnt: id="+id);
 			if(!id) { //если нужно обработать все элементы базы
 				var answer = my_all_data.filter(function(el,i){ 
@@ -3636,6 +3638,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     
 		 //кэширует в базе tmp_childrens, для быстрой работы (кол-во детей)
 		 this.jsUpdateChildrenCnt = function(id) {
+ 		 	console.info("jsUpdateChildrenCnt",id);
 			this_db.log("start jsUpdateChildrenTmpCnt: id="+id);
 			if(!id) { //если нужно обработать все элементы базы
 				var answer = my_all_data.filter(function(el,i){ 
@@ -4247,6 +4250,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 return d.promise();
 		 }
 		 
+		 
+		  function jsThumbnail(src) {
+		  	  if(src && src.indexOf("upload.4tree.ru/")!=-1) {
+			  	  var p2_url = src.replace(".jpg","_p2.jpg").replace(".jpeg","_p2.jpeg").
+			  	  				   replace(".gif","_p2.gif").replace(".png","_p2.png");
+		  	  }
+			  return p2_url;
+		  }
+		 
+		 
 	     var myrefreshtimer,comment_tm;
 	     //синхронизация данных с сервером
 	     this.jsSync = function(save_only) { 
@@ -4309,6 +4322,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 						$.when.apply( null, dfdArray_blob ).then( function(x){
 							if(blob_text1) { 
 								jsTitle("Изображение сохранено на сервер",5000);
+								
+								var first_image = blob_text1.find("img:first").attr("src");
+				
+								var new_icon = jsThumbnail(first_image);
+								if(new_icon) {
+									api4tree.jsFind(el.id, {icon:new_icon});
+									console.info("new_thumb=",new_icon);
+									jsRefreshTree();
+								}
+								
 								longtext = blob_text1.html(); //если были blob картинки
 								api4tree.jsFindLongText(el.id, longtext, "dont_sync").done(function(x){
 									//тут нужно будет обновить редактор
@@ -4792,12 +4815,11 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 	add_class = make_icon.myclass;
 		 	}
 		 /////
-		 	if(data.icon=='') 
+		 	if(!data.icon) 
 		 	  img = "<div class='node_img "+add_class+"'></div>";
 		 	else 
 		 	  {
 		 	  var icon = data.icon.replace("mini/","");
-		 	  icon = "image.php?width=50&height=50&cropratio=1.1:1&image=/"+icon;
 		 	  var img = "<div class='node_img node_box' style='background-image:url("+icon+")'></div>";
 		 	  }
 		 /////
@@ -5322,7 +5344,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  }
 		  
 		  function save_all_text_in_a_while(e, html) {
-	  		  		  if("39,37,40,38,".indexOf(e.keyCode+",")!=-1) return true;
+		  			  jsTitle(e.keyCode,10000);
+	  		  		  if(",39,37,40,38,".indexOf(","+e.keyCode+",")!=-1) return true;
   					  note_saved=false;
   					  clearTimeout(my_autosave);
   					  my_autosave = setTimeout( function() { 
@@ -5338,9 +5361,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		  imageUpload: './do.php?save_file='+main_user_id,
 		  		  autoresize:true, 
 		  		  buttonsAdd: ['|', 'button1','checkbox'], 
-		  		  keydownCallback: function(e) {
-			  		  //console.info("key_down",e);
-		  		  },
+		  		  keydownCallback: save_all_text_in_a_while,
 		  		  keyupCallback: save_all_text_in_a_while,
 		  		  execCommandCallback: save_all_text_in_a_while,
 		  	      buttonsCustom: {
@@ -5470,11 +5491,13 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 	   		$(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(300);
 	   		$.Menu.closeAll();
 		  }
-		  
+		  		  
 		  //сохраняет текст в DB и выбирает ему иконку
 		  function jsSaveOneTextIfChanged(id, md5text, text) {
 //			    api4editor.save_text_dif_snapshot(text);
+
 		  		api4tree.jsFindLongText(id, text);
+		  		
 		  		var note_class = api4panel.jsMakeIconText(text).myclass;
 		  		$("#node_"+id+" .node_img").attr("class", "node_img "+note_class);
 		  		api4editor.jsMakeWiki();

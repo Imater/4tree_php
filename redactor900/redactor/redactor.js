@@ -751,7 +751,7 @@
 			// before callback
 			html = this.callback('syncBefore', false, html);
 			
-			var html_div = $(html);
+			var html_div = $("<div>"+html+"div");
 			
 			if(html_div && html_div.hasClass("my_pomidors") && !html_div.nextAll("p").length) {
 				html += "<p>...</p>";

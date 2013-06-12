@@ -77,15 +77,19 @@ define('CACHE_DIR',				CURRENT_DIR . CACHE_DIR_NAME);
 define('DOCUMENT_ROOT',			$_SERVER['DOCUMENT_ROOT']);
 
 // Images must be local files, so for convenience we strip the domain if it's there
-$image			= preg_replace('/^(s?f|ht)tps?:\/\/[^\/]+/i', '', (string) $_GET['image']);
+//$image			= preg_replace('/^(s?f|ht)tps?:\/\/[^\/]+/i', '', (string) $_GET['image']);
+$image = (string) $_GET['image'];
 
 $image = str_replace("/http://4tree.ru/","/",$image);
 $image = str_replace("/http://localhost/","/",$image);
 $image = str_replace("/https://4tree.ru/","/",$image);
 $image = str_replace("/https://localhost/","/",$image);
 
+echo $image;
+
 // For security, directories cannot contain ':', images cannot contain '..' or '<', and
 // images must start with '/'
+if(false)
 if ($image{0} != '/' || strpos(dirname($image), ':') || preg_match('/(\.\.|<|>)/', $image))
 {
 	header('HTTP/1.1 400 Bad Request');

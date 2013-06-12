@@ -9,7 +9,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 <?
 require_once('compress_timestamp.php');                                       
 ?>
-<html lang="ru" class="" <? if($_SERVER["HTTP_HOST"]!="localhost") echo "manifest='!".$compress_stamp."_manifest.appcache'"; ?> >
+<html lang="ru" class="" <? if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) echo "manifest='!".$compress_stamp."_manifest.appcache'"; ?> >
 <!-- 1browser_manifest !!-->
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
@@ -37,7 +37,7 @@ if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)
         $gz='gz';
  else
         $gz=null;
-if($_SERVER["HTTP_HOST"]!="localhost") {
+if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) {
 	echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 	echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
 } else {

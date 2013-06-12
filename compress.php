@@ -127,7 +127,7 @@ $lines = explode("\n", $contents);
 for($i=0;$i<count($lines);$i++) {
 //	echo $lines[$i];
 	if(stristr($lines[$i],"# Version: ")) {
-		$lines[$i] = "# Version: ".$last_version;
+		$lines[$i] = "# Version: ".$last_version." (".rand(0,1000).")";
 	}
 	if(stristr($lines[$i],"./min/styles_")) {
 		$lines[$i] = "./min/styles_".$last_version.".cssgz";
