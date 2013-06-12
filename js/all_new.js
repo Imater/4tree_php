@@ -4306,8 +4306,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 							//когда все картинки загрузились на сервер
 						}
 						$.when.apply( null, dfdArray_blob ).then( function(x){
-							jsTitle("Изображение сохранено на сервер",5000);
 							if(blob_text1) { 
+								jsTitle("Изображение сохранено на сервер",5000);
 								longtext = blob_text1.html(); //если были blob картинки
 								api4tree.jsFindLongText(el.id, longtext, "dont_sync").done(function(x){
 									//тут нужно будет обновить редактор
