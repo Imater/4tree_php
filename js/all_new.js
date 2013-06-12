@@ -2289,7 +2289,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      });
 			  
 			  $(".bottom_right>.redactor_box").scroll(function() {
-			    	clearTimeout(scrolltimer);
+/*			    	clearTimeout(scrolltimer);
 			    	var id = $('#redactor').attr("myid");
 			    	if(id!="") {
 			    	  scrolltimer = setTimeout(function() {
@@ -2297,7 +2297,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      			var delta = scroll-api4tree.jsFind(id).s;
 			      			if( Math.abs(delta) > 200  ) api4tree.jsFind(id, { s:scroll });
 			    	  },3000);
-			    	}
+			    	} */
 			  });
 			   
 			  //открытие редактора в новом окне
@@ -4270,8 +4270,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			var sync_id = this_db.jsGetSyncId();
 			
 			var local_data_changed = my_all_data.filter(function(el) { //данные, которые буду отправлять на сервер
-				if(el) return (( (el.parent_id<-1000) || 
-								(el.id<-1000) || 
+				if(el) return (( (el.id<-1000) || 
 								(el.time>=el.lsync) || 
 								((el.new!="") && (el.new)) ) && ( el.id.toString().indexOf("_")==-1 )); 
 			});
@@ -4326,8 +4325,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 			//////////////////комментарии/////////////////
 			var local_comments_changed = my_all_comments.filter(function(el) { //изменившиеся комментарии
-				if(el) return ( (el.parent_id<-1000) || 
-								(el.id<-1000) || 
+				if(el) return ( (el.id<-1000) || 
 								(el.time>=el.lsync) || 
 								((el.new!="") && (el.new)) ); 
 			});

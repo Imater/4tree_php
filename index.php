@@ -9,7 +9,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 <?
 require_once('compress_timestamp.php');                                       
 ?>
-<html lang="ru" class="" manifest="!<? echo $compress_stamp; ?>_manifest.appcache">
+<html lang="ru" class="" <? if($_SERVER["HTTP_HOST"]!="localhost") echo "manifest='!".$compress_stamp."_manifest.appcache'"; ?> >
 <!-- 1browser_manifest !!-->
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
@@ -37,8 +37,49 @@ if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)
         $gz='gz';
  else
         $gz=null;
-echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
-if(true )echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
+if($_SERVER["HTTP_HOST"]!="localhost") {
+	echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
+	echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
+} else {
+
+	echo '
+    <link rel="stylesheet" type="text/css" href="ui/css/smoothness/jquery-ui-1.8.21.custom.css"/>
+    <link rel="stylesheet" type="text/css" href="css/iphone.css"/>
+    <link rel="stylesheet" type="text/css" href="fontello/css/fontello.css"/>
+    <link rel="stylesheet" type="text/css" href="redactor900/redactor/redactor.css"/>
+    <link rel="stylesheet" type="text/css" href="css/4tree-styles.css"/>
+    <link rel="stylesheet" type="text/css" href="fullcalendar-1.6.1/fullcalendar/fullcalendar.css"/>
+    <link rel="stylesheet" type="text/css" href="css/4tree-foto.css"/>';
+
+
+	echo '<script src="jstree/_lib/jquery.cookie.min.js"></script>
+	<script src="b_menu/jquery.menu.js"></script>
+	<script src="js/handlebars.js"></script>
+	<script src="js/md5.js"></script>
+	<script src="js/jquery.idle-timer.js"></script>
+	<script src="diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>
+	<script src="js/parser.js"></script>
+	<script src="fabric.js-1.1.0/dist/all.js"></script>
+	<script src="js/4tree-foto.js"></script>
+	<script src="js/loader.js"></script>
+	<script src="js/jquery.datetimeentry2.min.js"></script>
+	<script src="js/jquery.datetimeentry-ru.js"></script>
+	<script src="fullcalendar-1.6.1/fullcalendar/fullcalendar.js"></script>
+	<script src="b_menu/jquery.dimensions.min.js"></script>
+	<script src="js/pushstream.js"></script>
+	<script src="js/js_regallkeys.js"></script>
+	<script src="js/all_new.js"></script>
+	<script src="js/!sync_modul.js"></script>
+	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
+	<script src="redactor900/redactor/redactor.js"></script>
+	<script src="redactor900/redactor/ru.js"></script>
+	<script src="js/iphone-style-checkboxes.js"></script>
+	<script src="js/jszip.js"></script>
+	<script src="js/vcdiff.js"></script>
+	<script src="js/rangy-core.js"></script>
+	<script src="js/rangy-selectionsaverestore.js"></script>';
+	
+}
 
 if(isset($_GET['test']))
 	{
