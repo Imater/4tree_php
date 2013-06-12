@@ -1817,7 +1817,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				     if(comment_id==0) $("#tree_comments_container").scrollTop(99999999);
 				     else $("#tree_comments_container").scrollTop(old_scroll);
 				     $(".comment_enter_input").focus();
-				     api4tree.jsSync();
+				     api4tree.jsSync("save_only");
 				 });
 			     return false;
 			 });
@@ -3099,6 +3099,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  			});
 			  	}
     	  	}
+
+	  		only_save = true; //следующая синхронизация будет односторонней и очень быстрой
     	  	return d.promise();
 		 } //jsFindLongText
 		 
@@ -3668,7 +3670,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	   
 		      	   var long_texts=[]; //длинные тексты храню в отдельной базе данных
 		      	   my_all_data = []; //стираю главный массив
-		      	   var lsync_now = jsNow()+40000; //дата последней синхронизации +40, чтобы не синхронизировалось сразу
+		      	   var lsync_now = jsNow()+500; //дата последней синхронизации +40, чтобы не синхронизировалось сразу
 		      	   
 		      	   $.each(data.all_data, function(i, value) { //чтобы составить md5 и отправить большие тексты в базу
 		      	   	   if(value) {
@@ -4396,8 +4398,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				var changes = 'changes='+encodeURIComponent(local_data_changed_json_dry)+'&confirm=';
 				changes = changes + '&changes_comments='+encodeURIComponent(changes_comments);
 
-				if(!save_only) var what_to_do = "save_and_load";
-				else var what_to_do = "save_only";
+				if(!save_only) {
+					var what_to_do = "save_and_load";
+				} else {
+					var what_to_do = "save_only";
+					console.info("Быстрая синхронизация...");
+				}
 				
 				var lastsync_time_client = api4tree.jsFindLastSync();
 				
@@ -5446,6 +5452,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  this.jsRedactorOpenRecursive = function(id) {
 		    var this_id = api4tree.jsFind(id).id;
 		    var elements_from_recursive = api4tree.jsRecursive(id);
+		    if(elements_from_recursive.length>10) alert("Заметок слишком много!");
 //			var amount = parseInt(recursivedata.length,10);
 	   		var need_open = [];
 	   		
@@ -6824,7 +6831,13 @@ function _manageEvent(eventMessage) {
       var chat = $("#chat");
       if (eventMessage != '') {
 //        var values = $.parseJSON(eventMessage);
-        console.info("@mymessage:",eventMessage);
+       	var mysync_id = api4tree.jsGetSyncId();
+        if(mysync_id!=eventMessage.sync_id) {
+        	console.info("@mymessage:",eventMessage);
+        } else {
+	    	console.info("@mymessage:","Разослал сообщение о изменениях...")    
+        }
+        
         if( eventMessage.type == "need_refresh_now" ) { 
         		api4tree.jsSync(); 
         		setTimeout(function(){ alert("Пришло новое письмо!");},800); 
@@ -6832,10 +6845,9 @@ function _manageEvent(eventMessage) {
         if( eventMessage.type == "need_refresh_id" ) //сообщение о изменившихся данных от do.php
         	{ 
         	there_was_message_about_change = true;
-        	var mysync_id = api4tree.jsGetSyncId();
         	if(mysync_id!=eventMessage.sync_id) //не нужно обновлять, если сообщение пришло благодаря этому клиенту
         		{
-	        		if( jsNow() - last_message_sync_time > 2000 )
+	        		if( jsNow() - last_message_sync_time > 500 )
 	        			{
 	        			 setTimeout(function()
 	        			 	{ 

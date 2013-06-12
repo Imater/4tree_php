@@ -768,7 +768,9 @@ $confirm_saved_id["lsync"] = $now_time;
 $confirm_saved_id["time_dif"] = $time_dif;
 $confirm_saved_id["server_changes"] = $server_changes;
 $confirm_saved_id["server_changes_comments"] = $server_changes_comments;
+if($what_you_need == "save_and_load") {
 $confirm_saved_id["frends"] = get_all_frends($GLOBALS['user_id']); //загружаю друзей и расшаренные папки
+}
 
 
 echo json_encode($confirm_saved_id);

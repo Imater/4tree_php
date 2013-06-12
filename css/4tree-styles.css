@@ -1700,6 +1700,17 @@ li.active {
 	display: inline; /* fixes problem in ie6 */
 }
 
+.menu-item a:link,.menu-item a:visited {
+	text-decoration: none;
+	color:black;
+}
+
+li.active .menu-item a:link,li.active .menu-item a:visited {
+	text-decoration: none;
+	color:white;
+}
+
+
 li.menumain {
 	float: left;
 	padding: 0 10px;

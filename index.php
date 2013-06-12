@@ -308,7 +308,7 @@ if(isset($_GET['test']))
 				        </ul>
 				    </li>
 				    <li>
-				    	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank">Что нового в версии <b><? echo $compress_stamp; ?></b></a>
+				    	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank">Что нового в версии 4tree.ru <? echo $compress_stamp; ?> ...</a>
 				    </li>
 			    </ul>  
 			</div>  
