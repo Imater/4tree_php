@@ -128,7 +128,9 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 
 <body onResize="onResize();">
 
-<div id="load_screen" style="background-image:url('./img/textures/17.png');top:0px;bottom:-1px;left:0px;right:0px;background-color:white;position:absolute;z-index:999;padding-top:185px;"><center><div id='pload_text'>Загружаю...</div><br><div id="progress_bar" style="width:300px;overflow:hidden;background-color:rgb(151,252,0);height:5px;margin-top:25px;border:1px solid #000;border-radius:3px;"><div id="inside_bar" style="float:left;background-color:rgb(36,150,0);height:10px;margin-left:-3px;display:inline-block;width:10px;"></div></div><a style="color:rgb(65,109,0);margin-top:300px;display:block" href="./4tree.php"><h2>4tree.ru</h2></a></div></center></div>
+<div id="load_screen" style="background-image:url('./img/textures/17.png');top:0px;bottom:-1px;left:0px;right:0px;background-color:white;position:absolute;z-index:999;padding-top:185px;"><center><div id='pload_text'>Загрузка...</div><br><div id="progress_bar" style="width:300px;overflow:hidden;background-color:rgb(151,252,0);height:5px;margin-top:25px;border:1px solid #000;border-radius:3px;"><div id="inside_bar" style="float:left;background-color:rgb(36,150,0);height:10px;margin-left:-3px;display:inline-block;width:10px;"></div></div><a style="color:rgb(65,109,0);margin-top:280px;display:block" href="./4tree.php"><h2>4tree.ru</h2></a>
+<font style="font-size:15px"><? echo $compress_stamp; ?></font>
+</div></center></div>
 
 <?
 if(isset($_GET['test']))
