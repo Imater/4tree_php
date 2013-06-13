@@ -116,19 +116,20 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    if(!newposition) newposition = count+0.9;
 		    
 		    if(arrow=="right") { 
-		    	newposition = iii; 
+		    	newposition = $("#panel_"+panel).find("li:last").prev(".divider_li").attr("pos")+10;
+		    	if(!newposition) newposition = 10;
 		    	sender.addClass("old_selected"); 
         	 	parent = panel;
-		    }
-		    
-		    var pos1 = parseFloat( $(".selected").prev(".divider_li").attr("pos") );
-		    var pos2 = parseFloat( $(".selected").next(".divider_li").attr("pos") );
-		    if(!pos2) pos2 = pos1 + 10;
-		    var dif = (pos2 - pos1)/2;
-		    if(dif==0) dif = 0.01;
-		    newposition = pos1+dif;
-		    
-		    console.info("newposition = ", newposition, "pos1 = ",pos1,"pos2 = ",pos2, "dif=",dif);
+		    } else {
+			    var pos1 = parseFloat( $(".selected").prev(".divider_li").attr("pos") );
+			    var pos2 = parseFloat( $(".selected").next(".divider_li").attr("pos") );
+			    if(!pos2) pos2 = pos1 + 10;
+			    var dif = (pos2 - pos1)/2;
+			    if(dif==0) dif = 0.01;
+			    newposition = pos1+dif;
+			    
+			    console.info("@@@@newposition = ", newposition, "pos1 = ",pos1,"pos2 = ",pos2, "dif=",dif);
+			}
 		    
 		    var new_element = api4tree.jsAddDo(parent, pre_icon+"Новая заметка", 
 		    								   null, null, newposition); 
@@ -1424,7 +1425,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 
 		  //функция запуска при бездействии пользователя
 		  function jsMakeIdleFunction() {
-			$.idleTimer(5*1000);
+			$.idleTimer(500*1000);
 			$(document).bind("active.idleTimer", function(){
 			});
 			$(document).bind("idle.idleTimer", function(){
@@ -4467,6 +4468,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					     	$.each(data.saved, function(i,d) {
 					     		if(d.old_id) { //если нужно присвоить выданный id вместо отрицательного
 					     			jsChangeNewId(d);
+						 			$("li[myid='"+d.old_id+"'] .sync_it_i").addClass("hideit"); 
+						 			//скрываю зелёный кружок
 					     		}
    				 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); //скрываю зелёный кружок
 			 		   		var lsync = parseInt(data.lsync);
@@ -5295,7 +5298,6 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 this.jsSelectNode = function(id,nohash,iamfrom) { //открыть заметку в календаре и в редакторе
 		 //	i_am_from - кто вызвал: redactor, calendar, tree, diary
 //		 	mypanel.find("#node_"+id).addClass("selected");
-			console.info("SELECT EXP");
 		 	clearTimeout(open_redactor_timer);
 		 	open_redactor_timer = setTimeout(function()
 		 		{
@@ -6821,7 +6823,8 @@ if(element)
 		if(arrow == "right" || date1) //если я добавляю к родителю
 			{
 				var where_to_add = $("#panel_"+element.parent_id).find("ul");
-				var iii = $("#panel_"+element.parent_id+" li").length;
+//				var iii = $("#panel_"+element.parent_id+" li").length;
+				var iii = element.position;
 				where_to_add.find(".divider_li:last").remove();
 //				var divider = "<div class='divider_li' pos='"+(iii+0.2)+"' myid='"+element.parent_id+"'></div>";
 				where_to_add.append( api4panel.jsRenderOneElement(element,iii) );

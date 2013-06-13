@@ -1264,7 +1264,15 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 //					else return true;
 
 					if(el.id && draggable && (draggable!=dropto_parent_id)) {
-						api4tree.jsFind(draggable,{ position:(dropto_pos-0.01), parent_id : dropto_parent_id });
+						
+						var pos1 = parseFloat( $(event.target).prev("li").prev(".divider_li").attr("pos") );
+						var pos2 = parseFloat( $(event.target).attr("pos") );
+						if(!pos1) pos1 = pos2 - 5;
+						var dif = (pos2 - pos1)/2;
+						if(dif==0) dif = 0.01;
+						newposition = pos1+dif;
+						
+						api4tree.jsFind(draggable,{ position:(newposition), parent_id : dropto_parent_id });
 			   			setTimeout(function(){ 
 			   				jsRefreshTree(); 
 			   			},300);
