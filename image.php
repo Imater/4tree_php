@@ -85,8 +85,6 @@ $image = str_replace("/http://localhost/","/",$image);
 $image = str_replace("/https://4tree.ru/","/",$image);
 $image = str_replace("/https://localhost/","/",$image);
 
-echo $image;
-
 // For security, directories cannot contain ':', images cannot contain '..' or '<', and
 // images must start with '/'
 if ($image{0} != '/' || strpos(dirname($image), ':') || preg_match('/(\.\.|<|>)/', $image))

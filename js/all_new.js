@@ -5407,7 +5407,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	$(".redactor_box").append('<div class="comment_in"></div>');
 		  	$(".comment_in").append( $("#tree_comments") );
 		  	
-		  	myr_comment = $('.comment_enter_input').redactor({imageUpload: './do.php?save_file='+main_user_id, lang:'ru', focus:false, fileUpload: 'do.php?save_file='+main_user_id, autoresize:true, 
+		  	myr_comment = $('.comment_enter_input').redactor({imageUpload: './do.php?save_file='+main_user_id, lang:'ru', focus:false, fileUpload: 'do.php?save_file='+main_user_id, autoresize:false, 
 		  			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
 		  	   });
 		  
