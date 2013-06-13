@@ -5369,7 +5369,6 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  }
 		  
 		  function save_all_text_in_a_while(e, html) {
-		  			  jsTitle(e.keyCode,10000);
 	  		  		  if(",39,37,40,38,".indexOf(","+e.keyCode+",")!=-1) return true;
   					  note_saved=false;
   					  clearTimeout(my_autosave);

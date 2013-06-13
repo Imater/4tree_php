@@ -3481,7 +3481,7 @@
 					if (this.opts.autoresize === true )
 					{
 						this.$editor.height(this.$editor.height());
-						this.saveScroll = this.document.body.scrollTop;
+						this.saveScroll = this.$box.scrollTop();
 					}
 					else
 					{
@@ -3634,7 +3634,7 @@
 
 			this.selectall = false;
 
-			if (this.opts.autoresize) $(this.document.body).scrollTop(this.saveScroll);
+			if (this.opts.autoresize) $(this.$box).scrollTop(this.saveScroll);
 			else this.$editor.scrollTop(this.saveScroll);
 		},
 
