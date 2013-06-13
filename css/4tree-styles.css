@@ -1183,7 +1183,7 @@ background-repeat: no-repeat;
 width: 16px;
 height: 16px;
 vertical-align: middle;
-margin-top: -2px;
+margin-top: -4px;
 border: 1px solid transparent;
 margin-right: 7px;
 }
@@ -1504,7 +1504,7 @@ height: 1em;
 {
 background-size: 1.1em 1.1em;
 width: 1.1em;
-height: 1em;
+height: 1.1em;
 }
 
 .panel_type2 li > .note-clean, 
@@ -3153,20 +3153,20 @@ width: 0px;
 
 .sync_it_i
 {
-left: -1.5em;
+left: -1.8em;
 top: -0.6em;
-font-size: 0.5em;
+font-size: 0.4em;
 color: white;
 position: absolute;
 background: green;
 border-radius: 9em;
-padding: 1px;
-padding-bottom: 0px;
+padding: 2px;
 }
 
 .sync_it_i::before
 {
 margin-right: 0px !important;
+width: auto !important;
 }
 
 .hideit

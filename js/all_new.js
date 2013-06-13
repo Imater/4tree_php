@@ -1425,7 +1425,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 
 		  //функция запуска при бездействии пользователя
 		  function jsMakeIdleFunction() {
-			$.idleTimer(500*1000);
+			$.idleTimer(5*1000);
 			$(document).bind("active.idleTimer", function(){
 			});
 			$(document).bind("idle.idleTimer", function(){
