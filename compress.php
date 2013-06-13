@@ -274,8 +274,10 @@ function file_compress($file_name,$file_input) {
 		die ('illogical response from strrpos');
 	$fn=substr($file_name,0,$pos).'_'.$unix_timestamp.substr($file_name,$pos);	//put timestamp into file name
 	$fl=null;						//clear file data variable
-	foreach($file_input as $value)				//merge files in the group
+	foreach($file_input as $value) {			//merge files in the group
 		$fl.= file_get_contents($value).' ';
+		echo "<li>".$value." (".filesize($value).")</li>";
+		}
 	$len_orig=strlen($fl);		
 	if (strtolower(substr($file_name,$pos+1,2)) == 'js')	
 //		$fl = preg_replace('/\t| {2,}/', '', $fl);

@@ -1,12 +1,12 @@
 CACHE MANIFEST
 # AppName : 4tree
-# Version: v0.2.071 (297)
+# Version: v0.2.085 (540)
 
 CACHE:
 ./js/jquery-1.10.1.min.js 
 ./js/jquery-ui-1.10.3.custom.min.js 
-./min/styles_v0.2.071.cssgz
-./min/all_v0.2.071.jsgz
+./min/styles_v0.2.085.cssgz
+./min/all_v0.2.085.jsgz
 ./img/textures/17.png
 ./img/add-white.png
 ./img/pomidor-top.png
