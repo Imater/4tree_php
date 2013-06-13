@@ -3286,6 +3286,51 @@ echo (json_encode($answer));
 exit;
 }
 
+if (isset($HTTP_GET_VARS['save_thumb_remote'])) {
+	include "image_create_preview.php";
+
+
+$url = $HTTP_GET_VARS['save_thumb_remote'];
+
+$today = date("m-Y"); 
+$uploads_dir = "data/u".$GLOBALS['user_id']."/".$today."/";
+mkdir("data/u".$GLOBALS['user_id'],0777);
+mkdir("data/u".$GLOBALS['user_id']."/".$today,0777);
+mkdir($uploads_dir,0777);
+$dir = $uploads_dir;
+
+$lfile = fopen($dir . basename($url), "w");
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)');
+curl_setopt($ch, CURLOPT_FILE, $lfile);
+curl_exec($ch);
+curl_close($ch);
+
+fclose($lfile);
+$image = "/".$dir . basename($url);
+
+$preview1 = create_image_preview($image, 50, 50, "1:1");
+unlink($dir . basename($url));
+
+copy($preview1,$dir.(basename($url)));
+
+	$answer = array(
+		'filelink' => $dir . basename($url),
+		'filename' => $url
+	);
+	
+	echo json_encode($answer);
+
+
+exit;
+}
+
+
+
 if (isset($HTTP_GET_VARS['save_blob_old'])) 
 {
 $today = date("m-Y"); 

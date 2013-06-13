@@ -4251,12 +4251,36 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 }
 		 
 		 
-		  function jsThumbnail(src) {
-		  	  if(src && src.indexOf("upload.4tree.ru/")!=-1) {
-			  	  var p2_url = src.replace(".jpg","_p2.jpg").replace(".jpeg","_p2.jpeg").
-			  	  				   replace(".gif","_p2.gif").replace(".png","_p2.png");
-		  	  }
-			  return p2_url;
+		 this.jsThumbnail = function(src, id) {
+		 	  var d= new $.Deferred();
+		 	  
+			  var split_name = src.split("/");
+			  var icon_name = split_name[split_name.length-1];
+			  var current_icon = api4tree.jsFind(id).icon;
+
+		  	  var try_this_url = icon_name.replace(".jpg","_p2.jpg").replace(".jpeg","_p2.jpeg").
+				  	 	   replace(".gif","_p2.gif").replace(".png","_p2.png").replace(".JPG","_p2.JPG");
+
+			  //если нужна новая иконка
+			  if( (current_icon.indexOf(icon_name)==-1) && (current_icon.indexOf(try_this_url)==-1) ) { 
+			  	  console.info("Генерирую новую иконку",src,id);			  	
+			  	  if(src && src.indexOf("upload.4tree.ru/")!=-1) {
+				  	  var p2_url = src.replace(".jpg","_p2.jpg").replace(".jpeg","_p2.jpeg").
+				  	  				   replace(".gif","_p2.gif").replace(".png","_p2.png");
+			  	  	  d.resolve(p2_url);		  	  	  
+			  	  } else if(src) {
+			  	  	  var lnk = "do.php?save_thumb_remote="+encodeURIComponent(src);
+				  	  $.getJSON(lnk,function(data){
+				  	  	 console.info("thumb",data);
+				  	  	 p2_url = data.filelink;
+				  	  	 d.resolve(p2_url);
+				  	  });
+			  	  }
+			  } else {
+		  	    console.info("Иконка ок",src,id);			  	
+			  	d.resolve(""); //если иконку менять не нужно
+			  }
+			  return d.promise();
 		  }
 		 
 		 
@@ -4325,12 +4349,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 								
 								var first_image = blob_text1.find("img:first").attr("src");
 				
-								var new_icon = jsThumbnail(first_image);
-								if(new_icon) {
-									api4tree.jsFind(el.id, {icon:new_icon});
-									console.info("new_thumb=",new_icon);
-									jsRefreshTree();
-								}
+								api4tree.jsThumbnail(first_image, el.id).done(function(new_icon){
+									if(new_icon) {
+										api4tree.jsFind(el.id, {icon:new_icon});
+										console.info("new_thumb=",new_icon);
+										jsRefreshTree();
+									}
+								});
 								
 								longtext = blob_text1.html(); //если были blob картинки
 								api4tree.jsFindLongText(el.id, longtext, "dont_sync").done(function(x){
@@ -5495,6 +5520,18 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  //сохраняет текст в DB и выбирает ему иконку
 		  function jsSaveOneTextIfChanged(id, md5text, text) {
 //			    api4editor.save_text_dif_snapshot(text);
+
+				if(text.indexOf("img")!=-1) { 
+					var blob_text1 = $("<div>"+text+"</div>");								
+					var first_image = blob_text1.find("img:first").attr("src");				
+					api4tree.jsThumbnail(first_image, id).done(function(new_icon){
+							if(new_icon) {
+								api4tree.jsFind(id, {icon:new_icon});
+								console.info("new_thumb!!!=",new_icon);
+								jsRefreshTree();
+							}				
+						});
+				}
 
 		  		api4tree.jsFindLongText(id, text);
 		  		
@@ -6963,6 +7000,8 @@ function jsDoPasteClipboard(e) {
                return false;
                
     		   
+          } else {
+	          need_text = true;
           }
       } //for
 	} //if needtext
