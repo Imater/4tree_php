@@ -4352,8 +4352,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			       
 			       if(!myBlob) { resolve(""); return d.promise(); }
 			       
-				   fd.append('file', myBlob);
 				   console.info(fd,myBlob);
+
+				   fd.append('file', myBlob);
 				   
 				   $.ajax({
 				       type: 'POST',
@@ -4362,7 +4363,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				       processData: false,
 				       contentType: false
 				   }).done(function(data) {
-				          if(data=="") { d.resolve(); return false; }
+				          if( (data=="") || !data) { d.resolve(); return false; }
 				   
 				          var answer = JSON.parse(data);
 				          if(answer) {
