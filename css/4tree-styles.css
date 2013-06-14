@@ -1502,9 +1502,9 @@ height: 1em;
 }
 .basket_panel .node_img,.panel_type3 .node_img
 {
-background-size: 1.1em 1.1em;
+background-size: 1.1em 1em;
 width: 1.1em;
-height: 1.1em;
+height: 1em;
 }
 
 .panel_type2 li > .note-clean, 

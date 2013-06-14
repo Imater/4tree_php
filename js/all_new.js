@@ -3140,11 +3140,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					  
 					  var delta = diff_plugin.patch_make(new_text, old_text);
 					  
-					  console.info("DELTA of "+id+" =",delta);
+//					  console.info("DELTA of "+id+" =",delta);
 //					  console.info("new=",hex_md5(new_text),new_text);
 //					  console.info("old=",hex_md5(old_text),old_text);
 					  
-					  tmp_undo.push( {md5:hex_md5(old_text), md5new: hex_md5(new_text), delta: delta} );
+					  tmp_undo.push( {md5:"", md5new: "", delta: delta} );
 	
 					  if(tmp_undo.length>100) tmp_undo=tmp_undo.slice(1);
 	
