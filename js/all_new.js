@@ -4470,9 +4470,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 							blob_text1.find("img.tmp_img").each(function(i,el){
 								var blob_src = $(el).attr("src");
 								
+								try {
 								var done_element = jsSaveBlobImage(blob_src).done(function(filename){
 									$(el).attr("src", filename).removeClass("tmp_img");
 								});
+								} catch(e) {
+								var done_element = null;	
+								}
 								
 								dfdArray_blob.push( done_element );
 							});
