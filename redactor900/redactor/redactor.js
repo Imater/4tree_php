@@ -86,6 +86,7 @@
 			imageDeleteCallback: false,
 			fileUploadCallback: false,
 			fileUploadErrorCallback: false,
+			undoCallback: false,
 
 			// settings
 			rangy: false,
@@ -999,16 +1000,23 @@
 				if (ctrl && key === 90 && !e.shiftKey && !e.altKey) // z key
 				{
 					e.preventDefault();
+					this.callback('undo');
+					
+					/*
 					if (this.opts.buffer.length) this.bufferUndo();
 					else this.document.execCommand('undo', false, false);
+					*/
 					return;
 				}
-				// undo
+				// redo
 				else if (ctrl && key === 90 && e.shiftKey && !e.altKey)
 				{
 					e.preventDefault();
+					this.callback('redo');
+					/*
 					if (this.opts.rebuffer.length != 0) this.bufferRedo();
 					else this.document.execCommand('redo', false, false);
+					*/
 					return;
 				}
 

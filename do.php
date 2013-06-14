@@ -198,9 +198,59 @@ if($sql->cnt>0) { echo 'Добро пожаловать!<br>Перенаправ
 exit;
 }
 
+
+function myCreateRecord($sql, $new_parent, $new_user) {
+
+   
+   $sqlnews="INSERT INTO `tree` SET 
+   				user_id = '$new_user',
+   				position = '".$sql["position"]."',
+   				node_icon = '".$sql["node_icon"]."',
+   				adddate = '".$sql["adddate"]."',
+   				changetime = '".now()."',
+   				title = '".$sql["title"]."', 
+   				parent_id = '".$new_parent."',
+   				text = '".$sql["text"]."',
+   				old_id = '-8'";
+   				
+   $result = mysql_query_my($sqlnews); 
+   $id = mysql_insert_id();
+//   echo "<li>parent_id=".$new_parent." | n_i=$id | title=<b>".$sql["title"]."</b></li>";
+   
+   
+   return $id;
+};
+
+function mySelectBranch($sql2, $new_parent, $new_user) {
+
+  $sqlnews = "SELECT * FROM tree WHERE del=0 AND user_id=11 AND parent_id=".$sql2["id"];
+
+  $result = mysql_query_my($sqlnews); 
+  $i=0;
+//  echo "<ol>";
+  while (@$sql = mysql_fetch_array($result))
+    {
+    $id = myCreateRecord($sql, $new_parent, $new_user);
+    mySelectBranch($sql, $id, $new_user);
+    }
+//  echo "</ol>";
+	
+}
+
+if(isset($HTTP_GET_VARS['copy_template_tree'])) {
+$sql="";
+$sql["id"] = 7291;
+$new_user = 11;
+mySelectBranch($sql,1,$new_user);
+
+exit;	
+}
+
+
+
 if (isset($HTTP_POST_VARS['registrate_me'])) 
 {
-$email = trim($HTTP_POST_VARS['email']);
+$email = strtolower( trim($HTTP_POST_VARS['email']) );
 $passw = $HTTP_POST_VARS['passw'];
 
 $sqlnews="SELECT count(*) cnt FROM `tree_users` WHERE email LIKE '%".mysql_real_escape_string($email)."%' LIMIT 1";
@@ -228,6 +278,12 @@ else
 						   );";
 						   
 	$result = mysql_query_my($sqlnews); 
+    $new_user = mysql_insert_id();
+	
+	$sql="";
+	$sql["id"] = 7291;
+	mySelectBranch($sql,1,$new_user);
+	
 	
    $tree="<font color='#214516'>4</font><font color='#244918'>t</font><font color='#356d23'>r</font><font color='#42872c'>e</font><font color='#57b33a'>e</font>";
 
@@ -2936,6 +2992,7 @@ if (isset($HTTP_GET_VARS['movedo']))
   
  exit;
  }
+
 
 
 

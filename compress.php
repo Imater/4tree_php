@@ -215,7 +215,6 @@ file_compress('all.js',array(
 	"redactor900/redactor/ru.js",
 	"js/iphone-style-checkboxes.js",
 	"js/jszip.js",
-	"js/vcdiff.js",
 	"js/rangy-core.js",
 	"js/rangy-selectionsaverestore.js"
 	));
@@ -224,7 +223,8 @@ file_compress('all.js',array(
 
 //'jstree/jquery.jstree.js',
 
-file_compress('4tree.js',array('js/jquery.js','js/4tree.js','jstree/_lib/jquery.cookie.js','js/pwdwidget.js'));
+file_compress('4tree.js',array('js/jquery.js','js/4tree.js','jstree/_lib/jquery.cookie.js',
+							   'js/pwdwidget.js',"js/ztx-ydn.db-dev-0.6.2.js"));
 file_compress('4tree.css',array('css/4tree.css','js/pwdwidget.css'));
 
 

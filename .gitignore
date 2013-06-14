@@ -44,3 +44,7 @@ min/*
 AWS_44444
 
 .htaccess
+
+*.appcache
+
+*.appcache_template

@@ -1,7 +1,7 @@
-var log_error = ['неправильно…','неа… жми &rarr;','ошибочка… жми &rarr;','может сменить раскладку?', 'нажми сюда &rarr;','хочешь, вышлю на почту &rarr;', 'хватит… жми &rarr;', 'а!… ты хакер&iquest; &rarr;','а оно тебе надо &iquest;', 'настырный какой &spades;', 'моё терпение лопнуло &not;','опять ты? &not;', 'уговорил… ща помогу &spades;'];
+var log_error = ['неправильно…','неа… жмите &rarr;','ошибочка… жмите &rarr;','может сменить раскладку?', 'нажмите сюда &rarr;','хотите, вышлю на почту &rarr;', 'хватит… жмите &rarr;', 'а!… ты хакер&iquest; &rarr;','а оно тебе надо &iquest;', 'настырный какой &spades;', 'моё терпение лопнуло &not;','опять ты? &not;', 'уговорил… ща помогу &spades;'];
 var textid = -1;
 
-function jsReg()
+function jsReg() //регистрация
 {
 email = $('#reg_email').val();
 passw = $('#regpwd_text_id').val();
@@ -37,13 +37,13 @@ var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t
 	   $.cookie('4tree_email',email,{"expires": 365});
 	   $.cookie('4tree_email_md',md5email,{"expires": 365});
 	   $.cookie('4tree_passw',passw,{"expires": 365});
-	   setTimeout(function(){ document.location.href="./index.php"; },1000);
+	   setTimeout(function(){ document.location.href="./index.php"; },500);
 	   }
 	//alert('Регистрация '+email+' '+passw);
 	} });
 }
 
-function jsLog()
+function jsLog() //вход
 {
 email = $('#email_login').val();
 passw = $('#log_pas').val();
@@ -85,7 +85,7 @@ var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t
 	   		{ 
 		  	localStorage.clear(); //очищаю данные, если тут был другой пользователь
 	   		document.location.href="./index.php"; 
-	   		},1000);
+	   		},500);
 	   }
 	 else
 	   {
@@ -103,8 +103,37 @@ var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t
 
 }
 
+
+function jsClearCurrentBase() { //очищаем существующую базу данных
+   	var d=$.Deferred();
+
+   	if( JSON.stringify(db.getSchema().stores).indexOf('tree') != -1 ) //если таблицы tree нет
+       	db.clear().done(function(){ console.info("db cleared"); db.close(); d.resolve(); });
+       else
+       	d.resolve();
+       	
+    $.cookie("4tree_passw",null);
+    $.cookie("4tree_email",null);
+    $.cookie("4tree_email_md",null);
+    $.cookie("4tree_user_id",null);
+    $.cookie("main_tree_font",null);
+    $.cookie("main_x",null);
+    $.cookie("main_y",null);
+    $.cookie("pwidth",null);
+    $.cookie("sh",null);
+    localStorage.clear();
+
+   	return d.promise();
+}
+
+var db;
+
 function jsDoFirst()
 {
+    db = new ydn.db.Storage('_all_tree');    
+    
+    setTimeout(function(){ jsClearCurrentBase(); }, 1500);
+	
 
 		 $('*').delegate("input", "keyup", function(event) 
 			{

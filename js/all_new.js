@@ -38,7 +38,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		  var my_all_data, my_all_comments, my_all_frends, my_all_share,
+		  var my_all_data=[], my_all_comments=[], my_all_frends=[], my_all_share=[],
 		  	  recursive_array=[],
 		  	  scrolltimer, myhtml_for_comments ="",
 		  	  mymetaKey, //нажата ли клавиша Win или Cmd
@@ -3051,6 +3051,119 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 			return d.promise();
 		  }
+		  
+		  
+		  
+		  this.redo_last_step = function(id,text) {
+
+			  var element = api4tree.jsFind(id);
+			  
+			  if(element) {
+				  if(element.tmp_undo && element.tmp_undo != "[]") {
+					var tmp_undo = JSON.parse( element.tmp_undo );
+				  } else {
+				  	var tmp_undo = [];
+				  }				  
+			  
+			  if(tmp_undo.length==0) return false;
+			  
+			  var last_step_in_history = tmp_undo[tmp_undo.length-1];
+			  var delta = last_step_in_history.delta;
+
+			  var restored_text = diff_plugin.patch_apply(delta, text)[0];
+
+			  api4tree.jsFindLongText(id, restored_text).done(function(x) { //сохраняю восстановленный текст
+				  var element = api4tree.jsFind(id);
+			  	  api4editor.jsRefreshRedactor(element);
+				  console.info( last_step_in_history.md5, "?=" ,hex_md5(restored_text), restored_text );
+				  tmp_undo = tmp_undo.slice(0,tmp_undo.length-1); //удаляем использованную delta
+				  var json_tmp = JSON.stringify(tmp_undo);
+				  api4tree.jsFind(id, {tmp_undo: json_tmp } );				 				  
+			  }); 
+			  
+			  }
+			  
+		  }
+		  
+		  
+		  this.undo_last_step = function(id,text) {
+
+			  var element = api4tree.jsFind(id);
+			  
+			  if(element) {
+				  if(element.tmp_undo && element.tmp_undo != "[]") {
+					var tmp_undo = JSON.parse( element.tmp_undo );
+				  } else {
+				  	var tmp_undo = [];
+				  }				  
+			  
+			  if(tmp_undo.length==0) return false;
+			  
+			  var last_step_in_history = tmp_undo[tmp_undo.length-1];
+			  var delta = last_step_in_history.delta;
+
+			  var restored_text = diff_plugin.patch_apply(delta, text)[0];
+
+			  api4tree.jsFindLongText(id, restored_text).done(function(x) { //сохраняю восстановленный текст
+				  var element = api4tree.jsFind(id);
+			  	  api4editor.jsRefreshRedactor(element);
+				  console.info( last_step_in_history.md5, "?=" ,hex_md5(restored_text), restored_text );
+				  tmp_undo = tmp_undo.slice(0,tmp_undo.length-1); //удаляем использованную delta
+				  
+				  
+				  
+				  var json_tmp = JSON.stringify(tmp_undo);
+				  api4tree.jsFind(id, {tmp_undo: json_tmp } );				 				  
+			  }); 
+			  
+			  }
+			  
+		  }
+		  
+		  this.save_text_dif_snapshot = function(id, text) {
+		      var d=$.Deferred();
+
+			  element = api4tree.jsFind(id);
+			  
+			  if(element) {
+				  if(element.tmp_undo) {
+					var tmp_undo = JSON.parse( element.tmp_undo );
+				  } else {
+				  	var tmp_undo = [];
+				  }				  
+				  
+				  api4tree.jsFindLongText(id).done(function(old_text){ //нахожу старый текст
+					  var new_text = text;
+					  
+					  var delta = diff_plugin.patch_make(new_text, old_text);
+					  
+					  console.info("DELTA of "+id+" =",delta);
+//					  console.info("new=",hex_md5(new_text),new_text);
+//					  console.info("old=",hex_md5(old_text),old_text);
+					  
+					  tmp_undo.push( {md5:hex_md5(old_text), md5new: hex_md5(new_text), delta: delta} );
+	
+					  if(tmp_undo.length>100) tmp_undo=tmp_undo.slice(1);
+	
+					  var json_tmp = JSON.stringify(tmp_undo);
+					  api4tree.jsFind(id, {tmp_undo: json_tmp } );
+					  d.resolve();					  
+				  });
+
+			  } //if(element)
+
+/*		  	  if($(".redactor_").html().length<20) return 0;
+			  if(!old_text) old_text = $(".redactor_").html();
+			  var answer = this_db.savedif(1, old_text, $(".redactor_").html());
+			  old_text = $(".redactor_").html(); */
+
+
+
+			  return d.promise();
+			  
+		  }
+		  
+		  
 			
 		 //находит или меняет текст. Если текст длинный, закидывает в базу _texts
 		 //api4tree.jsFindLongText(6796).done(function(text){console.log(text);})
@@ -3071,24 +3184,30 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
        		    } else {
        		       element["tmp_txt_md5"] = hex_md5(newtext).substr(0,5); //md5 штамп текста, для сверки с сервером
        		    }
+       		    
+       		    api4tree.save_text_dif_snapshot(id, newtext).done(function(x){
 
-    			if(newtext.length > LENGTH_OF_LONG_TEXT) { //если текст длинный
-    				var short_text = strip_tags(newtext).substr(0, LENGTH_OF_LONG_TEXT/2);
-					
-    				this_db.jsFind(id,{ text:short_text, tmp_text_is_long:1 }, save_anyway);
+	    			if(newtext.length > LENGTH_OF_LONG_TEXT) { //если текст длинный
+	    				var short_text = strip_tags(newtext).substr(0, LENGTH_OF_LONG_TEXT/2);
+						
+	    				this_db.jsFind(id,{ text:short_text, tmp_text_is_long:1 }, save_anyway);
+	
+	    	    		db.put(global_table_name+"_texts",{id:id.toString(),text:newtext}).done(function(){
+	    		    		start_sync_when_idle = true; //запустим синхронизацию, когда пользователь будет бездействовать
+	    	    			this_db.log("Сохранил длинный текст", newtext.length);
+	    		    		d.resolve(newtext);
+	    	    		});
+	    			} else { //если текст короткий
+	   		    		start_sync_when_idle = true; //запустим синхронизацию, когда пользователь будет бездействовать
+	    				this_db.jsFind(id, { text:newtext, tmp_text_is_long:0 }, save_anyway);
+	    	    		db.remove(global_table_name+"_texts",id).done(function(){});
+	    				d.resolve(); 
+	    				return d.promise();
+	        		}
 
-    	    		db.put(global_table_name+"_texts",{id:id.toString(),text:newtext}).done(function(){
-    		    		start_sync_when_idle = true; //запустим синхронизацию, когда пользователь будет бездействовать
-    	    			this_db.log("Сохранил длинный текст", newtext.length);
-    		    		d.resolve(newtext);
-    	    		});
-    			} else { //если текст короткий
-   		    		start_sync_when_idle = true; //запустим синхронизацию, когда пользователь будет бездействовать
-    				this_db.jsFind(id, { text:newtext, tmp_text_is_long:0 }, save_anyway);
-    	    		db.remove(global_table_name+"_texts",id).done(function(){});
-    				d.resolve(); 
-    				return d.promise();
-        		}
+	       		    
+       		    });
+
         	} else {
         		var myelement = api4tree.jsFind(id);
     			if(!myelement) { d.resolve(); return d.promise(); }
@@ -3445,6 +3564,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		 //отбор комментариев по tree_id без текстов
 		 this.jsFindByTreeIdCommentFast = function(tree_id) {
+			
+			if(!my_all_comments) return false;
 
 			var myanswers = my_all_comments.filter(function(el,i) {
 				if(el.del == 1) return false;
@@ -3718,6 +3839,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 							console.info(my_all_comments);
 			      	   	});
 			      	   	
+		      	   } else {
+			      	    my_all_comments = [];
 		      	   }
 		      	   jsProgressStep();
 		   
@@ -4085,6 +4208,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		 //сохраняет изменения с сервера или добавляет новый элемент	     
 		 function jsSaveElement(d) {
+		 	var def = new $.Deferred();
 		 	var need_to_add=false;
 		 	if(!d) return false;
 		 	
@@ -4135,7 +4259,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	myelement.user_id = d.user_id;
 		 	myelement.remind = d.remind;
 		 	myelement.s = d.s;
-		 	api4tree.jsFindLongText(myelement.id, d.text,"dont_sync");
+
+		 	api4tree.jsFindLongText(myelement.id, d.text,"dont_sync").done(function(){
+				def.resolve();			 	
+		 	});
+		 	
  			db.put(global_table_name,myelement).done(function(){ 
  			    this_db.log("Новый элемент отредактирован: "+myelement.id); 
  			});
@@ -4145,7 +4273,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	} else {
 		 		api4panel.jsRefreshOneElement(d.id);
 		 	}
-		 
+		 return def.promise();
 		 }
 		 
 		 //сохранение комментариев
@@ -4190,14 +4318,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 
 		 }
 
-
+		 var tm_del_comment;
 		 function jsDelCom(id) { //удаление из базы определённого id
 		 		$.each(my_all_comments, function(i,el){
 		     		if(el) if(el.id == id) { my_all_comments.splice(i,1); }
 		     		});
 			 	
    	    		db.remove(global_table_name+"_comments",id).done(function(){
-   	    			api4tree.jsUpdateCommentsCnt();
+   	    			clearTimeout(tm_del_comment);
+   	    			tm_del_comment = setTimeout(function(){ api4tree.jsUpdateCommentsCnt();},400);
    	    		});
 		 }
 		 
@@ -4492,9 +4621,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				     	
 				     	if(data.server_changes) { //обновляем изменения
 				     		$.each(data.server_changes, function(i,el) {
-				     			jsSaveElement(el);
-					 			api4editor.jsRefreshRedactor(el);
-				     			this_db.log("Получен новый элемент",el);
+				     			jsSaveElement(el).done(function(){
+						 			api4editor.jsRefreshRedactor(el);
+					     			this_db.log("Получен новый элемент",el);
+				     			});
 				     			need_refresh = true;
 				     		});
 				     	}
@@ -5330,36 +5460,9 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	  scrolltimer,
 		  	  text_history=[], history_i=0, old_text;
 
-		  var vcd = new diffable.Vcdiff(), delta;
-		  vcd.blockSize = 3; //setting blockSize to 20 (defaults to 20)
-		  	  
-
-		  this.savedif = function(id, old_text, new_text) {
-			  delta = vcd.encode(new_text, old_text);
-			  console.log(delta); // [3, 3, 'ghi', 0, 3]
-			  text_history.push({i:history_i,delta:delta});
-			  history_i += 1;
-			  return text_history;
-		  }
 		  
-		  this.save_text_dif_snapshot = function() {
-		  	  if($(".redactor_").html().length<20) return 0;
-			  if(!old_text) old_text = $(".redactor_").html();
-			  var answer = this_db.savedif(1, old_text, $(".redactor_").html());
-			  old_text = $(".redactor_").html();
-			  return answer;
-			  
-		  }
 		  
-		  this.restore_from_dif = function() {
-			  text_history.reverse();
-			  $.each(text_history, function(i,el){
-			  	  var nowtext = $(".redactor_").html();
-				  $(".redactor_").html( vcd.decode(nowtext, el.delta) );
-			  });
-			  text_history = [];
-		  }
-
+		  
 		  //логирование любых 5 параметров в консоль
 		  this.log = function(x1,x2,x3,x4,x5) { 
 		    var time_dif = jsNow()-last_log_time;
@@ -5390,6 +5493,18 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		  keydownCallback: save_all_text_in_a_while,
 		  		  keyupCallback: save_all_text_in_a_while,
 		  		  execCommandCallback: save_all_text_in_a_while,
+		  		  undoCallback: function(){ 
+			  		var id = api4tree.node_to_id( $(".selected").attr('id') );
+			  		api4tree.jsFindLongText(id).done(function(text){
+			  		  	api4tree.undo_last_step(id, text);
+			  		});
+		  		  },
+		  		  redoCallback: function(){ 
+			  		var id = api4tree.node_to_id( $(".selected").attr('id') );
+			  		api4tree.jsFindLongText(id).done(function(text){
+			  		  	api4tree.redo_last_step(id, text);
+			  		});
+		  		  },
 		  	      buttonsCustom: {
 		  	        button1: {
 		  	           title: 'Спойлер (скрытый текст)', 
@@ -5520,7 +5635,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		  
 		  //сохраняет текст в DB и выбирает ему иконку
 		  function jsSaveOneTextIfChanged(id, md5text, text) {
-//			    api4editor.save_text_dif_snapshot(text);
+
+//			    api4editor.save_text_dif_snapshot(id, text);
 
 				if(text.indexOf("img")!=-1) { 
 					var blob_text1 = $("<div>"+text+"</div>");								
@@ -5540,7 +5656,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		$("#node_"+id+" .node_img").attr("class", "node_img "+note_class);
 		  		api4editor.jsMakeWiki();
 		  }
-		  
+
+		  var reopen_editor_timer;		  
 		  //обновляет текст редактора из массива
 		  this.jsRefreshRedactor = function(d) {
 		  	var divider = $(".divider_red[myid='"+d.id+"']");
@@ -5552,10 +5669,13 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 	  	    	//если с сервера прислали новый текст, то обновляю редактор. 
 	  	    	//Нужно дописать, если открыто несколько заметок. bug. никогда не запускается.
 	  	    	if( (id_node==d.id) && ( hex_md5(d.text) != md5text )) {
-		  	    	  var old_scroll = $(".redactor_editor").scrollTop();
+		  	    	  var old_scroll = $(".redactor_box:first").scrollTop();
 		  	    	  clearTimeout(scrolltimer);
-		  	    	  api4editor.jsRedactorOpen([d.id],"FROM SYNC EDITOR");		
-		  	    	  $(".redactor_editor").scrollTop(old_scroll);
+		  	    	  clearTimeout(reopen_editor_timer);
+		  	    	  reopen_editor_timer = setTimeout(function(){
+			  	    	  api4editor.jsRedactorOpen([d.id],"FROM SYNC EDITOR");		
+			  			  $(".redactor_box:first").scrollTop(old_scroll);
+		  	    	  }, 2);
 	  	    	}
 		  	} else {	  //если открыто несколько заметок
   	    	    var old_scroll = $(".redactor_editor").scrollTop();
@@ -6348,6 +6468,8 @@ var DB_INTERFACE = function(global_table_name){  //singleton
 					localStorage.setItem("sync_id",sync_id);
 					my_all_data = $.map(data.all_data, function (value, key) { return value; });
 					my_all_comments = $.map(data.comments, function (value, key) { return value; });
+					if(!my_all_data) my_all_data=[];
+					if(!my_all_comments) my_all_comments=[];
 					tree_db.save_data();
 //					jsSaveDataComment();
 					preloader.trigger('hide');
