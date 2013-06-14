@@ -976,6 +976,8 @@
 				var current = this.getCurrent();
 				var block = this.getBlock();
 				var pre = false;
+				
+				this.selectall = false;
 
 				this.callback('keydown', e);
 				
@@ -1024,8 +1026,8 @@
 				if (ctrl)
 				{
 					if (key === 65) this.selectall = true;
-					else if (key != this.keyCode.LEFT_WIN && !ctrl) this.selectall = false;
-				}
+				} else if (key != this.keyCode.LEFT_WIN && !ctrl) 
+					this.selectall = false;
 
 				// enter
 				if (key == this.keyCode.ENTER && !e.shiftKey && !e.ctrlKey && !e.metaKey )
@@ -1153,7 +1155,7 @@
 				{
 					if (current.nodeType === 3 && current.nodeValue.charCodeAt(0) == 8203)
 					{
-						current.remove();
+						//current = current.replace("&#8203;","");
 					}
 				}
 
@@ -3888,6 +3890,7 @@
 		// SAVE & RESTORE
 		selectionSave: function()
 		{
+			console.info("sel_save");
 			if (!this.isFocused()) this.$editor.focus();
 
 			if (!this.opts.rangy)
@@ -3932,6 +3935,7 @@
 		},
 		selectionRestore: function(replace, remove)
 		{
+			console.info("sel_restore");
 			if (!this.opts.rangy)
 			{
 				if (replace === true && this.savedSel)

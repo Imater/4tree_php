@@ -92,12 +92,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    			$("#top_panel #node_"+panel).append("<ul class='ul_childrens' myid="+
 			    												panel+"></ul>");
 						}
-						sender.find(".node_img").addClass('folder_closed').
-			   				   html("<div class='countdiv'>1</div>").removeClass("node_img");
+						sender.find(".node_img").addClass('folder_closed').removeClass("node_box").
+			   				   html("<div class='countdiv'>1</div>").removeClass("node_img").
+			   				   removeAttr("style");
 			   		} else {
 			   			sender.parents(".panel").nextAll(".panel").not("#panel_"+panel).remove();
-			   			sender.find(".node_img").addClass('folder_closed').
-			   				   html("<div class='countdiv'>1</div>").removeClass("node_img");
+						sender.find(".node_img").addClass('folder_closed').removeClass("node_box").
+			   				   html("<div class='countdiv'>1</div>").removeClass("node_img").
+			   				   removeAttr("style");
 			   			iii = $("#panel_"+panel+" li").length; 
 			   			if(iii==0) $("#mypanel").append("<div id='panel_"+panel+
 			   											"' class='panel'>"+top_of_panel+"<ul></ul></div>");
@@ -2290,15 +2292,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      });
 			  
 			  $(".bottom_right>.redactor_box").scroll(function() {
-/*			    	clearTimeout(scrolltimer);
+			    	clearTimeout(scrolltimer);
 			    	var id = $('#redactor').attr("myid");
 			    	if(id!="") {
 			    	  scrolltimer = setTimeout(function() {
 			      			var scroll = $(".bottom_right>.redactor_box").scrollTop();
+			      			console.info("save_scroll", scroll);
 			      			var delta = scroll-api4tree.jsFind(id).s;
-			      			if( Math.abs(delta) > 200  ) api4tree.jsFind(id, { s:scroll });
-			    	  },3000);
-			    	} */
+			      			if( Math.abs(delta) > 100  ) api4tree.jsFind(id, { s:scroll });
+			    	  },1500);
+			    	} 
 			  });
 			   
 			  //открытие редактора в новом окне
@@ -2881,7 +2884,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	  		    if(newvalue.length==0) 
 		       		       record["tmp_txt_md5"] = "";
 		       		    else
-		       		       record["tmp_txt_md5"] = hex_md5(newvalue).substr(0,5); //md5 штамп текста, для сверки с сервером
+		       		       record["tmp_txt_md5"] = ""; //hex_md5(newvalue).substr(0,5); //md5 штамп текста, для сверки с сервером
   		       		}
   		       		
   		       		//console.info("need_save: ",namefield," = ",newvalue);
@@ -3182,7 +3185,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
  	  		    if(newtext.length==0) {
        		       element["tmp_txt_md5"] = "";
        		    } else {
-       		       element["tmp_txt_md5"] = hex_md5(newtext).substr(0,5); //md5 штамп текста, для сверки с сервером
+       		       element["tmp_txt_md5"] = ""; //hex_md5(newtext).substr(0,5); //md5 штамп текста, для сверки с сервером
        		    }
        		    
        		    api4tree.save_text_dif_snapshot(id, newtext).done(function(x){
@@ -3268,7 +3271,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 shablon.img_class = "note-clean";
 			 shablon.parent_id = parent_id?parent_id.toString():"";
 			 shablon.position = "999";
-			 shablon.text = "";
+			 shablon.text = "<p>&#x200b;</p>";
 			 shablon.did = "";
 			 shablon.del = 0;
 			 shablon.tab = 0;
@@ -3677,7 +3680,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			element.img_class = "note-clean";
 			element.parent_id = parent_id.toString();
 			element.position = position?position:0;
-			element.text = "";
+			element.text = "<p>&#x200b;</p>";
 			element.did = "";
 			element.del = 0;
 			element.tab = 0;
@@ -3805,7 +3808,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		        		   if(value["text"].length==0) 
 		        		   	  value["tmp_txt_md5"] = "";
 		        		   else
-		        		      value["tmp_txt_md5"] = hex_md5(value["text"]).substr(0,5);
+		        		      value["tmp_txt_md5"] = "";//hex_md5(value["text"]).substr(0,5);
 		        		      //hex_md5(value["text"]).substr(0,5); //md5 штамп текста, для сверки
 		        		      //hex_md5 - замедляет загрузку (у Safari == 5 секунд)
 		        		      	
@@ -4224,7 +4227,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 			element.img_class = "note-clean";
 		 			element.parent_id = d.parent_id;
 		 			element.position = d.position.toString();
-		 			element.text = "";
+		 			element.text = "<p>&#x200b;</p>";
 		 			element.did = "";
 		 			element.time = parseInt(d.changetime);
 		 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
@@ -4291,7 +4294,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 			element.parent_id = d.parent_id;
 		 			element.tree_id = d.tree_id;
 		 			element.add_time = d.add_time;
-		 			element.text = "";
+		 			element.text = "<p>&#x200b;</p>";
 		 			element.time = parseInt(d.changetime);
 		 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
 		 			element.new = "";
@@ -4383,6 +4386,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 
 		 this.jsThumbnail = function(src, id) {
 		 	  var d= new $.Deferred();
+		 
+		 	  if(!src) { d.resolve(""); return d.promise(); }
 		 	  
 			  var split_name = src.split("/");
 			  var icon_name = split_name[split_name.length-1];
@@ -5543,7 +5548,9 @@ var API_4EDITOR = function(global_panel_id,need_log) {
     	    	  	var element = api4tree.jsFind(id);
     	    	  	if(element) {
     	    	  		var path = api4panel.jsFindPath(element);
-    	    	  		if(text=="") text = "<p>&#x200b;</p>";
+    	    	  		if(text && ((text=="") || (text.indexOf("<")==-1)) ) {
+    	    	  			text = "<p>&#x200b;</p>";
+    	    	  		}
 				  		all_texts.push({id:id, text:text, path:path, title:element.title, s:element.s});
     	    	  	}
     	    	}) );
@@ -5579,7 +5586,6 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 					var el = all_texts[0];
 					mytext = el.text;
 					myr.attr("md5", hex_md5( el.text ));
-					myr.attr("md_text", el.text);
 					myr.attr("myid", el.id);
 					var scroll_top = el.s; //вспоминаю скроллинг
 				} else {
@@ -5588,7 +5594,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 					all_texts = all_texts.sort(sort_by_path); //сортирую табы по полю tab
 					$.each(all_texts,function(i,el) { //перебираю все найденные тексты
 						var count_div = "<div class='divider_count'>"+ (i+1) +"</div>";
-						var divider = "<div class='divider_red' contenteditable='false' md5='"+hex_md5( el.text ) +
+						var divider = "<div class='divider_red' contenteditable='false' md5='"+hex_md5( el.text ) + 
 									  "' myid='"+el.id+"'>" + count_div + el.path.textpath +"<h6>" +
 									  el.title+"</h6></div>";
 						mytext = mytext + divider + "<div class='edit_text'>" + el.text + "</div>";
@@ -5614,7 +5620,10 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  this.jsRedactorOpenRecursive = function(id) {
 		    var this_id = api4tree.jsFind(id).id;
 		    var elements_from_recursive = api4tree.jsRecursive(id);
-		    if(elements_from_recursive.length>10) alert("Заметок слишком много!");
+		    if(elements_from_recursive.length>100 &&
+		      (!confirm("Вы действительно хотите открыть "+elements_from_recursive.length+" замет.? \n(Это может привести к нестабильной работе)"))) {
+		    return false;
+		    }
 //			var amount = parseInt(recursivedata.length,10);
 	   		var need_open = [];
 	   		
@@ -5705,9 +5714,10 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			  		var new_md5 = hex_md5(text);
 					if( new_md5 != md5text ) { 
 						jsSaveOneTextIfChanged(id, md5text, text); 
-						$(el).attr("md5",new_md5);
+						$(".redactor_ .divider_red[myid='"+id+"']").attr("md5",new_md5);
 					}
 			  	});
+			    myr.redactor('sync');
 			} else { //если текст один
 					var id = myr.attr("myid");
 					var text = html_from_editor;
