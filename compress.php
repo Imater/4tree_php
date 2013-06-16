@@ -186,7 +186,8 @@ file_compress('styles.css',
 			  "redactor900/redactor/redactor.css",
 			  "css/4tree-styles.css",
 			  "fullcalendar-1.6.1/fullcalendar/fullcalendar.css",
-			  "css/4tree-foto.css"
+			  "css/4tree-foto.css",
+			  "css/jqueryslidemenu.css"			  
 			  ));
 
 file_compress('all.js',array(
@@ -216,6 +217,7 @@ file_compress('all.js',array(
 	"js/iphone-style-checkboxes.js",
 	"js/jszip.js",
 	"js/rangy-core.js",
+	"js/jqueryslidemenu.js",
 	"js/rangy-selectionsaverestore.js"
 	));
 	
