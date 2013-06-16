@@ -4906,7 +4906,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	if(path1.length<1) return false;
 			
 			var p_len = path1.length;
-   			for(var ik=1; ik<p_len; ik=ik+1) {
+   			for(var ik=0; ik<p_len; ik=ik+1) {
    			   var toopen = path1[ik].path.id;
    			   if(ik==path1.length-1) {
    			   	  api4panel.jsOpenNode(toopen);
@@ -5451,6 +5451,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 } //jsOpenNode
 		 
 		 this.jsSetTitle = function(id) {
+		 		return false;
 		 		var element = api4tree.jsFind(id);
 		 		if(!element) return false;
 			 	var new_title = "";			 	

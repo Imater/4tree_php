@@ -47,7 +47,6 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
     <link rel="stylesheet" type="text/css" href="css/iphone.css"/>
     <link rel="stylesheet" type="text/css" href="fontello/css/fontello.css"/>
     <link rel="stylesheet" type="text/css" href="redactor900/redactor/redactor.css"/>
-    <link rel="stylesheet" type="text/css" href="css/4tree-styles.css"/>
     <link rel="stylesheet" type="text/css" href="fullcalendar-1.6.1/fullcalendar/fullcalendar.css"/>
     <link rel="stylesheet" type="text/css" href="css/4tree-foto.css"/>
     <link rel="stylesheet" type="text/css" href="css/jqueryslidemenu.css"/>';
@@ -69,7 +68,6 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 	<script src="b_menu/jquery.dimensions.min.js"></script>
 	<script src="js/pushstream.js"></script>
 	<script src="js/js_regallkeys.js"></script>
-	<script src="js/all_new.js"></script>
 	<script src="js/!sync_modul.js"></script>
 	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
 	<script src="redactor900/redactor/redactor.js"></script>
@@ -93,6 +91,8 @@ if(isset($_GET['test']))
 	}
 
 ?>
+    <link rel="stylesheet" type="text/css" href="css/4tree-styles.css"/>
+	<script src="js/all_new.js"></script>
 <? 
 if(isset($_GET['confirm']))
    {	
@@ -378,15 +378,39 @@ if(isset($_GET['test']))
   </li>  
   </ul>
 </li>
-<li class="top_level go_to_li_menu"><a class="header_text">Переход</a>
+
+<li class="top_level go_to_li_menu"><a>Отзывы/предложения</a>
 	<ul>
-		<li><a>_Новое</a></li>
+		<li><a href="http://4tree.reformal.ru" onclick="window.open('http://4tree.reformal.ru');return false;">Oтзывы и предложения (reformal.ru)</a><script type="text/javascript">
+    var reformalOptions = {
+        project_id: 105149,
+        show_tab: false,
+        project_host: "reformal.4tree.ru",
+        force_new_window: true
+    };
+    
+    (function() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript'; script.async = true;
+        script.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'media.reformal.ru/widgets/v3/reformal.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+    })();
+</script><noscript><a href="http://reformal.ru"><img src="http://media.reformal.ru/reformal.png" /></a><a href="http://reformal.4tree.ru">Oтзывы и предложения для 4tree.ru — дела, календарь, заметки, файлы. Всё в одном месте. </a></noscript></li>
 	</ul>
 </li>
+
+
 </ul>
 <br style="clear: left" />
 </div>
 
+<ul style="display:none">
+<li class="top_level go_to_li_menu"><a class="header_text">Переход</a>
+	<ul>
+		<li><a></a></li>
+	</ul>
+</li>
+</ul>
 
 	
   <div id="add_do_panel">
