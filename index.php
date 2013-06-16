@@ -49,7 +49,8 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
     <link rel="stylesheet" type="text/css" href="redactor900/redactor/redactor.css"/>
     <link rel="stylesheet" type="text/css" href="css/4tree-styles.css"/>
     <link rel="stylesheet" type="text/css" href="fullcalendar-1.6.1/fullcalendar/fullcalendar.css"/>
-    <link rel="stylesheet" type="text/css" href="css/4tree-foto.css"/>';
+    <link rel="stylesheet" type="text/css" href="css/4tree-foto.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jqueryslidemenu.css"/>';
 
 
 	echo '<script src="jstree/_lib/jquery.cookie.min.js"></script>
@@ -77,6 +78,7 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 	<script src="js/jszip.js"></script>
 	<script src="js/vcdiff.js"></script>
 	<script src="js/rangy-core.js"></script>
+	<script src="js/jqueryslidemenu.js"></script>
 	<script src="js/rangy-selectionsaverestore.js"></script>';
 	
 }
@@ -128,6 +130,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 
 <body onResize="onResize();">
 
+
 <div id="load_screen" style="background-image:url('./img/textures/17.png');top:0px;bottom:-1px;left:0px;right:0px;background-color:white;position:absolute;z-index:999;padding-top:185px;"><center><div id='pload_text'>Загрузка...</div><br><div id="progress_bar" style="width:300px;overflow:hidden;background-color:rgb(151,252,0);height:5px;margin-top:25px;border:1px solid #000;border-radius:3px;"><div id="inside_bar" style="float:left;background-color:rgb(36,150,0);height:10px;margin-left:-3px;display:inline-block;width:10px;"></div></div><a style="color:rgb(65,109,0);margin-top:280px;display:block" href="./4tree.php"><h2>4tree.ru</h2></a>
 <font style="font-size:15px"><? echo $compress_stamp; ?></font>
 </div></center></div>
@@ -152,17 +155,239 @@ if(isset($_GET['test']))
 
 <div id="header">
 
-	<div class="header_text">
-	</div>
-	
-	<div class="view_type">
-		<div id="v1" class="view_button view_selected"></div>
-		<div id="v3" class="view_button"></div>
-		<div id="v2" class="view_button"></div>
-		<div id="v4" class="view_button"></div>
-	</div>
-	
-	<div class="basket basket_empty" title="Выбранные дела"><i class="icon-basket"></i><div class="basket_count">0</div></div>
+<div id="myslidemenu" class="jqueryslidemenu" style="z-index:50">
+<ul>
+<li class="top_level"><a href="#">4tree</a>
+    <ul>  
+        <li><a>Расположение панелей</a>
+            <ul>  
+                <li><span class="m_key">alt+"1"</span><a id="v1">Вид №1</a></li>  
+                <li><span class="m_key">alt+"2"</span><a id="v2">Вид №2</a></li>  
+                <li><span class="m_key">alt+"3"</span><a id="v3">Вид №3</a></li>  
+                <li><span class="m_key">alt+"4"</span><a id="v4">Вид №4</a></li>  
+            </ul>  
+        </li>  
+        <li class="blank"></li>
+        <li><a>Редактор</a>
+            <ul>  
+                <li><span class="m_key">alt+"z"</span><a>Отменить один шаг редактирования</a></li>  
+                <li><span class="m_key">alt+shift+"z"</span><a>Вернуть один шаг редактирования</a></li>  
+            </ul>  
+        </li>  
+        <li><a>Поделиться</a>
+            <ul>  
+                <li><a class="send_by_mail"><i class='icon-mail-2'></i> По электронной почте</a></li>  
+                <li><a>Короткая ссылка</a></li>  
+                <li><a>Опубликовать на моём сайте</a></li>  
+            </ul>  
+        </li>  
+        <li><a>Печать</a>
+            <ul>  
+                <li><a>Распечатать содержимое редактора</a></li>  
+                <li><a>Распечатать содержимое календаря</a></li>  
+                <li><a>Распечатать дерево</a></li>  
+            </ul>  
+        </li>  
+        <li><a>Таймер</a>
+            <ul>  
+                <li><a class="timer_button" time="-1">1 минута</a></li>  
+                <li><a class="timer_button" time="-5"><b>5 минут</b></a></li>  
+                <li><a class="timer_button" time="-10">10 минут</a></li>  
+                <li><a class="timer_button" time="-15"><b>15 минут</b></a></li>  
+                <li><a class="timer_button" time="-20">20 минут</a></li>  
+                <li><a class="timer_button" time="-25"><b>25 минут</b></a></li>  
+                <li><a class="timer_button" time="-30">30 минут</a></li>  
+                <li><a class="timer_button" time="-40">40 минут</a></li>  
+                <li><a class="timer_button" time="-50">50 минут</a></li>  
+                <li><a class="timer_button" time="-60">60 минут</a></li>  
+                <li><a class="timer_button" time="-90">90 минут</a></li>  
+                <li><a class="timer_button" time="-120">120 минут</a></li>  
+                <li class="blank"></li>
+                <li><a>Что такое pomidorro?</a></li>  
+                <li class="blank"></li>
+                <li><a id="cancel_timer" time="0">Отменить таймер</a></li>  
+            </ul>  
+        </li>  
+        <li><a>Синхронизация</a>
+        	<ul>
+            	<li><span class="m_key">alt+"R"</span><a class="m_refresh">Синхронизировать с сервером</a></li>  
+            	<li><span class="m_key"></span><a class="m_refresh_all">Загрузить дерево с сервера</a></li>  
+            </ul>
+        </li>
+        <li>
+        	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank">Что нового в версии 4tree.ru <? echo $compress_stamp; ?> ...</a>
+        </li>
+    </ul>  
+
+
+</li>
+
+
+<li class="top_level"><a href="#">Вид</a>
+  <ul>
+      <li><input type="checkbox" class="on_off" id="on_off_hide_did"></input><a class="show_hidden_do" style="margin-right:90px;">Показывать выполненные дела</a></li>
+      <li class="blank"></li> <!-- separator -->  
+	  <li><a href="#">Панели</a>
+	  		<ul>
+	  		    <li><a href="#">Вид №1</a></li>
+	  		    <li><a href="#">Вид №2</a></li>
+	  		    <li><a href="#">Вид №3</a></li>
+	  		    <li><a href="#">Вид №4</a></li>
+	  		</ul>
+	  </li>
+	  <li><a href="#">Отображение дерева</a>
+	  		<ul>
+	  		    <li><a href="#">Панели</a></li>
+	  		    <li><a href="#">Дерево</a></li>
+	  		    <li><a href="#">Карта ума</a></li>
+	  		</ul>
+	  </li>
+	  <li><a href="#">Масштаб дерева</a>
+	  		<ul>
+		  		<li><span class="m_key">alt <i class="icon-plus-circle"></i></span><a class="m_zoom_in">Увеличить масштаб дерева</a></li>  
+		  		<li><span class="m_key">alt <i class="icon-minus-circle"></i></span><a class="m_zoom_out">Уменьшить масштаб дерева</a></li>  
+		  		<li><span class="m_key">alt+"0"</span><a class="m_zoom_default">Масштаб дерева по умолчанию</a></li>  
+	  		</ul>
+	  </li>
+	  <li><a href="#">Фокус</a>
+	  		<ul>
+	  		    <li><a href="#">Установить</a></li>
+	  		    <li><a href="#">Снять</a></li>
+	  		    <li><a href="#">На уровень выше</a></li>
+	  		</ul>
+	  </li>
+  </ul>
+</li>
+<li class="top_level"><a href="#">Добавить</a>
+	<ul>
+        <li><a href="#" class="add_do_down">Дело вниз</a></li>
+        <li><a href="#" class="add_do_right">Дело вправо</a></li>
+        <li class="blank"></li> <!-- separator -->  
+        <li><a href="#">Запись в сегодняшний дневник</a>
+			<ul>
+			    <li><a href="#">Завершённую "помидорку"</a></li>
+			    <li><a href="#">Комментарий</a></li>
+			</ul>
+        </li>
+    </ul>
+</li>
+<li class="top_level"><a href="#">Поделиться</a>
+	<ul>
+        <li><a href="#">Контакты</a>
+			<ul>
+			    <li><a href="#">Вецель Евгений</a>
+					<ul>
+						<li><a>чат</a></li>
+						<li><a>поделилась со мной</a></li>
+						<li><a>я делюсь с ней</a></li>
+					</ul>
+			    </li>
+			    <li><a href="#">Вецель Валентина</a>
+					<ul>
+						<li><a>чат</a></li>
+						<li><a>поделилась со мной</a></li>
+						<li><a>я делюсь с ней</a></li>
+					</ul>
+			    </li>			    
+			    <li><a href="#">Подбельных Екатерина</a>
+					<ul>
+						<li><a>чат</a></li>
+						<li><a>поделилась со мной</a></li>
+						<li><a>я делюсь с ней</a></li>
+					</ul>
+			    </li>
+			    
+			</ul>
+        </li>
+        
+        <li><a href="#">Поделиться текущей папкой</a>
+			<ul>
+			    <li><a href="#">Только для чтения</a></li>
+			    <li><a href="#">Полные права на редактирование</a></li>
+			    <li><a href="#">На мой сайт</a></li>
+			</ul>
+        </li>
+        <li class="blank"></li> <!-- separator -->  
+        <li><a href="#">Отправить текущую заметку</a>
+			<ul>
+			    <li><a href="#">Письмом</a></li>
+			    <li><a href="#">Короткую ссылку на экран</a></li>
+			    <li><a href="#">Короткую ссылку через SMS</a></li>
+			</ul>
+        </li>
+    </ul>
+</li>
+<li class="top_level"><a href="#">Избранные</a>
+  <ul>
+  <li><a href="#">ИДЕИ</a></li>
+  <li><a href="#">РАБОЧИЕ</a>
+    <ul>
+    <li><a href="#">КЛАДОВЩИК</a></li>
+    <li><a href="#">САЙТЫ</a></li>
+    <li><a href="#">_НОВОЕ</a>
+		<ul>
+    		<li><a href="#">ПИСЬМА</a></li>
+    		<li><a href="#">БЫСТРЫЕ</a></li>
+    		<li><a href="#">ИНН</a></li>
+    		<li><a href="#">ПФР</a></li>
+    		<li><a href="#">ВСЯЧИНА</a></li>
+		</ul>
+    </li>
+    <li><a href="#">ССЫЛКИ</a></li>
+    </ul>
+  </li>
+  </ul>
+</li>
+<li class="top_level"><a href="http://www.dynamicdrive.com/style/">Правка</a>
+  <ul>
+  <li><a href="#">Undo/Redo/History</a>
+    <ul>
+    <li><a href="#">Отменить (undo)</a></li>
+    <li><a href="#">Повторить (redo)</a></li>
+    <li><a href="#">История изменений текущей заметки</a></li>
+    </ul>
+  </li>  
+  <li class="blank"></li> <!-- separator -->  
+  <li><a href="#">Вырезать дело</a></li>
+  <li><a href="#">Скопировать дело</a></li>
+  <li><a href="#">Вставить дело</a></li>
+  <li><a href="#">Дублировать папку</a></li>
+  <li class="blank"></li> <!-- separator -->  
+  <li><a href="#">Вставить Граффити</a></li>
+  <li><a href="#">Печать содержимого редактора</a></li>
+  <li><a href="#">Упорядочить</a>
+    <ul>
+    <li><a href="#">По имени</a></li>
+    <li><a href="#">По дате выполнения</a></li>
+    <li><a href="#">По иконке (типу дела)</a></li>
+    </ul>
+  </li>  
+  <li><a href="#">Изменить тип дела</a>
+    <ul>
+    <li><a href="#">Звонок</a></li>
+    <li><a href="#">Визит</a></li>
+    <li><a href="#">Поездка</a></li>
+    </ul>
+  </li>  
+  <li><a href="#">Изменить цвет ярлычка</a>
+    <ul>
+    <li><a href="#">Синий</a></li>
+    <li><a href="#">Красный</a></li>
+    <li><a href="#">Зелёный</a></li>
+    </ul>
+  </li>  
+  </ul>
+</li>
+<li class="top_level go_to_li_menu"><a class="header_text">Переход</a>
+	<ul>
+		<li><a>_Новое</a></li>
+	</ul>
+</li>
+</ul>
+<br style="clear: left" />
+</div>
+
+
 	
   <div id="add_do_panel">
   	<input type="text" id="add_do" onwebkitspeechchange="jsSpeechComplete()" x-webkit-speech value="позвонить через 3 дня в 9:30">
@@ -246,104 +471,6 @@ if(isset($_GET['test']))
 		<div id="top_panel" class="effect2 panel_type3">
 
 	<div class="header_toolbar">
-			<div id="main_menu"><div class="h_button round_left round_right"><i class="icon-align-justify"></i></div>
-			    <ul>  
-					<li><input type="checkbox" class="on_off" id="on_off_hide_did"></input><a class="show_hidden_do">Показывать выполненные дела</a></li>
-			        <li></li> <!-- separator -->  
-			        <li><a class="m_zoom_in">Увеличить масштаб дерева<span class="m_key">alt <i class="icon-plus-circle"></i></span></a></li>  
-			        <li><a class="m_zoom_out">Уменьшить масштаб дерева<span class="m_key">alt <i class="icon-minus-circle"></i></span></a></li>  
-			        <li><a class="m_zoom_default">Масштаб дерева по умолчанию<span class="m_key">alt+"0"</span></a></li>  
-			        <li></li> <!-- separator -->  
-			        <li>Расположение панелей  
-			            <ul>  
-			                <li><a id="v1">Вид №1<span class="m_key">alt+"1"</span></a></li>  
-			                <li><a id="v2">Вид №2<span class="m_key">alt+"2"</span></li>  
-			                <li><a id="v3">Вид №3<span class="m_key">alt+"3"</span></li>  
-			                <li><a id="v4">Вид №4<span class="m_key">alt+"4"</span></li>  
-			            </ul>  
-			        </li>  
-			        <li></li> <!-- separator -->  
-			        <li>Редактор  
-			            <ul>  
-			                <li>Отменить один шаг редактирования<span class="m_key">alt+"z"</span></li>  
-			                <li>Вернуть один шаг редактирования<span class="m_key">alt+shift+"z"</span></li>  
-			            </ul>  
-			        </li>  
-			        <li>Поделиться  
-			            <ul>  
-			                <li><a class="send_by_mail"><i class='icon-mail-2'></i> По электронной почте</a></li>  
-			                <li>Короткая ссылка</li>  
-			                <li>Опубликовать на моём сайте</li>  
-			            </ul>  
-			        </li>  
-			        <li>Печать
-			            <ul>  
-			                <li>Распечатать содержимое редактора</li>  
-			                <li>Распечатать содержимое календаря</li>  
-			                <li>Распечатать дерево</li>  
-			            </ul>  
-			        </li>  
-			        <li>Таймер
-			            <ul>  
-			                <li><a class="timer_button" time="-1">1 минута</a></li>  
-			                <li><a class="timer_button" time="-5"><b>5 минут</b></a></li>  
-			                <li><a class="timer_button" time="-10">10 минут</a></li>  
-			                <li><a class="timer_button" time="-15"><b>15 минут</b></a></li>  
-			                <li><a class="timer_button" time="-20">20 минут</a></li>  
-			                <li><a class="timer_button" time="-25"><b>25 минут</b></a></li>  
-			                <li><a class="timer_button" time="-30">30 минут</a></li>  
-			                <li><a class="timer_button" time="-40">40 минут</a></li>  
-			                <li><a class="timer_button" time="-50">50 минут</a></li>  
-			                <li><a class="timer_button" time="-60">60 минут</a></li>  
-			                <li><a class="timer_button" time="-90">90 минут</a></li>  
-			                <li><a class="timer_button" time="-120">120 минут</a></li>  
-			                <li></li>
-			                <li>Что такое pomidorro?</li>  
-			                <li></li>
-			                <li><a id="cancel_timer" time="0">Отменить таймер</a></li>  
-			            </ul>  
-			        </li>  
-			        <li>Синхронизация
-			        	<ul>
-				        	<li><a class="m_refresh">Синхронизировать с сервером<span class="m_key">alt+"R"</span></a></li>  
-				        	<li><a class="m_refresh_all">Загрузить дерево с сервера<span class="m_key"></span></a></li>  
-				        </ul>
-				    </li>
-				    <li>
-				    	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank">Что нового в версии 4tree.ru <? echo $compress_stamp; ?> ...</a>
-				    </li>
-			    </ul>  
-			</div>  
-
-
-		&nbsp;
-		<div class="h_button round_left" id="tree_back"><i class="icon-left-dir"></i>
-		</div><div class="h_button round_right" id="tree_forward"><i class="icon-right-dir"></i></div>
-		&nbsp;
-		<div style="display:none" id="pt1" class="h_button round_left" title="вид: колонки"><i class="icon-calendar-alt" style="font-size:1.2em;vertical-align:-1px;"></i>
-		</div><div style="display:none" id="pt2" class="h_button" title="вид: иконки"><i class="icon-th-large" style="font-size:1em"></i>
-		</div><div id="pt3" class="h_button" title="вид: горизонтальные панели"><i class="icon-list" style="font-size:1.05em"></i>
-		</div><div style="display:none" id="pt4" class="h_button round_right" title="вид: дерево"><i class="icon-folder-open" style="font-size:1em"></i></div>
-		&nbsp;
-		&nbsp;
-		<div style="display:none" class="h_button round_left"><i class="icon-export-1"></i>
-		</div><div id="add_menu"><div class="h_button round_right" title="Добавить новое дело"><i class="icon-list-add"><font style="font-size:0.5em;vertical-align:middle">&nbsp;</font></i></div>
-			    <ul>  
-			        <li><a class="add_do_down">Добавить дело вниз<span class="m_key">alt+<i class="icon-down-bold"></i></span></a></li>  
-			        <li><a class="add_do_right">Добавить дело вправо<span class="m_key">alt+<i class="icon-right-bold"></i></span></a></li>  
-			        <li></li>
-			        <li><a class="delete_do">Удалить дело<span class="m_key">del</span></a></li>  
-				</ul>
-			  </div>
-		&nbsp;
-		&nbsp;
-		<div class="h_button" id="add_picture">
-			<i class="icon-feather" title="Граффити"></i>
-		</div>
-		<a id="blob-archive" style="display:none" href="">blob</a>
-			  
-	<div class='tree_history'><ul></ul></div>			  
-			  
 	</div>
 
 
@@ -530,22 +657,22 @@ if(isset($_GET['test']))
    			    <ul>  
 					<li><a class="show_all_in_redactor"><i class='icon-doc-2'></i> Редактировать <b>все</b> заметки этой ветки</a></li>
 					<li><a class="show_all_history_redactor"><i class='icon-clock-alt'></i> История изменений заметки</a></li>
-					<li></li>
+					<li class="blank"></li>
 					<li><a class="show_mindmap"><i class='icon-leaf'></i> Показать карту ума</a></li>
-					<li></li>
+					<li class="blank"></li>
 					<li><a class="send_by_mail"><i class='icon-mail-2'></i> Отправить заметку по эл.почте</a></li>
-					<li></li>
+					<li class="blank"></li>
 					<li><i class="icon-stop" style="color:red"></i> Цвет ярлычка
 						<ul>
 							<li><a class="fav_color fav_red" fav="1"><b>красный</b></a></li>
 							<li><a class="fav_color fav_yellow" fav="2"><b>жёлтый</b></a></li>
 							<li><a class="fav_color fav_green" fav="3"><b>зелёный</b></a></li>
-							<li></li>
+							<li class="blank"></li>
 							<li><a class="fav_color fav_cyan" fav="4"><b>салатовый</b></a></li>
 							<li><a class="fav_color fav_blue" fav="5"><b>синий</b></a></li>
 							<li><a class="fav_color fav_orange" fav="6"><b>оранжевый</b></a></li>
 							<li><a class="fav_color fav_magenta" fav="7"><b>фиолетовый</b></a></li>
-							<li></li>
+							<li class="blank"></li>
 							<li><a class="fav_color fav_no" fav="0"><b>без цвета</b></a></li>
 						</ul>
 					</li>
@@ -555,7 +682,7 @@ if(isset($_GET['test']))
 							<li><a class="fav_icon"><i class="icon-progress-1"></i><b>прогресс 30%</b></a></li>
 							<li><a class="fav_icon"><i class="icon-progress-2"></i><b>прогресс 70%</b></a></li>
 							<li><a class="fav_icon"><i class="icon-progress-3"></i><b>прогресс 100%</b></a></li>
-							<li></li>
+							<li class="blank"></li>
 							<li><a class="fav_icon"><i class="icon-info"></i><b>информация</b></a></li>
 							<li><a class="fav_icon"><i class="icon-phone"></i><b>телефон</b></a></li>
 							<li><a class="fav_icon"><i class="icon-home"></i><b>дом</b></a></li>
@@ -577,7 +704,7 @@ if(isset($_GET['test']))
 									<li><a class="fav_icon"><i class="icon-dot"></i><b>приоритет высокий</b></a></li>
 									<li><a class="fav_icon"><i class="icon-dot-2"></i><b>приоритет средний</b></a></li>
 									<li><a class="fav_icon"><i class="icon-dot-3"></i><b>приоритет низкий</b></a></li>
-									<li></li>
+									<li class="blank"></li>
 									<li><a class="fav_icon"><i class="icon-inbox"></i><b>входящие</b></a></li>
 									<li><a class="fav_icon"><i class="icon-steering-wheel"></i><b>автомобиль</b></a></li>
 									<li><a class="fav_icon"><i class="icon-chart-pie"></i><b>диаграммы</b></a></li>
@@ -603,10 +730,10 @@ if(isset($_GET['test']))
 								<ul>
 									<li><a class="fav_icon"><i class="icon-thumbs-up-1"></i><b>супер</b></a></li>
 									<li><a class="fav_icon"><i class="icon-thumbs-down"></i><b>отвратительно</b></a></li>
-									<li></li>
+									<li class="blank"></li>
 									<li><a class="fav_icon"><i class="icon-lock"></i><b>закрыто</b></a></li>
 									<li><a class="fav_icon"><i class="icon-lock-open"></i><b>открыто</b></a></li>
-									<li></li>
+									<li class="blank"></li>
 									<li><a class="fav_icon"><i class="icon-user"></i><b>человек</b></a></li>
 									<li><a class="fav_icon"><i class="icon-users-1"></i><b>люди</b></a></li>
 									<li><a class="fav_icon"><i class="icon-lamp"></i><b>идея</b></a></li>

@@ -337,30 +337,6 @@ outline: none;
     
     
 
-.header_text
-{
-position: absolute;
-width: auto;
-left:345px;
-right:345px;
-top:4px;
-text-align: center;
-display: inline-block;
-white-space: nowrap;
--moz-transition: all 1s; 
--webkit-transition: all 1s;  
--ms-transition: all 1s;  
--o-transition: all 1s;  
-transition: all 1s;  
-padding-top: 0.18em;
-font-size: 0.9em;
-font-weight: bold;
-cursor: pointer;
-color: #142B00;
-overflow: hidden;
-}
-
-
 #diary_panel
 {
 font-size: 0.9em;
@@ -910,7 +886,7 @@ margin-right: 15px;
 .fc-header
 {
 /*text shadow*/
-	text-shadow:1px 1px 1px #DDD;
+	text-shadow: none;
 }
 
 .fc-header-left
@@ -1738,7 +1714,9 @@ li.blue {
 }
 .m_key
 {
-float: right;
+position: absolute;
+right: 10px;
+top:6px;
 }
 
 .add_do
@@ -1881,7 +1859,7 @@ list-style: none;
 .all_screen_click
 {
 position: absolute;
-/* background-image: url(../img/opacity.png); */
+/*background-image: url(../img/opacity.png); */
 z-index: 6;
 width: 100%;
 height: 100%;
@@ -3920,10 +3898,10 @@ bottom: 0px;
 #right_panel_opener
 {
 width: 13px;
-position: absolute;
+position: fixed;
 right: 0px;
-top: 0px;
-bottom: 0px;
+top: 31px;
+bottom: 46px;
 z-index: 30;
 cursor: pointer;
 }
@@ -5199,8 +5177,8 @@ z-index: 30;
 .fc-state-default {
 background: none !important;
 border: none !important;
-color: #333;
-text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+color: #444;
+text-shadow: none;
 box-shadow: none !important;
 }
 
@@ -5220,7 +5198,7 @@ background: #eee !important;
 }
 
 .fc-header-right {
-margin-right: 5px;
+margin-right: 15px;
 }
 
 .fc-header {
@@ -5231,7 +5209,7 @@ box-shadow: none !important;
 .fc-header-title h2 {
 margin-top: -4px !important;
 white-space: nowrap;
-color: #666;
+color: #555;
 overflow: hidden;
 }
 

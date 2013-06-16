@@ -3,7 +3,7 @@ var textid = -1;
 
 function jsReg() //регистрация
 {
-email = $('#reg_email').val();
+email = $('#reg_email').val().toLowerCase();
 passw = $('#regpwd_text_id').val();
 
 if((email.indexOf('@')>0) && (email.indexOf('.')>0)) email_ok = 1;
@@ -45,7 +45,7 @@ var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t
 
 function jsLog() //вход
 {
-email = $('#email_login').val();
+email = $('#email_login').val().toLowerCase();
 passw = $('#log_pas').val();
 
 if((email.indexOf('@')>0) && (email.indexOf('.')>0)) email_ok = 1;

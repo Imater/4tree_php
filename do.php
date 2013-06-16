@@ -460,8 +460,10 @@ $ch = $HTTP_POST_VARS['changes']; //POST
 
 $ch_comments = $HTTP_POST_VARS['changes_comments']; //POST
 
-$share_ids = get_all_share_children($GLOBALS['user_id']); //все дочерние элементы, которые есть в таблице tree_share
-//echo $share_ids;
+$share_ids_answer = get_all_share_children($GLOBALS['user_id']); 
+
+$share_ids = $share_ids_answer[0];
+$share_ids_readonly = $share_ids_answer[1];
 
 if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru")) 
 	{
@@ -519,6 +521,7 @@ for ($i=0; $i<$countlines; $i++)
 		   		if($display) echo "<b>Новый id</b> = ".$id."<br>";
 		   		
 		   		$sqlnews = "UPDATE tree SET parent_id =".$id." WHERE parent_id = '".$old_id."'";	
+		   		$result = mysql_query_my($sqlnews);  //может зря добавил?
 		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
 		   		
 		   		for($j=0; $j<$countlines;$j++) //заменяю parent_id где он отрицательный в самом массиве изменений
@@ -533,13 +536,16 @@ for ($i=0; $i<$countlines; $i++)
 		   		$changes[$i]['id']=$id;
 		   }
     } //first for_i
+    
+    
 if($display) echo "<hr><hr>Начинаю второй проход<br>";
 $dont_send_ids = "";
 //второй проход, с учётом добавленных элементов
 for ($i=0; $i<$countlines; $i++)
 	{
 		$id = $changes[$i]['id'];
-		if($id=="") continue;
+		if($id=="") continue;	
+   		if(stristr($share_ids_readonly,"'$id'")) { continue; }
 		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
 
 		$sqlnews = "SELECT id,title,parent_id,changetime FROM tree WHERE id = '".$id."'";
@@ -619,6 +625,7 @@ for ($i=0; $i<$countlines; $i++)
 	{
 		$id = $changes_comments[$i]['id'];
 		if($id=="") continue;
+		
 		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
 
 		$sqlnews = "SELECT tree_comments.id,tree_comments.text,tree_comments.parent_id,tree_comments.changetime,tree.user_id user_id_host FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE tree_comments.id = '".$id."'";
@@ -736,6 +743,8 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 		}
 	
 	
+	$sqlnews = "UPDATE tree SET old_id ='' WHERE user_id = '".$GLOBALS['user_id']."'";	
+	$result = mysql_query_my($sqlnews);  //может зря добавил?
 	} //end of LOAD_DATA
 
 	//все объекты, которые удалены, но ещё ни разу не синхронизированны
@@ -1645,13 +1654,14 @@ $sqlnews = "SELECT * FROM tree_users WHERE id=".$user_id." OR frends LIKE '%".$u
 if(isset($HTTP_GET_VARS['test_it']))
 {
 $t1 = microtime();
-echo get_all_share_children($GLOBALS['user_id']);
+$t = get_all_share_children($GLOBALS['user_id']);
+echo $t[1];
 $t2 = microtime();
 $delta = ($t2-$t1)*1000;
 echo "<hr>".$delta;
 }
 
-function getAllChild($id)
+function getAllChild($id, $readonly)
 {
 global $main_array,$all_tree_id;
   
@@ -1659,8 +1669,9 @@ if(true)
   if(isset($all_tree_id[$id]))
 	foreach ($all_tree_id[$id] as $key => $val)
   			{
-		  	$main_array[] = $val;
-		  	getAllChild($val);
+		  	$main_array["all"][] = $val;
+		  	if($readonly==1) $main_array["readonly"][] = $val;
+		  	getAllChild($val, $readonly);
 	  		}
   
   return $main_array;
@@ -1683,7 +1694,7 @@ function set_all_share_children($user_id)
 {
 global $main_array,$all_tree_id;
 
-
+  //выбираем всех пользователей, которые с нами поделились
   $sqlnews = "SELECT distinct(delegate_user) FROM tree_share WHERE (host_user=".$user_id." OR delegate_user=".$user_id.")";
     
   $result = mysql_query_my($sqlnews); 
@@ -1693,6 +1704,7 @@ global $main_array,$all_tree_id;
   	$filter .= "user_id = ".$sql["delegate_user"]." OR ";
 	}
 
+  //выбираем всех пользователей, с которыми поделился я
   $sqlnews = "SELECT distinct(host_user) FROM tree_share WHERE (host_user=".$user_id." OR delegate_user=".$user_id.")";
   
   $result = mysql_query_my($sqlnews); 
@@ -1703,6 +1715,7 @@ global $main_array,$all_tree_id;
 	
   $filter .= "FALSE";
 	
+  //загружаем все (свои и чужие) деревья в массив	
   $sqlnews = "SELECT id,parent_id FROM tree WHERE user_id = ".$GLOBALS['user_id']." OR ".$filter;
   
   $result = mysql_query_my($sqlnews); 
@@ -1716,23 +1729,31 @@ global $main_array,$all_tree_id;
   $share_id = "";
   
   $main_array = "";
+
+  $main_array_readonly = "";
   
-  while (@$sql = mysql_fetch_array($result))
-  	{
-  	$main_array[] = $sql["tree_id"];
-  	getAllChild($sql["tree_id"]);
+  while (@$sql = mysql_fetch_array($result)) {
+  	$main_array["all"][] = $sql["tree_id"]; 	
+  	if($sql["block"]==1) {
+	  	$main_array["readonly"][] = $sql["tree_id"]; 	
   	}
+  	getAllChild($sql["tree_id"],$sql["block"]);
   	
-  $answerme = " id = '".implode( "' OR id = '",$main_array )."'";
+  }
+  	
+  $answerme = " id = '".implode( "' OR id = '",$main_array["all"] )."'";
+  $answerme_readonly = " id = '".implode( "' OR id = '",$main_array["readonly"] )."'";
   
   if($answerme=="") $answerme = "false";
+  if($answerme_readonly=="") $answerme_readonly = "false";
   $main_array="";
+  $main_array_readonly = "";
   $all_tree_id="";
 
 //  $sqlnews = 'UPDATE tree_users SET cookie="'.$answerme.'" WHERE id='.$user_id;
 //  $result = mysql_query_my($sqlnews); 
 
-  return $answerme;
+  return array ($answerme,$answerme_readonly);
 }
 
 function sqldate($date)
@@ -1757,8 +1778,11 @@ $only_md5 = $HTTP_GET_VARS['only_md5'];
 
 $time_dif = $now - $now_time;
 
+//все дочерние элементы, которые есть в таблице tree_share
+$share_ids_answer = get_all_share_children($GLOBALS['user_id']); 
 
-$share_ids = get_all_share_children($GLOBALS['user_id']); //все дочерние элементы, которые есть в таблице tree_share
+$share_ids = $share_ids_answer[0];
+$share_ids_readonly = $share_ids_answer[1];
 
 $sync_id = $HTTP_GET_VARS['sync_id'];
 
@@ -4079,7 +4103,10 @@ if (isset($HTTP_GET_VARS['history']))
 		   $sql2 = "";
 		   $h = $HTTP_GET_VARS['history'];
 		   
-	   	   $share_ids = get_all_share_children($GLOBALS['user_id']); //все дочерние элементы, которые есть в таблице tree_share
+			$share_ids_answer = get_all_share_children($GLOBALS['user_id']); 
+			
+			$share_ids = $share_ids_answer[0];
+			$share_ids_readonly = $share_ids_answer[1];
 		   
 		   $txt = "";
 		   $title = "История редактирования";
