@@ -1940,6 +1940,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  //при покидании add_do, свернуть его
 			  $('#add_do_panel').delegate("input","blur", function () {
 		      	  $(this).removeClass("active");
+		  		  $(".header_text").html("").attr("title","");
 			      return true;
 		      });
 			  //при клике в поиск    
@@ -4204,6 +4205,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	   	    $('.divider_red[myid="'+old_id+'"]').attr('myid',new_id);
 	   	    $(".makedone[myid="+old_id+"]").attr("myid",new_id); //заменяю индексы makedone
 	   	    $("#node_"+old_id).attr("id", "node_"+new_id).find(".tcheckbox").attr("title", new_id);
+	   	    $("#node_"+new_id).find(".n_title").attr("myid",new_id);
+	   	    $("#node_"+new_id).attr("myid",new_id);
 	   		$('#calendar').fullCalendar( 'refetchEvents' ); 
 	   	    
 	   		var id = parseInt(window.location.hash.replace("#",""),36); //меняем хэш в адресной строке

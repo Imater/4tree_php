@@ -1589,7 +1589,8 @@ function jsShowCalendar() //отображаю календарь
 			selectable: true,
 			selectHelper: true,
 			select: function(start, end, allDay) {
-			if( end-start == 900000 ) { 	calend.fullCalendar('unselect'); return true; }
+			console.info(end-start);
+			if( end-start == 1800000 ) { 	calend.fullCalendar('unselect'); return true; }
 				var title = prompt('Название события:');
 				if (title) { 
 				var manager = encodeURIComponent($('#selectmanager').html()); 

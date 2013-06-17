@@ -338,20 +338,19 @@ if(isset($_GET['test']))
     </ul>
 </li>
 
-
-
 </ul>
 <br style="clear: left" />
 </div>
 
 <ul style="display:none">
-<li class="top_level go_to_li_menu"><a class="header_text">Переход</a>
+<li class="top_level go_to_li_menu">
 	<ul>
 		<li><a></a></li>
 	</ul>
 </li>
 </ul>
 
+<div class="header_text"></div>
 	
   <div id="add_do_panel">
   	<input type="text" id="add_do" onwebkitspeechchange="jsSpeechComplete()" x-webkit-speech value="позвонить через 3 дня в 9:30">
