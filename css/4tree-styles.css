@@ -3418,6 +3418,7 @@ vertical-align: top;
     text-decoration: none;
     text-shadow: 0 1px rgba(255,255,255,0.7);
     font-size: 0.8em;
+    cursor: pointer;
 }
 
 .button_send:hover {
@@ -5381,7 +5382,84 @@ opacity: 1;
 content: "Need sync...";
 }
 
+#tree_settings {
+position: relative;
+left: -3px;
+right: 0px;
+top: 0px;
+bottom: 0px;
+z-index: 100;
+background: white;
+width: 580px;
+margin: 0 auto;
+margin-top: -20px;
+padding: 20px;
+border: 1px solid #CCC;
+-moz-box-shadow: 0px 2px 11px #444;
+-webkit-box-shadow: 0px 2px 11px #444;
+box-shadow: 0px 2px 11px #111;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+}
 
+#tree_settings h2{
+text-align: center;
+}
+
+#tree_settings .set_center{
+margin: 0 auto;
+width: 500px;
+}
+
+
+#tree_settings .left_label{
+	width:155px;
+	text-align: right;
+	font-size: 12px;
+	display: inline-block;
+	color:#888;
+	height: 18px;
+	vertical-align: middle;
+}
+
+#tree_settings .right_set{
+	width:300px;
+	text-align: center;
+	font-size: 14px;
+	display: inline-block;
+}
+
+#tree_settings .description{
+	width:300px;
+	margin-left: 160px;
+	text-align: center;
+	font-size: 10px;
+	color:#555;
+	
+	display: inline-block;
+}
+
+#tree_settings input{
+	width:260px;
+	text-align: left;
+	font-size: 14px;
+	display: inline-block;
+    padding: 5px 3px 4px 10px;
+}
+
+#tree_settings .is_female {
+	margin-left: 170px;
+}
+
+#tree_settings .is_female input{
+	display: inline-block;	
+	width: 10px;
+}
+#tree_settings .is_female label{
+	display: inline-block;	
+	font-size: 14px;
+	color: #888;
+}
 
 
 

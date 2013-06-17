@@ -74,7 +74,7 @@ function jsCloneChat(user_id) //клонирую чат из template
 		var new_chat = $(".chat_box[user_id='template']").clone().attr("user_id",user_id);
 		user_el = jsFrendById(user_id);
 		new_chat.find(".chat_user_name").html( user_el.fio );
-		new_chat.find(".chat_user_img").html('<img src="image.php?width=33&height=33&cropratio=1:1&image=/'+user_el.foto+'">');
+		new_chat.find(".chat_user_img").html('<img src="image_remote.php?width=33&height=33&cropratio=1:1&image=/'+user_el.foto+'">');
 		$("body").append(new_chat);
 		
 		var cnt=0;
@@ -238,7 +238,7 @@ function jsRefreshFrends()
 		
 		text += '<li user_id="'+el.user_id+'">'+
 					online_div+
-					'<img src="image.php?width=33&height=33&cropratio=1:1&image=/'+el.foto+'" title="'+el.fio
+					'<img src="image_remote.php?width=33&height=33&cropratio=1:1&image=/'+el.foto+'" title="'+el.fio
 						+"\n"+el.email+"\n"+lastvisit+'">'+
 					'<div class="contact_round">'+el.user_id+'</div>'+
 				'</li>';

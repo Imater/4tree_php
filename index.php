@@ -189,7 +189,9 @@ if(isset($_GET['test']))
 				</li>
             </ul>
         </li>
-
+        <li class="blank"></li>
+        <li><a id="show_settings"><i class="icon-cog-2"></i>Настройки</a></li>
+        <li class="blank"></li>
 
 		<li><a href="http://reformal.4tree.ru" onclick="window.open('http://reformal.4tree.ru');return false;"><i class="icon-thumbs-up"></i>Oтзывы и предложения (reformal.ru)</a><script type="text/javascript">
     var reformalOptions = {
@@ -230,7 +232,7 @@ if(isset($_GET['test']))
                 <li dont_close="true"><span class="m_key">alt + 4</span><a id="v4">Вид №4</a></li>  
             </ul>  
 	  </li>
-	  <li><a href="#">Отображение дерева</a>
+	  <li style="display:none"><a href="#">Отображение дерева</a>
 	  		<ul>
 	  		    <li><a href="#">Панели</a></li>
 	  		    <li><a href="#">Дерево</a></li>
@@ -239,12 +241,12 @@ if(isset($_GET['test']))
 	  </li>
 	  <li><a href="#">Масштаб дерева</a>
 	  		<ul>
-		  		<li><span class="m_key">alt <i class="icon-plus-circle"></i></span><a class="m_zoom_in">Увеличить масштаб дерева</a></li>  
-		  		<li><span class="m_key">alt <i class="icon-minus-circle"></i></span><a class="m_zoom_out">Уменьшить масштаб дерева</a></li>  
-		  		<li><span class="m_key">alt+"0"</span><a class="m_zoom_default">Масштаб дерева по умолчанию</a></li>  
+		  		<li dont_close="true"><span class="m_key">alt <i class="icon-plus-circle"></i></span><a class="m_zoom_in">Увеличить масштаб дерева</a></li>  
+		  		<li dont_close="true"><span class="m_key">alt <i class="icon-minus-circle"></i></span><a class="m_zoom_out">Уменьшить масштаб дерева</a></li>  
+		  		<li dont_close="true"><span class="m_key">alt+"0"</span><a class="m_zoom_default">Масштаб дерева по умолчанию</a></li>  
 	  		</ul>
 	  </li>
-	  <li><a href="#">Фокус</a>
+	  <li style="display:none"><a href="#">Фокус</a>
 	  		<ul>
 	  		    <li><a href="#">Установить</a></li>
 	  		    <li><a href="#">Снять</a></li>
@@ -256,7 +258,7 @@ if(isset($_GET['test']))
 
 <li class="top_level"><a href="#">Поделиться</a>
 	<ul>
-        <li><a href="#">Контакты</a>
+        <li style="display:none"><a href="#">Контакты</a>
 			<ul>
 			    <li><a href="#">Вецель Евгений</a>
 					<ul>
@@ -268,7 +270,7 @@ if(isset($_GET['test']))
 			</ul>
         </li>
         
-        <li><a href="#">Поделиться текущей папкой</a>
+        <li style="display:none"><a href="#">Поделиться текущей папкой</a>
 			<ul>
 			    <li><a href="#">Только для чтения</a></li>
 			    <li><a href="#">Полные права на редактирование</a></li>
@@ -279,13 +281,13 @@ if(isset($_GET['test']))
         <li><a href="#">Отправить текущую заметку</a>
 			<ul>
                 <li><a class="send_by_mail"><i class='icon-mail-2'></i> По электронной почте</a></li>  
-                <li><a>Короткая ссылка</a></li>  
+                <li style="display:none"><a>Короткая ссылка</a></li>  
 			</ul>
         </li>
     </ul>
 </li>
 
-<li class="top_level"><a href="http://www.dynamicdrive.com/style/">Правка</a>
+<li  style="display:none" class="top_level"><a href="http://www.dynamicdrive.com/style/">Правка</a>
   <ul>
   <li><a href="#">Undo/Redo/History</a>
     <ul>
@@ -333,8 +335,8 @@ if(isset($_GET['test']))
         <li class="blank"></li> <!-- separator -->  
         <li><a href="#">Запись в сегодняшний дневник</a>
 			<ul>
-			    <li><span class="m_key">alt + p</span><a href="#"><i class='icon-record'></i>Завершённую "помидорку"</a></li>
-			    <li><a href="#">Комментарий</a></li>
+			    <li><span class="m_key">alt + p</span><a href="javascript:api4tree.jsAskForPomidor();"><i class='icon-record'></i>Завершённую "помидорку"</a></li>
+			    <li style="display:none"><a href="#">Комментарий</a></li>
 			</ul>
         </li>
     </ul>
@@ -868,7 +870,7 @@ if(isset($_GET['test']))
 
 							<div class="comment_header">
 								<div class="comment_foto">
-								    <img src="image.php?width=15&height=15&cropratio=1:1&image=/{{foto}}" height="15px" width="15px" class="comment_foto_img">
+								    <img src="image_remote.php?width=15&height=15&cropratio=1:1&image={{foto}}" height="15px" width="15px" class="comment_foto_img">
 								</div>
 								<div class="comment_name">{{name}}</div>
 								<div class="comment_like">{{likes}}<i class="icon-heart"></i></div>
@@ -959,6 +961,47 @@ if(isset($_GET['test']))
 	
 	<div id="foto_canvas" class="noselectable">
 	</div>
+</div>
+
+<div id="tree_settings" style="display:none">
+	<h2>Настройки</h2>
+	<form id="tree_settings_form">
+	<div class="set_center">
+	<div class="left_label">Фамилия Имя:</div>
+	<div class="right_set"><input tabindex=1 name='fio' value='Вецель Евгений' placeholder="Петров Иван"></input></div>
+	<br><br>
+	<div class="left_label">Email №1:</div>
+	<div class="right_set"><input tabindex=2 name='email1' value='' placeholder="4tree@4tree.ru" ></input></div>
+	<div class="left_label">Email №2:</div>
+	<div class="right_set"><input tabindex=3 name='email2' value='' placeholder="4tree@4tree.ru" ></input></div>
+	<div class="left_label">Email №3:</div>
+	<div class="right_set"><input tabindex=4 name='email3' value='' placeholder="4tree@4tree.ru" ></input></div>
+	<div class="left_label">Email №4:</div>
+	<div class="right_set"><input tabindex=5 name='email4' value='' placeholder="4tree@4tree.ru" ></input></div><br>
+	<div class="description">Письма отправленные с этих адресов на 4tree@4tree.ru, будут складываться в папку "_НОВОЕ"</div>
+	<br><br>
+	<div class="left_label">Номер телефона для SMS:</div>
+	<div class="right_set"><input tabindex=6 name='mobilephone' value='' placeholder="79221234567"></input></div><br>
+	<br>
+	<div class="left_label">Ваша фотография:</div>
+	<div class="right_set"><input tabindex=7 name='foto' value='' placeholder="http://4tree.ru/upload/1.jpg"></input></div><br>
+	<br>
+	<div class="is_female">
+		<input type="radio" class="radio" name="gender" value="male" id="male" checked="true"/>
+		<label for="male">Мужчина</label>
+		<input type="radio" class="radio" name="gender" value="female" id="femail" />
+		<label for="female">Женщина</label>
+	</div>
+    <br><br>
+    	<div class="left_label"></div>
+	<div class="right_set" style="text-align:left">
+	<div id='send_settings' class='button_send' style="margin-left:10px;">Сохранить</div>
+	<div id='close_settings' class='button_send' style="margin-left:10px">Закрыть</div>
+	</div>
+	
+	</form>
+	
+	<div class="set_center">
 </div>
 
 

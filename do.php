@@ -392,6 +392,44 @@ $sqlnews2 = "UPDATE tree_users SET lastvisit = '".now()."' WHERE id=".$GLOBALS['
 $result2 = mysql_query_my($sqlnews2); 
 
 
+if (isset($HTTP_GET_VARS['send_settings'])) {
+	
+	$email1 = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["email1"] ) );
+	$email2 = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["email2"] ) );
+	$email3 = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["email3"] ) );
+	$email4 = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["email4"] ) );
+
+	$fio = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["fio"] ) );
+	$foto = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["foto"] ) );
+
+	$female = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["gender"] ) );
+
+	$mobilephone = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["mobilephone"] ) );
+	
+	if($female=="male") {
+		$female = 0;
+	} else {
+		$female = 1;
+	}
+	
+  $sqlnews = "UPDATE tree_users SET foto = '$foto',
+  									email1 = '$email1',
+  									email2 = '$email2',
+  									email3 = '$email3',
+  									email4 = '$email4',
+  									fio = '$fio',
+  									female = '$female',
+  									mobilephone = '$mobilephone'
+  									WHERE id='$user_id'";
+  $result = mysql_query_my($sqlnews); 
+  @$sql = mysql_fetch_array($result);
+	
+  echo json_encode(true);
+  	
+	exit;
+}
+
+
 if (isset($HTTP_GET_VARS['get_settings'])) 
 {
 
@@ -409,29 +447,7 @@ if (isset($HTTP_GET_VARS['get_settings']))
   $answer["mobilephone"] = $sql["mobilephone"];
 
 
-  $sqlnews="SELECT *, (date1-INTERVAL remind MINUTE) dateremind FROM h116.`tree` WHERE did = '0000-00-00 00:00:00' AND date1 != '0000-00-00 00:00:00' AND remind != '0' AND date1<(NOW() + INTERVAL 2 HOUR + INTERVAL remind MINUTE) ORDER BY `tree`.`remind` DESC";
-  
-  
-  $result = mysql_query($sqlnews); 
-while(@$sql = mysql_fetch_array ($result))
-{
-
-	$user_id = $sql["user_id"];
-	$sqlnews5="SELECT time_dif FROM tree_users WHERE id='".$user_id."'";
-	$result5 = mysql_query($sqlnews5); 
-	@$sql5 = mysql_fetch_array ($result5);
-
-	$timezone = $sql5["time_dif"]+6;
-	
-	$remindtime = $sql["date1"];
-	
-	$remindtime = date("Y-m-d H:i:s", strtotime($remindtime) + ($timezone * 60*60) );
-	
-	echo "time_zone = ".$timezone." user_id = ".$user_id." remindtime = ".$remindtime." date = ".
-			$sql["date1"]." : ".$timezone." hours ".$sql["dateremind"]."<br>";
-  
-//  echo json_encode($answer);
-}
+  echo json_encode($answer);
 exit;
 }
 

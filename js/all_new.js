@@ -1177,6 +1177,51 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //кнопки панели дерева
 		  function jsMakePanelKeys() {
+
+		  	  $("#myslidemenu").on("click", "#show_settings", function(){
+		  	  	  var lnk = "do.php?get_settings=true";
+		  	  	  console.info(lnk);
+		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
+				     if(j=="success") {
+				     	console.info(data);
+				     	$("#tree_settings_form input[name=email1]").val( data.email1 );
+				     	$("#tree_settings_form input[name=email2]").val( data.email2 );
+				     	$("#tree_settings_form input[name=email3]").val( data.email3 );
+				     	$("#tree_settings_form input[name=email4]").val( data.email4 );
+
+				     	$("#tree_settings_form input[name=fio]").val( data.fio );
+				     	$("#tree_settings_form input[name=mobilephone]").val( data.mobilephone );
+				     	$("#tree_settings_form input[name=foto]").val( data.foto );
+				     	if(data.female=="0") {
+						 	$("#tree_settings_form input[value=male]").click();
+				     	} else {
+						 	$("#tree_settings_form input[value=female]").click();
+				     	}
+
+					 	$("#tree_settings").slideDown(300);
+				     }
+				  });
+			  	  return false;
+		  	  });
+
+		  	  $("#tree_settings").on("click", "#close_settings", function(){
+				  $("#tree_settings").slideUp(500);
+			  	  return false;
+		  	  });
+
+		  	  $("#tree_settings").on("click", "#send_settings", function(){
+		  	  	  var params =  $("#tree_settings_form").serialize() ;
+		  	  	  var lnk = "do.php?send_settings=true&"+params;
+		  	  	  console.info(lnk);
+		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
+				     if(j=="success") {
+				     	jsTitle("Настройки успешно сохранены",10000);
+				     	start_sync_when_idle = true;
+				     }
+				  });
+							  	  	  
+			  	  return false;
+		  	  });
 		  
 		  	  $("#mypanel").on("click", ".add_do_panel_top i", function(){
 		  	  	var this_icon = $(this).attr("class");
@@ -2524,6 +2569,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  $("#hotkeyhelper ul").html(myhtml);
 		  }
 		  
+		  this.jsAskForPomidor = function() {
+			  
+	   	           var last_title = localStorage.getItem("pomidor_last_title");
+  	      	       if(!last_title) last_title = "Мой проект";
+     	           var answer = prompt("Ручное добавление 25 минутного блока работы.\n\nКак описать этот \"листочек\" в сегодняшнем дневнике?", last_title);
+    	      	   if(answer) { 
+   	      	        	localStorage.setItem("pomidor_last_title", answer);
+    	      	   		api4tree.jsDiaryTodayAddPomidor(answer,"green"); 
+    	      	   		}
+    	  }
+
+		  
 		  //обработка клавиш клавиатуры
 		  function jsMakeWindowKeyboardKeys() {
 
@@ -2589,13 +2646,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     key_help.push({key:"P",title:"добавить одну Pomidorro"});
 			  	 if( (e.altKey==true) && (e.keyCode==80) ) { //alt+P - обновляю дерево
 			       e.preventDefault();
-      	           var last_title = localStorage.getItem("pomidor_last_title");
-  	      	       if(!last_title) last_title = "Мой проект";
-     	           var answer = prompt("Ручное добавление 25 минутного блока работы.\n\nКак описать этот \"листочек\" в сегодняшнем дневнике?", last_title);
-    	      	   if(answer) { 
-   	      	        	localStorage.setItem("pomidor_last_title", answer);
-    	      	   		api4tree.jsDiaryTodayAddPomidor(answer,"green"); 
-    	      	   		}
+			       this_db.jsAskForPomidor();
 			  	   return false;
 			  	 }
 			     key_help.push({key:"G",title:"Стартовать таймер Pomidorro"});
