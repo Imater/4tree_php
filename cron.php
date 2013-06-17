@@ -176,6 +176,26 @@ while(@$sql = mysql_fetch_array ($result))
 {
 $phone='none';
 
+	$user_id = $sql["user_id"];
+	
+	$sqlnews5="SELECT time_dif,mobilephone FROM tree_users WHERE id='".$user_id."'";
+	$result5 = mysql_query($sqlnews5); 
+	@$sql5 = mysql_fetch_array ($result5);
+	
+	$phone = $sql5["mobilephone"];
+
+	$timezone = $sql5["time_dif"]+6;
+	
+	$remindtime = $sql["date1"];
+	
+	$tim = str_replace(" 00:"," 09:",$sql['dateremind']); //тут есть косяк с 00ч до 01ч
+
+	$remind_date = date("d.m.y H:i", strtotime($tim) + ($timezone * 60*60) );
+
+	//DDMMYYhhmm
+//	$remind_date =date("d.m.y H:i",strtotime($tim));
+/*
+
 	if($sql['user_id']=='11')
 		{
 		$phone="79227444440";
@@ -208,13 +228,12 @@ $phone='none';
 		{
 		$phone="79068677635";
 		}		
-		
+		*/
 		
     echo $phone;
 		
-	$tim = str_replace(" 00:"," 09:",$sql['dateremind']); //тут есть косяк с 00ч до 01ч
-	//DDMMYYhhmm
-	$remind_date =date("d.m.y H:i",strtotime($tim));
+	
+//	$remind_date =date()
 	
 
 if (date("i",strtotime($sql['date1']))=='00')
@@ -230,7 +249,7 @@ if($phone!='none')
 	
 	echo $txt;
 
-  $sqlnews="UPDATE h116.`tree` SET remind = '0' WHERE id=".$sql['id'];
+  $sqlnews="UPDATE h116.`tree` SET remind = '0', lsync = '0', changetime = '".(integer)(microtime(true)*1000)."' WHERE id=".$sql['id'];
   $result = mysql_query($sqlnews); 
 
 //	@$fp = fopen('990990/public_html/cron.html', "a+");

@@ -4630,7 +4630,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				
 				var lastsync_time_client = api4tree.jsFindLastSync();
 				
-				var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do;
+				var offsetdate = new Date();
+				var timezone = offsetdate.getTimezoneOffset()/60;
+				
+				var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do+"&timezone="+timezone;
 				
 				this_db.log(lnk);
 				
@@ -6862,9 +6865,9 @@ function jsDoFirst() { //функция, которая выполняется �
 		jsProgressStep();
 		api4tree.jsMakeMakedoneKeys(); //кнопки меню элемента (где дата и поделиться)
 		setTimeout(function() { 
-			jsProgressStep(); $("#load_screen").fadeOut(100);  
-//			$("#tab_files").click();
 			jsFotoDoFirst(); //инициализируем фото-редактор
+			jsProgressStep(); $("#load_screen").hide();  
+//			$("#tab_files").click();
 		},50); //отображаю страницу
 	}); //загружаю таблицу из памяти
 } //jsDoFirst
