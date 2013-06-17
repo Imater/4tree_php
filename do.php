@@ -269,10 +269,12 @@ else
 						   `md5email`,
 						   `reg_date` ,
 						   `password` ,
+						   `frends` ,
 						   `confirm_email`
 						   )
 						   VALUES (
-						   'Username',  '',  '', '".$email."', MD5('".$email.'990990'."'), NOW(), '".$passw."',  '".$hash."'
+						   'Username',  '',  '', '".$email."', MD5('".$email.'990990'."'), NOW(), 
+						   '".$passw."', ',11,',  '".$hash."'
 						   );";
 						   
 	$result = mysql_query($sqlnews); 
@@ -288,6 +290,16 @@ else
 
 	$sqlnews = "INSERT INTO `tree_share` (`tree_id`, `host_user`, `delegate_user`, `readed`, `parent_id_user`, `changetime`, `block`) VALUES ( '6562', '11', '$new_user', '', '1', '', '1');	";
 	$result = mysql_query($sqlnews); 
+	
+	$sqlnews = "SELECT frends FROM tree_users WHERE id='11'";
+	$result = mysql_query($sqlnews); 
+	@$sql = mysql_fetch_array ($result);	
+
+	$new_frends = $sql["frends"].",".$new_user.",";
+	$sqlnews = "UPDATE tree_users SET frends = '".$new_frends."' WHERE id='11'";
+	$result = mysql_query($sqlnews); 
+	$sql["frends"];
+	
 	
    $tree="<font color='#214516'>4</font><font color='#244918'>t</font><font color='#356d23'>r</font><font color='#42872c'>e</font><font color='#57b33a'>e</font>";
 
