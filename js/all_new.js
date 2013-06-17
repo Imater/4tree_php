@@ -3910,6 +3910,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	    					jsProgressStep();
 	    					api4tree.js_LoadAllDataFromServer().done(function(){ 
 	        					jsProgressStep();
+   								this_db.jsUpdateChildrenCnt();
+	        					jsProgressStep();
+   								this_db.jsUpdateNextAction();		    						
+	        					jsProgressStep();
 	    						d.resolve(); 
 	    					});
 	    				})(d);
