@@ -1995,7 +1995,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 			  //нажатие клавиш в поиске
 			  $('#search_panel').delegate("#search_filter", "keyup", function(event) {
-			     if("39,37,40,38,".indexOf(event.keyCode+",")!=-1) return true;
+			     if(",39,37,40,38,".indexOf(","+event.keyCode+",")!=-1) return true;
 	     		 clearTimeout(search_timer);
 	     		 var searchtxt = $('#search_filter').val();
 	     		 var len=searchtxt.length;
