@@ -2530,9 +2530,11 @@ display: none;
 
 .selected .n_title::selection {
 	background: white;
+	color:black;
 	}
 .selected .n_title::-moz-selection {
 	background: white;
+	color:black;
 }
 
 .divider_li
