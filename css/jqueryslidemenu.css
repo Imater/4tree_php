@@ -15,6 +15,12 @@ top: 6px !important;
 	margin-right: 90px !important;
 }
 
+.jqueryslidemenu a > i {
+	position: absolute;
+	left: 11px;
+	top:9px;
+}
+
 .jqueryslidemenu ul{
 margin: 0;
 padding: 0;
@@ -46,26 +52,11 @@ border: none;
 background: rgb(243, 243, 243) !important;
 }
 
-
-.jqueryslidemenu ul li.top_level{
-background: none;
-color: #000 !important;
-min-width: auto;
-padding: 0px 2px;
-z-index: 50;
-}
-
-.jqueryslidemenu ul li.top_level a{
-color: #555 !important;
-font-weight: normal;
-}
-
-
 /*Top level menu link items style*/
 .jqueryslidemenu ul li a{
 display: inline-block;
 /*background: #414141; /*background of tabs (default state)*/
-color: black;
+color: black !important;
 padding: 8px 10px;
 color: #2d2b2b;
 text-decoration: none;
@@ -73,6 +64,19 @@ text-decoration: none;
 
 * html .jqueryslidemenu ul li a{ /*IE6 hack to get sub menu links to behave correctly*/
 display: inline-block;
+}
+
+.jqueryslidemenu ul li.top_level{
+background: none;
+color: #000;
+min-width: auto;
+padding: 0px 2px;
+z-index: 50;
+}
+
+.jqueryslidemenu ul li.top_level > a{
+color: #111 !important;
+font-weight: normal;
 }
 
 .jqueryslidemenu ul li a:link, .jqueryslidemenu ul li a:visited{
@@ -83,13 +87,6 @@ color: black;
 background: #638cdc; /*tab link background during hover state*/
 }
 
-
-
-
-.jqueryslidemenu ul li.top_level:hover{
-background: none;
-color: #000;
-}
 
 .jqueryslidemenu ul li.top_level:hover > a{
 color: #000 !important;
@@ -108,6 +105,11 @@ color: white !important;
 .jqueryslidemenu ul li:hover > a{
 color: white !important;
 }
+
+.jqueryslidemenu ul li.top_level.active > a{
+color: #FFF !important;
+}
+
 	
 /*1st sub level menu*/
 .jqueryslidemenu ul li ul{
@@ -132,7 +134,7 @@ top: 0;
 .jqueryslidemenu ul li ul li a{
 font: normal 14px Arial;
 /*width: 160px; /*width of sub menus*/
-padding: 7px 25px;
+padding: 7px 33px;
 padding-right: 40px;
 margin: 0;
 white-space: nowrap;
@@ -155,7 +157,11 @@ right: 7px;
 .rightarrowclass{
 position: absolute;
 top: 7px;
-right: -2px;
+right: 5px;
 float: right;
 font-size: 17px;
+}
+
+.rightarrowclass i{
+color: #CCC !important;
 }

@@ -241,8 +241,7 @@ html .fc,
 .fc-state-disabled {
 	cursor: default;
 	background-image: none;
-	opacity: 0.65;
-	filter: alpha(opacity=65);
+	color: #666;
 	box-shadow: none;
 	}
 

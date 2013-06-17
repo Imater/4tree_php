@@ -594,7 +594,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 		var stime = time.getHours()+":"+
 		 			((time.getMinutes().toString().length==1)?("0"+time.getMinutes()):time.getMinutes());
 		 		
-		 		my_pomidor.find("ol").append("<li><span style='display:inline-block;width:100%;vertical-align:top;'><i class='icon-leaf-1' style='color:"+color+"'></i> "+
+		 		my_pomidor.find("ol").append("<li><span style='display:inline-block;width:100%;vertical-align:top;'><i class='icon-record' style='color:"+color+"'></i> "+
 		 									  text+"<b>"+stime+"</b></span></li>");
 		 		
 		 		global_id = id;
@@ -1664,7 +1664,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  });
 			  
 			  //отправить по почте
-			  $("#root-menu-div").on("click",".send_by_mail",function(){
+			  $("#myslidemenu").on("click",".send_by_mail",function(){
 			      $(".all_screen_click").remove();
 			      $("#wrap").append("<div class='all_screen_click'></div>");
 			  
@@ -1924,12 +1924,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //кнопки для быстрого добавления дел и поиска
 		  function jsMakeAddDoAndSearchKeys() {
 		  	  //клик в быстрое добавление дел
-			  $('#add_do_panel').delegate("input","click", function () {
+			  $('#add_do_panel').delegate("input","focus", function () {
 			      if(!$(this).hasClass("active")) {
 			      	$(this).addClass("active");
-			      	$(this).focus();
-			        	document.execCommand('selectAll',false,null);
-			      }
+//			      	$(this).focus();
+//			        setTimeout(function(){ document.execCommand('selectAll',false,null); },50);
+				    var inp = this;
+				    setTimeout(function() {
+				        inp.select();
+				    }, 1);
+				  }
 			      //last_input_click = jsNow();
 			      return true;
 		      });
@@ -1939,8 +1943,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      return true;
 		      });
 			  //при клике в поиск    
-			  $('#search_panel').delegate("input","click", function () {
+			  $('#search_panel').delegate("input","focus", function () {
 			      $(this).addClass("active");
+				  var inp = this;
+				  setTimeout(function() {
+				      inp.select();
+				  }, 1);
 			      //$(".search_panel_result").slideDown(500);
 			      return false;
 		      });
@@ -2372,6 +2380,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    api4tree.jsAddDoLeftRight('down');
 			  	return false;
 			  	});
+
+			  $("#myslidemenu").delegate("li","click", function () {
+			  	if(!$(this).attr("dont_close")) api4panel.jsCloseAllMenu();
+			  });
 			     
 			  //меню добавления дел
 			  $("#myslidemenu").delegate(".add_do_right","click", function () {
@@ -2416,19 +2428,21 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				    
 				    if(id_element == "on_off_hide_did") {
 					   if(value) { //
-						   console.info("Показываю дела",value);
 						   settings.show_did = true;
 						   localStorage.setItem('show_did',settings.show_did);
 						   clearTimeout(hide_timer);
+						   api4tree.jsUpdateChildrenCnt();
+						   jsRefreshTree(); //обновляю дерево
+						   setTimeout(function(){ jsTitle("Выполненные дела отображаются",10000); }, 500);
 					   } else {
-						   console.info("Скрываю дела",value);
 						   settings.show_did = false;
 						   localStorage.setItem('show_did',settings.show_did);
 						   hide_timer = setTimeout(function(){ $(".do_did").parents("li:first").hide(); },1000);
+						   api4tree.jsUpdateChildrenCnt();
+						   jsRefreshTree(); //обновляю дерево
+						   setTimeout(function(){ jsTitle("Выполненные дела скрыты",10000); }, 500);
 						   
 					   }
-					   api4tree.jsUpdateChildrenCnt();
-					   jsRefreshTree(); //обновляю дерево
 				    }
 
 				    //чекбоксы в makedone
@@ -2607,12 +2621,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     key_help.push({key:"2",title:"вид №2"});
 			  	 if( (e.altKey==true) && (e.keyCode==50) ) {
 			       e.preventDefault();
-			  	   $("#v3").click();
+			  	   $("#v2").click();
 			  	 }
 			     key_help.push({key:"3",title:"вид №3"});
 			  	 if( (e.altKey==true) && (e.keyCode==51) ) {
 			       e.preventDefault();
-			  	   $("#v2").click();
+			  	   $("#v3").click();
 			  	 }
 			     key_help.push({key:"4",title:"вид №4"});
 			     key_help.push({key:"",title:""});
@@ -2662,7 +2676,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     }
 			  	   
 			  if( (!($("input").is(":focus"))) && 
-			  	  (!($(".redactor_editor").is(":focus"))) && 
+			  	  (!($(".redactor_editor:first").is(":focus"))) && 
+			  	  (!($(".redactor_editor:last").is(":focus"))) && 
 			  	  (!($("#redactor").is(":focus"))) && 
 			  	  ($(".n_title[contenteditable='true']").length==0) && 
 			  	  (!$(".comment_enter_input").is(":focus")) ) { //если мы не в редакторе
@@ -2847,9 +2862,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //поиск любого элемента или установка его значений		  	
 		  this.jsFind = function(id,fields,save_anyway) {
 		    if(!my_all_data) return false;
-			var answer = my_all_data.filter(function(el,i) {
-				return el && el.id==id;
-			})[0];
+
+			var len = my_all_data.length;
+			for(var i=0;i<len;i++) {
+				var el = my_all_data[i];
+				if(el && el.id==id) {
+					var answer = my_all_data[i];
+					break;
+				}
+			}
+//			var answer = my_all_data.filter(function(el,i) {
+//				return el && el.id==id;
+//			})[0];
 			
 			var add_auto_folder = this_db.jsFindAutoFolder("", id);
 			if(add_auto_folder.length) {
@@ -3716,7 +3740,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    var id_parent = el.id;
 			    var j=0,old_id;
 			    
-			    while(j<1000) {//не больше 1000 уровней вложенности, чтобы исключить бесконечность
+			    while(j<50) {//не больше 50 уровней вложенности, чтобы исключить бесконечность
 			    	old_id = id_parent;
 			    	element = this_db.jsFind(id_parent);
 			    	if(!element) {j++; console.info(id_parent,"!!!Не обнаружен"); continue;}
@@ -3902,9 +3926,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	   							my_all_comments.push( rec );
    							}
    							jsProgressStep();
-   							this_db.jsUpdateChildrenCnt();
    							jsProgressStep();
-   							this_db.jsUpdateNextAction();		    						
+   							setTimeout(function(){
+   								this_db.jsUpdateChildrenCnt();
+   								this_db.jsUpdateNextAction();		    						
+   							}, 2000);
    							d.resolve();
    						});
 		    			} //else records.length != 0
@@ -4089,7 +4115,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				this_db.log("Начинаю синхронизацию.");
 				sync_now = true;
 				clearTimeout(sync_now_timer);
-				sync_now_timer = setTimeout(function(){ sync_now = false; }, 60000); //если синхр.не прошла сама
+				sync_now_timer = setTimeout(function(){ 
+					startSync();
+				}, 30000); //если синхр.не прошла сама
 			} else {
 				preloader.trigger("hide");
 				$(".icon-cd").css("color","#888");
@@ -5525,7 +5553,11 @@ var API_4EDITOR = function(global_panel_id,need_log) {
   					  my_autosave = setTimeout( function() { 
   					      api4editor.jsSaveAllText(1); 
   					  }, 500 );
-		  		  	}			  
+		  }			  
+		  
+		  function refresh_file_panel() {
+			  $('#fav_calendar li.active').click();
+		  }
 
 		  //создаёт редактор на странице и регистрирует глобальную переменную myr
 		  this.initRedactor = function() {
@@ -5538,6 +5570,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		  keydownCallback: save_all_text_in_a_while,
 		  		  keyupCallback: save_all_text_in_a_while,
 		  		  execCommandCallback: save_all_text_in_a_while,
+		  		  imageUploadCallback: refresh_file_panel,
+		  		  fileUploadCallback: refresh_file_panel,
 		  		  undoCallback: function(){ 
 			  		var id = api4tree.node_to_id( $(".selected").attr('id') );
 			  		api4tree.jsFindLongText(id).done(function(text){

@@ -157,45 +157,16 @@ if(isset($_GET['test']))
 
 <div id="myslidemenu" class="jqueryslidemenu" style="z-index:50">
 <ul>
-<li class="top_level"><a href="#">4tree</a>
+<li class="top_level"><a href="#">4tree.ru</a>
     <ul>  
-        <li><a>Расположение панелей</a>
-            <ul>  
-                <li><span class="m_key">alt+"1"</span><a id="v1">Вид №1</a></li>  
-                <li><span class="m_key">alt+"2"</span><a id="v2">Вид №2</a></li>  
-                <li><span class="m_key">alt+"3"</span><a id="v3">Вид №3</a></li>  
-                <li><span class="m_key">alt+"4"</span><a id="v4">Вид №4</a></li>  
-            </ul>  
-        </li>  
-        <li class="blank"></li>
-        <li><a>Редактор</a>
-            <ul>  
-                <li><span class="m_key">alt+"z"</span><a>Отменить один шаг редактирования</a></li>  
-                <li><span class="m_key">alt+shift+"z"</span><a>Вернуть один шаг редактирования</a></li>  
-            </ul>  
-        </li>  
-        <li><a>Поделиться</a>
-            <ul>  
-                <li><a class="send_by_mail"><i class='icon-mail-2'></i> По электронной почте</a></li>  
-                <li><a>Короткая ссылка</a></li>  
-                <li><a>Опубликовать на моём сайте</a></li>  
-            </ul>  
-        </li>  
-        <li><a>Печать</a>
-            <ul>  
-                <li><a>Распечатать содержимое редактора</a></li>  
-                <li><a>Распечатать содержимое календаря</a></li>  
-                <li><a>Распечатать дерево</a></li>  
-            </ul>  
-        </li>  
-        <li><a>Таймер</a>
+        <li><a><i class="icon-hourglass"></i>Таймер</a>
             <ul>  
                 <li><a class="timer_button" time="-1">1 минута</a></li>  
                 <li><a class="timer_button" time="-5"><b>5 минут</b></a></li>  
                 <li><a class="timer_button" time="-10">10 минут</a></li>  
                 <li><a class="timer_button" time="-15"><b>15 минут</b></a></li>  
                 <li><a class="timer_button" time="-20">20 минут</a></li>  
-                <li><a class="timer_button" time="-25"><b>25 минут</b></a></li>  
+                <li><span class="m_key">alt + g</span><a class="timer_button" time="-25"><i class="icon-record"></i><b>25 минут</b></a></li>  
                 <li><a class="timer_button" time="-30">30 минут</a></li>  
                 <li><a class="timer_button" time="-40">40 минут</a></li>  
                 <li><a class="timer_button" time="-50">50 минут</a></li>  
@@ -203,19 +174,41 @@ if(isset($_GET['test']))
                 <li><a class="timer_button" time="-90">90 минут</a></li>  
                 <li><a class="timer_button" time="-120">120 минут</a></li>  
                 <li class="blank"></li>
-                <li><a>Что такое pomidorro?</a></li>  
+                <li><a href="http://mydebianblog.blogspot.ru/2012/08/pomodoro.html" target="_blank">Что такое Pomodorro?</a></li>  
                 <li class="blank"></li>
                 <li><a id="cancel_timer" time="0">Отменить таймер</a></li>  
             </ul>  
         </li>  
-        <li><a>Синхронизация</a>
+        <li><a><i class="icon-cloud"></i>Синхронизация</a>
         	<ul>
-            	<li><span class="m_key">alt+"R"</span><a class="m_refresh">Синхронизировать с сервером</a></li>  
-            	<li><span class="m_key"></span><a class="m_refresh_all">Загрузить дерево с сервера</a></li>  
+            	<li><span class="m_key">alt + r</span><a class="m_refresh">Синхронизировать с сервером</a></li>  
+            	<li><a>Загрузить с сервера</a>
+            		<ul>
+						<li><a class="m_refresh_all">Заново</a></li>  
+					</ul>
+				</li>
             </ul>
         </li>
+
+
+		<li><a href="http://reformal.4tree.ru" onclick="window.open('http://reformal.4tree.ru');return false;"><i class="icon-thumbs-up"></i>Oтзывы и предложения (reformal.ru)</a><script type="text/javascript">
+    var reformalOptions = {
+        project_id: 105149,
+        show_tab: false,
+        project_host: "reformal.4tree.ru",
+        force_new_window: true
+    };
+    
+    (function() {
+        var script = document.createElement('script');
+        script.type = 'text/javascript'; script.async = true;
+        script.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'media.reformal.ru/widgets/v3/reformal.js';
+        document.getElementsByTagName('head')[0].appendChild(script);
+    })();
+</script><noscript><a href="http://reformal.ru"><img src="http://media.reformal.ru/reformal.png" /></a><a href="http://reformal.4tree.ru">Oтзывы и предложения для 4tree.ru — дела, календарь, заметки, файлы. Всё в одном месте. </a></noscript></li>
+
         <li>
-        	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank">Что нового в версии 4tree.ru <? echo $compress_stamp; ?> ...</a>
+        	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank"><i class="icon-info-circle"></i>Что нового в версии <? echo $compress_stamp; ?></a>
         </li>
     </ul>  
 
@@ -223,17 +216,17 @@ if(isset($_GET['test']))
 </li>
 
 
-<li class="top_level"><a href="#">Вид</a>
+<li class="top_level" dont_close="true"><a href="#">Вид</a>
   <ul>
-      <li><input type="checkbox" class="on_off" id="on_off_hide_did"></input><a class="show_hidden_do" style="margin-right:90px;">Показывать выполненные дела</a></li>
+      <li dont_close="true"><input type="checkbox" class="on_off" id="on_off_hide_did"></input><a class="show_hidden_do" style="margin-right:90px;">Показывать выполненные дела</a></li>
       <li class="blank"></li> <!-- separator -->  
-	  <li><a href="#">Панели</a>
-	  		<ul>
-	  		    <li><a href="#">Вид №1</a></li>
-	  		    <li><a href="#">Вид №2</a></li>
-	  		    <li><a href="#">Вид №3</a></li>
-	  		    <li><a href="#">Вид №4</a></li>
-	  		</ul>
+	  <li><a href="#">Расположение панелей</a>
+            <ul>  
+                <li dont_close="true"><span class="m_key">alt + 1</span><a id="v1">Вид №1</a></li>  
+                <li dont_close="true"><span class="m_key">alt + 2</span><a id="v2">Вид №2</a></li>  
+                <li dont_close="true"><span class="m_key">alt + 3</span><a id="v3">Вид №3</a></li>  
+                <li dont_close="true"><span class="m_key">alt + 4</span><a id="v4">Вид №4</a></li>  
+            </ul>  
 	  </li>
 	  <li><a href="#">Отображение дерева</a>
 	  		<ul>
@@ -258,19 +251,7 @@ if(isset($_GET['test']))
 	  </li>
   </ul>
 </li>
-<li class="top_level"><a href="#">Добавить</a>
-	<ul>
-        <li><a href="#" class="add_do_down">Дело вниз</a></li>
-        <li><a href="#" class="add_do_right">Дело вправо</a></li>
-        <li class="blank"></li> <!-- separator -->  
-        <li><a href="#">Запись в сегодняшний дневник</a>
-			<ul>
-			    <li><a href="#">Завершённую "помидорку"</a></li>
-			    <li><a href="#">Комментарий</a></li>
-			</ul>
-        </li>
-    </ul>
-</li>
+
 <li class="top_level"><a href="#">Поделиться</a>
 	<ul>
         <li><a href="#">Контакты</a>
@@ -281,22 +262,7 @@ if(isset($_GET['test']))
 						<li><a>поделилась со мной</a></li>
 						<li><a>я делюсь с ней</a></li>
 					</ul>
-			    </li>
-			    <li><a href="#">Вецель Валентина</a>
-					<ul>
-						<li><a>чат</a></li>
-						<li><a>поделилась со мной</a></li>
-						<li><a>я делюсь с ней</a></li>
-					</ul>
 			    </li>			    
-			    <li><a href="#">Подбельных Екатерина</a>
-					<ul>
-						<li><a>чат</a></li>
-						<li><a>поделилась со мной</a></li>
-						<li><a>я делюсь с ней</a></li>
-					</ul>
-			    </li>
-			    
 			</ul>
         </li>
         
@@ -310,52 +276,31 @@ if(isset($_GET['test']))
         <li class="blank"></li> <!-- separator -->  
         <li><a href="#">Отправить текущую заметку</a>
 			<ul>
-			    <li><a href="#">Письмом</a></li>
-			    <li><a href="#">Короткую ссылку на экран</a></li>
-			    <li><a href="#">Короткую ссылку через SMS</a></li>
+                <li><a class="send_by_mail"><i class='icon-mail-2'></i> По электронной почте</a></li>  
+                <li><a>Короткая ссылка</a></li>  
 			</ul>
         </li>
     </ul>
 </li>
-<li class="top_level"><a href="#">Избранные</a>
-  <ul>
-  <li><a href="#">ИДЕИ</a></li>
-  <li><a href="#">РАБОЧИЕ</a>
-    <ul>
-    <li><a href="#">КЛАДОВЩИК</a></li>
-    <li><a href="#">САЙТЫ</a></li>
-    <li><a href="#">_НОВОЕ</a>
-		<ul>
-    		<li><a href="#">ПИСЬМА</a></li>
-    		<li><a href="#">БЫСТРЫЕ</a></li>
-    		<li><a href="#">ИНН</a></li>
-    		<li><a href="#">ПФР</a></li>
-    		<li><a href="#">ВСЯЧИНА</a></li>
-		</ul>
-    </li>
-    <li><a href="#">ССЫЛКИ</a></li>
-    </ul>
-  </li>
-  </ul>
-</li>
+
 <li class="top_level"><a href="http://www.dynamicdrive.com/style/">Правка</a>
   <ul>
   <li><a href="#">Undo/Redo/History</a>
     <ul>
-    <li><a href="#">Отменить (undo)</a></li>
-    <li><a href="#">Повторить (redo)</a></li>
-    <li><a href="#">История изменений текущей заметки</a></li>
+    <li><span class="m_key">ctrl + z</span><a><i class="icon-fast-bw"></i>Отменить один шаг редактирования</a></li>  
+    <li><span class="m_key">ctrl + shift + z</span><a><i class="icon-fast-fw"></i>Вернуть один шаг редактирования</a></li>  
+    <li><a href="#"><i class="icon-clock-1"></i>История изменений текущей заметки</a></li>
     </ul>
   </li>  
   <li class="blank"></li> <!-- separator -->  
-  <li><a href="#">Вырезать дело</a></li>
-  <li><a href="#">Скопировать дело</a></li>
-  <li><a href="#">Вставить дело</a></li>
-  <li><a href="#">Дублировать папку</a></li>
+  <li><a href="#"><i class="icon-scissors"></i>Вырезать дело</a></li>
+  <li><a href="#"><i class="icon-docs"></i>Скопировать дело</a></li>
+  <li><a href="#"><i class="icon-list-add"></i>Вставить дело</a></li>
+  <li><a href="#"><i class="icon-dot-2"></i>Дублировать папку</a></li>
   <li class="blank"></li> <!-- separator -->  
-  <li><a href="#">Вставить Граффити</a></li>
-  <li><a href="#">Печать содержимого редактора</a></li>
-  <li><a href="#">Упорядочить</a>
+  <li><a href="#"><i class="icon-feather"></i>Вставить Граффити</a></li>
+  <li><a href="#"><i class="icon-print"></i>Печать содержимого редактора</a></li>
+  <li><a href="#"><i class="icon-arrow-combo"></i>Упорядочить</a>
     <ul>
     <li><a href="#">По имени</a></li>
     <li><a href="#">По дате выполнения</a></li>
@@ -379,25 +324,20 @@ if(isset($_GET['test']))
   </ul>
 </li>
 
-<li class="top_level go_to_li_menu"><a>Отзывы/предложения</a>
+<li class="top_level"><a href="#"><b><i class='icon-plus'></i>Добавить</b></a>
 	<ul>
-		<li><a href="http://reformal.4tree.ru" onclick="window.open('http://reformal.4tree.ru');return false;">Oтзывы и предложения (reformal.ru)</a><script type="text/javascript">
-    var reformalOptions = {
-        project_id: 105149,
-        show_tab: false,
-        project_host: "reformal.4tree.ru",
-        force_new_window: true
-    };
-    
-    (function() {
-        var script = document.createElement('script');
-        script.type = 'text/javascript'; script.async = true;
-        script.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'media.reformal.ru/widgets/v3/reformal.js';
-        document.getElementsByTagName('head')[0].appendChild(script);
-    })();
-</script><noscript><a href="http://reformal.ru"><img src="http://media.reformal.ru/reformal.png" /></a><a href="http://reformal.4tree.ru">Oтзывы и предложения для 4tree.ru — дела, календарь, заметки, файлы. Всё в одном месте. </a></noscript></li>
-	</ul>
+        <li><span class="m_key">alt + <i class="icon-down"></i></span><a href="#" class="add_do_down"><i class='icon-down-1'></i> Дело вниз</a></li>
+        <li><span class="m_key">alt + <i class="icon-right"></i></span><a href="#" class="add_do_right"><i class='icon-right-1'></i> Дело вправо</a></li>
+        <li class="blank"></li> <!-- separator -->  
+        <li><a href="#">Запись в сегодняшний дневник</a>
+			<ul>
+			    <li><span class="m_key">alt + p</span><a href="#"><i class='icon-record'></i>Завершённую "помидорку"</a></li>
+			    <li><a href="#">Комментарий</a></li>
+			</ul>
+        </li>
+    </ul>
 </li>
+
 
 
 </ul>
@@ -512,6 +452,7 @@ if(isset($_GET['test']))
 	  <div id="bottom_panel">
 	  		<div class="bottom_left">
 
+	  	<div class="calendar_and_others">
 			<div id="tree_comments">
 				<div id="tree_comments_container">
 				</div>
@@ -575,7 +516,8 @@ if(isset($_GET['test']))
     				</ul>
     			</div>
 
-	  		</div>
+	  		</div> <!-- calendar_and_others -->
+	  	</div>
 	  		<div class="resize_me"></div>
 	  		<div class="sos" title="Синхронизация / Размер окон"><i class="icon-cd"></i><div id="myloader"></div></div>
 	  		<div class="bottom_right animate_me">

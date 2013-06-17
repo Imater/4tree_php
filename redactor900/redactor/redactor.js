@@ -1173,7 +1173,7 @@
 					var node = $('<p>').append($(current).clone());
 					$(current).replaceWith(node);
 					var next = $(node).next();
-					if (next[0].tagName == 'BR') next.remove();
+//					if (next[0].tagName == 'BR') next.remove();
 					this.selectionEnd(node);
 				}
 

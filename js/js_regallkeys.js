@@ -469,7 +469,7 @@ function jsMakeView(view_type)
     	if( $(".place_of_top #calendar").length == 1 )
     		{
 	    	$("#calendar").fullCalendar("destroy");
-			$("#calendar").swapWith($("#top_panel"));
+			$(".calendar_and_others").swapWith($("#top_panel"));
 			jsShowCalendar();
 			}
 		$("#content1").attr("class","").addClass("v1");
@@ -481,7 +481,7 @@ function jsMakeView(view_type)
     	if( $(".place_of_top #calendar").length == 0 )
     		{
 	    	$("#calendar").fullCalendar("destroy");
-			$("#calendar").swapWith($("#top_panel"));
+			$(".calendar_and_others").swapWith($("#top_panel"));
 			jsShowCalendar();
 			}
 		$("#content1").attr("class","").addClass("v3");
@@ -493,7 +493,7 @@ function jsMakeView(view_type)
     	if( $(".place_of_top #calendar").length == 1 )
     		{
 	    	$("#calendar").fullCalendar("destroy");
-			$("#calendar").swapWith($("#top_panel"));
+			$(".calendar_and_others").swapWith($("#top_panel"));
 			jsShowCalendar();
 			}
 		$(".bottom_right").appendTo($("#content1"));
@@ -507,7 +507,7 @@ function jsMakeView(view_type)
     	if( $(".place_of_top #calendar").length == 0 )
     		{
 	    	$("#calendar").fullCalendar("destroy");
-			$("#calendar").swapWith($("#top_panel"));
+			$(".calendar_and_others").swapWith($("#top_panel"));
 			jsShowCalendar();
 			}
 		$(".redactor_box").appendTo($("#below_footer"));
@@ -515,6 +515,7 @@ function jsMakeView(view_type)
 		$("#content1").attr("class","").addClass("v4");
 		onResize();
     }
+	$('#fav_calendar li.active').click();
 
 
 

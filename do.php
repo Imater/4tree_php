@@ -402,7 +402,7 @@ if (isset($HTTP_GET_VARS['get_files'])) {
 		$result = mysql_query_my($sqlnews); 
 		$i=0;
 	    while (@$sql = mysql_fetch_array($result)) {
-	    	$answer[$i]["preview1"] = $sql["preview_big"];
+	    	$answer[$i]["preview1"] = $sql["preview_litle"];
 	    	$answer[$i]["link"] = $sql["link"];
 	    	$i++;
 		}
@@ -1661,7 +1661,7 @@ $delta = ($t2-$t1)*1000;
 echo "<hr>".$delta;
 }
 
-function getAllChild($id, $readonly)
+function getAllChild($id, $readonly, $i_am_user)
 {
 global $main_array,$all_tree_id;
   
@@ -1670,8 +1670,10 @@ if(true)
 	foreach ($all_tree_id[$id] as $key => $val)
   			{
 		  	$main_array["all"][] = $val;
-		  	if($readonly==1) $main_array["readonly"][] = $val;
-		  	getAllChild($val, $readonly);
+		  	if($readonly==1 && $i_am_user==0) {
+		  		$main_array["readonly"][] = $val;
+		  	}
+		  	getAllChild($val, $readonly, $i_am_user);
 	  		}
   
   return $main_array;
@@ -1716,7 +1718,7 @@ global $main_array,$all_tree_id;
   $filter .= "FALSE";
 	
   //загружаем все (свои и чужие) деревья в массив	
-  $sqlnews = "SELECT id,parent_id FROM tree WHERE user_id = ".$GLOBALS['user_id']." OR ".$filter;
+  $sqlnews = "SELECT id,parent_id,user_id FROM tree WHERE user_id = ".$GLOBALS['user_id']." OR ".$filter;
   
   $result = mysql_query_my($sqlnews); 
   while (@$sql = mysql_fetch_array($result))
@@ -1737,7 +1739,10 @@ global $main_array,$all_tree_id;
   	if($sql["block"]==1) {
 	  	$main_array["readonly"][] = $sql["tree_id"]; 	
   	}
-  	getAllChild($sql["tree_id"],$sql["block"]);
+  	if($sql["host_user"]==$user_id) $i_am_user = 1;
+  	else  $i_am_user = 0;
+  	
+  	getAllChild($sql["tree_id"], $sql["block"], $i_am_user);
   	
   }
   	
@@ -3323,10 +3328,13 @@ if($sql) { //если файл с такой контольной суммой �
 	
 	
 } else {
-$response = save_file_to_amazone($newname,$newname);
+
+include "image_create_preview.php";
 
 if($newname_preview1) {
-	include "image_create_preview.php";
+	$preview0 = create_image_preview("/".$newname, 1200, 1024);
+	$response = save_file_to_amazone($preview0,$newname);
+
 	//делаем 2 превьюшки большую и маленькую
 	$preview1 = create_image_preview("/".$newname, 200, 200, "1:1");
 	$response1 = save_file_to_amazone($preview1, $newname_preview1);
@@ -3336,6 +3344,8 @@ if($newname_preview1) {
 
 	$preview_big = "http://upload.4tree.ru/".$newname_preview1;
 	$preview_litle = "http://upload.4tree.ru/".$newname_preview2;
+} else {
+	$response = save_file_to_amazone($newname,$newname);	
 }
 
 if ($response->isOK()) {
