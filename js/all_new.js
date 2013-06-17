@@ -72,7 +72,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		   }
 		  
 		   var sender = $(".selected");
-		   if(!sender) return true;
+		   if(!sender.length) {
+		   		$( "#node_"+api4tree.jsCreate_or_open(["_НОВОЕ"]).toString() ).addClass("selected");
+		   		var sender = $(".selected");
+		   }
 		  
 		   var isTree = $("#top_panel").hasClass("panel_type1");
 		   
@@ -841,15 +844,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	   this_db.jsFind(id,{ did:mydatenow.toMysqlFormat() });
 	  		   $("#node_"+id+" .n_title").addClass("do_did");
 
-		  	   var li = $("#mypanel #node_"+id);
+		  	   var li = $("#mypanel #node_"+id);	  	   
 		  	   clearTimeout(did_timeout);
 		  	   if(!settings.show_did) {
 		  	   		did_timeout = setTimeout(function() {
 		  				$(".do_did").parents("li").slideUp(300,function(){ 
 		  					jsRefreshTree(); 
 		  				});	   			
-	  	   			},10000);
-		  	   		jsTitle("Выполненные дела будут скрыты через 10 секунд",10000);
+	  	   			},3000);
+		  	   		jsTitle("Выполненные дела будут скрыты через 3 секунды",3000);
 		  	   } else {
 		  	   		jsRefreshTree();
 		  	   }
@@ -1945,11 +1948,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      });
 			  //при клике в поиск    
 			  $('#search_panel').delegate("input","focus", function () {
+			  	  if( !$(this).hasClass("active") ) {
+	  				  var inp = this;
+					  setTimeout(function() {
+					      inp.select();
+					  }, 1);
+			  	  }
 			      $(this).addClass("active");
-				  var inp = this;
-				  setTimeout(function() {
-				      inp.select();
-				  }, 1);
 			      //$(".search_panel_result").slideDown(500);
 			      return false;
 		      });
@@ -2543,7 +2548,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	     var key_help = [];
 			  	 clearTimeout(show_help_timer); //скрываю alt подсказку
 			  	 
-			     //console.info("нажата клавиша", e.keyCode);
+//			     console.info("нажата клавиша", e.keyCode);
 			  
 			  	 if(e.keyCode==91) { mymetaKey = true; } //регистрируем глобально, что нажата Win или Cmd
 			  	 
@@ -2594,7 +2599,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	   return false;
 			  	 }
 			     key_help.push({key:"G",title:"Стартовать таймер Pomidorro"});
-			  	 if( (e.altKey==true) && (e.keyCode==71) ) { //alt+G - обновляю дерево
+			  	 if( (e.altKey==true) && (e.keyCode==71) ) { //alt+G - стартую помидорку
 			       e.preventDefault();
 				   if(!$(".pomidor_now").attr('id')) {
 				       var id=1;				   	
@@ -4716,6 +4721,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					 	   //jsRefreshOneElement(-3);
 					 	   jsRefreshFrends();
 					 	}
+					 	
+					 	if(data.need_confirm_email) {
+					 	   jsTitle("Не забудьте подтвердить свою электронную почту",60000);
+					 	}
+					 	
 
 				     	//(компенсация часовых поясов за счёт единого времени от сервера в jsNow)
 					 	localStorage.setItem("time_dif",data.time_dif); 
@@ -4764,9 +4774,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				  $(".all_screen_click").remove();
 				  $(".favorit_menu ul,.tree_history ul").slideUp(200);
 				  $("#myslidemenu").trigger("all_screen_click");
-				  $("input").removeClass("active");
 				  $(".send_mail_form").slideUp(300);
-				  $(".search_panel_result,.search_arrow").slideUp(200);
+//				  $(".search_panel_result,.search_arrow").slideUp(200);
 				  $("#minicalendar").remove();
 				  $(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
 				  $.Menu.closeAll();
@@ -5368,6 +5377,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		  		var parent_node_panel = $("#panel_"+parent_node);
 			 		  		if (parent_node_panel.length != 1) //если панель ещё не открыта
 			 		  			{
+			 		  			var mypanel = $("#mypanel");
 			 		  			mypanel.append("<div id='panel_"+parent_node+"' class='panel' style='width:"+pwidth+"'>"+top_of_panel+"<ul myid='"+parent_node+"'></ul></div>");
 			 		  			}
 			 		  		else //если панель уже открыта, нужно её очистить
@@ -5590,8 +5600,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			  		api4tree.jsFindLongText(id).done(function(text){
 			  		  	api4tree.redo_last_step(id, text);
 			  		});
-		  		  },
-		  	      buttonsCustom: {
+		  		  }
+/*™		  	      buttonsCustom: {
 		  	        button1: {
 		  	           title: 'Спойлер (скрытый текст)', 
 		  	           callback: function(obj, event, key) {
@@ -5603,8 +5613,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	           callback: function(obj, event, key) {
 	  	  				  myr.execCommand('insertHtml',"<input type='checkbox'>&nbsp;");
 		  	           }  
-		  	        }
-		  	     }
+		  	        } 
+		  	     }*/
 		  	   });
 		  	$(".redactor_toolbar").insertBefore(".redactor_box");
 		  	$(".redactor_box").append('<div class="comment_in"></div>');
@@ -6949,6 +6959,7 @@ function jsShowTreePanel() {//запускается единожды
       		var id = parseInt(myhash.replace("#",""),36);///перехожу на заметку указанную в hash
       	}
       	fullscreen_mode = false;
+      	if(!id) id = api4tree.jsCreate_or_open(["_НОВОЕ"]).toString();
     }
 		
 	var isTree = $("#top_panel").hasClass("panel_type1");

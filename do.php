@@ -392,6 +392,27 @@ $sqlnews2 = "UPDATE tree_users SET lastvisit = '".now()."' WHERE id=".$GLOBALS['
 $result2 = mysql_query_my($sqlnews2); 
 
 
+if (isset($HTTP_GET_VARS['get_settings'])) 
+{
+
+  $sqlnews = "SELECT * FROM tree_users WHERE id='$user_id'";
+  $result = mysql_query_my($sqlnews); 
+  @$sql = mysql_fetch_array($result);
+  
+  $answer["email1"] = $sql["email1"];
+  $answer["email2"] = $sql["email2"];
+  $answer["email3"] = $sql["email3"];
+  $answer["email4"] = $sql["email4"];
+  $answer["fio"] = $sql["fio"];
+  $answer["foto"] = $sql["foto"];
+  $answer["female"] = $sql["female"];
+  $answer["mobilephone"] = $sql["mobilephone"];
+  
+  echo json_encode($answer);
+
+exit;
+}
+
 
 if (isset($HTTP_GET_VARS['update_path'])) 
 {
@@ -852,6 +873,15 @@ $confirm_saved_id["server_changes_comments"] = $server_changes_comments;
 if($what_you_need == "save_and_load") {
 $confirm_saved_id["frends"] = get_all_frends($GLOBALS['user_id']); //загружаю друзей и расшаренные папки
 }
+
+$sqlnews8 = "SELECT count(*) cnt FROM tree_users WHERE confirm_email != '' AND id = '".$GLOBALS['user_id']."'";
+$result8 = mysql_query_my($sqlnews8); 
+@$sql8 = mysql_fetch_array($result8);
+
+if($sql8["cnt"]>0) {
+	$confirm_saved_id["need_confirm_email"] = "need_confirm_email";
+}
+
 
 
 echo json_encode($confirm_saved_id);

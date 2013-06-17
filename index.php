@@ -94,10 +94,10 @@ if(isset($_GET['test']))
 
 ?>
 <? 
+require_once('db.php');
+
 if(isset($_GET['confirm']))
    {	
-
-		require_once('db.php');
 		
 		$confirm = $_GET['confirm'];
 
@@ -210,6 +210,8 @@ if(isset($_GET['test']))
         <li>
         	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank"><i class="icon-info-circle"></i>Что нового в версии <? echo $compress_stamp; ?></a>
         </li>
+        <li class="blank"></li>
+        <li><a href="./4tree.php"><i class="icon-home-2"></i>Выход (смена пользователя)</a></li>
     </ul>  
 
 
@@ -520,8 +522,10 @@ if(isset($_GET['test']))
 	  		<div class="resize_me"></div>
 	  		<div class="sos" title="Синхронизация / Размер окон"><i class="icon-cd"></i><div id="myloader"></div></div>
 	  		<div class="bottom_right animate_me">
+	  		  <div class="all_editor_place">
 	  			<textarea id="redactor">
 	  			</textarea>
+	  		  </div>
 	  				<div class="diary_calendar">
 	  				</div>
 	  				<div class="diary_arrow"></div>

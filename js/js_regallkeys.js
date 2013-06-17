@@ -472,6 +472,7 @@ function jsMakeView(view_type)
 			$(".calendar_and_others").swapWith($("#top_panel"));
 			jsShowCalendar();
 			}
+		$("html").removeClass("v4");
 		$("#content1").attr("class","").addClass("v1");
 		onResize();
     }
@@ -484,6 +485,7 @@ function jsMakeView(view_type)
 			$(".calendar_and_others").swapWith($("#top_panel"));
 			jsShowCalendar();
 			}
+		$("html").removeClass("v4");
 		$("#content1").attr("class","").addClass("v3");
 		onResize();
     }
@@ -497,6 +499,8 @@ function jsMakeView(view_type)
 			jsShowCalendar();
 			}
 		$(".bottom_right").appendTo($("#content1"));
+//		$(".all_editor_place").appendTo($("#below_footer"));
+		$("html").removeClass("v4");
 		$("#content1").attr("class","").addClass("v2");
 
 		onResize();
@@ -510,11 +514,15 @@ function jsMakeView(view_type)
 			$(".calendar_and_others").swapWith($("#top_panel"));
 			jsShowCalendar();
 			}
-		$(".redactor_box").appendTo($("#below_footer"));
+		$(".all_editor_place").appendTo($("#below_footer"));
+
 		$("html").addClass("v4");
 		$("#content1").attr("class","").addClass("v4");
 		onResize();
+    } else {
+   		$(".all_editor_place").appendTo($(".bottom_right"));
     }
+    
 	$('#fav_calendar li.active').click();
 
 
@@ -1416,6 +1424,7 @@ function onResize() //вызывается при каждом ресайзе с
 			
 			
 			var newheight=$('#calendar').parent("div").height()-62;
+			if( $("#content1").hasClass("v3")  ) newheight += 30;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight);
 			$("#tree_news").height(newheight);
