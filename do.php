@@ -201,16 +201,15 @@ exit;
 
 function myCreateRecord($sql, $new_parent, $new_user) {
 
-   
    $sqlnews="INSERT INTO `tree` SET 
    				user_id = '$new_user',
    				position = '".$sql["position"]."',
    				node_icon = '".$sql["node_icon"]."',
    				adddate = '".$sql["adddate"]."',
    				changetime = '".now()."',
-   				title = '".$sql["title"]."', 
+   				title = '".addslashes($sql["title"])."', 
    				parent_id = '".$new_parent."',
-   				text = '".$sql["text"]."',
+   				text = '".addslashes($sql["text"])."',
    				old_id = '-8'";
    				
    $result = mysql_query_my($sqlnews); 
@@ -224,7 +223,7 @@ function myCreateRecord($sql, $new_parent, $new_user) {
 function mySelectBranch($sql2, $new_parent, $new_user) {
 
   $sqlnews = "SELECT * FROM tree WHERE del=0 AND user_id=11 AND parent_id=".$sql2["id"];
-
+//  echo $sqlnews."<hr>";
   $result = mysql_query_my($sqlnews); 
   $i=0;
 //  echo "<ol>";
@@ -257,13 +256,12 @@ $sqlnews="SELECT count(*) cnt FROM `tree_users` WHERE email LIKE '%".mysql_real_
 $result = mysql_query_my($sqlnews); 
 @$sql = mysql_fetch_object ($result);
 
-if($sql->cnt>0) { echo $email.' уже зарегистрирован'; exit; }
+if($sql->cnt>0 AND false) { echo $email.' уже зарегистрирован'; exit; }
 else
  {
  	$hash = '4tree_'.substr(md5($email),5,10);
  	
 	$sqlnews="INSERT INTO  `tree_users` (
-						   `id` ,
 						   `fio` ,
 						   `mobilephone` ,
 						   `cookie` ,
@@ -274,16 +272,22 @@ else
 						   `confirm_email`
 						   )
 						   VALUES (
-						   NULL ,  'Username',  '',  '', '".$email."', MD5('".$email.'990990'."'), NOW(), '".$passw."',  '".$hash."'
+						   'Username',  '',  '', '".$email."', MD5('".$email.'990990'."'), NOW(), '".$passw."',  '".$hash."'
 						   );";
 						   
-	$result = mysql_query_my($sqlnews); 
-    $new_user = mysql_insert_id();
+	$result = mysql_query($sqlnews); 
+	
+    $sqlnews2 = "SELECT LAST_INSERT_ID() id";
+	$result = mysql_query($sqlnews2); 
+	@$sql = mysql_fetch_array ($result);	
+    $new_user = $sql["id"];
 	
 	$sql="";
-	$sql["id"] = 7291;
+	$sql["id"] = 6570;
 	mySelectBranch($sql,1,$new_user);
-	
+
+	$sqlnews = "INSERT INTO `tree_share` (`tree_id`, `host_user`, `delegate_user`, `readed`, `parent_id_user`, `changetime`, `block`) VALUES ( '6562', '11', '$new_user', '', '1', '', '1');	";
+	$result = mysql_query($sqlnews); 
 	
    $tree="<font color='#214516'>4</font><font color='#244918'>t</font><font color='#356d23'>r</font><font color='#42872c'>e</font><font color='#57b33a'>e</font>";
 

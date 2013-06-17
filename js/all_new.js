@@ -4359,7 +4359,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 function jsSaveBlobImage(blob_src) {
 			   var d= new $.Deferred();
 
-		 	   if(!blob_src || blob_src.toLowerCase().indexOf("http")==0 || blob_src.toLowerCase().indexOf("https")!=-1) { //если файл не blob
+		 	   if(!blob_src || blob_src.toLowerCase().indexOf("http")==0 || blob_src.toLowerCase().indexOf("https")==0) { //если файл не blob
 			 	   d.resolve(blob_src);
 			 	   return d.promise();
 		 	   }
