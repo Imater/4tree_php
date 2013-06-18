@@ -2620,10 +2620,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		         }
 			  
 			     key_help.push({key:"A",title:"добавить дело"});
-			  	 if( (e.altKey==true) && (e.keyCode==65) )  { //A - быстрое добавление дел
+			  	 if( (e.altKey==true) && (e.keyCode==65) )  { //alt+A - быстрое добавление дел
 				       e.preventDefault();
 				  	   if(!$("#add_do").hasClass("active")) {
-				  	   		$("#add_do").click();
+				  	   		$("#add_do").focus();
 		  	   		   } else {
 				  	   		if( $("#add_do").is(":focus") ) {
 				      	   		$("#add_do").blur();
