@@ -125,6 +125,7 @@ $(document).ready(jsDoFirst);
     (w[c] = w[c] || []).push(function() {
         try {
             w.yaCounter21558199 = new Ya.Metrika({id:21558199,
+                    webvisor:true,
                     clickmap:true,
                     trackLinks:true,
                     accurateTrackBounce:true});
