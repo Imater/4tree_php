@@ -447,15 +447,17 @@ if(howlong>0)
 
 function jsMakeView(view_type)
 {
+	localStorage.setItem("view_type",view_type);
+
 	$(".place_of_top").show();
 	$(".place_of_top #calendar").show();
 	$(".bottom_left,.bottom_right").show();
 	if($("#below_footer .redactor_box").length==1) $(".redactor_box").appendTo($(".bottom_right"));
 	
-	jsMakeAnimatePanel(1);
+//	jsMakeAnimatePanel(1);
 	$("html").removeClass("v4");	
 
-	setTimeout( function() { jsMakeAnimatePanel(2); },400);
+//	setTimeout( function() { jsMakeAnimatePanel(2); },400);
 
 	if($("#content1 .bottom_right").length==1)
 		{

@@ -6927,6 +6927,8 @@ function jsDoFirst() { //функция, которая выполняется �
 		progress_load=200;
 		jsProgressStep();
 		api4tree.jsMakeMakedoneKeys(); //кнопки меню элемента (где дата и поделиться)
+		var view_type = localStorage.getItem("view_type");
+		if(view_type) jsMakeView(view_type);
 		setTimeout(function() { 
 			jsFotoDoFirst(); //инициализируем фото-редактор
 			jsProgressStep(); $("#load_screen").hide();  
