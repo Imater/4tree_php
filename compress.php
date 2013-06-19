@@ -210,7 +210,7 @@ file_compress('all.js',array(
 	"js/pushstream.js",
 	"js/js_regallkeys.js",
 	"js/all_new.js",
-	"js/!sync_modul.js",
+//	"js/!sync_modul.js",
 	"js/ztx-ydn.db-dev-0.6.2.js",
 	"redactor900/redactor/redactor.js",
 	"redactor900/redactor/ru.js",
