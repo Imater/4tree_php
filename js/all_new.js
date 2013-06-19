@@ -2,7 +2,7 @@
 var note_saved=true,myr,t1,t2,my_all_data,my_all_comments,my_all_share,
 	my_all_frends,remember_old_panel="top_panel";
 var main_x = 50; //ширина левой панели в процентах
-var main_y = 250;//высота верхней панели в пикселях
+var main_y = 250,pwidth=300;//высота верхней панели в пикселях
 var preloader,clicknow,add_menu;
 var calctabs_timer,show_help_timer,tttt2;
 var tree_history = [],history_time,ignorehashchange,tttt;
@@ -41,7 +41,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  var my_all_data=[], my_all_comments=[], my_all_frends=[], my_all_share=[],
 		  	  recursive_array=[],
 		  	  scrolltimer, myhtml_for_comments ="",
-		  	  mymetaKey, //нажата ли клавиша Win или Cmd
 		  	  old_before_diary,
 		  	  member_old_id = false, //для запоминания id выбранной заметки на время пользования дневником
 		  	  sync_now = false, //true - если идёт синхронизация
@@ -2586,13 +2585,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  var alt_hide_timer, alt_show_timer_started = false;
 			  $(window).keyup(function(e){
 			    
-			  	 if((e.keyCode==91)) { //Cmd
+			  	 if((e.keyCode==16)) { //Shift
 			  	 	mymetaKey = false;
 			     }
 			  
-			  	 if((e.keyCode==16)) { //shift - убирает даты родителей
-			    	//$(".fromchildren").hide();
-			  	 	}
 			  	
 			  	 if(alt_show_timer_started==true) { //alt - при отпускании, скрывает подсказку
 			  	 	clearTimeout(alt_hide_timer);
@@ -2600,6 +2596,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	 	alt_show_timer_started = false;
 				  	 	clearTimeout(show_help_timer);
 				  	 	$("#hotkeyhelper").hide();
+				  	 	mymetaKey = false;
 				  	 	console.info("HIDING...");
 			  	 	},100);
 			  	 }
@@ -2608,9 +2605,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  $(window).keydown(function(e){
 		  	     var key_help = [];
 			  	 
-//			     console.info("нажата клавиша", e.keyCode);
+			     console.info("нажата клавиша", e.keyCode);
 			  
-			  	 if(e.keyCode==91) { mymetaKey = true; } //регистрируем глобально, что нажата Win или Cmd
+			  	 if(e.keyCode==16) { 
+				  	if(alt_show_timer_started == false)  {
+				  	 	alt_show_timer_started = true;
+				  	 	show_help_timer = setTimeout(function(){ mymetaKey = true; },50);
+			  	 	}
+			  	  
+			  	 } //регистрируем глобально, что нажата Shift
 			  	 
 			  	 if((e.altKey==true) && (e.keyCode==18)) { //нажатый альт вызывает помощь по горячим клавишам
 				  	if(alt_show_timer_started == false)  {
@@ -4830,7 +4833,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		     hash_timer, lastclick, open_redactor_timer,
 		     mypanel =$("#mypanel"); //номер лога
 		     
-		 var pwidth = $.cookie('pwidth');
+		 pwidth = $.cookie('pwidth');
 		 if(!pwidth) pwidth = 300;
 
 		 this.jsCloseAllMenu = function(){
@@ -5441,7 +5444,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		  		if (parent_node_panel.length != 1) //если панель ещё не открыта
 			 		  			{
 			 		  			var mypanel = $("#mypanel");
-			 		  			mypanel.append("<div id='panel_"+parent_node+"' class='panel' style='width:"+pwidth+"'>"+top_of_panel+"<ul myid='"+parent_node+"'></ul></div>");
+			 		  			mypanel.append("<div id='panel_"+parent_node+"' class='panel' style='width:"+pwidth+"px'>"+top_of_panel+"<ul myid='"+parent_node+"'></ul></div>");
 			 		  			}
 			 		  		else //если панель уже открыта, нужно её очистить
 			 		  		 	{
@@ -5552,7 +5555,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 	     	} else {
 	     		if( ($("#content1").hasClass("v1")) || ($("#content1").hasClass("v4")) ) {
 	 		  		if(!pwidth) pwidth = 300;
-	     			$("#mypanel").append("<div class='panel' style='border-right: 1px solid transparent;width:"+pwidth+"'>"+top_of_panel+"<ul></ul></div>"); 
+	     			$("#mypanel").append("<div class='panel' style='border-right: 1px solid transparent;width:"+pwidth+"px'>"+top_of_panel+"<ul></ul></div>"); 
 	 		  		jsPresize();
 	     		}
 	     	}
