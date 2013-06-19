@@ -2597,7 +2597,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	 	clearTimeout(show_help_timer);
 				  	 	$("#hotkeyhelper").hide();
 				  	 	mymetaKey = false;
-				  	 	console.info("HIDING...");
+//				  	 	console.info("HIDING...");
 			  	 	},100);
 			  	 }
 			    });
@@ -2605,7 +2605,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  $(window).keydown(function(e){
 		  	     var key_help = [];
 			  	 
-			     console.info("нажата клавиша", e.keyCode);
+//			     console.info("нажата клавиша", e.keyCode);
 			  
 			  	 if(e.keyCode==16) { 
 				  	if(alt_show_timer_started == false)  {
@@ -2619,7 +2619,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	if(alt_show_timer_started == false)  {
 				  	 	alt_show_timer_started = true;
 				  	 	show_help_timer = setTimeout(function(){ $("#hotkeyhelper").show(); },700);
-				  	 	console.info("STARTING...");
+//				  	 	console.info("STARTING...");
 			  	 	}
 		  	 	 }
 			  
