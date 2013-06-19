@@ -1202,6 +1202,23 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  });
 			  	  return false;
 		  	  });
+		  	  
+		  	  $("#remind_time").click(function(){
+			  	 var val=prompt("За сколько минут прислать SMS?", 15);
+			  	 val = parseInt(val);
+			  	 if(val>=0 && val<1000) {
+			  	 if(val==0) val=1;
+				 $("#remind_time").html(val+" мин.");
+				 localStorage.setItem("remind_time",val);
+				 var checkboxnow = $("#on_off_sms");
+				 var value = checkboxnow.nextAll(".iPhoneCheckLabelOn").width()>10
+				 api4tree.jsChangeMakedoneCheckbox(checkboxnow, value);
+				 
+			  	 } else {
+				  	 jsTitle("Недопустимое значение");
+			  	 }
+			  
+		  	  });
 
 		  	  $("#tree_settings").on("click", "#close_settings", function(){
 				  $("#tree_settings").slideUp(500);
@@ -1369,6 +1386,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     
 			    var element = api4tree.jsFind(id);
 			    
+			    var remind_time = localStorage.getItem("remind_time");
+			    
+			    if(remind_time) {
+				   $("#remind_time").html(remind_time+" мин.")
+			    }
+			    
 			    if(element.date1=="") { //устанавливаю дату в makedone
 		    	    $("#makedate").hide();
 			    	var mydate = new Date((new Date()).getTime()+60*60000); //новые дела - через час
@@ -1395,6 +1418,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			       }
 			    }
 			  
+	       		if(element.remind>0) $("#remind_time").html(element.remind+" мин.");
+	       		
 			    if(parseInt(element.remind,10)==0) { //устанавливаю переключатель SMS напоминалки
 			       if($("#on_off_sms").prop("checked")==true) {
 			       		$("#on_off_sms").prop("checked",false).iphoneStyle("refresh");
@@ -2419,58 +2444,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 		  }
 		  
-		  //пункты меню
-		  function jsMakeMenuKeys() {
-			  var hide_timer;
-			  //меню добавления дел
-			  $("#myslidemenu").delegate(".add_do_down","click", function () {
-			  	api4panel.jsCloseAllMenu();
-			    api4tree.jsAddDoLeftRight('down');
-			  	return false;
-			  	});
-
-			  $("#myslidemenu").delegate("li","click", function () {
-			  	if(!$(this).attr("dont_close")) api4panel.jsCloseAllMenu();
-			  });
-			     
-			  //меню добавления дел
-			  $("#myslidemenu").delegate(".add_do_right","click", function () {
-			  	api4panel.jsCloseAllMenu();
-			    api4tree.jsAddDoLeftRight('right');
-			  	return false;
-			  	});
-
-			  //синхронизация с сервером		  
-			  $("#myslidemenu").on("click", ".m_refresh", function () {
-		  	    api4panel.jsCloseAllMenu();
-			    api4tree.jsSync();
-			  	return false;
-			  	});
-
-		      //
-			  $('body').delegate(".show_hidden_do","click", function() {
-			    $("#on_off_hide_did").prop("checked",true).iphoneStyle("refresh");
-			    return false;
-			  });
-			    		
-			  $("#myslidemenu").on("click", ".m_refresh_all", function () {
-			    $.Menu.closeAll();
-			    progress_load=0;
-			  	$("#load_screen").show();
-			  	jsProgressStep();
-			  	this_db.js_LoadAllDataFromServer().done(function(){
-				  	jsProgressStep();
-				  	jsRefreshTree();
-				  	jsProgressStep();
-				  	$("#load_screen").fadeOut(1000);
-				  	jsProgressStep();
-				  	jsTitle("Данные загружены с сервера заново",10000);
-			  	});
-			    return false;
-			  });
-
-			  $('.on_off').iphoneStyle({ checkedLabel: 'да', uncheckedLabel: 'нет',         
-				  onChange: function(element,value) {
+		  this_db.jsChangeMakedoneCheckbox = function(element,value) {
 				    if(is_rendering_now) return true;
 				  	var id_element = element.attr("id");
 				    
@@ -2523,7 +2497,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  
 				  	if(id_element == "on_off_sms") { //переключатель SMS
 				  	   if(value) {
-				       		this_db.jsFind(id,{ remind: 15 });
+				  	   		var remind_time = parseInt( $("#remind_time").html() );
+				  	   		if(!remind_time) remind_time = 15;
+				       		this_db.jsFind(id,{ remind: remind_time });
 				    	    setTimeout(function(){ jsRefreshTree(); api4tree.jsPlaceMakedone(id); },300);
 				  	   } else {
 				       		this_db.jsFind(id,{ remind: 0 });
@@ -2547,6 +2523,61 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	   
 				    api4tree.jsPlaceMakedone(id);
 				  	} //onchange iphoneStyle
+				  	
+				  	
+		  
+		  //пункты меню
+		  function jsMakeMenuKeys() {
+			  var hide_timer;
+			  //меню добавления дел
+			  $("#myslidemenu").delegate(".add_do_down","click", function () {
+			  	api4panel.jsCloseAllMenu();
+			    api4tree.jsAddDoLeftRight('down');
+			  	return false;
+			  	});
+
+			  $("#myslidemenu").delegate("li","click", function () {
+			  	if(!$(this).attr("dont_close")) api4panel.jsCloseAllMenu();
+			  });
+			     
+			  //меню добавления дел
+			  $("#myslidemenu").delegate(".add_do_right","click", function () {
+			  	api4panel.jsCloseAllMenu();
+			    api4tree.jsAddDoLeftRight('right');
+			  	return false;
+			  	});
+
+			  //синхронизация с сервером		  
+			  $("#myslidemenu").on("click", ".m_refresh", function () {
+		  	    api4panel.jsCloseAllMenu();
+			    api4tree.jsSync();
+			  	return false;
+			  	});
+
+		      //
+			  $('body').delegate(".show_hidden_do","click", function() {
+			    $("#on_off_hide_did").prop("checked",true).iphoneStyle("refresh");
+			    return false;
+			  });
+			    		
+			  $("#myslidemenu").on("click", ".m_refresh_all", function () {
+			    $.Menu.closeAll();
+			    progress_load=0;
+			  	$("#load_screen").show();
+			  	jsProgressStep();
+			  	this_db.js_LoadAllDataFromServer().done(function(){
+				  	jsProgressStep();
+				  	jsRefreshTree();
+				  	jsProgressStep();
+				  	$("#load_screen").fadeOut(1000);
+				  	jsProgressStep();
+				  	jsTitle("Данные загружены с сервера заново",10000);
+			  	});
+			    return false;
+			  });
+
+			  $('.on_off').iphoneStyle({ checkedLabel: 'да', uncheckedLabel: 'нет',         
+				  onChange: api4tree.jsChangeMakedoneCheckbox
 				});
 			     
 			  

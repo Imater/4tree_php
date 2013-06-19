@@ -738,7 +738,7 @@ if(isset($_GET['test']))
 
 	<div class="makedonecalendar"></div>
    <br>
-   <div class="makelabel" style="margin-left:-11px">SMS за 15м <i class="icon-bell-1"></i>:</div><div id="makedatebutton"> <input type="checkbox" class="on_off" id="on_off_sms"></div><br>
+   <div class="makelabel" style="margin-left:-11px">SMS за <span id="remind_time">15 мин.</span> <i class="icon-bell-1"></i>:</div><div id="makedatebutton"> <input type="checkbox" class="on_off" id="on_off_sms"></div><br>
 <!--   <div class="makelabel" style="margin-left:-11px">Повторять:</div><div class="makerepeat"> каждый год</div> -->
    </div>
    <br>

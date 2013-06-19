@@ -5465,7 +5465,11 @@ width: 500px;
 	color: #888;
 }
 
-
+#remind_time {
+	text-decoration: underline;
+	color:#2f207d;
+	cursor: pointer;
+}
 
 
 
