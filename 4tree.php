@@ -12,7 +12,19 @@
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
+
+<link rel="stylesheet" type="text/css" href="css/4tree.css">
+<link rel="stylesheet" type="text/css" href="js/pwdwidget.css">
+
+<script src="js/jquery.js"/></script>
+<script src="js/4tree.js"/></script>
+<script src="jstree/_lib/jquery.cookie.js"/></script>
+<script src="js/pwdwidget.js"/></script>
+<script src="js/ztx-ydn.db-dev-0.6.2.js"/></script>
+
+
 <?
+/*
 require_once('compress_timestamp.php');         //load timestamp created by compress.php module sets field $compress_stamp=unix_timestamp                                       
 if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)   
         $gz='gz';
@@ -20,6 +32,7 @@ if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)
         $gz=null;
 echo '<link rel="stylesheet" type="text/css" href="min/4tree_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
 echo '<script src="min/4tree_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
+*/
 ?>
 
 

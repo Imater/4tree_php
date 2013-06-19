@@ -3,8 +3,8 @@ var textid = -1;
 
 function jsReg() //регистрация
 {
-email = $('#reg_email').val().toLowerCase();
-passw = $('#regpwd_text_id').val();
+var email = $('#reg_email').val().toLowerCase();
+var passw = $('#regpwd_text_id').val();
 
 if((email.indexOf('@')>0) && (email.indexOf('.')>0)) email_ok = 1;
 else
@@ -22,13 +22,13 @@ else
 
 passw = $.md5(passw);
 
-mydata = { 
+var mydata = { 
 		  "registrate_me" : true,
 		  "email" : email, 
 		  "passw" : passw
 		 }
 		 
-md5email = $.md5(email+'990990');
+var md5email = $.md5(email+'990990');
 
 var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t) { 
 	$('#reg_error').hide().html(t).fadeIn();
@@ -45,8 +45,8 @@ var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t
 
 function jsLog() //вход
 {
-email = $('#email_login').val().toLowerCase();
-passw = $('#log_pas').val();
+var email = $('#email_login').val().toLowerCase();
+var passw = $('#log_pas').val();
 
 if((email.indexOf('@')>0) && (email.indexOf('.')>0)) email_ok = 1;
 else
@@ -62,17 +62,17 @@ else
   return false;
  }
 
-md5email = $.md5(email+'990990');
+var md5email = $.md5(email+'990990');
 
-passw = $.md5(passw);
+var passw = $.md5(passw);
 
-mydata = { 
+var mydata = { 
 		  "login_me" : true,
 		  "email" : email, 
 		  "passw" : passw
 		 }
 		 
-md5email = $.md5(email+'990990');
+var md5email = $.md5(email+'990990');
 
 var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t) { 
 	$('#reg_error').hide().html(t).fadeIn();

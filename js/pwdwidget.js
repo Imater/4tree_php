@@ -160,7 +160,7 @@ function showpwdchars()
 		pwdtxt.value = pwdfield.value;
 		pwdfield.style.display='none';
 		pwdtxt.style.display='';
-		pwdtxt.focus();
+		//if(pwdtxt) pwdtxt.focus();
 	}
 	else
 	{
@@ -169,7 +169,7 @@ function showpwdchars()
 		pwdfield.value = pwdtxt.value;
 		pwdtxt.style.display='none';
 		pwdfield.style.display='';
-		pwdfield.focus();
+		//if(pwdfield) pwdfield.focus();
 			
 	}
 	this.show_anch_obj.innerHTML = innerText;

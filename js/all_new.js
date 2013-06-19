@@ -2583,7 +2583,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //обработка клавиш клавиатуры
 		  function jsMakeWindowKeyboardKeys() {
-
+			  var alt_hide_timer, alt_show_timer_started = false;
 			  $(window).keyup(function(e){
 			    
 			  	 if((e.keyCode==91)) { //Cmd
@@ -2594,23 +2594,30 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	//$(".fromchildren").hide();
 			  	 	}
 			  	
-			  	 if((e.keyCode==18)) //alt - при отпускании, скрывает подсказку
-			  	 	{
-			  	 	clearTimeout(show_help_timer);
-			  	 	$("#hotkeyhelper").hide();
-			  	 	}
+			  	 if(alt_show_timer_started==true) { //alt - при отпускании, скрывает подсказку
+			  	 	clearTimeout(alt_hide_timer);
+			  	 	alt_hide_timer = setTimeout(function(){
+				  	 	alt_show_timer_started = false;
+				  	 	clearTimeout(show_help_timer);
+				  	 	$("#hotkeyhelper").hide();
+				  	 	console.info("HIDING...");
+			  	 	},100);
+			  	 }
 			    });
 			  
 			  $(window).keydown(function(e){
 		  	     var key_help = [];
-			  	 clearTimeout(show_help_timer); //скрываю alt подсказку
 			  	 
 //			     console.info("нажата клавиша", e.keyCode);
 			  
 			  	 if(e.keyCode==91) { mymetaKey = true; } //регистрируем глобально, что нажата Win или Cmd
 			  	 
 			  	 if((e.altKey==true) && (e.keyCode==18)) { //нажатый альт вызывает помощь по горячим клавишам
-			  	 	show_help_timer = setTimeout(function(){ $("#hotkeyhelper").show(); },700);
+				  	if(alt_show_timer_started == false)  {
+				  	 	alt_show_timer_started = true;
+				  	 	show_help_timer = setTimeout(function(){ $("#hotkeyhelper").show(); },700);
+				  	 	console.info("STARTING...");
+			  	 	}
 		  	 	 }
 			  
 			     key_help.push({key:"D",title:"открыть дневник"});
@@ -2712,12 +2719,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	 }
 			  	   
 			     key_help.push({key:"<i class='icon-down-bold'></i>",title:"добавить дело вниз"});
-			  	 if( ((e.altKey==true) || (e.ctrlKey==true) ) && (e.keyCode==40) ) { //alt + вниз
+			  	 if( (e.altKey==true ) && (e.keyCode==40) ) { //alt + вниз
 			       e.preventDefault();
 				   api4tree.jsAddDoLeftRight('down');
 			  	 }
 			     key_help.push({key:"<i class='icon-right-bold'></i>",title:"добавить дело вправо"});
-			  	 if( ((e.altKey==true) || (e.ctrlKey==true) ) && (e.keyCode==39) ) { //alt + вправо
+			  	 if( (e.altKey==true) && (e.keyCode==39) ) { //alt + вправо
 			       e.preventDefault();
 				   api4tree.jsAddDoLeftRight('right');
 			  	 }
@@ -4287,7 +4294,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     	$(this).attr("id","comment_"+d.id); 
 		     	});
 		 
-	      	this_db.jsFindComment(d.old_id,{id:d.id, lsync: lsync, new:""},"dont_sync").done(function(){
+	      	this_db.jsFindComment(d.old_id,{id:d.id, lsync: lsync, "new":""},"dont_sync").done(function(){
    				db.remove(global_table_name+"_comments",d.old_id.toString()).done(function(){
    					console.info("Удалил коммент с старым id<0: ",d.old_id);
        			});
@@ -4319,7 +4326,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
 		 			element.user_id = $.cookie("4tree_user_id"); //уверен? а вдруг это дело добавил другой юзер?
 		 			element.remind = 0;
-		 			element.new = "";
+		 			element["new"] = "";
 		 			element.s = 0;
 		 			element.tab = 0;
 		 			element.fav = 0;
@@ -4383,13 +4390,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 			element.text = "<p>&#x200b;</p>";
 		 			element.time = parseInt(d.changetime);
 		 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
-		 			element.new = "";
+		 			element["new"] = "";
 		 			console.info("new-element-comment",element);
 		 	}
 		 				
 		 	if(!element) return false;
     	 	element.parent_id = d.parent_id;
-    	 	element.new = ""; //обнуляю new, чтобы скрыть иконку синхронизации
+    	 	element["new"] = ""; //обнуляю new, чтобы скрыть иконку синхронизации
     	 	element.lsync = parseInt(d.lsync);
     	 	element.user_id = d.user_id;
     	 	element.add_time = d.add_time;
@@ -4409,6 +4416,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		 var tm_del_comment;
 		 function jsDelCom(id) { //удаление из базы определённого id
+		 		if(!api4tree.jsFindCommentFast(id)) return true;
+		 
 		 		$.each(my_all_comments, function(i,el){
 		     		if(el) if(el.id == id) { my_all_comments.splice(i,1); }
 		     		});
@@ -4533,7 +4542,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			var local_data_changed = my_all_data.filter(function(el) { //данные, которые буду отправлять на сервер
 				if(el) return (( (el.id<-1000) || 
 								(el.time>=el.lsync) || 
-								((el.new!="") && (el.new)) ) && ( el.id.toString().indexOf("_")==-1 )); 
+								((el["new"]!="") && (el["new"])) ) && ( el.id.toString().indexOf("_")==-1 )); 
 			});
 			
 			var dfdArray = []; //массив для объектов работы с асинхронными функциями
@@ -4603,7 +4612,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			var local_comments_changed = my_all_comments.filter(function(el) { //изменившиеся комментарии
 				if(el) return ( (el.id<-1000) || 
 								(el.time>=el.lsync) || 
-								((el.new!="") && (el.new)) ); 
+								((el["new"]!="") && (el["new"])) ); 
 			});
 			
 

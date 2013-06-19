@@ -61,12 +61,12 @@ function jsSync(save_only)
 	var data = my_all_data.filter(function(el) 
 			{ 
 			if(el) 
-				return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>=el.lsync) || ((el.new!="") && (el.new)) ); } );
+				return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>=el.lsync) || ((el["new"]!="") && (el["new"])) ); } );
 	
 	var title_txt = "<ul style='font-size:0.7em'>";
 	$.each(data,function(i,d)
 		{ 
-		title_txt = title_txt + "<li><b>"+ d.id +" - " +d.title+ "</b> (изменились: "+ d.new +")</li>"; 
+		title_txt = title_txt + "<li><b>"+ d.id +" - " +d.title+ "</b> (изменились: "+ d["new"] +")</li>"; 
 		});
 		
 	title_txt = title_txt + "</ul>";
@@ -87,7 +87,7 @@ function jsSync(save_only)
 	var data_comments = my_all_comments.filter(function(el) 
 			{ 
 			if(el) 
-				return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>=el.lsync) || ((el.new!="") && (el.new)) ); } );
+				return ( (el.parent_id<-1000) || (el.id<-1000) || (el.time>=el.lsync) || ((el["new"]!="") && (el["new"])) ); } );
 	
 	
 	if(my_all_comments)
@@ -118,7 +118,7 @@ function jsSync(save_only)
 			 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit");
 			 	    	var myelement1=jsFind(d.id);
 		 	    		myelement1.lsync = parseInt(data.lsync);
-		 	    		myelement1.new = "";
+		 	    		myelement1["new"] = "";
 		 	    		jsSaveData(d.id);
 			 	    	});
 			 if(data.saved_comments)
@@ -131,7 +131,7 @@ function jsSync(save_only)
 
 			 	    	var myelement1=jsFindComment(d.id);
 		 	    		myelement1.lsync = parseInt(data.lsync);
-		 	    		myelement1.new = "";
+		 	    		myelement1["new"] = "";
 		 	    		jsSaveDataComment(d.id);
 			 	    	});
 
@@ -278,7 +278,7 @@ function jsSaveElement(d)
 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
 			element.user_id = $.cookie("4tree_user_id"); //уверен? а вдруг это дело добавил другой юзер?
 			element.remind = 0;
-			element.new = "";
+			element["new"] = "";
 			element.s = 0;
 			element.tab = 0;
 			element.fav = 1;
@@ -298,7 +298,7 @@ function jsSaveElement(d)
 	myelement.date2 = d.date2;
 	myelement.tab = d.tab;
 	myelement.time = parseInt(d.changetime)-1;
-	myelement.new = ""; //обнуляю new, чтобы скрыть иконку синхронизации
+	myelement["new"] = ""; //обнуляю new, чтобы скрыть иконку синхронизации
 	myelement.position = d.position.toString();
 	myelement.icon = d.node_icon;
 	myelement.lsync = parseInt(d.lsync);
@@ -331,7 +331,7 @@ function jsSaveElementComment(d)
 			element.text = "";
 			element.time = parseInt(d.changetime);
 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
-			element.new = "";
+			element["new"] = "";
 			jsSaveDataComment(d.id);
 			console.info("new-element-comment",element);
 		}
@@ -339,7 +339,7 @@ function jsSaveElementComment(d)
 	var myelement = jsFindComment(d.id);
 	if(!myelement) return false;
 	myelement.parent_id = d.parent_id;
-	myelement.new = ""; //обнуляю new, чтобы скрыть иконку синхронизации
+	myelement["new"] = ""; //обнуляю new, чтобы скрыть иконку синхронизации
 	myelement.lsync = parseInt(d.lsync);
 	myelement.user_id = d.user_id;
 	myelement.add_time = d.add_time;
