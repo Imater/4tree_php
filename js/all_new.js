@@ -2194,7 +2194,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  function jsMakeCalenarKeys() {
 			  //открываю всю неделю в редакторе
 			  $('body').delegate(".ui-datepicker-week-col","click", function () {
-			  	  alert(1);
 			      var year = $(this).parents(".ui-datepicker-group").find(".ui-datepicker-year").html();
 			      var week = $(this).html();
 			      
@@ -2234,19 +2233,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      			showWeek:true,
 			      			onSelect:function(dateText, inst) 
 			      			  { 
-					  			  var my_time_id = $(".makedone").attr("myid");
-					  			  
-					  			  var dd = dateText.split('.');
-					  			  
-					  			  var date1 = dd[2]+'-'+dd[1]+'-'+dd[0];
-					  			  var myold_date = $("#makedatetime").datetimeEntry('getDatetime').toMysqlFormat();
-					  			  
-					  			  var my_dd = myold_date.split(" ");
-					  			  
-					  			  var new_date = date1+" "+my_dd[1];
-					  			  var mydate = Date.createFromMysql(new_date);
-					  			  $("#makedatetime").datetimeEntry("setDatetime",mydate);
-			      			  }
+			      			  console.info(dateText,inst);
+			      			  api4tree.jsDiaryPath( $(this).datepicker("getDate") );
+			      			  },
+				  			beforeShowDay : function(date) {
+				  			  var highlight_class = "ui-has-note";
+				  			  var finddate = api4tree.jsDiaryFindDateNote(date);
+				  			  if( finddate[0] ) highlight_class = 'ui-has-note';
+				  			  else highlight_class = "";
+				  			  
+				  			  return [true, highlight_class, finddate[1]];
+				  			}
+			      			  
 			      			});
 			      			
 			      			
@@ -6913,6 +6911,27 @@ function jsSetDiaryDate(skipdays) {
 //////////////////////////////////DO FIRST///////////////////////////////////////
 //эта функция запускается первой
 function jsDoFirst() { //функция, которая выполняется при запуске
+
+        $.datepicker.regional['ru'] = {
+                closeText: 'Закрыть',
+                prevText: '&#x3c;Пред',
+                nextText: 'След&#x3e;',
+                currentText: 'Сегодня',
+                monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь',
+                'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+                monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн',
+                'Июл','Авг','Сен','Окт','Ноя','Дек'],
+                dayNames: ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],
+                dayNamesShort: ['вск','пнд','втр','срд','чтв','птн','сбт'],
+                dayNamesMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+                weekHeader: 'Не',
+                dateFormat: 'dd.mm.yy',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''};
+        $.datepicker.setDefaults($.datepicker.regional['ru']);
+
 	jsProgressStep();
 	api4tree = new API_4TREE("4tree_db");
 	var mydb = api4tree.js_InitDB(); //инициализирую соединение с базой

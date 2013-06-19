@@ -1,3 +1,4 @@
+
 var compare_timer;
 
 function my_console(text,text2) //вывод лога в консоль

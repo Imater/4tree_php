@@ -3473,6 +3473,7 @@ width: auto;
 background: white;
 height: 175px;
 font-size: 9px;
+z-index: 1;
 overflow-x: scroll;
 overflow-y: hidden;
     -webkit-box-shadow:0px 1px 6px #000;

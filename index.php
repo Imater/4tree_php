@@ -70,7 +70,6 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 	<script src="js/pushstream.js"></script>
 	<script src="js/js_regallkeys.js"></script>
 	<script src="js/all_new.js"></script>
-	<script src="js/!sync_modul.js"></script>
 	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
 	<script src="redactor900/redactor/redactor.js"></script>
 	<script src="redactor900/redactor/ru.js"></script>
@@ -82,6 +81,9 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 	<script src="js/rangy-selectionsaverestore.js"></script>';
 	
 }
+
+//	<script src="js/!sync_modul.js"></script>
+
 
 if(isset($_GET['test']))
 	{
