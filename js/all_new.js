@@ -5444,7 +5444,12 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		  		if (parent_node_panel.length != 1) //если панель ещё не открыта
 			 		  			{
 			 		  			var mypanel = $("#mypanel");
-			 		  			mypanel.append("<div id='panel_"+parent_node+"' class='panel' style='width:"+pwidth+"px'>"+top_of_panel+"<ul myid='"+parent_node+"'></ul></div>");
+			 		  			if(pwidth>130) {
+				 		  			var pw = pwidth+"px";
+				 		  		} else {
+				 		  			var pw = "auto";
+				 		  		}
+			 		  			mypanel.append("<div id='panel_"+parent_node+"' class='panel' style='width:"+pw+"'>"+top_of_panel+"<ul myid='"+parent_node+"'></ul></div>");
 			 		  			}
 			 		  		else //если панель уже открыта, нужно её очистить
 			 		  		 	{
@@ -5555,7 +5560,14 @@ var API_4PANEL = function(global_panel_id,need_log) {
 	     	} else {
 	     		if( ($("#content1").hasClass("v1")) || ($("#content1").hasClass("v4")) ) {
 	 		  		if(!pwidth) pwidth = 300;
-	     			$("#mypanel").append("<div class='panel' style='border-right: 1px solid transparent;width:"+pwidth+"px'>"+top_of_panel+"<ul></ul></div>"); 
+
+ 		  			if(pwidth>130) {
+     		  			var pw = pwidth+"px";
+     		  		} else {
+     		  			var pw = "auto";
+     		  		}
+
+	     			$("#mypanel").append("<div class='panel' style='border-right: 1px solid transparent;width:"+pw+"'>"+top_of_panel+"<ul></ul></div>"); 
 	 		  		jsPresize();
 	     		}
 	     	}

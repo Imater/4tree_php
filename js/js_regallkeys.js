@@ -1750,7 +1750,14 @@ if(true)
 		$("body").off("mousemove.presize");
 		$("body").off("mouseup.presize");
 	    $('#left').removeClass('noselectable');
-		if(mymetaKey) $.cookie('pwidth',widthpanel.prev(".panel").width(),{ expires: 300 });			
+		if(mymetaKey) { 
+			$.cookie('pwidth',widthpanel.prev(".panel").width(),{ expires: 300 });			
+			pwidth = widthpanel.prev(".panel").width();
+			if(pwidth<130) {
+				$("#mypanel .panel").width("auto");
+				jsTitle("Включена автоматическая ширина панелей");
+			}
+		}
 //		$.cookie('main_y',main_y,{ expires: 300 });			
 		jsMakeDrop();
 		return false;
