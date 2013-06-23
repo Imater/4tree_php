@@ -486,7 +486,7 @@ if(isset($_GET['test']))
 					<div id="comment_enter">
 						<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>					
 						<div class="comment_enter_input"></div>
-						<div class="comment_send_button" title="alt+enter">отправить <span style='color:#CCC'>(alt+enter)</span></div>
+						<div class="comment_send_button" title="alt+enter">отправить <span style='color:#CCC'>(alt+enter)</span>f</div>
 					</div>
 				</div>
 				
