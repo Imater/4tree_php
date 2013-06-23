@@ -1322,8 +1322,12 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 
 }
 
+var tm_resize;
 function onResize() //вызывается при каждом ресайзе страницы
 {	
+	clearTimeout(tm_resize);
+	if(isMindmap) tm_resize = setTimeout(function(){ myjsPlumb.setSuspendDrawing(false,true) },1000);
+	
 	if($(".ui-resizable-resizing").length) return true;
 	
 			var w = $(document).width();

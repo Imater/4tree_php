@@ -4074,7 +4074,7 @@ text-align: center;
 
 #left_panel_opener
 {
-width: 13px;
+width: 5px;
 position: absolute;
 left: 0px;
 top: 0px;
@@ -4111,7 +4111,7 @@ bottom: 0px;
 
 #right_panel_opener
 {
-width: 13px;
+width: 5px;
 position: fixed;
 right: 0px;
 top: 31px;
