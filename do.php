@@ -99,7 +99,18 @@ if (isset($_GET['backups-of-user']))
   	
   }
 
-
+if (isset($_GET['sovet'])) 
+{
+  $sqlnews = "SELECT * FROM `tree` WHERE `user_id` = '11' AND parent_id='6702'";
+  $result = mysql_query($sqlnews); 
+  $sovets="";
+  while (@$sql = mysql_fetch_array($result))
+  	{
+  	$sovets[] = $sql["text"];
+	}
+  $i = (integer)rand(0,count($sovets)-1);
+  echo $i."<br>".$sovets[$i];
+}
 
 if (isset($_GET['iphone'])) 
 {

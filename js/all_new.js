@@ -1230,7 +1230,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					'главное не отвлекайтесь сегодня.',
 					'а почему вы не комментируете свои заметки?',
 					'вставляйте картинки в редактор из буфера обмена.',
-					'почитайте про карты ума, скажите спасибо.',
+					'почитайте про карты ума, скажете спасибо.',
 					'спасибо, что вы с нами.',
 					'я хорошо забочусь о ваших делах?',
 					'вы вчера отлично поработали.',
@@ -1610,12 +1610,30 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			$(".chat_box").draggable({appendTo: "body", handle: ".chat_header"});
 		 }    
 		 
+		 function jsScreenSaver(is_on) {
+			 if(is_on) {
+			 	clearInterval(sovet_tm);
+			 	var sovet_tm = setInterval(function(){
+					$("#screen_saver #saver_sovet").load("do.php?sovet");
+			 	}, 1*60*1000);
+			 	$("#screen_saver").fadeIn(3000);
+			 } else {
+				$("#screen_saver").fadeOut(300);
+			 	clearInterval(sovet_tm);
+			 }
+		 }
+		 
 		  //функция запуска при бездействии пользователя
 		  function jsMakeIdleFunction() {
 			$.idleTimer(5*1000);
 			$(document).bind("active.idleTimer", function(){
+				clearTimeout(screensaver_tm);
+				jsScreenSaver(false);
 			});
 			$(document).bind("idle.idleTimer", function(){
+				screensaver_tm = setTimeout(function(){
+					jsScreenSaver(true);
+				}, 120000)
 			    if(start_sync_when_idle) { this_db.jsSync(only_save); only_save=false; }
 			});
 		  }

@@ -5785,3 +5785,38 @@ color: #777 !important;
 .tree-closed ._jsPlumb_connector {
 	display: none;
 }
+
+#screen_saver {
+	display: none;
+	position: absolute;
+	padding: 10px;
+	margin: 0 auto;
+	vertical-align: middle;
+	left: 0px;
+	right: 0px;
+	top:0px;
+	bottom: 0px;
+	background: black;
+	z-index: 9999999;
+	color: white;
+}
+
+#saver_sovet {
+	font-size: 20px;
+	margin: 0 auto;
+	width: 99%;
+	position: absolute;
+	top: 30%;
+	vertical-align: middle;
+	text-align: center;
+}
+
+#saver_4tree {
+	margin: 0 auto;
+	width: 99%;
+	position: absolute;
+	top: 70%;
+	vertical-align: middle;
+	text-align: center;
+	color:rgb(65,109,0);
+}
