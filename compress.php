@@ -194,6 +194,7 @@ file_compress('all.js',array(
 	'jstree/_lib/jquery.cookie.min.js',
 	'b_menu/jquery.menu.js',
 	'js/handlebars.js',
+	'js/jquery.jsPlumb-1.4.1-all.js',
 //	'js/ru.js',
 	'js/md5.js',
 //	'js/sjcl.js',
