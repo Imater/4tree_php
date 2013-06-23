@@ -1612,6 +1612,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 
 		 function jsScreenSaver(is_on) {
 			 if(is_on) {
+				$("#screen_saver #saver_sovet").load("do.php?sovet");
 			 	clearInterval(sovet_tm);
 			 	var sovet_tm = setInterval(function(){
 					$("#screen_saver #saver_sovet").load("do.php?sovet");
