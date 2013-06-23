@@ -5806,16 +5806,17 @@ color: #777 !important;
 	margin: 0 auto;
 	width: 99%;
 	position: absolute;
-	top: 30%;
+	top: 20%;
 	vertical-align: middle;
 	text-align: center;
+	max-width: 800px;
 }
 
 #saver_4tree {
 	margin: 0 auto;
 	width: 99%;
 	position: absolute;
-	top: 70%;
+	top: 85%;
 	vertical-align: middle;
 	text-align: center;
 	color:rgb(65,109,0);
