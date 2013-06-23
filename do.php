@@ -109,7 +109,7 @@ if (isset($_GET['sovet']))
   	$sovets[] = $sql["text"];
 	}
   $i = (integer)rand(0,count($sovets)-1);
-  echo $i."<br>".$sovets[$i];
+  echo $sovets[$i];
 }
 
 if (isset($_GET['iphone'])) 
