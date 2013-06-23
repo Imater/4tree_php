@@ -1201,15 +1201,70 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  }
 		  
-		  this.jsMakeTheme = function() {
+		//выбирает случайную шутку для завршённой помидорки
+		function jsJoke2() {
+			var pomidor_text = ['у вас всё получится.',
+					'вы сегодня продуктивны.',
+					'сегодня отличный день.',
+					'рад видеть вас.',
+					'всё хорошо.',
+					'не держите всё в голове.',
+					'мысли нужно расчесать.',
+					'запланируйте сюрприз.',
+					'это будет хорошая работа.',
+					'вы войдёте в историю.',
+					'вы лучше всех.',
+					'не отвлекайтесь.',
+					'освободите голову для творчества.',
+					'разберите завалы.',
+					'воспользуйтесь дневником Alt+D.',
+					'добавьте помидорку Alt+P.',
+					'чего изволите?',
+					'добавьте 5 дел из головы ->',
+					'может сменить тему оформления в настройках <----',
+					'хорошо что вы спокойны',
+					'подумайте ещё раз.',
+					'семь раз отмерили?',
+					'вы хороши сегодня',
+					'а я вас ждал.',
+					'главное не отвлекайтесь сегодня.',
+					'а почему вы не комментируете свои заметки?',
+					'вставляйте картинки в редактор из буфера обмена.',
+					'почитайте про карты ума, скажите спасибо.',
+					'спасибо, что вы с нами.',
+					'я хорошо забочусь о ваших делах?',
+					'вы вчера отлично поработали.',
+					'заведите помидорку Alt+G.',
+					'добавьте дело при помощи Alt+A.',
+					'отлично поработаем.',
+					'поздравляю. Вы знаете с чем.',
+					'у вас завтра важное дело.'
+					];
+
+      	        var joke_id = parseInt(Math.random()*pomidor_text.length,10); 
+      	        return pomidor_text[joke_id];
+		}
+		  
+		  
+		  this.jsMakeTheme = function() { //применяю тему, так как система оффлайн
 		  	  	  var lnk = "do.php?get_settings=true";
 		  	  	  console.info(lnk);
 		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
 				     if(j=="success") {
 				     	var themes_div = "";
+				     	if(data.fio) {
+					     	var name = data.fio.split(" ");
+					     	data.fio = name[name.length-1];
+				     	}
+					 	$(".header_text").html(data.fio+", "+jsJoke2());
+					 	setTimeout(function(){
+						 	if($(".header_text").html().indexOf(", ")!=-1) $(".header_text").fadeOut(500,function(){
+							 	$(this).html("").show();
+						 	});
+					 	}, 30000);
 				     	$.each(data.themes,function(i,el){
 				     		if(el.active) {
-					     		$("html").attr("class",el.dark).attr("style","background-image:url("+el.img+")");
+					     		$("html").attr("class","theme_"+el.dark).attr("style","background-image:url("+el.img+")");
 				     		}
 				     	});
 				     }
