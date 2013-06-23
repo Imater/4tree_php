@@ -370,7 +370,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  }
 		      
 		  this.jsCalcTabs = function() {//устанавливает ширину табов у дневника и у избранных
-    	  
+    	  	  return true;
 	    	  clearTimeout(calctabs_timer);
 	    	  calctabs_timer = setTimeout(function()
 	    	  	{

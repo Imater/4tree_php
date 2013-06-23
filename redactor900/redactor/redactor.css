@@ -476,7 +476,8 @@ body .redactor_toolbar li a.redactor_btn_pre		 		{ background-position: -875px; 
 .redactor_dropdown {
 	position: absolute;
 	top: 28px;
-	left: 0;
+	margin-right: 30px;
+	margin-top: -24px;
 	z-index: 2004;
 	padding: 10px;
 	width: 200px;
