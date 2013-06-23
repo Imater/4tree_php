@@ -101,7 +101,7 @@ if (isset($_GET['backups-of-user']))
 
 if (isset($_GET['sovet'])) 
 {
-  $sqlnews = "SELECT * FROM `tree` WHERE `user_id` = '11' AND parent_id='6702'";
+  $sqlnews = "SELECT * FROM `tree` WHERE `user_id` = '11' AND parent_id='8731'";
   $result = mysql_query($sqlnews); 
   $sovets="";
   while (@$sql = mysql_fetch_array($result))
