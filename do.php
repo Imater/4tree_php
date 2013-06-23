@@ -77,6 +77,29 @@ $howLong = ($endTime-$startTime)*1000;
   echo "Запрос '".$sqlnews."' выполнялся ".$howLong." мс.";
   }
 
+if (isset($_GET['backups-of-user'])) 
+  {
+  echo '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">';
+  if($_GET['backups-of-user']!="170uuS4") exit;
+  $sqlnews = "SELECT DISTINCT(id) FROM `tree_backup` WHERE `user_id` = '170'";
+  $result = mysql_query($sqlnews); 
+
+  while (@$sql = mysql_fetch_array($result))
+  	{
+	  	$sqlnews1 = "SELECT title, text FROM `tree_backup` WHERE `id` = '".$sql["id"]."' ORDER by changedate DESC LIMIT 1";
+	  	$result1 = mysql_query($sqlnews1); 
+	  	@$sql1 = mysql_fetch_array($result1);
+
+	  	$sqlnews2 = "SELECT title FROM `tree_backup` WHERE title<>'' AND `id` = '".$sql["id"]."' ORDER by changedate DESC LIMIT 1";
+	  	$result2 = mysql_query($sqlnews2); 
+	  	@$sql2 = mysql_fetch_array($result2);
+	  	
+  	echo "<h1>".$sql2["title"]."</h1>".$sql1["text"]."<hr style='margin-top:200px'>";
+  	}
+  	
+  }
+
+
 
 if (isset($_GET['iphone'])) 
 {
