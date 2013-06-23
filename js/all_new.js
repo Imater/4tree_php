@@ -1201,6 +1201,22 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  }
 		  
+		  this.jsMakeTheme = function() {
+		  	  	  var lnk = "do.php?get_settings=true";
+		  	  	  console.info(lnk);
+		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
+				     if(j=="success") {
+				     	var themes_div = "";
+				     	$.each(data.themes,function(i,el){
+				     		if(el.active) {
+					     		$("html").attr("class",el.dark).attr("style","background-image:url("+el.img+")");
+				     		}
+				     	});
+				     }
+				  });
+			  
+		  }
+		  
 		  //кнопки панели дерева
 		  function jsMakePanelKeys() {
 		  
@@ -7135,6 +7151,7 @@ function jsSetDiaryDate(skipdays) {
 function jsDoFirst() { //функция, которая выполняется при запуске
 //		jsPlumb.draggable($(".window"));
 
+
 		myjsPlumb = jsPlumb.getInstance({
 			DragOptions: { cursor: 'pointer', zIndex: 2000 },
 			PaintStyle:{ 
@@ -7172,6 +7189,7 @@ function jsDoFirst() { //функция, которая выполняется �
 
 	jsProgressStep();
 	api4tree = new API_4TREE("4tree_db");
+	api4tree.jsMakeTheme();
 	var mydb = api4tree.js_InitDB(); //инициализирую соединение с базой
 	api4tree.jsLoadUserSettings() //загружаю установки пользователя
 	jsProgressStep();
