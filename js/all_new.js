@@ -5198,6 +5198,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				var offset_top = $("#mypanel").height()/2 - $("#node_"+id+" .big_n_title").height()-50;
 				var offset_left = $("#mypanel").width()/2 + $("#node_"+id+" .big_n_title").width()-150;
 				$("#mypanel").scrollTo($("#node_"+id),1500,{offset:{ top: -offset_top, left: -offset_left}});
+			} else {
+				$("#mypanel").scrollLeft(9999999);
 			}
 			
 		 }
@@ -5673,7 +5675,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	  	var w=0; 
 		 	  	$("#mypanel .panel").each(function(){w+=$(this).width()});
 		 	  	
-		 		thisWidth = w+300;
+		 		thisWidth = w+300000;
 		 	if(!$(".makedone").is(":visible"))
 		 		if(!isTree && !isMindmap) {
 			 		if($('#mypanel').scrollLeft()!=thisWidth) mypanel.stop().animate({"scrollLeft":thisWidth},700);		 		
