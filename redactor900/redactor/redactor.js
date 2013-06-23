@@ -10,6 +10,9 @@
 	Usage: $('#content').redactor();
 */
 
+var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-italic',  deleted:'icon-font', unorderedlist:'icon-list-1', orderedlist:'icon-list-numbered', outdent:'icon-indent-left', indent:'icon-indent-right', image:'icon-picture-1', video:'icon-video-1', file:'icon-attach', table:'icon-th-1', link:'icon-link-1', fontcolor:'icon-palette', backcolor:'icon-palette', alignment:'icon-align-center', horizontalrule:'icon-minus'}; // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+
+
 (function($)
 {
 	var uuid = 0;
@@ -139,7 +142,7 @@
 			toolbarFixed: false,
 			toolbarFixedTopOffset: 0, // pixels
 			toolbarFixedBox: false,
-			toolbarExternal: false, // ID selector
+			toolbarExternal: "", // ID selector
 			buttonSource: true,
 
 			buttonSeparator: '<li class="redactor_separator"></li>',
@@ -1928,7 +1931,11 @@
 		// BUTTONS
 		buttonBuild: function(btnName, btnObject)
 		{
-			var $button = $('<a href="javascript:;" title="' + btnObject.title + '" class="redactor_btn redactor_btn_' + btnName + '"></a>');
+			var button_i_class = buttons_i[btnName];
+			if(btnName=="deleted") var crossline_style = "style='text-decoration: line-through'";
+			else var crossline_style="";
+			var $button = $('<a href="javascript:;" title="' + btnObject.title + '" class="redactor_btn redactor_btn_' + btnName + '">'+
+			"<i class='"+button_i_class+"' "+crossline_style+"></i>"+'</a>');
 			var $dropdown = $('<div class="redactor_dropdown" style="display: none;">');
 
 			$button.on('click', $.proxy(function(e)

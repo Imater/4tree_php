@@ -317,7 +317,8 @@ else
    		"From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=utf8\r\n");
 
 	
-	$sqlnews="SELECT id FROM `tree_users` WHERE `confirm_email`!='' AND reg_date < (NOW() - INTERVAL 3 DAY)";
+/*	Очень опасный момент
+	$sqlnews="SELECT id FROM `tree_users` WHERE `confirm_email`!='' AND reg_date < (NOW() - INTERVAL 180 DAY)";
 	$result = mysql_query_my($sqlnews); 
 	while(@$sql = mysql_fetch_object ($result))
 	  {
@@ -326,7 +327,7 @@ else
 	  
 		$sqlnews2="DELETE FROM `tree_users` WHERE `id`='".$sql->id."'";
 		$result2 = mysql_query_my($sqlnews2); 
-	  }
+	  } */
 	 echo 'Вы успешно зарегистрировались.<br>Перенаправляю на сайт...';
 	 	
 	
@@ -405,6 +406,9 @@ if (isset($HTTP_GET_VARS['send_settings'])) {
 	$female = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["gender"] ) );
 
 	$mobilephone = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["mobilephone"] ) );
+
+	$theme_img = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["theme"] ) );
+	$dark = addslashes( mysql_real_escape_string( $HTTP_GET_VARS["dark"] ) );
 	
 	if($female=="male") {
 		$female = 0;
@@ -419,8 +423,13 @@ if (isset($HTTP_GET_VARS['send_settings'])) {
   									email4 = '$email4',
   									fio = '$fio',
   									female = '$female',
+  									theme_img = '$theme_img',
+  									theme_dark = '$dark',
   									mobilephone = '$mobilephone'
   									WHERE id='$user_id'";
+  								
+//  echo $sqlnews;									
+  								
   $result = mysql_query_my($sqlnews); 
   @$sql = mysql_fetch_array($result);
 	
@@ -445,6 +454,203 @@ if (isset($HTTP_GET_VARS['get_settings']))
   $answer["foto"] = $sql["foto"];
   $answer["female"] = $sql["female"];
   $answer["mobilephone"] = $sql["mobilephone"];
+
+  $theme_img = $sql["theme_img"];
+  if($theme_img=="") $theme_img = "./img/textures/18.png";
+  
+  $i=0;
+  $answer["themes"][$i]["img"] = "./img/textures/18.png";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/2.jpg"; 
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/09.jpeg";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/21.png";
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/3.jpg"; 
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/21.png";
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/4.jpg";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/28.png"; //leather textile
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/10.jpeg";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/17.png"; 
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/19.png";
+  $answer["themes"][$i]["dark"] = "normal";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/1.jpg";
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/20.png";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/29.png"; //leather textile
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/texture-blue.png"; //leather textile
+  $answer["themes"][$i]["dark"] = "night";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/25.png"; //leather textile
+  $answer["themes"][$i]["dark"] = "night";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/26.png"; //leather
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/27.png"; //leatger
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/leather1.png"; //leather
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/leather2.jpg"; //leather
+  $answer["themes"][$i]["dark"] = "night";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/01.jpeg"; //leather
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/03.jpeg"; //leather
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/02.jpeg"; //leather
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/16.png"; 
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/04.jpeg"; //wood
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/05.jpeg"; //wood
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/06.jpeg"; //wood
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/07.jpeg"; //wood
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/08.jpeg"; //wood
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/11.jpeg"; //wood
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/14.jpeg"; //wood
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/15.jpeg"; //wood
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/wood1.png"; //wood
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/wood2.png"; //wood
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/12.jpeg";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/22.png";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/23.png";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/24.png";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/02.jpeg";
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/opacity-dark.png";
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/opacity-side.png";
+  $answer["themes"][$i]["dark"] = "normal";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/opacity-white.png";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/30.jpeg";
+  $answer["themes"][$i]["dark"] = "white";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/31.jpg";
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/32.jpg";
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/33.jpg";
+  $answer["themes"][$i]["dark"] = "night";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/34.jpg";
+  $answer["themes"][$i]["dark"] = "dark";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  $i++;
+  $answer["themes"][$i]["img"] = "./img/textures/35.jpg";
+  $answer["themes"][$i]["dark"] = "light";
+  if($theme_img==$answer["themes"][$i]["img"]) $answer["themes"][$i]["active"] = "true";
+  
 
 
   echo json_encode($answer);

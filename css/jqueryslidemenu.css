@@ -1,8 +1,13 @@
 .jqueryslidemenu{
 font: bold 12px Verdana;
-margin:0 auto;
+margin: 0 auto;
 z-index: 50;
 text-shadow: none !important;
+background: rgb(65, 65, 65);
+height: 30px;
+padding-left: 34px;
+border-bottom: 1px solid #DDD;
+box-shadow: inset 2px 0px 5px rgba(20,20,20,1);
 }
 
 .jqueryslidemenu .iPhoneCheckContainer{
@@ -57,7 +62,7 @@ background: rgb(243, 243, 243) !important;
 display: inline-block;
 /*background: #414141; /*background of tabs (default state)*/
 color: black !important;
-padding: 8px 10px;
+padding: 7px 10px;
 color: #2d2b2b;
 text-decoration: none;
 }
@@ -68,14 +73,14 @@ display: inline-block;
 
 .jqueryslidemenu ul li.top_level{
 background: none;
-color: #000;
+color: #DDD;
 min-width: auto;
-padding: 0px 2px;
+padding: 0px 0px;
 z-index: 50;
 }
 
 .jqueryslidemenu ul li.top_level > a{
-color: #111 !important;
+color: #999 !important;
 font-weight: normal;
 }
 
@@ -90,20 +95,21 @@ background: #638cdc; /*tab link background during hover state*/
 
 .jqueryslidemenu ul li.top_level:hover > a{
 color: #000 !important;
+box-shadow: inset 0px 1px 3px rgba(0,0,0,0.9);
 }
 
 .jqueryslidemenu ul li.active{
 background: #638cdc !important; /*tab link background during hover state*/
-color: white !important;
+color: #EEE !important;
 }
 
 
 .jqueryslidemenu ul li.active > a{
-color: white !important;
+color: #EEE !important;
 }
 
 .jqueryslidemenu ul li:hover > a{
-color: white !important;
+color: #EEE !important;
 }
 
 .jqueryslidemenu ul li.top_level.active > a{

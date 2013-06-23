@@ -9,7 +9,40 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 <?
 require_once('compress_timestamp.php');                                       
 ?>
-<html lang="ru" class="" <? if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) echo "manifest='!".$compress_stamp."_manifest.appcache'"; ?> >
+<? 
+require_once('db.php');
+
+if(loginuser()) {
+	if(!$theme_img) $theme_img="./img/textures/18.png";
+	if(!$theme_dark) $theme_dark="theme_normal";
+} else {
+	echo '<script type="text/javascript">
+		 document.location.href="./4tree.php";
+		 </script>';
+}
+
+if(isset($_GET['confirm']))
+   {	
+		
+		$confirm = $_GET['confirm'];
+
+		$sqlnews="SELECT count(*) cnt FROM `tree_users` WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
+		$result = mysql_query_my($sqlnews); 
+		@$sql = mysql_fetch_object ($result);
+
+		if($sql->cnt>0) 
+		  {
+		  $sqlnews="UPDATE `tree_users` SET confirm_email='' WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
+		  $result = mysql_query_my($sqlnews); 
+		  @$sql = mysql_fetch_object ($result);
+		  echo '<script>alert("Спасибо за подтверждение электронной почты. Удачи в ваших делах.");</script>';
+		  }
+		
+	}
+
+?>
+
+<html lang="ru" class="<? echo $theme_dark; ?>" style="background-image:url(<? echo $theme_img; ?>)" <? if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) echo "manifest='!".$compress_stamp."_manifest.appcache'"; ?> >
 <!-- 1browser_manifest !!-->
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
@@ -55,6 +88,7 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 
 	echo '<script src="jstree/_lib/jquery.cookie.min.js"></script>
 	<script src="b_menu/jquery.menu.js"></script>
+	<script src="js/jquery.jsPlumb-1.4.1-all.js"></script>
 	<script src="js/handlebars.js"></script>
 	<script src="js/md5.js"></script>
 	<script src="js/jquery.idle-timer.js"></script>
@@ -95,29 +129,6 @@ if(isset($_GET['test']))
 	}
 
 ?>
-<? 
-require_once('db.php');
-
-if(isset($_GET['confirm']))
-   {	
-		
-		$confirm = $_GET['confirm'];
-
-		$sqlnews="SELECT count(*) cnt FROM `tree_users` WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
-		$result = mysql_query_my($sqlnews); 
-		@$sql = mysql_fetch_object ($result);
-
-		if($sql->cnt>0) 
-		  {
-		  $sqlnews="UPDATE `tree_users` SET confirm_email='' WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
-		  $result = mysql_query_my($sqlnews); 
-		  @$sql = mysql_fetch_object ($result);
-		  echo '<script>alert("Спасибо за подтверждение электронной почты. Удачи в ваших делах.");</script>';
-		  }
-		
-	}
-
-?>
 
 
 
@@ -133,7 +144,7 @@ if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
 <body onResize="onResize();">
 
 
-<div id="load_screen" style="background-image:url('./img/textures/17.png');top:0px;bottom:-1px;left:0px;right:0px;background-color:white;position:absolute;z-index:999;padding-top:185px;"><center><div id='pload_text'>Загрузка...</div><br><div id="progress_bar" style="width:300px;overflow:hidden;background-color:rgb(151,252,0);height:5px;margin-top:25px;border:1px solid #000;border-radius:3px;"><div id="inside_bar" style="float:left;background-color:rgb(36,150,0);height:10px;margin-left:-3px;display:inline-block;width:10px;"></div></div><a style="color:rgb(65,109,0);margin-top:280px;display:block" href="./4tree.php"><h2>4tree.ru</h2></a>
+<div id="load_screen" class='<? echo $theme_dark; ?>' style="background-image:url('<? echo $theme_img; ?>');top:0px;bottom:-1px;left:0px;right:0px;background-color:white;position:absolute;z-index:999;padding-top:185px;"><center><div id='pload_text'>Загрузка...</div><br><div id="progress_bar" style="width:300px;overflow:hidden;background-color:rgb(151,252,0);height:5px;margin-top:25px;border:1px solid #000;border-radius:3px;"><div id="inside_bar" style="float:left;background-color:rgb(36,150,0);height:10px;margin-left:-3px;display:inline-block;width:10px;"></div></div><a style="color:rgb(65,109,0);margin-top:280px;display:block" href="./4tree.php"><h2>4tree.ru</h2></a>
 <font style="font-size:15px"><? echo $compress_stamp; ?></font>
 </div></center></div>
 
@@ -157,7 +168,7 @@ if(isset($_GET['test']))
 
 <div id="header">
 
-<div id="myslidemenu" class="jqueryslidemenu" style="z-index:50">
+<div id="myslidemenu" class="jqueryslidemenu noselectable" style="z-index:50">
 <ul>
 <li class="top_level"><a href="#">4tree.ru</a>
     <ul>  
@@ -376,7 +387,6 @@ if(isset($_GET['test']))
 
 <div id="content1" class="v1">
 <div id="left_panel_opener">
-	<i class="icon-right-open"></i>
 </div>
 <div id="left_panel">
 	<div class="inside_left_panel">
@@ -420,7 +430,6 @@ if(isset($_GET['test']))
 
 
 <div id="right_panel_opener">
-	<i class="icon-left-open"></i>
 </div>
 <div id="right_panel">
 	<div class="inside_right_panel">
@@ -435,6 +444,8 @@ if(isset($_GET['test']))
 
 
 	<div id="main_window">
+					<div class="favorit_tabs noselectable" id="fav_tabs">
+					</div>
 	  <div class="place_of_top">
 	    
 		<div id="top_panel" class="effect2 panel_type3">
@@ -445,9 +456,19 @@ if(isset($_GET['test']))
 
 			<div id="mypanel" style="">
 			</div>
-					<div class="favorit_tabs" id="fav_tabs">
-					</div>
-					<div class="favorit_menu"><i class="icon-right-open"></i>
+			<div class="favorit_tabs noselectable" id="fav_mypanel">
+    				<ul>
+    					<li id="tree_view_panels" title="Панели" class="active"><span class="rotate90">Панели</span><i class="icon-doc"></i></li>
+    					<li id="tree_view_tree" title="Дерево"><span class="rotate90">Дерево</span><i class="icon-flow-cascade"></i></li>
+    					<li id="tree_view_mindmap" title="Карта ума"><span class="rotate90">Mindmap</span><i class="icon-sitemap"></i></li>
+    					<!--<li style="display:none">
+    					Параметры</li><li style="display:none">
+    					Мой сайт</li><li style="display:none">
+    					Файлы</li><li style="display:none">
+    					По датам</li>-->
+    				</ul>
+			</div>
+					<div class="favorit_menu noselectable"><i class="icon-right-open"></i>
 						<ul>
 						</ul>
 					</div>
@@ -465,7 +486,7 @@ if(isset($_GET['test']))
 					<div id="comment_enter">
 						<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>					
 						<div class="comment_enter_input"></div>
-						<div class="comment_send_button" title="alt+enter"><i class="icon-comment-1"></i> написать</div>
+						<div class="comment_send_button" title="alt+enter">отправить <span style='color:#CCC'>(alt+enter)</span></div>
 					</div>
 				</div>
 				
@@ -503,12 +524,12 @@ if(isset($_GET['test']))
 			    <div id="calendar" class="noselectable1">
 				</div>	
 
-				<div class="favorit_tabs" id="fav_calendar">
+				<div class="favorit_tabs noselectable" id="fav_calendar">
     				<ul>
-    					<li id="tab_find"><i class="icon-search"></i> Поиск</li><li class="active" id="tab_calendar">
-    					<i class="icon-calendar"></i> Календарь</li><li id="tab_files">
-    					<i class="icon-attach-1"></i> Файлы</li><li id="tab_news">
-    					<i class="icon-clock"></i> Новости</li>
+    					<li id="tab_calendar" title="Дневник" class="active"><span class="rotate90">Дневник</span><i class="icon-calendar"></i></li>
+    					<li id="tab_files" title="Файлы"><span class="rotate90">Файлы</span><i class="icon-attach-1"></i></li>
+    					<li id="tab_news" title="Новости"><span class="rotate90">Новости</span><i class="icon-clock"></i></li>
+    					<li id="tab_find" title="Поиск"><span class="rotate90">Поиск</span><i class="icon-search"></i></li>
     					<!--<li style="display:none">
     					Параметры</li><li style="display:none">
     					Мой сайт</li><li style="display:none">
@@ -516,7 +537,7 @@ if(isset($_GET['test']))
     					По датам</li>-->
     				</ul>
     			</div>
-    			<div class="favorit_menu" style="bottom:10px;"><i class="icon-right-open"></i>
+    			<div class="favorit_menu noselectable" style="bottom:10px;">
     				<ul>
     				</ul>
     			</div>
@@ -529,16 +550,23 @@ if(isset($_GET['test']))
 	  		  <div class="all_editor_place">
 	  			<textarea id="redactor">
 	  			</textarea>
+
+			  <div class="favorit_tabs noselectable" id="fav_redactor_btn">
+    		  </div>
+
+			  <div class="favorit_tabs noselectable" id="fav_redactor_btn_comment">
+    		  </div>
+
 	  		  </div>
 	  				<div class="diary_calendar">
 	  				</div>
 	  				<div class="diary_arrow"></div>
-					<div class="favorit_tabs" id="fav_red">
+					<div class="favorit_tabs noselectable" id="fav_red">
 						<ul>
 						<li fix=0></li>
 						</ul>
 					</div>
-					<div class="favorit_menu" id="fav_red_mini" style="bottom:10px;"><i class="icon-right-open"></i>
+					<div class="favorit_menu noselectable" id="fav_red_mini" style="bottom:10px;"><i class="icon-right-open"></i>
 						<ul>
 						</ul>
 					</div>
@@ -994,8 +1022,10 @@ if(isset($_GET['test']))
 		<input type="radio" class="radio" name="gender" value="female" id="femail" />
 		<label for="female">Женщина</label>
 	</div>
-    <br><br>
+    <br>
+    	<div id="tree_themes"></div>
     	<div class="left_label"></div>
+    <br>
 	<div class="right_set" style="text-align:left">
 	<div id='send_settings' class='button_send' style="margin-left:10px;">Сохранить</div>
 	<div id='close_settings' class='button_send' style="margin-left:10px">Закрыть</div>
@@ -1018,7 +1048,8 @@ if(isset($_GET['test']))
                     webvisor:true,
                     clickmap:true,
                     trackLinks:true,
-                    accurateTrackBounce:true});
+                    accurateTrackBounce:true,
+                    trackHash:true});
         } catch(e) { }
     });
 
@@ -1036,6 +1067,5 @@ if(isset($_GET['test']))
 </script>
 <noscript><div><img src="//mc.yandex.ru/watch/21558199" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
-
 </body>
 </html>

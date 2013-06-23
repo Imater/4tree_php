@@ -128,7 +128,8 @@ $(document).ready(jsDoFirst);
                     webvisor:true,
                     clickmap:true,
                     trackLinks:true,
-                    accurateTrackBounce:true});
+                    accurateTrackBounce:true,
+                    trackHash:true});
         } catch(e) { }
     });
 

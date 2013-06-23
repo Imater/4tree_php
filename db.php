@@ -1348,7 +1348,7 @@ return true;
 
 function loginuser ()
 {
-global $fpk_id,$confirm_email;
+global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
 
    $email = $_COOKIE['4tree_email_md'];
    $passw = $_COOKIE['4tree_passw'];
@@ -1361,6 +1361,8 @@ global $fpk_id,$confirm_email;
    
    
    $fpk_id = $sql->id;
+   $theme_img = $sql->theme_img;
+   $theme_dark = $sql->theme_dark;
    
    if ($sql->confirm_email=='') 
       {

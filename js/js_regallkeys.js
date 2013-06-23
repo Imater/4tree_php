@@ -1322,9 +1322,8 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 
 }
 
-
 function onResize() //вызывается при каждом ресайзе страницы
-{
+{	
 	if($(".ui-resizable-resizing").length) return true;
 	
 			var w = $(document).width();
@@ -1385,15 +1384,15 @@ function onResize() //вызывается при каждом ресайзе с
 
 			
 			//ресайзим ширину главных панелей
-			if(main_x!=97.5) $(".bottom_left").css("width",main_x+'%');
-			$(".bottom_right").css("left",main_x+1+'%');
+			if(main_x!=97.5) $(".bottom_left").css("width",(main_x)+'%');
+			$(".bottom_right").css("left",main_x+'%');
 			
 //			if(main_x==101)	$(".resize_me").css("margin-left","-25px");
 //			else $(".resize_me").css("margin-left","18px");
 			
 			center = main_x;
 			$(".resize_me").css("left",center+'%');
-			$(".sos").css("left",center+0.5+'%');
+			$(".sos").css("left",center+'%');
 
 			y = $(".resize_me").width();
 			
@@ -1402,7 +1401,7 @@ function onResize() //вызывается при каждом ресайзе с
 
 			if( $("#content1").hasClass("v2") ) 
 			  {
-			  $(".place_of_top").css("width",main_x+2.5+'%');
+			  $(".place_of_top").css("width",main_x+'%');
 			  }
 			else
 			  $(".place_of_top").css("width",'auto');
@@ -1410,11 +1409,11 @@ function onResize() //вызывается при каждом ресайзе с
 			//ресайзим высоту главных панелей
 			if( $("#content1").hasClass("v2") ) 
 			  {
-				$(".place_of_top").height(main_y-34);
+				$(".place_of_top").height(main_y-13);
 			  }
 			else
 			  {
-				$(".place_of_top").height(main_y);
+				$(".place_of_top").height(main_y-15);
 			  }
 			  
 			if( $("html").hasClass("v4") ) 
@@ -1655,7 +1654,7 @@ function jsSetTimeNow() //устанавливаю красную полоску
 		           else
 		           var swap = $('#left_top').width()+1;
 		           
-				   myleft=myl-$('.fc-agenda-axis').width()-swap+38;
+				   myleft=myl-$('.fc-agenda-axis').width()-swap+18;
 				   				   
 				   if($('#top').hasClass('fullscreen')) myleft=myl-2;
 				   if($('#left_bottom2').hasClass('fullscreen')) myleft=myl-swap-3;
@@ -1798,7 +1797,7 @@ function jsCalendarNode(id)
 		  i_am_scroll = 0;
 		  }
 	
-	
+		  if(!gotodate) return false;
 	
 		  var d = gotodate.getDate();
 		  var m = gotodate.getMonth();
