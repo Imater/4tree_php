@@ -1899,7 +1899,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				}
 				else
 				{
-					$dropdown.css({ position: 'absolute', right: left, top: keyPosition.top + btnHeight + 'px' }).show();
+					$dropdown.css({ position: 'absolute', right: left, top: keyPosition.top + btnHeight - 140 + 'px' }).show();
 				}
 			}
 

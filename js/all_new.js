@@ -1716,7 +1716,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    return false;
 			});		
 			
-			$('body').on("click","#left_panel_opener",function(){
+			$('body').on("click","#left_panel_opener1",function(){
 			    if($("#left_panel").css("width") != "0px") {
 			    	$("#left_panel").animate({"width":"0"},200,function(){ $(this).hide(); });
 			    	$("#main_window").animate({"left":"0"},200);
@@ -1730,7 +1730,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	$("#left_panel").css({"width":"0"}).show().animate({"width":"150"},300);
 			    	$("#left_panel_opener").animate({"left":"150"},300);
 			    	$("#main_window").animate({"left":"150"},300);
-			    	$("#search_panel").animate({"left":"166"},300, 
+			    	$("#search_panel").animate({"left":"50"},300, 
 			    		function(){ 
 			    				$("#left_panel_opener .icon-right-open").attr("class","icon-left-open");
 			    				onResize();
@@ -1740,7 +1740,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    return false;
 			});
 			
-			$('#content1').on("click","#right_panel_opener",function(){
+			$('#content1').on("click","#right_panel_opener1",function(){
 			    var right_width = 50;
 			    if($("#right_panel").css("width") != "0px") {
 			    	$("#right_panel").animate({"width":"0"},200,function(){ $(this).hide(); });
