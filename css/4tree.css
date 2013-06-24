@@ -34,7 +34,7 @@ body {
 	margin-top:0px;
 	width: 100%;
 	background: #3b7b2f;
-	height: 450px;
+	height: 580px;
 	}
 
 #lozung {
@@ -46,6 +46,15 @@ body {
 	margin-top:0px;
 	width: 600px;
 	}
+	
+#lozung img {
+-moz-box-shadow: 0px 2px 11px #444;
+-webkit-box-shadow: 0px 2px 11px #444;
+box-shadow: 0px 2px 11px #111;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+}	
+	
 #air
 {
 	margin-top: 30px;
@@ -53,7 +62,7 @@ body {
 
 }
 #white {
-	padding-top: 50px;
+	padding-top: 25px;
 	padding-bottom: 50px;
 	text-align: center;
 	margin-top:0px;
@@ -72,8 +81,6 @@ body {
 	}
 #white img
 	{
-	    -webkit-box-shadow: #000 2px 2px 10px;
-
 	}
 
 #green {
@@ -92,7 +99,7 @@ body {
 	margin: auto;
 	color: #FFF;
 	margin-top:0px;
-	width: 600px;
+	width: 455px;
 	
 	}
 #green img
@@ -212,4 +219,19 @@ color: #7cff53 !important;
 {
 font-size: 13px;
 color: #7cff53 !important;
+}
+
+.some_more {
+	font-size: 16px !important;
+	text-align: left !important;
+	margin: 20px;
+	width: auto !important;
+	height: auto;
+	min-height: 470px;
+}
+.some_more img{
+margin: 20px;
+margin-top: 0px;
+margin-left: 30px;
+display: block;
 }
