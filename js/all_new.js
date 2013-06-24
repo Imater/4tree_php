@@ -6028,7 +6028,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
     	    	  	var element = api4tree.jsFind(id);
     	    	  	if(element) {
     	    	  		var path = api4panel.jsFindPath(element);
-    	    	  		if(text && ((text=="") || (text.indexOf("<")==-1)) ) {
+    	    	  		if( ((text=="") || (text.indexOf("<")==-1)) ) {
     	    	  			text = "<p>&#x200b;</p>";
     	    	  		}
 				  		all_texts.push({id:id, text:text, path:path, title:element.title, s:element.s});
