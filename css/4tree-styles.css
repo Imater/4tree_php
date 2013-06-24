@@ -5796,7 +5796,7 @@ color: #777 !important;
 	right: 0px;
 	top:0px;
 	bottom: 0px;
-	background: black;
+	background-image:url("../img/textures/18.png");
 	z-index: 9999999;
 	color: white;
 }
