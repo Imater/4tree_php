@@ -160,13 +160,14 @@ $(document).ready(jsDoFirst);
 
 <div id="white" class="some_more">
 <center><b>3 режима отображения дерева:</b></center><br>
-
+<center>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Панельный режим:<br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_9087_31a9bd91.png" width="800px" align="center">
+<img src="http://upload.4tree.ru/data/u11/06-2013/clip_9087_31a9bd91.png" width="650px" align="center">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Режим дерева:<br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_6517_5d22e5da.png" width="800px" align="center">
+<img src="http://upload.4tree.ru/data/u11/06-2013/clip_6517_5d22e5da.png" width="650px" align="center">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Режим карты ума:<br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_8580_658cb30a.png" width="800px" align="center">
+<img src="http://upload.4tree.ru/data/u11/06-2013/clip_8580_658cb30a.png" width="650px" align="center">
+</center>
 Любую заметку дерева можно превратить в папку, просто добавив в неё элементы при помощи клавиш alt+вправо.<br><br>
 При добавлении новых дел или переименовании старых, вы можете написать "позвонить через 3 дня в 10:50 напомнить", эта фраза расшифруется и делу присвоится соответствующая дата.<br><br>
 Вы можете создать собственную структуру дел, основанную, например, на технологии Getting Things Done (GTD). Дела по дереву можно перетаскивать мышкой.<br><br>Всё что вы напишите БОЛЬШИМИ буквами, автоматически добавится в панель избранных над деревом. При клике в избранные, эта папка открывается в дереве, календаре и редакторе.<br><br>
@@ -174,9 +175,9 @@ $(document).ready(jsDoFirst);
 Дата следующего действия транслируется на все родительские папки. Если кликнуть на эту дату, открывается дело, дата которого ближайшая.
 </div>
 
-<div id="green" class="some_more" style="height:800px !important;">
+<div id="green" class="some_more" style="height:600px !important;">
 <center>Добро пожаловать на альфа-тестирование 4tree.<br><br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_8495_e5256a80.png" width="900px" align="center"></center>
+<img src="http://upload.4tree.ru/data/u11/06-2013/clip_8495_e5256a80.png" width="650px" align="center"></center>
 </div>
 
 
