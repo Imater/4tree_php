@@ -6,11 +6,15 @@
 <?
 $s = file_get_contents('http://ulogin.ru/token.php?token=' . $_POST['token'] . '&host=' . $_SERVER['HTTP_HOST']);
 $user = json_decode($s, true);
-if(!$user["error"]) print_r($user);
+if(!$user["error"]) {
 //$user['network'] - соц. сеть, через которую авторизовался пользователь
 //$user['identity'] - уникальная строка определяющая конкретного пользователя соц. сети
 //$user['first_name'] - имя пользователя
 //$user['last_name'] - фамилия пользователя
+
+	print_r($user);
+	print_r($_SERVER);
+}
 ?>
 
 <html>
@@ -76,9 +80,10 @@ $(document).ready(jsDoFirst);
 
 		<a href="#" id="reg_now">Регистрация (открыта)</a>
 
+<div id="social" style="width:180px;height:20px;">
 <script src="//ulogin.ru/js/ulogin.js"></script>
-<div id="uLogin" data-ulogin="display=small;fields=first_name,last_name;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php"></div>
-		
+<div id="uLogin" data-ulogin="display=small;fields=first_name;optional=photo,phone,bdate,sex,city,country,email,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php"></div>
+</div>		
 		<div id="reg_form" class="myform">
 		  <h2>всего 2 поля:</h2>
 		  email: <input id="reg_email" placeholder="4tree@4tree.ru" type="email" name="email"><br>
