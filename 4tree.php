@@ -233,7 +233,7 @@ $(document).ready(jsDoFirst);
 
 		<a href="#" id="reg_now">Регистрация</a>
 
-<div id="social" style="width:340px;height:20px;margin-top:15px" title="Регистрация/вход через соц.сервисы">
+<div id="social" style="width:340px;height:20px;margin-top:19px" title="Регистрация/вход через соц.сервисы">
 <script src="//ulogin.ru/js/ulogin.js"></script>
 <div id="uLogin" data-ulogin="display=small;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php"></div>
 <span>регистрация / вход через соц.сервисы</span>
@@ -338,11 +338,13 @@ $(document).ready(jsDoFirst);
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Режим карты ума:<br>
 <img src="http://upload.4tree.ru/data/u11/06-2013/clip_8580_658cb30a.png" width="650px" align="center">
 </center>
+<p>
 Любую заметку дерева можно превратить в папку, просто добавив в неё элементы при помощи клавиш alt+вправо.<br><br>
 При добавлении новых дел или переименовании старых, вы можете написать "позвонить через 3 дня в 10:50 напомнить", эта фраза расшифруется и делу присвоится соответствующая дата.<br><br>
 Вы можете создать собственную структуру дел, основанную, например, на технологии Getting Things Done (GTD). Дела по дереву можно перетаскивать мышкой.<br><br>Всё что вы напишите БОЛЬШИМИ буквами, автоматически добавится в панель избранных над деревом. При клике в избранные, эта папка открывается в дереве, календаре и редакторе.<br><br>
 При клике мышкой в синюю папку рядом с делом, в редактор загружаются все заметки этой папки. Вы можете редактировать несколько заметок одновременно.<br><br>
 Дата следующего действия транслируется на все родительские папки. Если кликнуть на эту дату, открывается дело, дата которого ближайшая.
+</p>
 </div>
 
 <div id="green" class="some_more" style="height:600px !important;">

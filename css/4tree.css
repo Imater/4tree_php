@@ -9,7 +9,9 @@ body {
 #header {
 	margin-top:0px;
 	margin-bottom: 10px;
-	width: 100%;
+	width: auto;
+	left:0px;
+	right: 0px;
 	background: #fff;
 	}
 #logo
@@ -32,7 +34,9 @@ body {
 }
 #content {
 	margin-top:0px;
-	width: 100%;
+	width: auto;
+	left:0px;
+	right: 0px;
 	background: #3b7b2f;
 	height: 580px;
 	}
@@ -66,17 +70,19 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 	padding-bottom: 50px;
 	text-align: center;
 	margin-top:0px;
-	width: 100%;
+	width: auto;
+	left:0px;
+	right: 0px;
 	background: #fff;
 	}
 #white p
 	{
 	margin: auto;
 	padding-top: 30px;
-	font-size: 200%;
+	font-size: 100%;
 	color: #3b7b2f;
 	margin-top:0px;
-	width: 600px;
+	max-width: 600px;
 	
 	}
 #white img
@@ -89,7 +95,9 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 	padding-top: 50px;
 	padding-bottom: 50px;
 	margin-top:0px;
-	width: 100%;
+	width: auto;
+	left:0px;
+	right: 0px;
 	background: #3b7b2f;
 	}
 #green ul
