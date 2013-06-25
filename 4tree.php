@@ -9,7 +9,7 @@ $user = json_decode($s, true);
 //$user = array( "uid" => "38346778", "bdate" => "12.5.1978", "network" => "vkontakte", "country" => "Россия ", "profile" => "http://vk.com/id38346778", "sex" => "2", "last_name" => "Вецель", "first_name" => "Евгений", "city" => "Челябинск", "identity" => "http://vk.com/id38346778", "photo_big" => "http://cs4480.vk.me/u38346778/a_7e2ce3e6.jpg", "photo" => "http://cs4480.vk.me/u38346778/e_8908007b.jpg", "email" => "eugene.leonar@gmail.com");
 	require_once("db.php");
 
-  push(array("am"),array('type' => "new_visit", 'from' => $fpk_id, 'txt' => "Визит <b title='".addslashes(var_dump($_SERVER))."'>".$_SERVER["REMOTE_ADDR"]."</b>"));
+  push(array("am"),array('type' => "new_visit", 'from' => $fpk_id, 'txt' => "Визит <b title='".addslashes($_SERVER["HTTP_USER_AGENT"]." / ".$_SERVER["HTTP_COOKIE"])."'>".$_SERVER["REMOTE_ADDR"]."</b>"));
 
 
 if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/http.html?")) {
