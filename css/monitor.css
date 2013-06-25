@@ -1,0 +1,61 @@
+body, html {
+	margin: 0px;
+	padding: 0px;
+	background-image: url("../img/textures/1.jpg");
+	color: #CCC;
+	font-family: Verdana;
+}
+
+h1 {
+	font-size: 20px;
+	text-align: center;
+	text-shadow: 1px 1px 4px black;
+}
+
+h2 {
+	margin-top: 0px;
+	color: #666;
+	font-size: 11px;
+	text-align: center;
+	text-shadow: 1px 1px 4px black;
+}
+
+#log {
+	font-size: 11px;
+	position: absolute;
+	right: 50px;
+	left:50px;
+	top: 80px;
+	border: 1px solid #222;
+	padding: 5px;
+	width: auto;
+	height: 300px;
+	overflow: auto;
+	background-color: rgba(0,0,0,0.5);
+	
+}
+
+#log .time {
+	width: 80px;
+	display: inline-block;
+}
+
+#log .user {
+	float: right;
+	clear: right;	
+}
+
+#log ol {
+	padding: 10px;
+	margin: 10px;
+}
+
+#log ol li {
+	margin-bottom: 3px;
+}
+
+.icon-dot {
+	display: none;
+	color: green;
+	font-weight: bold;
+}

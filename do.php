@@ -250,7 +250,10 @@ $sqlnews="SELECT count(*) cnt FROM `tree_users` WHERE email = '".mysql_real_esca
 $result = mysql_query_my($sqlnews); 
 @$sql = mysql_fetch_object ($result);
 
-if($sql->cnt>0) { echo 'Добро пожаловать!<br>Перенаправляю на сайт...'; exit; }
+if($sql->cnt>0) { 
+	push(array("am"),array('type' => "login", 'from' => $email, 'txt' => "Залогинился"));
+	echo 'Добро пожаловать!<br>Перенаправляю на сайт...'; exit; 
+	}
 exit;
 }
 
@@ -774,6 +777,8 @@ if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru"))
 $changes =  json_decode( $ch , true );  
 $changes_comments =  json_decode( $ch_comments , true );  
 
+push(array("am"),array('type' => "sync_cnt", 'from' => $fpk_id, 'txt' => "Клиент прислал ".count($changes)." изменений + ".count($changes_comments)." комментариев"));
+
 $confirm = $HTTP_POST_VARS['confirm'];
 $confirms =  json_decode( $confirm , true );  
 
@@ -783,7 +788,6 @@ $timezone = $HTTP_GET_VARS['timezone'];
 
 $sqlnews5="UPDATE tree_users SET time_dif = '".$timezone."' WHERE id='".$GLOBALS['user_id']."'";
 $result5 = mysql_query_my($sqlnews5); //сохраняю разницу по времени с сервером
-
 
 $now_time = $now_time + $time_dif;
 
@@ -812,8 +816,8 @@ for ($i=0; $i<$countlines; $i++)
 		   {
 		   		$old_id = $id; //сохраняю старый отрицательный id
 		   		
-		   		if($display) echo "Необходимо добавить элемент ".$id." (".$changes[$i]['title'].")<br>";
-		   		
+		   		if($display) echo "Необходимо добавить элемент ".$id." (".$changes[$i]['title'].")<br>";	
+		   		push(array("am"),array('type' => "sync_new", 'from' => $fpk_id, 'txt' => "Новая заметка: <b title='".$changes[$i]['text']."'>".$changes[$i]['title']."</b>"));
 		   		$sqlnews5="DELETE FROM tree WHERE old_id='".$id."'";
 		   		$result5 = mysql_query_my($sqlnews5); 
 		   		if($display) if(mysql_affected_rows()>0) echo "Удалил дублирующую запись (".mysql_affected_rows()." шт)<br>";
@@ -872,11 +876,13 @@ for ($i=0; $i<$countlines; $i++)
    			{
 	   		if($display) echo "<span style='color:green'><b>Сохраняю этот элемент в базе данных</b></span><br>";
 	   		sync_save_changes($changes,$i,$sql,$display,$now_time,$time_dif);
+		    push(array("am"),array('type' => "sync_change", 'from' => $fpk_id, 'txt' => "Изменилась заметка: <b title='".$changes[$i]['text']."'>".($changes[$i]['title']?$changes[$i]['title']:$sql["title"])."</b>"));
 	   		$dont_send_ids .= " `id` != ".$id." AND ";
    			}
    		else
    			{
 	   		if($display) echo "<span style='color:red'><b>Делаю резервную копию, но не сохраняю! Есть более свежие изменения сделанные ".$dif." мс. назад; ".@$changes[$i]['old_id']."</b></span><br>";
+		    push(array("am"),array('type' => "sync_change", 'from' => $fpk_id, 'txt' => "Изменилась заметка, НО НЕ СОХРАНЯЮ: <b title='".$changes[$i]['text']."'>".($changes[$i]['title']?$changes[$i]['title']:$sql["title"])."</b>"));
    			}
    			//тут нужно будет поставить ограничение по времени, чтобы не бэкапить каждый раз
 	   		sync_save_backup($changes,$i,$sql,$display,$now_time);
@@ -905,6 +911,8 @@ for ($i=0; $i<$countlines; $i++)
 		   		
 		   		$sqlnews="INSERT INTO `tree_comments` (old_id,user_id,changetime,text) VALUES ('".$id."','".$GLOBALS['user_id']."','".ConvertFutureDate($now_time)."','".$changes_comments[$i]['text']." (new)');";
 		   		$result = mysql_query_my($sqlnews); 
+		   		push(array("am"),array('type' => "sync_new_comment", 'from' => $fpk_id, 'txt' => "Новый комментарий: <b>".($changes_comments[$i]['text'])."</b>"));
+		   		
 		   		if($display) echo "<font style='font-size:9px'>".$sqlnews."</font><br>";
 		   		$id = mysql_insert_id();
 		   		if($display) echo "<b>Новый id</b> = ".$id."<br>";
@@ -1046,6 +1054,8 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 		$server_changes[$i]['s']=($sql['s']);
 		$server_changes[$i]['del']=($sql['del']);
 		$i++;
+   		push(array("am"),array('type' => "sync_from_server", 'from' => $fpk_id, 'txt' => "Сервер отправил клиенту: <b title='".$sql['text']."'>".($sql['title'])."</b>"));
+		
 		}
 	
 	
@@ -4500,34 +4510,6 @@ if (isset($HTTP_GET_VARS['history']))
 	}
 
 
-function push ($cids, $message) {
-    /*
-     * $cids - ID канала, либо массив, у которого каждый элемент - ID канала
-     * $text - сообщение, которое необходимо отправить 
-     */
-    $c = curl_init();
-    $url = 'http://4do.me/pub?id=';
-        
-    curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($c, CURLOPT_POST, true);
-
-    if (is_array($cids)) {
-        foreach ($cids as $v) {
-            curl_setopt($c, CURLOPT_URL, $url.$v);
-            curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($message));
-            $r = curl_exec($c);
-        }
-    } else {
-        curl_setopt($c, CURLOPT_URL, $url.$cids);
-        curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($message));
-        $r = curl_exec($c);
-    }
-    
-    curl_close($c);
-    
-    return $r;
-    
-}
 
 
 

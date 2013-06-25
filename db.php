@@ -6,6 +6,36 @@
 
  require_once('db2.php');
 
+
+function push ($cids, $message) {
+    /*
+     * $cids - ID канала, либо массив, у которого каждый элемент - ID канала
+     * $text - сообщение, которое необходимо отправить 
+     */
+    $c = curl_init();
+    $url = 'http://4do.me/pub?id=';
+        
+    curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($c, CURLOPT_POST, true);
+
+    if (is_array($cids)) {
+        foreach ($cids as $v) {
+            curl_setopt($c, CURLOPT_URL, $url.$v);
+            curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($message));
+            $r = curl_exec($c);
+        }
+    } else {
+        curl_setopt($c, CURLOPT_URL, $url.$cids);
+        curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($message));
+        $r = curl_exec($c);
+    }
+    
+    curl_close($c);
+    
+    return $r;
+    
+}
+
 if (time()<1346331456) $read=1;
 else $read=0;
 
