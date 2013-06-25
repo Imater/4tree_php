@@ -1072,6 +1072,7 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 	while(@$sql = mysql_fetch_array($result))
 		{
 		if($display) echo "<li>Нужно удалить: ".$sql["id"]."</li>";
+   		push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе: <b>".($sql['id'])."</b>"));
 
 		$confirm_saved_id["need_del"][$k]["id"] = $sql["id"];
 		$confirm_saved_id["need_del"][$k]["command"] = "del";
@@ -1116,6 +1117,7 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 		$server_changes_comments[$i]['del']=($sql['del']);
 		$server_changes_comments[$i]['lsync']=ConvertFutureDate($now_time);
 		$server_changes_comments[$i]['add_time']=(integer)($sql['add_time']);
+   		push(array("am"),array('type' => "sync_from_server_comments", 'from' => $fpk_id, 'txt' => "Сервер отправил клиенту комментарий: <b>".($sql['text'])."</b>"));
 		$i++;
 		}
 
@@ -1128,6 +1130,7 @@ if(true)
 	$k = 0;
 	while(@$sql = mysql_fetch_array($result))
 		{
+   		push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе комментариев: <b>".($sql['id'])."</b>"));
 		if($display) echo "<li>Нужно удалить: ".$sql["id"]."</li>";
 
 		$confirm_saved_id["need_del_comment"][$k]["id"] = $sql["id"];
