@@ -1,26 +1,159 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
 <?
 function startsWith($haystack, $needle)
 {
     return !strncmp($haystack, $needle, strlen($needle));
 }
 
-$s = file_get_contents('http://ulogin.ru/token.php?token=' . $_POST['token'] . '&host=' . $_SERVER['HTTP_HOST']);
+$s = file_get_contents('http://ulogin.ru/token.php?token=' . @$_POST['token'] . '&host=' . $_SERVER['HTTP_HOST']);
 $user = json_decode($s, true);
+//$user = array( "uid" => "38346778", "bdate" => "12.5.1978", "network" => "vkontakte", "country" => "Россия ", "profile" => "http://vk.com/id38346778", "sex" => "2", "last_name" => "Вецель", "first_name" => "Евгений", "city" => "Челябинск", "identity" => "http://vk.com/id38346778", "photo_big" => "http://cs4480.vk.me/u38346778/a_7e2ce3e6.jpg", "photo" => "http://cs4480.vk.me/u38346778/e_8908007b.jpg", "email" => "eugene.leonar@gmail.com");
+
 if(!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/http.html?")) {
 //$user['network'] - соц. сеть, через которую авторизовался пользователь
 //$user['identity'] - уникальная строка определяющая конкретного пользователя соц. сети
 //$user['first_name'] - имя пользователя
 //$user['last_name'] - фамилия пользователя
+	require_once("db.php");
+	$db2 = new PDO('mysql:dbname=h116;host=localhost;charset=utf8', $config["mysql_user"], $config["mysql_password"]);
+	$db2 -> exec("set names utf8");
+	$db2->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+	$db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	print_r($user);
-	print_r($_SERVER["HTTP_REFERER"]);
+	if(user_exist($user, $db2) == false)	create_new_user($user, $db2);
+	
+}
+
+function user_exist($user, $db2){
+	$stmt = $db2->prepare("select * from tree_users_social where identity=:identity");
+	$stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
+	$stmt->execute( array( ':identity' => $user["identity"] ) );
+	$user_exist = $stmt->fetch();
+	
+	if($user_exist["user_id"]) {
+		setcookie('4tree_email',@$user_exist["email"],time()+60*60*24*60);
+		setcookie('4tree_email_md5',md5(@$user_exist["md5email"]."990990"),time()+60*60*24*60);
+		setcookie('4tree_social_md5', @$user_exist["session_md5"],time()+60*60*24*60);
+		setcookie('4tree_user_id',@$user_exist["user_id"],time()+60*60*24*60);
+		echo "<script>document.location.href='./index.php';</script>";
+		
+		return true;
+	} else {
+		return false;	
+	}
+}
+
+function create_new_user($user, $db2){
+	//print_r($user);
+	$sql11 = "INSERT INTO `tree_users` SET
+	    	`fio` = :fio,
+	    	`mobilephone` = :mobilephone,
+	    	`email` = :email,
+	    	`md5email` = :md5email,
+	    	`confirm_email` = :confirm_email,
+	    	`password` = :password,
+	    	`reg_date` = :reg_date,
+	    	`foto` = :foto,
+	    	`frends` = :frends,
+	    	`female` = :female,
+	    	`lastvisit` = :lastvisit";
+	echo $sql11;
+	$last_name = $user["last_name"]?$user["last_name"]." ":"";
+	$fio = $last_name.$user["first_name"];
+	
+	$newpassword = substr(md5($user["identity"]."pass_990"),3,10);
+	$code = '4tree_'.substr(md5($email),5,10);
+	
+	$values11 = array( 
+	    	":fio" => 				$fio,
+	    	":mobilephone" =>  		$user["mobilephone"]?$user["mobilephone"]:"",
+	    	":email" => 			$user["email"]?$user["email"]:"",
+	    	":md5email" => 	   		$user["email"]?md5($user["email"]):"",
+	    	":confirm_email" => 	$user["email"]?$code:"",
+	    	":password" => 			md5($passw."990990"),
+	    	":reg_date" => 			date("Y-m-d H:i:s"),
+	    	":foto" => 				$user["photo"]?$user["photo"]:"",
+	    	":frends" =>			",11,",
+	    	":female" => 			1,
+	    	":lastvisit" => 		0
+	        );
+	        
+	$query1 = $db2->prepare($sql11);
+	$query1->execute($values11);
+	$last_user_id = $db2->lastInsertId();
+	
+	if(!$last_user_id) {
+		echo "Ошибка регистрации";
+		return false;
+	}
+	
+	if(stristr($user["email"],"@")) {
+		//отправляю сгенерированный пароль
+		$tree="<font color='#214516'>4</font><font color='#244918'>t</font><font color='#356d23'>r</font><font color='#42872c'>e</font><font color='#57b33a'>e</font>";
+		
+		mail($user["email"],'Вы только что зарегистрировались на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
+   		"From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=utf8\r\n");
+		
+	}
+	
+	echo "<hr>$last_id<hr>";
+
+
+	//1. save_to tree_users_social
+	$sql11 = "INSERT INTO `tree_users_social` SET
+	    	`user_id` = :user_id,
+	    	`network` = :network,
+	    	`identity` = :identity,
+	    	`uid` = :uid,
+	    	`bdate` = :bdate,
+	    	`country` = :country,
+	    	`profile` = :profile,
+	    	`last_name` = :last_name,
+	    	`first_name` = :first_name,
+	    	`city` = :city,
+	    	`photo_big` = :photo_big,
+	    	`photo` = :photo,
+	    	`session_md5` = :session_md5,
+	    	`fio` = :fio,
+	    	`email` = :email,
+	    	`sex` = :sex";
+	echo $sql11;
+		
+	$values11 = array( 
+	    	":user_id" => 		$last_user_id,
+	    	":network" =>  		$user["network"],
+	    	":identity" => 		$user["identity"],
+	    	":uid" => 	   		$user["uid"],
+	    	":bdate" => 		$user["bdate"],
+	    	":country" => 		$user["country"],
+	    	":profile" => 		$user["profile"],
+	    	":last_name" => 	$user["last_name"],
+	    	":first_name" =>	$user["first_name"],
+	    	":city" => 			$user["city"],
+	    	":photo_big" => 	$user["photo_big"],
+	    	":photo" => 		$user["photo"],
+	    	":session_md5"=>	$user["session_md5"],
+	    	":fio" => 			$user["fio"],
+	    	":email" => 		$user["email"],
+	    	":sex" => 			$user["sex"],
+	    	":session_md5" =>	md5($user["identity"]."990990")
+	        );
+	        
+	$query1 = $db2->prepare($sql11);
+	$query1->execute($values11);
+	$last_id = $db2->lastInsertId();
+	
+	echo "<hr>$last_id<hr>";
+	
+	
+	//2. create in tree_users
 }
 ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
 
 <html>
 <head>
@@ -87,7 +220,7 @@ $(document).ready(jsDoFirst);
 
 <div id="social" style="width:180px;height:20px;">
 <script src="//ulogin.ru/js/ulogin.js"></script>
-<div id="uLogin" data-ulogin="display=small;fields=first_name;optional=photo,phone,bdate,sex,city,country,email,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php"></div>
+<div id="uLogin" data-ulogin="display=small;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php"></div>
 </div>		
 		<div id="reg_form" class="myform">
 		  <h2>всего 2 поля:</h2>

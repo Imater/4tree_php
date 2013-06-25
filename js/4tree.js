@@ -116,6 +116,7 @@ function jsClearCurrentBase() { //очищаем существующую баз
     $.cookie("4tree_email",null);
     $.cookie("4tree_email_md",null);
     $.cookie("4tree_user_id",null);
+    $.cookie("4tree_social_md5",null);
     $.cookie("main_tree_font",null);
     $.cookie("main_x",null);
     $.cookie("main_y",null);
@@ -193,12 +194,12 @@ $("*").delegate("#reremember", "click", function(event){
   });
 
 
-$("*").delegate("#reg_ok", "click", function(event){
+$("#reg_form").delegate("#reg_ok", "click", function(event){
 	jsReg();
 	return false;
 	});
 
-$("*").delegate("#login_ok", "click", function(event){
+$("#login_form").delegate("#login_ok", "click", function(event){
 	jsLog();
 	return false;
 	});

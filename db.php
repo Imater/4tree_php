@@ -1350,12 +1350,21 @@ function loginuser ()
 {
 global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
 
-   $email = $_COOKIE['4tree_email_md'];
-   $passw = $_COOKIE['4tree_passw'];
+   @$email = $_COOKIE['4tree_email_md'];
+   @$passw = $_COOKIE['4tree_passw'];
    
+   $social = $_COOKIE['4tree_social_md5'];
    
-   $sqlnews="SELECT * FROM tree_users WHERE md5email='$email' AND password='$passw' LIMIT 1;";
-   
+   if($social) {
+	   $sqlnews="SELECT * FROM tree_users_social WHERE session_md5='$social' LIMIT 1;";
+	   $result = mysql_query_my($sqlnews); 
+	   @$sql = mysql_fetch_object ($result);
+	   $user_id = $sql->user_id;
+	   $sqlnews="SELECT * FROM tree_users WHERE id='$user_id' LIMIT 1;";
+   } else {
+	   $sqlnews="SELECT * FROM tree_users WHERE md5email='$email' AND password='$passw' LIMIT 1;";
+   }
+      
    $result = mysql_query_my($sqlnews); 
    @$sql = mysql_fetch_object ($result);
    
@@ -1375,9 +1384,6 @@ global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
 //   setcookie('fpk_id', $fpk_id);
 
    setcookie('4tree_user_id', $fpk_id,time()+60*60*24*60);
-
-
-   
 
 if($fpk_id=='') return false;
 else return true;

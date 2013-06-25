@@ -16,6 +16,7 @@ if(loginuser()) {
 	if(!$theme_img) $theme_img="./img/textures/18.png";
 	if(!$theme_dark) $theme_dark="theme_normal";
 } else {
+	if(false)
 	echo '<script type="text/javascript">
 		 document.location.href="./4tree.php";
 		 </script>';
@@ -134,7 +135,7 @@ if(isset($_GET['test']))
 
 <script type="text/javascript">
 $(document).ready(jsDoFirst); 
-if(!$.cookie("4tree_passw")) document.location.href="./4tree.php";
+if(!$.cookie("4tree_passw") && !$.cookie("4tree_social_md5")) document.location.href="./4tree.php";
 
 </script>
 </head>
