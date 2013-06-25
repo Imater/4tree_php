@@ -13,7 +13,7 @@ if(!$user["error"]) {
 //$user['last_name'] - фамилия пользователя
 
 	print_r($user);
-	print_r($_SERVER);
+	print_r($_SERVER["HTTP_REFERER"]);
 }
 ?>
 
