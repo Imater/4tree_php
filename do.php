@@ -451,6 +451,7 @@ if (isset($HTTP_GET_VARS['send_settings'])) {
   									WHERE id='$user_id'";
   								
 //  echo $sqlnews;									
+  push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Сохраняю <b title='$sqlnews'>параметры</b>"));
   								
   $result = mysql_query_my($sqlnews); 
   @$sql = mysql_fetch_array($result);
@@ -463,6 +464,7 @@ if (isset($HTTP_GET_VARS['send_settings'])) {
 
 if (isset($HTTP_GET_VARS['get_settings'])) 
 {
+  push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Загружаю параметры"));
 
   $sqlnews = "SELECT * FROM tree_users WHERE id='$user_id'";
   $result = mysql_query_my($sqlnews); 
@@ -4220,6 +4222,7 @@ if (isset($HTTP_GET_VARS['onLink']))  //нужно добавить отбор �
   $s2 = $HTTP_GET_VARS['longlink'];
   $is_on = $HTTP_GET_VARS['is_on'];
   
+  push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Включаю короткую ссылку: <b>".($HTTP_GET_VARS['shortlink'])." - ".$is_on."</b>"));
 
   $s1 = explode('/',$s1);
   $s1 = $s1[count($s1)-1];
@@ -4247,7 +4250,6 @@ if (isset($HTTP_GET_VARS['onLink']))  //нужно добавить отбор �
 				);";
     $result = mysql_query_my($sqlnews);   
     echo $sqlnews;
-	push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Включаю короткую ссылку: <b>".($HTTP_GET_VARS['shortlink'])." - ".$is_on."</b>"));
     
     exit;
     }
