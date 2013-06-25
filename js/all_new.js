@@ -1633,7 +1633,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			});
 			$(document).bind("idle.idleTimer", function(){
 				screensaver_tm = setTimeout(function(){
-					jsScreenSaver(true);
+					//jsScreenSaver(true);
 				}, 10*60*1000)
 			    if(start_sync_when_idle) { this_db.jsSync(only_save); only_save=false; }
 			});
