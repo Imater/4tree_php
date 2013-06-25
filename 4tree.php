@@ -37,6 +37,8 @@ function user_exist($user, $db2){
 	$user_exist = $stmt->fetch();
 	
 	if($user_exist["user_id"]) {
+		push(array("am"),array('type' => "login_user_social", 'from' => $fpk_id, 'txt' => "Вошёл пользователь через соц.сети <b title='".addslashes($user["network"])."'>параметры</b>"));
+	
 		setcookie('4tree_email',@$user_exist["email"],time()+60*60*24*60);
 		setcookie('4tree_email_md5',md5(@$user_exist["md5email"]."990990"),time()+60*60*24*60);
 		setcookie('4tree_social_md5', @$user_exist["session_md5"],time()+60*60*24*60);
@@ -92,6 +94,8 @@ function create_new_user($user, $db2){
 		echo "Ошибка регистрации";
 		return false;
 	}
+
+  push(array("am"),array('type' => "new_user_social", 'from' => $fpk_id, 'txt' => "Новый пользователь через соц.сети <b title='".addslashes($values11)."'>параметры</b>"));
 	
 	if(stristr($user["email"],"@")) {
 		//отправляю сгенерированный пароль
