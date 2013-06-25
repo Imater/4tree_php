@@ -56,7 +56,7 @@ function create_new_user($user, $db2){
 	    	`frends` = :frends,
 	    	`female` = :female,
 	    	`lastvisit` = :lastvisit";
-	echo $sql11;
+//	echo $sql11;
 	$last_name = $user["last_name"]?$user["last_name"]." ":"";
 	$fio = $last_name.$user["first_name"];
 	
@@ -95,7 +95,7 @@ function create_new_user($user, $db2){
 		
 	}
 	
-	echo "<hr>$last_id<hr>";
+//	echo "<hr>$last_id<hr>";
 
 
 	//1. save_to tree_users_social
@@ -116,7 +116,7 @@ function create_new_user($user, $db2){
 	    	`fio` = :fio,
 	    	`email` = :email,
 	    	`sex` = :sex";
-	echo $sql11;
+//	echo $sql11;
 		
 	$values11 = array( 
 	    	":user_id" => 		$last_user_id,
@@ -141,8 +141,13 @@ function create_new_user($user, $db2){
 	$query1 = $db2->prepare($sql11);
 	$query1->execute($values11);
 	$last_id = $db2->lastInsertId();
+
+	require("do.php");
+	$sql["id"] = 6570;
+	mySelectBranch($sql,1,$new_user);
+
 	
-	echo "<hr>$last_id<hr>";
+//	echo "<hr>$last_id<hr>";
 	
 	
 	//2. create in tree_users
