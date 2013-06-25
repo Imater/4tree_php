@@ -255,43 +255,6 @@ exit;
 }
 
 
-function myCreateRecord($sql, $new_parent, $new_user) {
-
-   $sqlnews="INSERT INTO `tree` SET 
-   				user_id = '$new_user',
-   				position = '".$sql["position"]."',
-   				node_icon = '".$sql["node_icon"]."',
-   				adddate = '".$sql["adddate"]."',
-   				changetime = '".now()."',
-   				title = '".addslashes($sql["title"])."', 
-   				parent_id = '".$new_parent."',
-   				text = '".addslashes($sql["text"])."',
-   				old_id = '-8'";
-   				
-   $result = mysql_query_my($sqlnews); 
-   $id = mysql_insert_id();
-//   echo "<li>parent_id=".$new_parent." | n_i=$id | title=<b>".$sql["title"]."</b></li>";
-   
-   
-   return $id;
-};
-
-function mySelectBranch($sql2, $new_parent, $new_user) {
-
-  $sqlnews = "SELECT * FROM tree WHERE del=0 AND user_id=11 AND parent_id=".$sql2["id"];
-//  echo $sqlnews."<hr>";
-  $result = mysql_query_my($sqlnews); 
-  $i=0;
-//  echo "<ol>";
-  while (@$sql = mysql_fetch_array($result))
-    {
-    $id = myCreateRecord($sql, $new_parent, $new_user);
-    mySelectBranch($sql, $id, $new_user);
-    }
-//  echo "</ol>";
-	
-}
-
 if(isset($HTTP_GET_VARS['copy_template_tree'])) {
 $sql="";
 $sql["id"] = 7291;

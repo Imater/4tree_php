@@ -142,7 +142,6 @@ function create_new_user($user, $db2){
 	$query1->execute($values11);
 	$last_id = $db2->lastInsertId();
 
-	require("do.php");
 	$sql["id"] = 6570;
 	mySelectBranch($sql,1,$new_user);
 
