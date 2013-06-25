@@ -8,7 +8,7 @@ $s = file_get_contents('http://ulogin.ru/token.php?token=' . @$_POST['token'] . 
 $user = json_decode($s, true);
 //$user = array( "uid" => "38346778", "bdate" => "12.5.1978", "network" => "vkontakte", "country" => "Россия ", "profile" => "http://vk.com/id38346778", "sex" => "2", "last_name" => "Вецель", "first_name" => "Евгений", "city" => "Челябинск", "identity" => "http://vk.com/id38346778", "photo_big" => "http://cs4480.vk.me/u38346778/a_7e2ce3e6.jpg", "photo" => "http://cs4480.vk.me/u38346778/e_8908007b.jpg", "email" => "eugene.leonar@gmail.com");
 
-if(true OR @!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/http.html?")) {
+if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/http.html?")) {
 //$user['network'] - соц. сеть, через которую авторизовался пользователь
 //$user['identity'] - уникальная строка определяющая конкретного пользователя соц. сети
 //$user['first_name'] - имя пользователя
