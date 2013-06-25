@@ -300,6 +300,8 @@ else
 						   );";
 						   
 	$result = mysql_query($sqlnews); 
+
+  push(array("am"),array('type' => "new_user", 'from' => $fpk_id, 'txt' => "Новый пользователь <b title='".addslashes($sqlnews)."'>".$email."</b>"));
 	
     $sqlnews2 = "SELECT LAST_INSERT_ID() id";
 	$result = mysql_query($sqlnews2); 
@@ -338,7 +340,7 @@ else
    mail('eugene.leonar@gmail.com',$real_email.' он только что зарегистрировался на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".",
    		"From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=UTF-8;\r\n");
 
-	
+
 /*	Очень опасный момент
 	$sqlnews="SELECT id FROM `tree_users` WHERE `confirm_email`!='' AND reg_date < (NOW() - INTERVAL 180 DAY)";
 	$result = mysql_query_my($sqlnews); 
@@ -730,6 +732,10 @@ if (isset($HTTP_GET_VARS['get_files'])) {
 
 	
 	echo json_encode($answer);
+	
+	push(array("am"),array('type' => "get_files", 'from' => $fpk_id, 'txt' => "Загружаю список файлов: ".count($answer)));
+
+	
 	exit;	
 }
 
@@ -1888,6 +1894,9 @@ $emails = $_GET['send_mail_to'];
 $mytitle = $_GET['mytitle'];
 $mytxt = $_POST['changes'];
 
+push(array("am"),array('type' => "send_mail", 'from' => $fpk_id, 'txt' => "Отправляю почту: ".$emails." - ".$mytitle));
+
+
 $sqlnews = "SELECT * FROM tree_users WHERE id=".$GLOBALS['user_id'];
 $result = mysql_query_my($sqlnews); 
 @$sql = mysql_fetch_array($result);
@@ -2282,7 +2291,7 @@ if($only_md5!=1)
 	$res["all_data"] = $answer;
 	}
 	
-	push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Загружаю всю базу целиком: ".count($answer)."заметок + ".count($comments)." комментариев"));
+	push(array("am"),array('type' => "get_all_db", 'from' => $fpk_id, 'txt' => "Загружаю всю базу целиком: ".count($answer)." заметок + ".count($comments)." комментариев"));
 
 ///	echo md5($longtext)."<hr>";
 //	echo ($longtext);
@@ -3707,6 +3716,9 @@ if ($response->isOK()) {
 if($newname) unlink($newname);
 echo (json_encode($answer));
 
+push(array("am"),array('type' => "save_file", 'from' => $fpk_id, 'txt' => "Сохранил файл: ".json_encode($answer)));
+
+
 exit;
 }
 
@@ -3749,6 +3761,7 @@ copy($preview1,$dir.(basename($url)));
 	
 	echo json_encode($answer);
 
+push(array("am"),array('type' => "save_thumbnail", 'from' => $fpk_id, 'txt' => "Сохранил превью: ".json_encode($answer)));
 
 exit;
 }
