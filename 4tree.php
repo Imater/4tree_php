@@ -231,7 +231,7 @@ $(document).ready(jsDoFirst);
 
 
 
-		<a href="#" id="reg_now">Регистрация (открыта)</a>
+		<a href="#" id="reg_now">Регистрация:</a>
 
 <div id="social" style="width:340px;height:40px;">
 <script src="//ulogin.ru/js/ulogin.js"></script>
