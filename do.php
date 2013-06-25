@@ -4247,6 +4247,8 @@ if (isset($HTTP_GET_VARS['onLink']))  //нужно добавить отбор �
 				);";
     $result = mysql_query_my($sqlnews);   
     echo $sqlnews;
+	push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Включаю короткую ссылку: <b>".($HTTP_GET_VARS['shortlink'])." - ".$is_on."</b>"));
+    
     exit;
     }
 
