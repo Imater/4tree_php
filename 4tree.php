@@ -231,11 +231,12 @@ $(document).ready(jsDoFirst);
 
 
 
-		<a href="#" id="reg_now">Регистрация в 2 клика:</a>
+		<a href="#" id="reg_now">Регистрация</a>
 
-<div id="social" style="width:340px;height:40px;">
+<div id="social" style="width:340px;height:20px;margin-top:15px" title="Регистрация/вход через соц.сервисы">
 <script src="//ulogin.ru/js/ulogin.js"></script>
 <div id="uLogin" data-ulogin="display=small;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php"></div>
+<span>регистрация / вход через соц.сервисы</span>
 </div>		
 		<div id="reg_form" class="myform">
 		  <h2>всего 2 поля:</h2>

@@ -235,3 +235,26 @@ margin-top: 0px;
 margin-left: 30px;
 display: block;
 }
+
+#social span {
+	opacity: 0;
+	font-size: 10px;
+	margin-left: 200px;
+	color: #444;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;
+	white-space: nowrap;
+}
+
+#social:hover span {
+	opacity: 1;
+	margin-left: 0px;
+	-webkit-transition: all 1s ease;
+	-moz-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	-ms-transition: all 1s ease;
+	transition: all 1s ease;	
+}
