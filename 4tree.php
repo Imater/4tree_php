@@ -98,10 +98,10 @@ function create_new_user($user, $db2){
 		$tree="<font color='#214516'>4</font><font color='#244918'>t</font><font color='#356d23'>r</font><font color='#42872c'>e</font><font color='#57b33a'>e</font>";
 		
 		mail($user["email"],'Вы только что зарегистрировались на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
-   		"From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=utf8\r\n");
+   		"From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=UTF-8;\r\n");
 
 		mail("eugene.leonar@gmail.com",'Вы только что зарегистрировались на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
-   		"From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=utf8\r\n");
+   		"From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=UTF-8;\r\n");
 		
 	}
 	
