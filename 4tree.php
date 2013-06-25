@@ -235,7 +235,7 @@ $(document).ready(jsDoFirst);
 
 <div id="social" style="width:180px;height:20px;">
 <script src="//ulogin.ru/js/ulogin.js"></script>
-<div id="uLogin" data-ulogin="display=small;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php"></div>
+<div id="uLogin" data-ulogin="display=panel;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php"></div>
 </div>		
 		<div id="reg_form" class="myform">
 		  <h2>всего 2 поля:</h2>
