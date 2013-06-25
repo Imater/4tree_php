@@ -233,7 +233,7 @@ $(document).ready(jsDoFirst);
 
 		<a href="#" id="reg_now">Регистрация (открыта)</a>
 
-<div id="social" style="width:180px;height:20px;">
+<div id="social" style="width:340px;height:40px;">
 <script src="//ulogin.ru/js/ulogin.js"></script>
 <div id="uLogin" data-ulogin="display=panel;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php"></div>
 </div>		
