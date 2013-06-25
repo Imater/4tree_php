@@ -155,7 +155,7 @@ function create_new_user($user, $db2){
 	$sql = "";
 	$sql["id"] = 6570;//6570
 	mySelectBranch($sql,1,$last_user_id);
-
+	user_exist($user, $db2);
 	
 //	echo "<hr>$last_id<hr>";
 	
