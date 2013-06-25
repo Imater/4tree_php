@@ -33,13 +33,7 @@ if (isset($HTTP_GET_VARS['send_message']))
 
 <body onload="javascript:jsDoFirst();">
 <h1>Монитор <span class="icon-dot">&middot;</span></h1>
-
-<div id="log">
-<h2>Log:</h2>
-	<ol reversed>
-	</ol>
-</div>
-
+<div id="container"></div>
 
 </body>
 </html>

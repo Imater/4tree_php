@@ -14,43 +14,43 @@ h1 {
 
 h2 {
 	margin-top: 0px;
+	margin-bottom: 0px;
 	color: #666;
 	font-size: 11px;
 	text-align: center;
 	text-shadow: 1px 1px 4px black;
 }
 
-#log {
+.log {
 	font-size: 11px;
-	position: absolute;
-	right: 50px;
-	left:50px;
-	top: 80px;
+	position: relative;
+	margin-right: 50px;
+	margin-left:50px;
+	margin-top: 10px;
 	border: 1px solid #222;
 	padding: 5px;
 	width: auto;
-	height: 300px;
+	max-height: 300px;
 	overflow: auto;
 	background-color: rgba(0,0,0,0.5);
 	
 }
 
-#log .time {
+.log .time {
 	width: 80px;
 	display: inline-block;
 }
 
-#log .user {
+.log .user {
 	float: right;
 	clear: right;	
 }
 
-#log ol {
-	padding: 10px;
-	margin: 10px;
+.log ol {
+	margin: 5px;
 }
 
-#log ol li {
+.log ol li {
 	margin-bottom: 3px;
 }
 

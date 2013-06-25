@@ -52,9 +52,31 @@ function _manageEvent(em) {
 	  setTimeout(function(){ $(".icon-dot").fadeIn(100); }, 500);
       var chat = $("#chat");
       if (em != '') {
-      	$("#log ol").prepend("<li>"+em.txt+"<span class='user' style='color:#"+(1000*parseInt(em.from))+"'>"+jsNow()+" : "+em.from+"</span></li>");
+      	jsCreateOlIfNeed(em.from).prepend("<li>"+em.txt+"<span class='user' style='color:#"+(1000*parseInt(em.from))+"'>"+jsNow()+" : "+em.from+"</span></li>");
 	  }        
       if( em.type == "need_refresh_now" ) { 
       }
       
+}
+
+function jsCreateOlIfNeed(user_id) {
+if(user_id != parseInt(user_id)) user_id = "Others";
+$(".log").css("border","1px solid transparent");
+
+var el = $("#user_"+user_id);
+el.css("border","1px solid green");
+
+if(el.length) {
+	return el.find("ol");
+} else {
+	var template = '<div class="log" id="user_'+user_id+'">'+
+	'<h2>Log '+user_id+':</h2>'+
+		'<ol reversed>'+
+		'</ol>'+
+	'</div>';
+	
+	$("#container").append(template);
+	var el = $("#user_"+user_id);
+	return el.find("ol");
+	}	
 }
