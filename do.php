@@ -451,7 +451,7 @@ if (isset($HTTP_GET_VARS['send_settings'])) {
   									WHERE id='$user_id'";
   								
 //  echo $sqlnews;									
-  push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Сохраняю <b title='$sqlnews'>параметры</b>"));
+  push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Сохраняю <b title='".addslashes($sqlnews)."'>параметры</b>"));
   								
   $result = mysql_query_my($sqlnews); 
   @$sql = mysql_fetch_array($result);
@@ -2106,6 +2106,7 @@ function create_start_database_if_need($user_id)
 
 if (isset($HTTP_GET_VARS['get_all_data2'])) 
 {
+
 $now = now();
 $now_time = $HTTP_GET_VARS['get_all_data2'];
 
@@ -2281,6 +2282,8 @@ if($only_md5!=1)
 	$res["all_data"] = $answer;
 	}
 	
+	push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Загружаю всю базу целиком: ".count($answer)."заметок + ".count($comments)." комментариев"));
+
 ///	echo md5($longtext)."<hr>";
 //	echo ($longtext);
 	echo json_encode($res);
