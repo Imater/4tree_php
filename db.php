@@ -16,7 +16,7 @@ function myCreateRecord($sql, $new_parent, $new_user) {
    				position = '".$sql["position"]."',
    				node_icon = '".$sql["node_icon"]."',
    				adddate = '".$sql["adddate"]."',
-   				changetime = '".now()."',
+   				changetime = '".now1()."',
    				title = '".addslashes($sql["title"])."', 
    				parent_id = '".$new_parent."',
    				text = '".addslashes($sql["text"])."',
@@ -30,6 +30,14 @@ function myCreateRecord($sql, $new_parent, $new_user) {
    return $id;
 };
 
+function now1()
+{
+//    return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds()).valueOf(); 
+
+    return (integer)(microtime(true)*1000);
+}
+
+
 function mySelectBranch($sql2, $new_parent, $new_user) {
 
   $sqlnews = "SELECT * FROM tree WHERE del=0 AND user_id=11 AND parent_id=".$sql2["id"];
@@ -39,7 +47,9 @@ function mySelectBranch($sql2, $new_parent, $new_user) {
 //  echo "<ol>";
   while (@$sql = mysql_fetch_array($result))
     {
+//	echo "sdfdfsd";
     $id = myCreateRecord($sql, $new_parent, $new_user);
+//	echo $id." - ";
     mySelectBranch($sql, $id, $new_user);
     }
 //  echo "</ol>";

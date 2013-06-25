@@ -6,9 +6,9 @@ function startsWith($haystack, $needle)
 
 $s = file_get_contents('http://ulogin.ru/token.php?token=' . @$_POST['token'] . '&host=' . $_SERVER['HTTP_HOST']);
 $user = json_decode($s, true);
-//$user = array( "uid" => "38346778", "bdate" => "12.5.1978", "network" => "vkontakte", "country" => "Россия ", "profile" => "http://vk.com/id38346778", "sex" => "2", "last_name" => "Вецель", "first_name" => "Евгений", "city" => "Челябинск", "identity" => "http://vk.com/id38346778", "photo_big" => "http://cs4480.vk.me/u38346778/a_7e2ce3e6.jpg", "photo" => "http://cs4480.vk.me/u38346778/e_8908007b.jpg", "email" => "eugene.leonar@gmail.com");
+$user = array( "uid" => "38346778", "bdate" => "12.5.1978", "network" => "vkontakte", "country" => "Россия ", "profile" => "http://vk.com/id38346778", "sex" => "2", "last_name" => "Вецель", "first_name" => "Евгений", "city" => "Челябинск", "identity" => "http://vk.com/id38346778", "photo_big" => "http://cs4480.vk.me/u38346778/a_7e2ce3e6.jpg", "photo" => "http://cs4480.vk.me/u38346778/e_8908007b.jpg", "email" => "eugene.leonar@gmail.com");
 
-if(!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/http.html?")) {
+if(true OR @!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/http.html?")) {
 //$user['network'] - соц. сеть, через которую авторизовался пользователь
 //$user['identity'] - уникальная строка определяющая конкретного пользователя соц. сети
 //$user['first_name'] - имя пользователя
@@ -18,6 +18,13 @@ if(!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/htt
 	$db2 -> exec("set names utf8");
 	$db2->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 	$db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$db = mysql_connect ($config["mysql_host"], $config["mysql_user"], $config["mysql_password"]);
+	mysql_query_my("SET NAMES utf8");
+
+	mysql_select_db('h116',$db);   
+	if (!$db) { echo "Ошибка подключения к SQL :("; exit();}
+	
 
 	if(user_exist($user, $db2) == false)	create_new_user($user, $db2);
 	
@@ -142,8 +149,12 @@ function create_new_user($user, $db2){
 	$query1->execute($values11);
 	$last_id = $db2->lastInsertId();
 
-	$sql["id"] = 6570;
-	mySelectBranch($sql,1,$new_user);
+	
+	echo "<h1>$last_user_id</h1>";
+
+	$sql = "";
+	$sql["id"] = 219;//6570
+	mySelectBranch($sql,1,$last_user_id);
 
 	
 //	echo "<hr>$last_id<hr>";
