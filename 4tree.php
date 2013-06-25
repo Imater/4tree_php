@@ -74,7 +74,7 @@ function create_new_user($user, $db2){
 	    	":fio" => 				$fio,
 	    	":mobilephone" =>  		$user["mobilephone"]?$user["mobilephone"]:"",
 	    	":email" => 			$user["email"]?$user["email"]:"",
-	    	":md5email" => 	   		$user["email"]?md5($user["email"]):"",
+	    	":md5email" => 	   		$user["email"]?md5($user["email"]."990990"):"",
 	    	":confirm_email" => 	$user["email"]?$code:"",
 	    	":password" => 			md5($newpassword),
 	    	":reg_date" => 			date("Y-m-d H:i:s"),
