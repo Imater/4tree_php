@@ -64,6 +64,7 @@ if(user_id != parseInt(user_id)) user_id = "Others";
 $(".log").css("border","1px solid transparent");
 
 var el = $("#user_"+user_id);
+
 el.css("border","1px solid green");
 
 if(el.length) {
@@ -77,6 +78,8 @@ if(el.length) {
 	
 	$("#container").append(template);
 	var el = $("#user_"+user_id);
+	el.css("border","1px solid green");
+	
 	return el.find("ol");
 	}	
 }
