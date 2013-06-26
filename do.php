@@ -1103,7 +1103,7 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 	    	`sync_id` = '".$sync_id."' ";
 	    $result2 = mysql_query($sqlnews2); 
 		}
-   	push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе: <b>".($k)." элементов</b>"));
+   	if($k) push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе: <b>".($k)." элементов</b>"));
 ////то же самое делаю с комментариями
 
 	$share_ids_tree_id = str_replace("id = ","tree.id = ",$share_ids);
@@ -1163,7 +1163,7 @@ if(true)
 	    	`sync_id` = 'comment_".$sync_id."' ";
 	    $result2 = mysql_query_my($sqlnews2); 
 		}
-   		push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе комментариев: <b>".($k)." элементов</b>"));
+   		if($k) push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе комментариев: <b>".($k)." элементов</b>"));
 }
 
 //////////////////////////////////////
