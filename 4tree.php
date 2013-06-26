@@ -30,6 +30,9 @@ if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/ht
 	
 	if(isset($_GET["set_to_current_account"])) {
 		$last_user_id = $_COOKIE['4tree_user_id'];
+		$session_md5 = md5($user["identity"]."990990");
+		$sqlnews = "DELETE FROM tree_users_social WHERE session_md5 = '".$session_md5."'";
+		$result = mysql_query_my($sqlnews); 
 		if($last_user_id AND mySaveToSocial($last_user_id,$user,$db,$db2)) user_exist($user, $db2);
 	} else {
 		if(user_exist($user, $db2) == false) create_new_user($user, $db2);
