@@ -1091,7 +1091,6 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 	while(@$sql = mysql_fetch_array($result))
 		{
 		if($display) echo "<li>Нужно удалить: ".$sql["id"]."</li>";
-   		push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе: <b>".($sql['id'])."</b>"));
 
 		$confirm_saved_id["need_del"][$k]["id"] = $sql["id"];
 		$confirm_saved_id["need_del"][$k]["command"] = "del";
@@ -1104,6 +1103,7 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 	    	`sync_id` = '".$sync_id."' ";
 	    $result2 = mysql_query($sqlnews2); 
 		}
+   	push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе: <b>".($k)." элементов</b>"));
 ////то же самое делаю с комментариями
 
 	$share_ids_tree_id = str_replace("id = ","tree.id = ",$share_ids);
@@ -1149,7 +1149,6 @@ if(true)
 	$k = 0;
 	while(@$sql = mysql_fetch_array($result))
 		{
-   		push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе комментариев: <b>".($sql['id'])."</b>"));
 		if($display) echo "<li>Нужно удалить: ".$sql["id"]."</li>";
 
 		$confirm_saved_id["need_del_comment"][$k]["id"] = $sql["id"];
@@ -1164,6 +1163,7 @@ if(true)
 	    	`sync_id` = 'comment_".$sync_id."' ";
 	    $result2 = mysql_query_my($sqlnews2); 
 		}
+   		push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе комментариев: <b>".($k)." элементов</b>"));
 }
 
 //////////////////////////////////////
