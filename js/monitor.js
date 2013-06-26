@@ -35,6 +35,10 @@ var pushstream = new PushStream({
 pushstream.onmessage = _manageEvent;
 pushstream.onstatuschange = _statuschanged;
 
+var snd3 = new Audio("img/tick2.mp3"); // buffers automatically when created
+snd3.play();
+
+
 function getMyDateFormat(date) {
     var d = date ? new Date(date) : new Date;
     var dt = [d.getFullYear(), d.getMonth(), d.getDay()].join("-"),
@@ -49,6 +53,7 @@ function jsNow()
 
 function _manageEvent(em) {
 	  $(".icon-dot").fadeOut(100);
+	  snd3.play();
 	  setTimeout(function(){ $(".icon-dot").fadeIn(100); }, 500);
       var chat = $("#chat");
       if (em != '') {
