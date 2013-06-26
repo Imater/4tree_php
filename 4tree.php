@@ -141,12 +141,12 @@ $(document).ready(jsDoFirst);
   <div id="lozung">
   Мы заботимся о ваших деревьях,<br> чтобы у вас оставалось время строить и воспитывать…
   <br><br>
-  <img src="http://upload.4tree.ru/data/u11/06-2013/clip_750_fc1baf3e.png" width="530" height="410">
+  <img src="./img/mainpage/clip_750_fc1baf3e.png" width="530" height="410">
   </div>
 </div>
 
 <div id="white">
-  <div id="air"><img src="http://upload.4tree.ru/data/u11/06-2013/clip_4152_1ff1f204.png" width="417" height="250"></div>
+  <div id="air"><img src="./img/mainpage/clip_4152_1ff1f204.png" width="417" height="250"></div>
 <p>дела + календарь + заметки<br>
 всё в одном дереве</p>
 </div>
@@ -190,7 +190,7 @@ $(document).ready(jsDoFirst);
 
 <div id="white" class="some_more">
 <center><b>HTML редактор:</b></center><br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_9375_e99fe479.png" width="400px" align="left">Текстовый html редактор.<br>
+<img src="./img/mainpage/clip_9375_e99fe479.png" width="400px" align="left">Текстовый html редактор.<br>
 Позволяет писать и украшать тексты форматированием. Вы можете добавить картинки не только из файла, но и из буфера обмена.<br><br>
 Вы можете комментировать собственные записи и отвечать на эти комментарии. Вы можете использовать редактор как дневник. Заметка сегодняшнего дня создаётся автоматически и доступна при помощи горячей клавиши.<br><br>
 В правом нижнем углу — можно заметить таймер, который можно заводить мышкой. Этот таймер настроен на работу с симтемой Pomodorro (25 минут работы, потом 5 минут перерыв. Каждые 4 "помидорки" 15 минутный отдых).<br><br>
@@ -199,7 +199,7 @@ $(document).ready(jsDoFirst);
 
 <div id="green" class="some_more">
 <center><b>Календарь:</b></center><br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_1448_80c8e22d.png" width="400px" align="left">Может отображать данные в режиме месяца, недели и дня.<br><br>
+<img src="./img/mainpage/clip_1448_80c8e22d.png" width="400px" align="left">Может отображать данные в режиме месяца, недели и дня.<br><br>
 Поддерживает перетаскивание дел с даты на дату. Дело можно переместить из дерева в календарь. При клике в дело календаря, эта заметка откроется и в дереве и в редакторе.<br><br>
 Текущее время отображается красной чертой.<br><br>
 Слева переключатели на: панель картинок и файлов, новости и поиск.<br><br>
@@ -210,11 +210,11 @@ $(document).ready(jsDoFirst);
 <center><b>3 режима отображения дерева:</b></center><br>
 <center>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Панельный режим:<br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_9087_31a9bd91.png" width="650px" align="center">
+<img src="./img/mainpage/clip_9087_31a9bd91.png" width="650px" align="center">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Режим дерева:<br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_6517_5d22e5da.png" width="650px" align="center">
+<img src="./img/mainpage/clip_6517_5d22e5da.png" width="650px" align="center">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Режим карты ума:<br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_8580_658cb30a.png" width="650px" align="center">
+<img src="./img/mainpage/clip_8580_658cb30a.png" width="650px" align="center">
 </center>
 <p>
 Любую заметку дерева можно превратить в папку, просто добавив в неё элементы при помощи клавиш alt+вправо.<br><br>
@@ -225,9 +225,9 @@ $(document).ready(jsDoFirst);
 </p>
 </div>
 
-<div id="green" class="some_more" style="height:600px !important;">
+<div id="green" class="some_more" style="height:360px !important;">
 <center>Добро пожаловать на альфа-тестирование 4tree.<br><br>
-<img src="http://upload.4tree.ru/data/u11/06-2013/clip_8495_e5256a80.png" width="650px" align="center"></center>
+<img src="./img/mainpage/clip_8495_e5256a80.png" width="450px" align="center"></center>
 </div>
 
 
