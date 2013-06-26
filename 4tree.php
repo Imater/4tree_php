@@ -28,7 +28,7 @@ if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/ht
 	mysql_select_db('h116',$db);   
 	if (!$db) { echo "Ошибка подключения к SQL :("; exit();}
 	
-	if(isset($_GET("set_to_current_account"))) {
+	if(isset($_GET["set_to_current_account"])) {
 		$last_user_id = $_COOKIE['4tree_user_id'];
 		if($last_user_id AND mySaveToSocial($last_user_id,$user,$db,$db2)) user_exist($user, $db2);
 	} else {

@@ -1259,7 +1259,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	  
 			  	  var loginform = '<b>Разрешить вход через соц.сервисы:</b>'+
 			  	  				  '<script src="//ulogin.ru/js/ulogin.js"></script>'+
-			  	  				  '<div id="uLogin" data-ulogin="display=panel;fields=first_name,last_name;'+ 								                  'providers=vkontakte,odnoklassniki,google,mailru,facebook,yandex,twitter;'+
+			  	  				  '<div id="uLogin" data-ulogin="display=panel;'+
+			  	  				  'fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;'+
+								  'providers=vkontakte,odnoklassniki,google,mailru,facebook,yandex,twitter;'+
 			  	  				  'hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php%3Fset_to_current_account"'+
 			  	  				  '></div>';
 			  	  
