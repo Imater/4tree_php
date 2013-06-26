@@ -1027,10 +1027,12 @@ if(isset($_GET['test']))
 		<label for="female">Женщина</label>
 	</div>
     <br>
+    <div id="login_social_form">. . .</div>
+	    <h3>Темы оформления:</h3>
     	<div id="tree_themes"></div>
     	<div class="left_label"></div>
     <br>
-	<div class="right_set" style="text-align:left">
+	<div class="right_set" style="text-align:center;width:100%;">
 	<div id='send_settings' class='button_send' style="margin-left:10px;">Сохранить</div>
 	<div id='close_settings' class='button_send' style="margin-left:10px">Закрыть</div>
 	</div>

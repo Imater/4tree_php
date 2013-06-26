@@ -1256,6 +1256,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		  	  $("#myslidemenu").on("click", "#show_settings", function(){
 			  	  api4panel.jsCloseAllMenu();
+			  	  
+			  	  var loginform = '<b>Разрешить вход через соц.сервисы:</b>'+
+			  	  				  '<script src="//ulogin.ru/js/ulogin.js"></script>'+
+			  	  				  '<div id="uLogin" data-ulogin="display=panel;fields=first_name,last_name;'+ 								                  'providers=vkontakte,odnoklassniki,google,mailru,facebook,yandex,twitter;'+
+			  	  				  'hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php%3Fset_to_current_account"'+
+			  	  				  '></div>';
+			  	  
+			  	  $("#tree_settings #login_social_form").html(loginform);
+			  	  
 		  	  	  var lnk = "do.php?get_settings=true";
 		  	  	  console.info(lnk);
 		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
@@ -1283,7 +1292,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				     	});
 					    $("#tree_themes").html(themes_div);
 
-					 	$("#tree_settings").slideDown(300);
+					 	$("#tree_settings").slideDown(900);
 				     }
 				  });
 			  	  return false;
@@ -4364,7 +4373,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	if(status=="start") {
 				preloader.trigger("show");
 				$(".sos").css("opacity","0.6");
-				$(".sos .icon-cd").css("color","#167b16");
+				$(".sos .icon-cd").css("color","#3b7b2f");
 				this_db.log("Начинаю синхронизацию.");
 				sync_now = true;
 				clearTimeout(sync_now_timer);
