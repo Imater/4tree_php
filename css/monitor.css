@@ -53,10 +53,16 @@ h2 {
 
 .log ol {
 	margin: 1px;
+	padding: 1px;
+	padding-left: 15px;
 }
 
 .log ol li {
 	margin-bottom: 3px;
+}
+
+.log ol li i{
+	color: #666;
 }
 
 .icon-dot {
