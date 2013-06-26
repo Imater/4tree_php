@@ -82,9 +82,10 @@ if(el.length) {
 	'</div>';
 	
 	$("#container").append(template);
+
 	var el = $("#user_"+user_id);
 	el.css("border","1px solid green");
-	
+	el.find("h2").load("do.php?user_by_id="+user_id);
 	return el.find("ol");
 	}	
 }
