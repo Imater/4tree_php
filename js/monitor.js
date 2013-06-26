@@ -57,7 +57,7 @@ function _manageEvent(em) {
 	  setTimeout(function(){ $(".icon-dot").fadeIn(100); }, 500);
       var chat = $("#chat");
       if (em != '') {
-      	jsCreateOlIfNeed(em.from).prepend("<li>"+em.txt+"<span class='user'>"+jsNow()+" : "+em.from+"</span></li>");
+      	jsCreateOlIfNeed(em.from).prepend("<li>"+em.txt+" ("+em.from+")<span class='user'>"+jsNow()+"</span></li>");
 	  }        
       if( em.type == "need_refresh_now" ) { 
       }
