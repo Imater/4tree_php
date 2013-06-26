@@ -43,7 +43,7 @@ function getMyDateFormat(date) {
     var d = date ? new Date(date) : new Date;
     var dt = [d.getFullYear(), d.getMonth(), d.getDay()].join("-"),
         tm = [d.getHours(), d.getMinutes(), d.getSeconds()].join(":");
-    return dt + " " + tm;
+    return tm;
 }
 
 function jsNow()
@@ -57,7 +57,7 @@ function _manageEvent(em) {
 	  setTimeout(function(){ $(".icon-dot").fadeIn(100); }, 500);
       var chat = $("#chat");
       if (em != '') {
-      	jsCreateOlIfNeed(em.from).prepend("<li>"+em.txt+"<span class='user' style='color:#"+(1000*parseInt(em.from))+"'>"+jsNow()+" : "+em.from+"</span></li>");
+      	jsCreateOlIfNeed(em.from).prepend("<li>"+em.txt+"<span class='user'>"+jsNow()+" : "+em.from+"</span></li>");
 	  }        
       if( em.type == "need_refresh_now" ) { 
       }
