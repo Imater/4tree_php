@@ -35,6 +35,8 @@ h2 {
 	display: inline-block;
 	width: 400px;
 	background-color: rgba(0,0,0,0.5);
+	border-radius: 10px;
+	box-shadow: 1px 1px 20px #bbbbbb;
 	
 }
 
