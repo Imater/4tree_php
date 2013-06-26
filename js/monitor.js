@@ -64,11 +64,11 @@ function _manageEvent(em) {
 
 function jsCreateOlIfNeed(user_id) {
 if(user_id != parseInt(user_id)) user_id = "Others";
-$(".log").css("border","5px solid transparent");
+$(".log").css("border","3px solid transparent");
 
 var el = $("#user_"+user_id);
 
-el.css("border","1px solid green");
+el.css("border","3px solid green");
 
 if(el.length) {
 	return el.find("ol");
@@ -82,7 +82,7 @@ if(el.length) {
 	$("#container").append(template);
 
 	var el = $("#user_"+user_id);
-	el.css("border","5px solid green");
+	el.css("border","3px solid green");
 	el.find("h2").load("do.php?user_by_id="+user_id);
 	return el.find("ol");
 	}	
