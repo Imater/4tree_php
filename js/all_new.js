@@ -5373,6 +5373,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	else 
 		 	  {
 		 	  var icon = data.icon.replace("mini/","");
+	    	  var icon = icon?icon.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
 		 	  var img = "<div class='node_img node_box' style='background-image:url("+icon+")'></div>";
 		 	  }
 		 /////
