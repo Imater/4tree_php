@@ -1137,7 +1137,8 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				// tab
 				if (key === this.keyCode.TAB && this.opts.shortcuts )
 				{
-					e.preventDefault();
+					this.$editor.blur();
+					return false;
 
 					if (pre === true && !e.shiftKey)
 					{

@@ -166,6 +166,7 @@ if(isset($_GET['test']))
 
 
 <div id="wrap" class="">
+<div id="welcome_screen"></div>
 <div id='p1'></div><div id='p2'></div><div id='p3'></div>
 
 <div id="header">
@@ -455,7 +456,9 @@ if(isset($_GET['test']))
 	<div class="header_toolbar">
 	</div>
 
-
+			<div id="path_line">
+				<ul><li>Статьи</li><li>Про личную эффективность и ТМ</li><li>Так ли необходим нам GTD-статья</li><li>Ещё раз пробую</li><li>Ух ты</li><li>Газманов</li></ul>
+			</div>
 			<div id="mypanel" style="">
 			</div>
 			<div class="favorit_tabs noselectable" id="fav_mypanel">
@@ -1042,8 +1045,9 @@ if(isset($_GET['test']))
 	<div class="set_center">
 </div>
 
-
 </div>
+
+
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
 (function (d, w, c) {
@@ -1072,5 +1076,6 @@ if(isset($_GET['test']))
 </script>
 <noscript><div><img src="//mc.yandex.ru/watch/21558199" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+
 </body>
 </html>

@@ -5078,6 +5078,7 @@
                                 oId = oIdx == 0 ? c.sourceId : c.targetId,
                                 oInfo = _jsPlumb.getCachedData(oId),
                                 oOffset = oInfo.o, oWH = oInfo.s;
+                            if(!oOffset) { _jsPlumb.detachEveryConnection(); return false; }
                             anchorParams.txy = [ oOffset.left, oOffset.top ];
                             anchorParams.twh = oWH;
                             anchorParams.tElement = c.endpoints[oIdx];

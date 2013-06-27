@@ -1,4 +1,65 @@
+function jsHideWelcome() {
+	myjsPlumb2.detachEveryConnection();
+	$("#mypanel").off("scroll.my");
+}
 
+function jsLoadWelcome() {
+
+	//off("click",".welcome_pointer")
+	$("#welcome_screen").on("click",".pointer",function(){
+		var myid = $(this).attr("myid");
+		$(".pointer.active").removeClass("active");
+		$(this).addClass("active");
+		$(".welcome_page.active").removeClass("active");;
+		$(".welcome_page[myid='"+myid+"']").addClass("active");
+		jsDrawWelcomeLine();
+		return false;
+	});
+	var tm;
+	$("#mypanel").on("scroll.my",function(){
+		clearTimeout(tm);
+		tm = setTimeout(function(){
+			myjsPlumb2.setSuspendDrawing(false,true);
+		}, 5);
+		return false;
+	});
+
+	$("#welcome_screen").draggable({
+		drag:function(){
+					myjsPlumb2.setSuspendDrawing(false,true);
+		}
+	});
+
+	lnk = "do.php?load_welcome";
+	$("#welcome_screen").load(lnk, function(){
+		setTimeout(function(){ $("#welcome_screen").fadeIn(500,function(){
+			jsDrawWelcomeLine();
+		}); }, 500);
+	});
+}
+
+function jsDrawWelcomeLine(){
+	myjsPlumb2.detachEveryConnection();
+	jsPlumb.Defaults.Container = $("body");
+	var stateMachineConnector = {				
+		connector:"Bezier",
+		paintStyle:{lineWidth:2,strokeStyle:"#d10008"},
+		endpoint:"Blank",
+		anchor:"AutoDefault",
+		Container:$("#wrap"),
+		overlays:[ ["PlainArrow", {location:1, width:6, length:18} ]]
+	};
+
+	var line_to = $(".welcome_page.active").attr("line_to");
+    	if(line_to) {
+    		if($(line_to).length) {
+    			myjsPlumb2.connect({source:"welcome_screen", target: $(line_to), scope:"someScope"},stateMachineConnector);
+    			myjsPlumb2.setSuspendDrawing(false,true);
+    	}
+    }
+   	jsPlumb.Defaults.Container = $("#mypanel");
+
+}
 
 function getWordAt(s, pos) {
   // make pos point to a character of the word
@@ -275,14 +336,13 @@ function jsAddComment(tree_id,parent_id,text)
 
 function jsGo(arrow)
 {
-		var isTree = $("#top_panel").hasClass("panel_type1");
 
 if(arrow=='up')
 	{
 	lastclick = new Date();
 	current = $("#mypanel .selected");
 	if(current.length==0) current = $("#mypanel li:first").addClass("selected");
-	prev = current.prev("div").prev("li:visible").find("ul").find("li:visible:last");
+	prev = current.prev("div").prev("li:visible").find("ul:first").find("li:visible:last");
 	
 	if(prev.length==0)
 	  {
@@ -305,7 +365,8 @@ if(arrow=='up')
 	if(prev.length==1) 
 		{
 		current.removeClass("selected");
-		prev.addClass("selected").click();
+		prev.addClass("selected");
+		prev.find(".n_title:first").click();
 		}
 	}
 
@@ -335,7 +396,8 @@ if(arrow=='down')
 	if(prev.length==1) 
 		{
 		current.removeClass("selected");
-		prev.addClass("selected").click();
+		prev.addClass("selected");
+		prev.find(".n_title:first").click();
 		}
 	}
 
@@ -650,7 +712,11 @@ var add_do = window.location.hash;
 if(add_do.indexOf("add_do:")!=-1)
 	{
 	var text_of_do = decodeURIComponent(add_do).replace("#add_do:","").replace("+"," ");
-	setTimeout(function() { jsAddDo( "new", 599, text_of_do ); jsTitle("Добавил новое дело: "+text_of_do,10000); }, 500);
+	setTimeout(function() { 
+			jsAddDo( "new", 599, text_of_do ); 
+	     	var new_id = api4tree.jsAddDo( "to_new_folder", text_of_do, undefined, undefined, "last" ); 
+	     	api4panel.jsOpenPath(new_id.id);
+			}, 500);
 	}
 
 }
