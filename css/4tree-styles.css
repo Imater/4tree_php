@@ -5470,7 +5470,7 @@ font-family: Verdana, Arial;
 .add_do_panel_top input {
 -webkit-appearance: none;
 border: 1px solid #DDD;
-top: 2px;
+top: 0px;
 left: 2.5em;
 right: 1.2em;
 width: auto;
@@ -5485,7 +5485,7 @@ outline: none;
 .add_do_panel_top .node_img {
 	margin: 0px;
 	margin-left: 0.5em;
-	margin-top: 5px;
+	margin-top: 3px;
 	opacity: 0.5;
 }
 

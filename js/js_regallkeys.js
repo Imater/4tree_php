@@ -713,7 +713,6 @@ if(add_do.indexOf("add_do:")!=-1)
 	{
 	var text_of_do = decodeURIComponent(add_do).replace("#add_do:","").replace("+"," ");
 	setTimeout(function() { 
-			jsAddDo( "new", 599, text_of_do ); 
 	     	var new_id = api4tree.jsAddDo( "to_new_folder", text_of_do, undefined, undefined, "last" ); 
 	     	api4panel.jsOpenPath(new_id.id);
 			}, 500);

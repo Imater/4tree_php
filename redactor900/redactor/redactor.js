@@ -3563,7 +3563,12 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			html = html.replace(/<embed(.*?)>([\w\W]*?)<\/embed>/gi, '[embed$1]$2[/embed]');
 			html = html.replace(/<object(.*?)>([\w\W]*?)<\/object>/gi, '[object$1]$2[/object]');
 			html = html.replace(/<param(.*?)>/gi, '[param$1]');
-			html = html.replace(/<img(.*?)style="(.*?)"(.*?)>/gi, '[img$1$3]');
+			
+			if(true) {
+				html = html.replace(/<img(.*?)(.*?)>/gi, '[img$1$2]');
+			} else {
+				html = html.replace(/<img(.*?)style="(.*?)"(.*?)\>/gi, '[img$1$3]'); //спорный момент
+			}
 
 			// remove attributes
 			html = html.replace(/<(\w+)([\w\W]*?)>/gi, '<$1>');
