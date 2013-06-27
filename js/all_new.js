@@ -3459,7 +3459,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 //api4tree.jsFindLongText(6796).done(function(text){console.log(text);})
 		 this.jsFindLongText = function(id, newtext, dont_sync) {
 	    	var d=$.Deferred();
-
+			
 		 	if(!id) { d.resolve(); return d.promise(); } //если нет id
 
 			if(dont_sync=="dont_sync") { var save_anyway = "dont_sync"; }
@@ -3505,7 +3505,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
         			d.resolve(myelement.text);
         		} else {
 	    	  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
-    		  			d.resolve(record?record.text:"");
+	    	  			var the_text = record?record.text.replace("http://upload.4tree.ru/","https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
+    		  			d.resolve(the_text);
 			  			});
 			  	}
     	  	}
@@ -3676,7 +3677,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				 	 element.parent_id = "_filters";
 				 	 element.position = 0;
 				 	 element.tmp_childrens = "100";
-				 	 element.title = "<i class='icon-clock-3'></i> 100 недавних изменений";
+				 	 element.title = "<i class='icon-clock-1'></i> 100 недавних изменений";
 					 answer.push(element);
 				 }
 
@@ -5371,6 +5372,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	else 
 		 	  {
 		 	  var icon = data.icon.replace("mini/","");
+		 	  icon = icon.replace("http://upload.4tree.ru/","https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/");
 		 	  var img = "<div class='node_img node_box' style='background-image:url("+icon+")'></div>";
 		 	  }
 		 /////

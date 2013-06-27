@@ -3721,14 +3721,14 @@ if($newname_preview1) {
 	$preview2 = create_image_preview("/".$newname, 50, 50, "1:1");
 	$response2 = save_file_to_amazone($preview2, $newname_preview2);
 
-	$preview_big = "http://upload.4tree.ru/".$newname_preview1;
-	$preview_litle = "http://upload.4tree.ru/".$newname_preview2;
+	$preview_big = "https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/".$newname_preview1;
+	$preview_litle = "https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/".$newname_preview2;
 } else {
 	$response = save_file_to_amazone($newname,$newname);	
 }
 
 if ($response->isOK()) {
-	$filelink = "http://upload.4tree.ru/".$newname;
+	$filelink = "https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/".$newname;
 	
 	$answer = array(
 		'filelink' => $filelink,
