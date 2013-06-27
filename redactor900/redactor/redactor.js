@@ -10,7 +10,7 @@
 	Usage: $('#content').redactor();
 */
 
-var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-italic',  deleted:'icon-font', unorderedlist:'icon-list-1', orderedlist:'icon-list-numbered', outdent:'icon-indent-left', indent:'icon-indent-right', image:'icon-picture-1', video:'icon-video-1', file:'icon-attach', table:'icon-th-1', link:'icon-link-1', fontcolor:'icon-palette', backcolor:'icon-tint', alignment:'icon-align-center', horizontalrule:'icon-minus'}; // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-italic',  deleted:'icon-font', unorderedlist:'icon-list-2', orderedlist:'icon-th-list-3', outdent:'icon-indent-left', indent:'icon-indent-right', image:'icon-picture-1', video:'icon-video-1', file:'icon-attach', table:'icon-th-1', link:'icon-link-1', fontcolor:'icon-palette', backcolor:'icon-tint', alignment:'icon-align-center', horizontalrule:'icon-minus'}; // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 
 
 (function($)
