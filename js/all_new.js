@@ -3972,6 +3972,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				position = max + 10;
 			}
 			
+			title = strip_tags(title).substr(0,2000);
+			
 			element.id = new_id.toString();
 			element.title = title;
 			element.date1 = date1?date1:"";
