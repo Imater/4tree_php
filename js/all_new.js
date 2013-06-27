@@ -3284,7 +3284,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	var my_element = [];
 				my_element.push(answer);
 				db.get(global_table_name+"_comments",id.toString()).done(function(record) {
-   	  				my_element[0].text = record?record.text:"";
+		    	    
+		    	    var the_text = record?record.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
+   	  				my_element[0].text = the_text;
 
    	  				if(fields) { //если нужно присваивать значения
    	  				   var record;
