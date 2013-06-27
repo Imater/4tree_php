@@ -3502,10 +3502,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
         		var myelement = api4tree.jsFind(id);
     			if(!myelement) { d.resolve(); return d.promise(); }
         		if(myelement.tmp_text_is_long==0) {
-        			d.resolve(myelement.text);
+	    	  		var the_text = myelement?myelement.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
+        			d.resolve(the_text);
         		} else {
 	    	  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
-	    	  			var the_text = record?record.text.replace("http://upload.4tree.ru/","https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
+	    	  			var the_text = record?record.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
     		  			d.resolve(the_text);
 			  			});
 			  	}
@@ -5372,7 +5373,6 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	else 
 		 	  {
 		 	  var icon = data.icon.replace("mini/","");
-		 	  icon = icon.replace("http://upload.4tree.ru/","https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/");
 		 	  var img = "<div class='node_img node_box' style='background-image:url("+icon+")'></div>";
 		 	  }
 		 /////
