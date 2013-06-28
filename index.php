@@ -577,7 +577,7 @@ if(isset($_GET['test']))
 					</div>
 					<div class="red_new_window" style="" title="Открыть в новом окне"><i class="icon-forward"></i></div>
 					<div class="fullscreen_button fullscreen_editor icon-resize-full" title="На весь экран"></div>	
-					<div id="wiki_back_button" title="Вернуться назад в wiki"><i class="icon-left-bold"></i></div>
+					<div id="wiki_back_button" title="Вернуться назад в wiki"><i class="icon-left-bold"></i> вернуться</div>
 					
 	  			
 	  		</div>
@@ -620,6 +620,7 @@ if(isset($_GET['test']))
 
 	
 	<div id="search_panel">
+  	<div id="start_welcome_page"><i class="icon-help-circle"></i></div>
   		<input type="text" id="search_filter">
   	</div>
 	

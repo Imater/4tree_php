@@ -219,6 +219,15 @@ cursor: pointer;
 border: 1px solid transparent;
 
 }
+
+.transition {
+	-moz-transition: all 0.5s; 
+-webkit-transition: all 0.5s;  
+-ms-transition: all 0.5s;  
+-o-transition: all 0.5s;  
+transition: all 0.5s;  
+}
+
 .h_button:hover
 {
 -moz-transition: all 0.3s; 
@@ -2235,13 +2244,20 @@ display: none;
 display: none;
 position: absolute;
 left: 16px;
-top: 34px;
+top: 22px;
+right: 35px;
 font-size: 10px;
-background: magenta;
+background: rgb(0,124,10);
 cursor: pointer;
 padding: 2px 2px;
 color: white;
-opacity: 0.5;
+z-index: 1;
+text-align: center;
+-moz-box-shadow: 1px -1px 6px #444;
+-webkit-box-shadow: 1px -1px 6px #444;
+box-shadow: 1px -1px 6px #444;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 }
 
 
@@ -2309,11 +2325,13 @@ height: 20px;
 border-radius: 5px;
 border: 1px solid #888;
 display: inline-block;
-width: 35px;
+min-width: 35px;
 height: 18px;
 padding-top: 1px;
 margin-right: 7px;
 margin-left: 5px;
+padding-left: 3px;
+padding-right: 3px;
 font-size: 15px;
 text-align: center;
 vertical-align: middle;
@@ -5881,17 +5899,31 @@ color: #777 !important;
 	height: 250px;
 	width: 350px;
 	background: #FFF;
-	border: 1px solid #888;
+	border: 1px solid #005200;
 	-moz-box-shadow: 3px 5px 21px #000;
 	-webkit-box-shadow: 3px 5px 21px #000;
 	box-shadow: 3px 5px 21px #000;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
 	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 	z-index: 99999999;
-	font-size: 11px;
+	font-size: 12px;
 	padding: 5px;
 	border-radius: 3px;
-	cursor: move®;
+	color:#000;
+	text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.5);
+	cursor: pointer;
+	
+background: rgb(157,213,58); /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzlkZDUzYSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9Ijg5JSIgc3RvcC1jb2xvcj0iI2ExZDU0ZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjkxJSIgc3RvcC1jb2xvcj0iIzgwYzIxNyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM3Y2JjMGEiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  rgba(157,213,58,1) 0%, rgba(161,213,79,1) 89%, rgba(128,194,23,1) 91%, rgba(124,188,10,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(157,213,58,1)), color-stop(89%,rgba(161,213,79,1)), color-stop(91%,rgba(128,194,23,1)), color-stop(100%,rgba(124,188,10,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(157,213,58,1) 0%,rgba(161,213,79,1) 89%,rgba(128,194,23,1) 91%,rgba(124,188,10,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(157,213,58,1) 0%,rgba(161,213,79,1) 89%,rgba(128,194,23,1) 91%,rgba(124,188,10,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(157,213,58,1) 0%,rgba(161,213,79,1) 89%,rgba(128,194,23,1) 91%,rgba(124,188,10,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(157,213,58,1) 0%,rgba(161,213,79,1) 89%,rgba(128,194,23,1) 91%,rgba(124,188,10,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9dd53a', endColorstr='#7cbc0a',GradientType=0 ); /* IE6-8 */
+	
 }
 
 #welcome_pointer {
@@ -5907,7 +5939,7 @@ font-size: 14px;
 
 #welcome_pointer .pointer{
 display: inline-block;
-color:#888;
+color:rgb(222,250,196);
 cursor: pointer;
 margin-left: 1px;
 margin-right: 1px;
@@ -5922,6 +5954,7 @@ color: #000;
 	overflow-y: auto;
 	height: 100%;
 	padding: 10px;
+	text-align: center;
 }
 
 .welcome_page img {
@@ -5933,6 +5966,7 @@ color: #000;
 .welcome_page h1 {
 margin-top: 0px;
 font-size: 18px;
+cursor: move;
 }
 
 .welcome_page.active {
@@ -6000,4 +6034,59 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
     margin: 0px;
     padding: 0px;
     height: 100%;
+}
+
+#hide_welcome {
+	position: absolute;
+	right: 0px;
+	top: 5px;
+	font-size: 20px;
+	color: rgb(222,250,196);
+	cursor: pointer;
+	text-shadow: none;
+}
+
+#hide_welcome:hover {
+	color:#000;
+}
+
+#welcome_screen .alt_button {
+border-radius: 5px;
+font-weight: bold;
+border: 1px solid #888;
+display: inline-block;
+width: 40px;
+height: 22px;
+line-height: 22px;
+padding-top: 1px;
+margin-right: 7px;
+margin-left: 5px;
+font-size: 15px;
+text-align: center;
+vertical-align: middle;
+background: white;
+-moz-box-shadow: 1px 3px 3px #444;
+-webkit-box-shadow: 1px 3px 3px #444;
+box-shadow: 1px 3px 3px #111;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+}
+
+#welcome_screen .alt_button i {
+padding-top: 4px;
+margin-left: 2px;
+display: inline-block;
+}
+
+#start_welcome_page {
+	position: absolute;
+	left: -28px;
+	font-size: 20px;
+	cursor: pointer;
+}
+
+#start_welcome_page:hover,#start_welcome_page.active {
+color: rgb(157,213,58);
+text-shadow: 1px 2px 4px #000;
+
 }

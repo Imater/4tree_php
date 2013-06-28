@@ -555,7 +555,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  	for(var i=0;i<p_len;i++)
     	  		{
     	  		var id = api4tree.jsFindByTitle(parent_id, path[i]);  //ищу запись у родителя
-    	  		if(!id) var id = this_db.jsAddDo(parent_id, path[i]).id; //создаю, если нет такой записи
+    	  		if(!id) var id = this_db.jsAddDo(parent_id, path[i],undefined,undefined,undefined,"dont_parse_date").id; //создаю, если нет такой записи
     	  		parent_id = id;
     	  		}
     	  	return id;	
@@ -1214,6 +1214,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
 				     if(j=="success") {
 				     	var themes_div = "";
+				     	
+				     	if(data.welcome == 0) jsLoadWelcome();
+				     	
 				     	if(data.fio) {
 					     	var name = data.fio.split(" ");
 					     	data.fio = name[name.length-1];
@@ -1401,6 +1404,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			   
 			       $('.bottom_left,.resize_me i').addClass('noselectable');
 			   
+	       		   var move_t;
 			       $("body").mousemove(function(e) {
 			     		  var w = $(document).width();
 			     		  var neww = e.pageX-25;			  
@@ -1410,6 +1414,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     		  }
 			     		  procent = parseInt( 100*(parseFloat(neww)/parseFloat(w)*100),10 )/100;
 			     		  main_x = procent;
+			     		  clearTimeout(move_t);
+			     		  move_t = setTimeout(function(){
+	   		      			  myjsPlumb2.setSuspendDrawing(false,true);
+			     		  },20);
 			     		  onResize();	
 			     	});
 			   
@@ -2031,14 +2039,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	isTree = false;
 			      	$("#top_panel").attr("class","panel_type3");
 			      	$("#mypanel").html("");
-				  	api4panel.jsShowTreeNode(1,false);
+				  	api4panel.jsShowTreeNode(1);
 			      	onResize();
 			      } else if( tab_name == "tree_view_tree" ) {
 				  	isMindmap = false;
 				  	isTree = true;
 			      	$("#top_panel").attr("class","panel_type1");
 			      	$("#mypanel").html("");
-				  	api4panel.jsShowTreeNode(1,false);
+				  	api4panel.jsShowTreeNode(1);
 			      	$("#panel_1").nextAll(".panel").remove();
 			      	onResize();
 			      } else if( tab_name == "tree_view_mindmap" ) {
@@ -2046,7 +2054,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	isTree = true;
 			      	$("#top_panel").attr("class","panel_type1 mindmap");
 			      	$("#mypanel").html("");
-				  	api4panel.jsShowTreeNode(1,false);
+				  	api4panel.jsShowTreeNode(1);
 			      }
 			  });
 
@@ -2486,17 +2494,20 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  //переход в дневник и обратно
 			  $('body').delegate(".todaydate","click", function ()
 			    {
-			     if(!member_old_id) {
-	   			     member_old_id = api4tree.node_to_id( $(".selected").attr('id') );
-	   			     console.info("Запомнил "+member_old_id);
-	   				 this_db.jsDiaryPath( jsNow() );
-			     	 setTimeout(function(){ $(".redactor_").focus(); },200);
-   			     } else {
-	   			     console.info("Вспомнил "+member_old_id);
-	   			     api4panel.jsOpenPath(member_old_id);
-	   			     member_old_id = false;
-   			     }
-
+	   			 if(!$("#wiki_back_button").is(":visible")) {
+	   			 	var member_old_id = api4tree.node_to_id( $(".selected").attr('id') );
+	   			 	var back_title = $(".selected .n_title").html();
+	   			 } else {
+	   			  	var member_old_id = 0;
+	   			 }
+	   			 
+	   		     this_db.jsDiaryPath( jsNow() );
+	   			 if(member_old_id) {
+	   			 	$("#wiki_back_button").attr("myid",member_old_id);
+	   			 	$("#wiki_back_button").html(back_title+' <i class="icon-left-bold"></i>');
+	   			 }
+	   			 $("#wiki_back_button").show()
+			     setTimeout(function(){ $(".redactor_").focus(); },200);
 			     return false;
 			    });
 			    
@@ -2762,7 +2773,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  if(el.title=="") {
 				  	myhtml +="<div class='help_divider'></div>";
 				  } else {
-				  	myhtml += "<li><b>alt </b><span class='help_plus'>+</span><b>"+el.key+
+				  	if(!el.no_alt) var alt = "<b>alt </b><span class='help_plus'>+</span>";
+				  	else alt = "<b style='opacity:0'>alt </b><span  style='opacity:0' class='help_plus'>+</span>";
+				  	myhtml += "<li>"+alt+"<b>"+el.key+
 				  			"</b><span class='help_title'>- "+el.title+"</span></li>";
 				  }
 			  });
@@ -2784,14 +2797,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //обработка клавиш клавиатуры
 		  function jsMakeWindowKeyboardKeys() {
 			  var alt_hide_timer, alt_show_timer_started = false;
-			  $(window).keyup(function(e){
-			    
-			  	 if((e.keyCode==16)) { //Shift
-			  	 	mymetaKey = false;
-			     }
 			  
-			  	
-			  	 if(alt_show_timer_started==true) { //alt - при отпускании, скрывает подсказку
+			  function jsHide_help() {
 			  	 	clearTimeout(alt_hide_timer);
 			  	 	alt_hide_timer = setTimeout(function(){
 				  	 	alt_show_timer_started = false;
@@ -2800,6 +2807,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	 	mymetaKey = false;
 //				  	 	console.info("HIDING...");
 			  	 	},100);
+			  }
+			  
+			  $(window).keyup(function(e){
+			    
+			  	 if((e.keyCode==16)) { //Shift
+			  	 	mymetaKey = false;
+			     }
+			  	
+			  	 if(alt_show_timer_started==true) { //alt - при отпускании, скрывает подсказку
+			  	 	jsHide_help();
 			  	 }
 			    });
 			  
@@ -2814,7 +2831,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	 	show_help_timer = setTimeout(function(){ mymetaKey = true; },50);
 			  	 	}
 			  	  
-			  	 } //регистрируем глобально, что нажата Shift
+			  	 } 
 			  	 
 			  	 if((e.altKey==true) && (e.keyCode==18)) { //нажатый альт вызывает помощь по горячим клавишам
 				  	if(alt_show_timer_started == false)  {
@@ -2826,13 +2843,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 			     key_help.push({key:"D",title:"открыть дневник"});
 			  	 if( (e.altKey==true) && (e.keyCode==68) )  { //D - открыть дневник
-			    	   e.preventDefault();
+			    	   e.preventDefault();					   
+			    	   jsHide_help();
 			      	   $(".todaydate").click();
 		         }
 			  
 			     key_help.push({key:"A",title:"добавить дело"});
 			  	 if( (e.altKey==true) && (e.keyCode==65) )  { //alt+A - быстрое добавление дел
 				       e.preventDefault();
+			    	   jsHide_help();
 				  	   if(!$("#add_do").hasClass("active")) {
 				  	   		$("#add_do").focus();
 		  	   		   } else {
@@ -2850,6 +2869,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     key_help.push({key:"R",title:"синхронизировать с сервером"});
 			  	 if( (e.altKey==true) && (e.keyCode==82) ) { //alt+R - обновляю дерево
 			       e.preventDefault();
+		    	   jsHide_help();
 			  	   $(".m_refresh")[0].click();
 			  	   return false;
 		  	     }
@@ -2857,12 +2877,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     key_help.push({key:"P",title:"добавить одну Pomidorro"});
 			  	 if( (e.altKey==true) && (e.keyCode==80) ) { //alt+P - обновляю дерево
 			       e.preventDefault();
+				   jsHide_help();
 			       this_db.jsAskForPomidor();
 			  	   return false;
 			  	 }
 			     key_help.push({key:"G",title:"Стартовать таймер Pomidorro"});
 			  	 if( (e.altKey==true) && (e.keyCode==71) ) { //alt+G - стартую помидорку
 			       e.preventDefault();
+				   jsHide_help();
 				   if(!$(".pomidor_now").attr('id')) {
 				       var id=1;				   	
 				   } else {
@@ -2878,40 +2900,47 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     key_help.push({key:"",title:""});
 			  	 if( (e.altKey==true) && (e.keyCode==70) ) { //alt+F - полноэкранный режим редактора
 			       e.preventDefault();
+				   jsHide_help();
 			  	   $(".fullscreen_editor").click();
 			  	   return false;
 			  	 }
 			     key_help.push({key:"1",title:"вид №1"});
 			  	 if( (e.altKey==true) && (e.keyCode==49) ) {
 			       e.preventDefault();
+				   jsHide_help();
 			  	   $("#v1").click();
 			  	 }
 			     key_help.push({key:"2",title:"вид №2"});
 			  	 if( (e.altKey==true) && (e.keyCode==50) ) {
 			       e.preventDefault();
+				   jsHide_help();
 			  	   $("#v2").click();
 			  	 }
 			     key_help.push({key:"3",title:"вид №3"});
 			  	 if( (e.altKey==true) && (e.keyCode==51) ) {
 			       e.preventDefault();
+				   jsHide_help();
 			  	   $("#v3").click();
 			  	 }
 			     key_help.push({key:"4",title:"вид №4"});
 			     key_help.push({key:"",title:""});
 			  	 if( (e.altKey==true) && (e.keyCode==52) ) {
 			       e.preventDefault();
+				   jsHide_help();
 			  	   $("#v4").click();
 			  	 }
 			  	   
 			     key_help.push({key:"+",title:"увеличить шрифт"});
 			  	 if( (e.altKey==true) && ((e.keyCode==187) || (e.keyCode==61) || (e.keyCode==231)) ) {
 			       e.preventDefault();
+				   jsHide_help();
 			  	   $(".m_zoom_in")[0].click();
 			  	 }
 
 			     key_help.push({key:"–",title:"уменьшить шрифт"});
 			  	 if( (e.altKey==true) && ((e.keyCode==189) || (e.keyCode==173) ) ) {
 			       e.preventDefault();
+				   jsHide_help();
 			  	   $(".m_zoom_out")[0].click();
 			  	 }
 
@@ -2919,22 +2948,26 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     key_help.push({key:"",title:""});
 			  	 if( (e.altKey==true) && (e.keyCode==48) ) {
 			       e.preventDefault();
+				   jsHide_help();
 			  	   $(".m_zoom_default")[0].click();
 			  	 }
 			  	   
 			     key_help.push({key:"<i class='icon-down-bold'></i>",title:"добавить дело вниз"});
 			  	 if( (e.altKey==true ) && (e.keyCode==40) ) { //alt + вниз
 			       e.preventDefault();
+				   jsHide_help();
 				   api4tree.jsAddDoLeftRight('down');
 			  	 }
 			     key_help.push({key:"<i class='icon-right-bold'></i>",title:"добавить дело вправо"});
 			  	 if( (e.altKey==true) && (e.keyCode==39) ) { //alt + вправо
 			       e.preventDefault();
+				   jsHide_help();
 				   api4tree.jsAddDoLeftRight('right');
 			  	 }
 
 			     if( (e.altKey==false) && (e.keyCode==9) ) { //TAB - в редактор / в дерево	
 			        e.preventDefault();
+				    jsHide_help();
 			        if( !$("#redactor").is(":focus") ) {
 			        	$(".redactor_").focus();
 			        } else {
@@ -2955,6 +2988,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			     if( (e.altKey==false) && (e.keyCode==13) ) { //enter - запускаем редактирование
 			        e.preventDefault();
+					jsHide_help();
 			       	var ntitle = $(".selected").find(".n_title");
 			      	ntitle.attr("contenteditable","true").attr("spellcheck","false").focus(); 
 			      	ntitle.attr("old_title",ntitle.html());
@@ -2988,6 +3022,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	 }
 			    } //если мы не в редакторе
 			  	   
+			     key_help.push({key:"",title:""});
+			     key_help.push({key:"Enter",title:"редактирование заголовка", no_alt:true});
+			     key_help.push({key:"Tab",title:"перейти в редактор/обратно", no_alt:true});
+
 			  	 jsMakeHelpKeys(key_help); //заполнение подсказки клавиш
 			 }); //keydown
 			  
@@ -3031,6 +3069,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	      //РЕГИСТРАЦИЯ ВСЕХ КНОПОК И СОБЫТИЙ
 		  this.jsRegAllKeys = function() {
 		  
+		  	$("#start_welcome_page").on("click",function(){
+			  if( !$("#welcome_screen").is(":visible") ) {
+			  	jsLoadWelcome();
+			  } else {
+			  	jsHideWelcome();
+			  }
+			  return false;
+			});
+
 		  	(function startDropDownMenu(){
 				var options = {minWidth: 420, arrowSrc: 'b_menu/demo/arrow_right.gif'};
 				$('#main_menu').menu(options);
@@ -3205,7 +3252,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	  		         (typeof fields.title != "undefined") ||
 	  		         (typeof fields.date1 != "undefined") ||
 	  		         (typeof fields.date2 != "undefined") ||
-	  		         (typeof fields.del   != "undefined") ||
+	  		         (typeof fields["del"]   != "undefined") ||
 	  		         (typeof fields.id    != "undefined") ) {
    		         	after_save1 = function() { this_db.jsUpdateNextAction(); };
 		  		 }
@@ -3215,7 +3262,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  		 }
 
   		         if( (typeof fields.did   != "undefined") || //если нужно будет пересчитать детей у родителя
-	  		         (typeof fields.del   != "undefined") ||
+	  		         (typeof fields["del"]   != "undefined") ||
 	  		         (typeof fields.date1 != "undefined") ||
 	  		         (typeof fields.date2 != "undefined") ||
 	  		         (typeof fields.id    != "undefined") ) {
@@ -3243,7 +3290,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	element.parent_id = parseInt(parent_id);
 		  	element.tree_id = tree_id;
 		  	element.text = text;
-		  	element.del = 0;
+		  	element["del"] = 0;
 		  	element["new"] = "";
 		  	element.time = jsNow();
 		  	element.add_time = jsNow();
@@ -3564,7 +3611,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 shablon.position = "999";
 			 shablon.text = "<p>&#x200b;</p>";
 			 shablon.did = "";
-			 shablon.del = 0;
+			 shablon["del"] = 0;
 			 shablon.tab = 0;
 			 shablon.fav = 0;
 			 shablon.time = jsNow();
@@ -3862,7 +3909,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			if(!my_all_comments) return false;
 
 			var myanswers = my_all_comments.filter(function(el,i) {
-				if(el.del == 1) return false;
+				if(el["del"] == 1) return false;
 				return el && el.tree_id==tree_id;
 			});
 			
@@ -3940,7 +3987,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		 
 		 //добавление нового элемента в базу к родителю parent_id
-		 this.jsAddDo = function(parent_id,title,date1,date2,position) {
+		 this.jsAddDo = function(parent_id,title,date1,date2,position,dont_parse_date) {
 			var remind_time = 0;
 			if(parseInt(parent_id)) {
 				$("#node_"+parent_id).find(".icon-play-div:first").css("opacity",1);
@@ -3958,6 +4005,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     	var parent_id = api4tree.jsCreate_or_open(["_НОВОЕ"]);
 		 	} //to_new_folder
 
+		 	if(!dont_parse_date) {
 			 	var mynewdate = api4tree.jsParseDate(title).date;
 			 	if(mynewdate!="") {
 				 	date1 = mynewdate.toMysqlFormat();
@@ -3968,6 +4016,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				 	   		remind_time = remind_time_default?remind_time_default:15;		    
 				 	}
 				}
+			}
 
 			if(position == "last") {
 				var max= -100000000; 
@@ -3988,7 +4037,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			element.position = position?position:0;
 			element.text = "<p>&#x200b;</p>";
 			element.did = "";
-			element.del = 0;
+			element["del"] = 0;
 			element.tab = 0;
 			element.fav = 0;
 			element.time = jsNow();
@@ -4403,7 +4452,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	if(status=="start") {
 				preloader.trigger("show");
 				$(".sos").css("opacity","0.6");
-				$(".sos .icon-cd").css("color","#3b7b2f");
+				$(".sos .icon-cd").css("color","#417b2e");
 				this_db.log("Начинаю синхронизацию.");
 				sync_now = true;
 				clearTimeout(sync_now_timer);
@@ -4547,6 +4596,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 			element.position = d.position.toString();
 		 			element.text = "<p>&#x200b;</p>";
 		 			element.did = "";
+		 			element.del = 0;
 		 			element.time = parseInt(d.changetime);
 		 			element.lsync = parseInt(jsNow()); //зачем это? чтобы пересинхронизироваться?
 		 			element.user_id = $.cookie("4tree_user_id"); //уверен? а вдруг это дело добавил другой юзер?
@@ -4572,6 +4622,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	myelement.date1 = d.date1;
 		 	myelement.date2 = d.date2;
 		 	myelement.tab = d.tab;
+		 	myelement.del = 0;
 		 	myelement.time = parseInt(d.changetime)-1;
 		 	myelement["new"] = ""; //обнуляю new, чтобы скрыть иконку синхронизации
 		 	myelement.position = d.position.toString();
@@ -4626,7 +4677,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	 	element.user_id = d.user_id;
     	 	element.add_time = d.add_time;
     	 	element.tree_id = d.tree_id;
-    	 	element.del = d.del;
+    	 	element["del"] = d.del;
     	 	element.text = d.text;
     	 	
     	 	db.put(global_table_name+"_comments",element).done(function(){ 
@@ -5671,7 +5722,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 }
 		 
 		 //функция отображения панели для дерева		 
-		 this.jsShowTreeNode = function(parent_node,isTree,other_data) {
+		 this.jsShowTreeNode = function(parent_node,isTree1,other_data) {
 		 	var where_to_add; //панель, куда будем добавлять данные
 
 
@@ -5711,7 +5762,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 		  if(parent_node!=-1) {//если мы находимся не в поиске
 			 		  if(i==0) {
-			 		  	if(isTree) {  // если это дерево
+			 		  	if(isTree && parent_node!=1) {  // если это дерево
 			 		  		if( $(".ul_childrens[myid="+parent_node+"]").length==0 ) {
 			 		  			$("#top_panel #node_"+parent_node).
 			 		  				append("<ul class='ul_childrens' myid="+parent_node+"></ul>");
@@ -5760,7 +5811,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 		  }
 		 		  
 		 	}); //each(mydata)
-		 	if(!isTree && !isMindmap) if(where_to_add) where_to_add.append(top_of_panel);
+		 	if(!isTree && !isMindmap && parent_node != -1) if(where_to_add) where_to_add.append(top_of_panel);
 //		 	if(parent_node!=1) myjsPlumb.repaint("node_"+parent_node);
 //		 	console.info("suspend_repaint");
 //		 	if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);		 	
@@ -5870,7 +5921,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
      		  		}
 
 	 		  		if(!isMindmap && !isTree) {
-	     				$("#mypanel").append("<div id='panel_"+element.id+"' class='panel' style='border-right: 1px solid transparent;width:"+pw+"'><ul>"+top_of_panel+"</ul></div>"); 
+	     				$("#mypanel").append("<div id='panel_"+element.id+"' class='panel' style='width:"+pw+"'><ul>"+top_of_panel+"</ul></div>"); 
 	     			}
 	 		  		jsPresize();
 	     		}
@@ -6357,6 +6408,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  //открытие wiki ссылки
 		  this.jsOpenWikiPage = function(parent_id,mytitle) {
 		  		api4tree.log("Кликнули в "+parent_id+" wiki ссылку");
+   			 	var back_title = $(".selected .n_title").html();
 		  		var mynewdata = jsFindWikiForParent(parent_id, mytitle);
 		  		
 		  		if(!mynewdata) 
@@ -6369,6 +6421,9 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  			api4panel.jsOpenPath(mynewdata.id);
 		  			jsFixScroll(2);
 		  			}
+
+   			 	$("#wiki_back_button").html(back_title+' <i class="icon-left-bold"></i>');
+		  			
 		  		$("#wiki_back_button").show().attr("myid",parent_id);
 		  		myr.setFocus();
 		  }

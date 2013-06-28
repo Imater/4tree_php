@@ -62,7 +62,7 @@ function ShowTree($cnt,$note,$tree, $pid=0){
 
 if (isset($_GET['load_welcome'])) 
   {
-  $sqlnews = "SELECT * FROM tree WHERE user_id=11 AND parent_id = '6702' ORDER by position";
+  $sqlnews = "SELECT * FROM tree WHERE user_id=11 AND parent_id = '10291' ORDER by position";
   $result = mysql_query($sqlnews); 
 
   $pages = "";
@@ -75,7 +75,7 @@ if (isset($_GET['load_welcome']))
   	  $help_text = $sql["text"];
   	  
   	  $title1 = $sql["title"];
-  	  $title = explode(" ", $title1);
+  	  $title = explode("::", $title1);
   	  
   	  if(stristr($title1,"line")) $line_to = " line_to = '".$title[1]."' ";
   	  else $line_to="";
@@ -84,7 +84,8 @@ if (isset($_GET['load_welcome']))
 	  $pointers .= '<div class="pointer '.$active.'" myid="'.$i.'"><i class="icon-record"></i></div>';
 	  $i++;
   }
-  echo $pages.'<div id="welcome_pointer">'.$pointers.'</div>';
+  echo '<div id="hide_welcome" class="transition"><i class="icon-cancel-circle"></i></div>'.$pages.'<div id="welcome_pointer">'.$pointers.'</div>';
+  exit;
   }
 
 if (isset($_GET['test-speed'])) 
@@ -500,6 +501,17 @@ if (isset($HTTP_GET_VARS['send_settings'])) {
 	exit;
 }
 
+if (isset($HTTP_GET_VARS['off_welcome'])) 
+{
+  $sqlnews = "UPDATE tree_users SET welcome = '1' WHERE id='$user_id' LIMIT 1";
+  								
+//  echo $sqlnews;									
+  push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Клиент просмотрел Welcome"));
+  								
+  $result = mysql_query_my($sqlnews); 
+  @$sql = mysql_fetch_array($result);
+
+}
 
 if (isset($HTTP_GET_VARS['get_settings'])) 
 {
@@ -517,6 +529,7 @@ if (isset($HTTP_GET_VARS['get_settings']))
   $answer["foto"] = $sql["foto"];
   $answer["female"] = $sql["female"];
   $answer["mobilephone"] = $sql["mobilephone"];
+  $answer["welcome"] = $sql["welcome"];
 
   $theme_img = $sql["theme_img"];
   if($theme_img=="") $theme_img = "./img/textures/18.png";

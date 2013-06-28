@@ -1900,7 +1900,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				}
 				else
 				{
-					$dropdown.css({ position: 'absolute', right: left, top: keyPosition.top + btnHeight - 140 + 'px' }).show();
+					if(key == "formatting") var delta = 6;
+					else if(key == "link" ) var delta = 6;
+					else if(key == "table" ) var delta = 220;
+					else delta = 140;
+					$dropdown.css({ position: 'absolute', right: left, top: keyPosition.top + btnHeight - delta + 'px' }).show();
 				}
 			}
 
