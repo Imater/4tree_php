@@ -61,7 +61,7 @@ function ShowTree($cnt,$note,$tree, $pid=0){
 }    
 
 if (isset($_GET['load_welcome'])) 
-  {
+  {  
   $sqlnews = "SELECT * FROM tree WHERE user_id=11 AND parent_id = '10291' ORDER by position";
   $result = mysql_query($sqlnews); 
 
@@ -85,6 +85,8 @@ if (isset($_GET['load_welcome']))
 	  $i++;
   }
   echo '<div id="hide_welcome" class="transition"><i class="icon-cancel-circle"></i></div>'.$pages.'<div id="welcome_pointer">'.$pointers.'</div>';
+  push(array("am"),array('type' => "get_files", 'from' => $fpk_id, 'txt' => "Загрузил Welcome Screen ***");
+
   exit;
   }
 

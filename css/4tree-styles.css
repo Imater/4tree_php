@@ -2253,6 +2253,8 @@ padding: 2px 2px;
 color: white;
 z-index: 1;
 text-align: center;
+border-top-left-radius: 10px;
+border-top-right-radius: 10px;
 -moz-box-shadow: 1px -1px 6px #444;
 -webkit-box-shadow: 1px -1px 6px #444;
 box-shadow: 1px -1px 6px #444;
