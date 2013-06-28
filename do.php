@@ -975,7 +975,7 @@ for ($i=0; $i<$countlines; $i++)
 		   		$result5 = mysql_query_my($sqlnews5); 
 		   		if($display) if(mysql_affected_rows()>0) echo "Удалил дублирующую запись (".mysql_affected_rows()." шт)<br>";
 		   		
-		   		$sqlnews="INSERT INTO `tree_comments` (old_id,user_id,changetime,text) VALUES ('".$id."','".$GLOBALS['user_id']."','".ConvertFutureDate($now_time)."','".$changes_comments[$i]['text']." (new)');";
+		   		$sqlnews="INSERT INTO `tree_comments` (old_id,user_id,changetime,text) VALUES ('".$id."','".$GLOBALS['user_id']."','".ConvertFutureDate($now_time)."','".addslashes($changes_comments[$i]['text'])." (new)');";
 		   		$result = mysql_query_my($sqlnews); 
 		   		push(array("am"),array('type' => "sync_new_comment", 'from' => $fpk_id, 'txt' => "Новый комментарий: <b>".($changes_comments[$i]['text'])."</b>"));
 		   		
