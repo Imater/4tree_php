@@ -838,7 +838,8 @@ if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru"))
 $changes =  json_decode( $ch , true );  
 $changes_comments =  json_decode( $ch_comments , true );  
 
-push(array("am"),array('type' => "sync_cnt", 'from' => $fpk_id, 'txt' => "Клиент прислал ".count($changes)." изменений + ".count($changes_comments)." комментариев"));
+if(count($changes)>0 || count($changes_comments))
+	push(array("am"),array('type' => "sync_cnt", 'from' => $fpk_id, 'txt' => "Клиент прислал ".count($changes)." изменений + ".count($changes_comments)." комментариев"));
 
 $confirm = $HTTP_POST_VARS['confirm'];
 $confirms =  json_decode( $confirm , true );  
