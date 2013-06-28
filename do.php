@@ -529,7 +529,7 @@ if (isset($HTTP_GET_VARS['get_settings']))
   $answer["foto"] = $sql["foto"];
   $answer["female"] = $sql["female"];
   $answer["mobilephone"] = $sql["mobilephone"];
-  $answer["welcome"] = $sql["welcome"];
+  $answer["welcome"] = $sql["welcome"]?$sql["welcome"]:0;
 
   $theme_img = $sql["theme_img"];
   if($theme_img=="") $theme_img = "./img/textures/18.png";
