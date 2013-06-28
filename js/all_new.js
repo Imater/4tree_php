@@ -1875,7 +1875,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			       		var child_text = "";
 			       }
 			       
-			      if(title) {
+			      if(id) {
 			        if (confirm('Удалить "'+title+'" ?'+child_text)) { 
 			       		this_db.jsDeleteDo( id_element ); 
 			        } else {
@@ -2182,7 +2182,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	this_cache.blur();
 			    	return false;
 			     }
-			     if(event.keyCode==13) { //добавление нового дела
+			     if((event.keyCode==13) && ($(this).val().length>0)) { //добавление нового дела
 			        //создаю новую заметку в текущей папке
 			        var parent_id = $(this).parents(".add_do_panel_top").parents(".panel:first").attr("id").replace("panel_","");
 			     	var new_id = api4tree.jsAddDo( parent_id, $(this).val(), undefined, undefined, "last" ); 
@@ -2504,7 +2504,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	   		     this_db.jsDiaryPath( jsNow() );
 	   			 if(member_old_id) {
 	   			 	$("#wiki_back_button").attr("myid",member_old_id);
-	   			 	$("#wiki_back_button").html(back_title+' <i class="icon-left-bold"></i>');
+	   			 	$("#wiki_back_button").html('<i class="icon-left-bold"></i>вернуться к '+back_title);
 	   			 }
 	   			 $("#wiki_back_button").show()
 			     setTimeout(function(){ $(".redactor_").focus(); },200);
@@ -4968,8 +4968,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				
 				var offsetdate = new Date();
 				var timezone = offsetdate.getTimezoneOffset()/60;
+				var this_vers = encodeURIComponent($("#this_version").html());
 				
-				var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do+"&timezone="+timezone;
+				var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do+"&timezone="+timezone+"&version="+this_vers;
 				
 				this_db.log(lnk);
 				
@@ -6422,7 +6423,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  			jsFixScroll(2);
 		  			}
 
-   			 	$("#wiki_back_button").html(back_title+' <i class="icon-left-bold"></i>');
+   			 	$("#wiki_back_button").html('<i class="icon-left-bold"></i>вернуться к '+back_title);
 		  			
 		  		$("#wiki_back_button").show().attr("myid",parent_id);
 		  		myr.setFocus();

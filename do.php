@@ -838,8 +838,10 @@ if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru"))
 $changes =  json_decode( $ch , true );  
 $changes_comments =  json_decode( $ch_comments , true );  
 
-if(count($changes)>0 || count($changes_comments))
-	push(array("am"),array('type' => "sync_cnt", 'from' => $fpk_id, 'txt' => "Клиент прислал ".count($changes)." изменений + ".count($changes_comments)." комментариев"));
+@$version = $HTTP_GET_VARS['version']; 
+
+
+push(array("am"),array('type' => "sync_cnt", 'from' => $fpk_id, 'txt' => "Клиент прислал ".count($changes)." изменений + ".count($changes_comments)." комментариев. Версия: ".$version));
 
 $confirm = $HTTP_POST_VARS['confirm'];
 $confirms =  json_decode( $confirm , true );  
@@ -847,6 +849,8 @@ $confirms =  json_decode( $confirm , true );
 $time_dif = $now - $now_time;
 
 $timezone = $HTTP_GET_VARS['timezone']; 
+
+
 
 $sqlnews5="UPDATE tree_users SET time_dif = '".$timezone."' WHERE id='".$GLOBALS['user_id']."'";
 $result5 = mysql_query_my($sqlnews5); //сохраняю разницу по времени с сервером

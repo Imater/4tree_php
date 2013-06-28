@@ -226,7 +226,7 @@ if(isset($_GET['test']))
 </script><noscript><a href="http://reformal.ru"><img src="http://media.reformal.ru/reformal.png" /></a><a href="http://reformal.4tree.ru">Oтзывы и предложения для 4tree.ru — дела, календарь, заметки, файлы. Всё в одном месте. </a></noscript></li>
 
         <li>
-        	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank"><i class="icon-info-circle"></i>Что нового в версии <? echo $compress_stamp; ?></a>
+        	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank"><i class="icon-info-circle"></i>Что нового в версии <span id="this_version"><? echo $compress_stamp; ?></span></a>
         </li>
         <li class="blank"></li>
         <li><a href="./4tree.php"><i class="icon-home-2"></i>Выход (смена пользователя)</a></li>
@@ -620,7 +620,7 @@ if(isset($_GET['test']))
 
 	
 	<div id="search_panel">
-  	<div id="start_welcome_page"><i class="icon-help-circle"></i></div>
+  	<div id="start_welcome_page" title="Обучающий тур"><i class="icon-info-circle"></i></div>
   		<input type="text" id="search_filter">
   	</div>
 	
