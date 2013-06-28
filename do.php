@@ -85,7 +85,7 @@ if (isset($_GET['load_welcome']))
 	  $i++;
   }
   echo '<div id="hide_welcome" class="transition"><i class="icon-cancel-circle"></i></div>'.$pages.'<div id="welcome_pointer">'.$pointers.'</div>';
-  push(array("am"),array('type' => "get_files", 'from' => $fpk_id, 'txt' => "Загрузил Welcome Screen ***");
+  push(array("am"),array('type' => "get_files", 'from' => $fpk_id, 'txt' => "Загрузил Welcome Screen ***"));
 
   exit;
   }
