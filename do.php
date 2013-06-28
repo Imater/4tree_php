@@ -60,35 +60,6 @@ function ShowTree($cnt,$note,$tree, $pid=0){
  echo "</ul>";
 }    
 
-if (isset($_GET['load_welcome'])) 
-  {  
-  $sqlnews = "SELECT * FROM tree WHERE user_id=11 AND parent_id = '10291' ORDER by position";
-  $result = mysql_query($sqlnews); 
-
-  $pages = "";
-  $pointers = "";
-  $i=0;
-  while (@$sql = mysql_fetch_array($result)) {
-  	  if($i==0) $active = "active";
-  	  else $active = "";
-  	  
-  	  $help_text = $sql["text"];
-  	  
-  	  $title1 = $sql["title"];
-  	  $title = explode("::", $title1);
-  	  
-  	  if(stristr($title1,"line")) $line_to = " line_to = '".$title[1]."' ";
-  	  else $line_to="";
-  	  
-	  $pages .= '<div '.$line_to.' class="welcome_page '.$active.'" myid="'.$i.'">'.$help_text.'</div>';
-	  $pointers .= '<div class="pointer '.$active.'" myid="'.$i.'"><i class="icon-record"></i></div>';
-	  $i++;
-  }
-  echo '<div id="hide_welcome" class="transition"><i class="icon-cancel-circle"></i></div>'.$pages.'<div id="welcome_pointer">'.$pointers.'</div>';
-  push(array("am"),array('type' => "get_files", 'from' => $fpk_id, 'txt' => "Загрузил Welcome Screen ***"));
-
-  exit;
-  }
 
 if (isset($_GET['test-speed'])) 
   {
@@ -449,6 +420,36 @@ $q = strtolower($HTTP_GET_VARS["diary_guest"]);
 
 ///регистрация пользователя
 if( (!loginuser()) AND ( !isset($_POST['phone']) )) exit;
+
+if (isset($_GET['load_welcome'])) 
+  {  
+  $sqlnews = "SELECT * FROM tree WHERE user_id=11 AND parent_id = '10291' ORDER by position";
+  $result = mysql_query($sqlnews); 
+
+  $pages = "";
+  $pointers = "";
+  $i=0;
+  while (@$sql = mysql_fetch_array($result)) {
+  	  if($i==0) $active = "active";
+  	  else $active = "";
+  	  
+  	  $help_text = $sql["text"];
+  	  
+  	  $title1 = $sql["title"];
+  	  $title = explode("::", $title1);
+  	  
+  	  if(stristr($title1,"line")) $line_to = " line_to = '".$title[1]."' ";
+  	  else $line_to="";
+  	  
+	  $pages .= '<div '.$line_to.' class="welcome_page '.$active.'" myid="'.$i.'">'.$help_text.'</div>';
+	  $pointers .= '<div class="pointer '.$active.'" myid="'.$i.'"><i class="icon-record"></i></div>';
+	  $i++;
+  }
+  echo '<div id="hide_welcome" class="transition"><i class="icon-cancel-circle"></i></div>'.$pages.'<div id="welcome_pointer">'.$pointers.'</div>';
+  push(array("am"),array('type' => "get_files", 'from' => $fpk_id, 'txt' => "Загрузил Welcome Screen ***"));
+
+  exit;
+  }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
