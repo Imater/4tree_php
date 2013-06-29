@@ -1480,22 +1480,22 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 		
 	$("#mypanel li").not("ui-draggable").draggable({
 				zIndex: 999,
-				delay:400,
+				delay:100,
 				revert: false,      // will cause the event to go back to its
 				helper:"clone",
 				appendTo: "#content1",
 				start: function(event, ui) {
 					console.info("start-drag");
-					$("#mypanel li").addClass("li_compact");
+					$("#mypanel").addClass("li_compact");
 				},
 				stop: function(event, ui) {
 					console.info("stop-drag");
-					$("#mypanel li").removeClass("li_compact");
+					$("#mypanel").removeClass("li_compact");
 				}
 //				revertDuration: 500  //  original position after the drag
 			});
 			
-	$( "#mypanel .n_title,.divider_li" ).not("ui-droppable").droppable({
+	$( "#mypanel .big_n_title,.divider_li" ).not("ui-droppable").droppable({
 			accept: "li",
 			activeClass: "ui-can-recieve",
 			tolerance: "pointer",
@@ -1543,9 +1543,9 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
             		}
             	else //если уронили на другой элемент
             		{
-            		if(!ui.draggable[0].attributes.myid) return true;
-	            	dropto = event.target.attributes.myid.nodeValue;
-	            	draggable = ui.draggable[0].attributes.myid.nodeValue;
+            		if(!$(ui.draggable).attr("myid")) return true;
+	            	dropto = $(event.target).parent("li").attr("myid");
+	            	draggable = $(ui.draggable).attr("myid");
 	            	
 	            	var drop_to_element = api4tree.jsFind(dropto);
 	            	
@@ -1558,7 +1558,7 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 			   			setTimeout(function(){ 
 			   				jsRefreshTree(); 
 			   				api4panel.jsOpenPath(draggable);
-			   			},300);
+			   			},800);
 			   		}
 			    	
 		           	}
