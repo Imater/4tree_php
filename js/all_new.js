@@ -4772,7 +4772,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			  //если нужна новая иконка
 			  if( (current_icon.indexOf(icon_name)==-1) && (current_icon.indexOf(try_this_url)==-1) ) { 
-			  	  console.info("Генерирую новую иконку",src,id);			  	
+			  	  //console.info("Генерирую новую иконку",src,id);			  	
 			  	  if(src && src.indexOf("upload.4tree.ru/")!=-1) {
 				  	  var p2_url = src.replace(".jpg","_p2.jpg").replace(".jpeg","_p2.jpeg").
 				  	  				   replace(".gif","_p2.gif").replace(".png","_p2.png");

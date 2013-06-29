@@ -3572,6 +3572,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				html = html.replace(/<img(.*?)(.*?)>/gi, '[img$1$2]');
 			} else {
 				html = html.replace(/<img(.*?)style="(.*?)"(.*?)\>/gi, '[img$1$3]'); //спорный момент
+				html = html.replace(/<img(.*?)(.*?)>/gi, '[img$1$2]');
 			}
 
 			// remove attributes
