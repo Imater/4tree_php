@@ -3568,7 +3568,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			html = html.replace(/<object(.*?)>([\w\W]*?)<\/object>/gi, '[object$1]$2[/object]');
 			html = html.replace(/<param(.*?)>/gi, '[param$1]');
 			
-			if(true) {
+			if(false) {
 				html = html.replace(/<img(.*?)(.*?)>/gi, '[img$1$2]');
 			} else {
 				html = html.replace(/<img(.*?)style="(.*?)"(.*?)\>/gi, '[img$1$3]'); //спорный момент
@@ -3638,7 +3638,8 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			{
 				html = html.replace(/<font>([\w\W]*?)<\/font>/gi, '$1');
 			}
-
+			html = html.replace(/\[img(.*?)&gt;/gi, "<img$1>");
+			html = html.replace(/\[img/gi, "<img");
 			this.pasteInsert(html);
 
 		},
