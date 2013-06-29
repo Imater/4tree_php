@@ -349,7 +349,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  		if(data[i].title.length>10) title = data[i].title;
     	  		else title = "";
     	  		alltabs = alltabs + "<li title='"+title+"' myid='"+
-    	  				  data[i].id+"'><i class='icon-folder-1'></i>"+api4others.jsShortText(data[i].title,20)+"</li>";
+    	  				  data[i].id+"'>"+api4others.jsShortText(data[i].title,20)+"</li>";
+    	  				  //<i class='icon-folder-1'></i>
     	  		}
     	  	alltabs= alltabs+ "</ul>";
     	  		
