@@ -173,6 +173,17 @@ function sqldate(UNIX_timestamp){ //показываю время в виде my
  }
 
 
+function sqltime(UNIX_timestamp){ //показываю время в виде mysql. timeConverter( jsFindLastSync ) используются для отладки
+ var a = new Date(UNIX_timestamp);
+     var hour = a.getHours();
+     if(hour<10) hour = "0"+hour;
+     var min = a.getMinutes();
+     if(min<10) min = "0"+min;
+     var time = hour+':'+min;
+     return time;
+ }
+
+
 
 
 function jsCloneChat(user_id) //клонирую чат из template
@@ -454,6 +465,14 @@ if(arrow=='right')
 		{
 		if(current.hasClass("tree-open"))
 			{
+			
+			var el = current.find("li:first");
+			if(el.length) {
+				var new_id = el.attr("id").replace("node_","");
+				api4panel.jsOpenNode(new_id);
+				api4panel.jsSelectNode(new_id);		
+			}
+
 			}
 		else
 			{
@@ -477,6 +496,13 @@ if(arrow=="left")
 			}
 		else
 			{
+			var el = current.parents("ul:first").parent("li");
+			if(el.length) {
+				var new_id = el.attr("id").replace("node_","");
+				api4panel.jsOpenNode(new_id);
+				api4panel.jsSelectNode(new_id);		
+			}
+			
 			}
 		}
 	else
@@ -1596,7 +1622,7 @@ function jsShowCalendar() //отображаю календарь
 		calend = $('#calendar').fullCalendar({
 			editable:true,
 			firstHour: firstHour,
-			slotMinutes: 30,
+			slotMinutes: 15,
 			timeFormat: 'H:mm',
 			axisFormat: 'H:mm',
 			contentHeight:361,

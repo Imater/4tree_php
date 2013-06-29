@@ -2526,7 +2526,7 @@ min-height: 200px;
 {
 width: 18px;
 height: 16px;
-opacity: 0.3;
+opacity: 1;
 }
 
 .add_new_do
@@ -6067,4 +6067,8 @@ display: inline-block;
 color: rgb(157,213,58);
 text-shadow: 1px 2px 4px #000;
 
+}
+
+.fc-event-head.fc-event-skin {
+    display: none;
 }

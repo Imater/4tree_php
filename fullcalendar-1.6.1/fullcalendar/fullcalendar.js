@@ -66,8 +66,8 @@ var defaults = {
 	// locale
 	isRTL: false,
 	firstDay: 0,
-	monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
-	monthNamesShort: ['Янв','Февр','Март','Апр','Май','Июнь','Июль','Авг','Сент','Окт','Нояб','Дек'],
+	monthNames: ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'],
+	monthNamesShort: ['янв','февр','март','апр','май','июнь','июль','авг','сент','окт','нояб','дек'],
 	dayNames: ['Воскресение','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
 	dayNamesShort: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
 	buttonText: {
@@ -1792,11 +1792,13 @@ function setOuterHeight(element, height, includeMargins) {
 
 
 function hsides(element, includeMargins) {
+
 	return hpadding(element) + hborders(element) + (includeMargins ? hmargins(element) : 0);
 }
 
 
 function hpadding(element) {
+	
 	return (parseFloat($.css(element[0], 'paddingLeft', true)) || 0) +
 	       (parseFloat($.css(element[0], 'paddingRight', true)) || 0);
 }
@@ -2918,7 +2920,7 @@ setDefaults({
 	allDaySlot: true,
 	allDayText: 'весь&nbsp;<br>день:',
 	firstHour: 6,
-	slotMinutes: 30,
+	slotMinutes: 60,
 	defaultEventMinutes: 60,
 	axisFormat: 'h(:mm)tt',
 	timeFormat: {
@@ -4088,9 +4090,9 @@ function AgendaEventRenderer() {
 			"</div>" +
 			"</div>" +
 			"<div class='fc-event-bg'></div>";*/
-			
+		var time_start = event.start?(sqltime(event.start)):"";
 		html +=
-			" class='" + classes.join(' ') + "'" + "title = '"+event.title+"'" + "myid = '"+event.id+"'" +
+			" class='" + classes.join(' ') + "'" + "title = '(В "+time_start+") "+event.title+"'" + "myid = '"+event.id+"'" +
 			" style='position:absolute;z-index:8;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
 			">" +
 			"<div class='fc-event-inner fc-event-skin'" + skinCssAttr + ">" +
