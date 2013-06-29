@@ -5861,40 +5861,10 @@ color: #777 !important;
 	display: none;
 }
 
-#screen_saver {
-	display: none;
-	position: absolute;
-	padding: 10px;
-	margin: 0 auto;
-	vertical-align: middle;
-	left: 0px;
-	right: 0px;
-	top:0px;
-	bottom: 0px;
-	background-image:url("../img/textures/18.png");
-	z-index: 9999999;
-	color: black;
-}
+.blur {
+    filter: url(filter.svg#blur); /* FF, IE10 & Opera */
+    -webkit-filter: blur(3px);
 
-#saver_sovet {
-	font-size: 19px;
-	margin: 0 auto;
-	width: 99%;
-	position: absolute;
-	top: 20%;
-	vertical-align: middle;
-	text-align: center;
-	max-width: 800px;
-}
-
-#saver_4tree {
-	margin: 0 auto;
-	width: 99%;
-	position: absolute;
-	top: 85%;
-	vertical-align: middle;
-	text-align: center;
-	color:rgb(65,109,0);
 }
 
 #welcome_screen {

@@ -1576,17 +1576,19 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			$(".chat_box").draggable({appendTo: "body", handle: ".chat_header"});
 		 }    
 		 
+		 var old_title_of_screensaver;
 		 function jsScreenSaver(is_on) {
 			 if(is_on) {
-				$("#screen_saver #saver_sovet").load("do.php?sovet");
-			 	clearInterval(sovet_tm);
-			 	var sovet_tm = setInterval(function(){
-					$("#screen_saver #saver_sovet").load("do.php?sovet");
-			 	}, 1*60*1000);
-			 	$("#screen_saver").fadeIn(3000);
+				$("#mypanel .n_title").addClass("blur");
+				$("#calendar .fc-event").addClass("blur");
+				$(".redactor_").addClass("blur");
+				old_title_of_screensaver = window.document.title;
+				window.document.title = "4tree.ru - Screensaver...";
 			 } else {
-				$("#screen_saver").fadeOut(300);
-			 	clearInterval(sovet_tm);
+				$("#mypanel .n_title").removeClass("blur");
+				$("#calendar .fc-event").removeClass("blur");
+				$(".redactor_").removeClass("blur");
+				if(old_title_of_screensaver) window.document.title = old_title_of_screensaver;
 			 }
 		 }
 		 
@@ -1599,7 +1601,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			});
 			$(document).bind("idle.idleTimer", function(){
 				screensaver_tm = setTimeout(function(){
-					//jsScreenSaver(true);
+					jsScreenSaver(true);
 				}, 10*60*1000)
 			    if(start_sync_when_idle) { this_db.jsSync(only_save); only_save=false; }
 			});
