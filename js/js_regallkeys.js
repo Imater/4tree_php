@@ -1703,6 +1703,7 @@ function jsShowCalendar() //отображаю календарь
 			eventMouseover: function (event) 
 			   { 			   			   
 			   },					
+			eventAfterAllRender: function() { jsSetTimeNow(); },
 			eventMouseout: function (event) 
 			   { 
 			   },					
@@ -1795,7 +1796,7 @@ function jsSetTimeNow() //устанавливаю красную полоску
 		           else
 		           var swap = $('#left_top').width()+1;
 		           
-				   myleft=myl-$('.fc-agenda-axis').width()-swap+18;
+				   myleft=myl-$('.fc-agenda-axis').width()-swap+18-20;
 				   				   
 				   if($('#top').hasClass('fullscreen')) myleft=myl-2;
 				   if($('#left_bottom2').hasClass('fullscreen')) myleft=myl-swap-3;
