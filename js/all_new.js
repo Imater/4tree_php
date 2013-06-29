@@ -1577,7 +1577,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 }    
 		 
 		 var old_title_of_screensaver;
-		 function jsScreenSaver(is_on) {
+		 this.jsScreenSaver = function(is_on) {
 			 if(is_on) {
 				$("#mypanel .n_title").addClass("blur");
 				$("#calendar .fc-event").addClass("blur");
@@ -1597,11 +1597,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			$.idleTimer(5*1000);
 			$(document).bind("active.idleTimer", function(){
 				clearTimeout(screensaver_tm);
-				jsScreenSaver(false);
+				this_db.jsScreenSaver(false);
 			});
 			$(document).bind("idle.idleTimer", function(){
 				screensaver_tm = setTimeout(function(){
-					jsScreenSaver(true);
+					this_db.jsScreenSaver(true);
 				}, 15*60*1000)
 			    if(start_sync_when_idle) { this_db.jsSync(only_save); only_save=false; }
 			});

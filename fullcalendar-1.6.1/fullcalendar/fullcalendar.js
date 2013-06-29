@@ -91,7 +91,7 @@ var defaults = {
 	//selectable: false,
 	unselectAuto: true,
 	
-	dropAccept: '*'
+	dropAccept: 'li'
 	
 };
 
@@ -1798,7 +1798,6 @@ function hsides(element, includeMargins) {
 
 
 function hpadding(element) {
-	
 	return (parseFloat($.css(element[0], 'paddingLeft', true)) || 0) +
 	       (parseFloat($.css(element[0], 'paddingRight', true)) || 0);
 }
@@ -2441,6 +2440,7 @@ function BasicView(element, calendar, viewName) {
 	
 	
 	function setWidth(width) {
+
 		viewWidth = width;
 		colContentPositions.clear();
 
@@ -3527,11 +3527,13 @@ function AgendaView(element, calendar, viewName) {
 	
 	function colContentLeft(col) {
 		return colContentPositions.left(col);
+		//-3; - один из вариантов
 	}
 	
 	
 	function colContentRight(col) {
 		return colContentPositions.right(col);
+		//+9;
 	}
 	
 	
@@ -3654,9 +3656,9 @@ function AgendaView(element, calendar, viewName) {
 				var bottom = timePosition(startDate, endDate);
 				if (bottom > top) { // protect against selections that are entirely before or after visible range
 					rect.top = top;
-					rect.height = bottom - top;
-					rect.left += 2;
-					rect.width -= 5;
+					rect.height = bottom - top + 1;
+					rect.left += 2*0;
+					rect.width -= 5*0 - 1;
 					if ($.isFunction(helperOption)) {
 						var helperRes = helperOption(startDate, endDate);
 						if (helperRes) {
@@ -3916,6 +3918,7 @@ function AgendaEventRenderer() {
 	
 	
 	// renders events in the 'time slots' at the bottom
+	//тут задаётся ширина элементов
 	
 	function renderSlotSegs(segs, modifiedEventId) {
 	
@@ -3948,6 +3951,7 @@ function AgendaEventRenderer() {
 			dis = 1;
 			dit = 0;
 		}
+
 			
 		// calculate position/dimensions, create html
 		for (i=0; i<segCnt; i++) {
@@ -3961,6 +3965,7 @@ function AgendaEventRenderer() {
 			leftmost = colContentLeft(colI*dis + dit);
 			availWidth = colContentRight(colI*dis + dit) - leftmost;
 			availWidth = Math.min(availWidth-6, availWidth*.95); // TODO: move this to CSS
+			//availWidth = Math.min(availWidth-6, availWidth*.95); // TODO: move this to CSS
 			if (levelI) {
 				// indented and thin
 				outerWidth = availWidth / (levelI + forward + 1);
@@ -3977,8 +3982,8 @@ function AgendaEventRenderer() {
 				(availWidth / (levelI + forward + 1) * levelI) // indentation
 				* dis + (rtl ? availWidth - outerWidth : 0);   // rtl
 			seg.top = top;
-			seg.left = left;
-			seg.outerWidth = outerWidth;
+			seg.left = left-3;
+			seg.outerWidth = outerWidth+12;
 			seg.outerHeight = bottom - top;
 			html += slotSegHtml(event, seg);
 		}
@@ -4973,6 +4978,7 @@ function DayEventRenderer() {
 	
 	
 	function daySegSetWidths(segs) {
+		
 		var i;
 		var segCnt = segs.length;
 		var seg;
