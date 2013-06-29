@@ -393,6 +393,117 @@ function jsAddComment(tree_id,parent_id,text)
 function jsGo(arrow)
 {
 
+if(isMindmap) {
+	if(arrow=='down')
+		{
+		lastclick = new Date();
+		current = $("#mypanel .selected");
+		if(current.length==0) current = $("#mypanel li:first").addClass("selected");
+		prev = current.nextAll("li:first");
+		if(prev.length==1) 
+			{
+			current.removeClass("selected");
+			prev.addClass("selected");
+
+			var el = prev;
+			if(el.length) {
+				var new_id = el.attr("id").replace("node_","");
+				//api4panel.jsOpenNode(new_id);
+				api4panel.jsSelectNode(new_id);		
+			}
+
+			//prev.find(".n_title:first").click();
+			}
+		}
+
+	if(arrow=='up')
+		{
+		lastclick = new Date();
+		current = $("#mypanel .selected");
+		if(current.length==0) current = $("#mypanel li:first").addClass("selected");
+		prev = current.prevAll("li:first");
+		if(prev.length==1) 
+			{
+			current.removeClass("selected");
+			prev.addClass("selected");
+
+			var el = prev;
+			if(el.length) {
+				var new_id = el.attr("id").replace("node_","");
+				//api4panel.jsOpenNode(new_id);
+				api4panel.jsSelectNode(new_id);		
+			}
+
+			//prev.find(".n_title:first").click();
+			}
+		}
+
+if(arrow=='right')
+	{
+	current = $("#mypanel .selected");
+	
+	if(isTree)
+		{
+		if(current.hasClass("tree-open"))
+			{
+			
+			var el = current.find("li:first");
+			if(el.length) {
+				var new_id = el.attr("id").replace("node_","");
+				api4panel.jsOpenNode(new_id);
+				api4panel.jsSelectNode(new_id);				
+			}
+
+			}
+		else
+			{
+			current.click();
+			jsGo("right");
+			}
+		}
+	else
+		{
+		current.parents(".panel").nextAll(".panel:first").find("li:first").click();
+		}
+
+	}
+
+if(arrow=="left")
+	{
+	current = $("#mypanel .selected");
+	
+	if(isTree)
+		{
+		if(current.hasClass("tree-open"))
+			{
+			current.click();
+			}
+		else
+			{
+			var el = current.parents("ul:first").parent("li");
+			if(el.length) {
+				var new_id = el.attr("id").replace("node_","");
+				api4panel.jsOpenNode(new_id);
+				api4panel.jsSelectNode(new_id);		
+			}
+			
+			}
+		}
+	else
+		{
+		current.parents(".panel").prevAll(".panel:first").find("li.old_selected").click();
+		}
+	}
+
+if(isMindmap || isTree) {
+				var offset_top = $("#mypanel").height()/2;
+				var offset_left = $("#mypanel").width()/2;// - $(".selected").parent("ul:first").width()*1.5;
+				$("#mypanel").stop().scrollTo($(".selected"),600,{offset:{ top: -offset_top, left: -offset_left}});
+			}
+return true;
+}
+
+
 if(arrow=='up')
 	{
 	lastclick = new Date();

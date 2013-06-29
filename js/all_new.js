@@ -5733,8 +5733,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 }
 		 
 		 //функция отображения панели для дерева		 
-		 this.jsShowTreeNode = function(parent_node,isTree1,other_data) {
-		 	var where_to_add; //панель, куда будем добавлять данные
+		 this.jsShowTreeNode = function(parent_node,isTree1,other_data, where_to_add) {
+		 	
 
 
 		 	if(other_data) { //если данные внешние
@@ -5800,8 +5800,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		  } //if(i==0) Если это первый элемент, создать место, куда добавлять.
 		 		  } //-1 -2
 		 		  
-		 		  if(isTree) where_to_add = $("ul[myid="+parent_node+"]");
-		 		  else where_to_add = $("#panel_"+parent_node+" ul");
+		 		  if(!where_to_add) {
+		 		 		  if(isTree) where_to_add = $("ul[myid="+parent_node+"]");
+		 		  		else where_to_add = $("#panel_"+parent_node+" ul");
+		 		  }
 		 		  
 		 		  if(parent_node==-1) { //функция отображения результатов поиска//
 			 		  	where_to_add = $(".search_panel_result ul");
