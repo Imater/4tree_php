@@ -1596,10 +1596,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  function jsMakeIdleFunction() {
 			$.idleTimer(5*1000);
 			$(document).bind("active.idleTimer", function(){
+				jsSetTimeNow();
 				clearTimeout(screensaver_tm);
 				this_db.jsScreenSaver(false);
 			});
 			$(document).bind("idle.idleTimer", function(){
+				jsSetTimeNow();
 				screensaver_tm = setTimeout(function(){
 					this_db.jsScreenSaver(true);
 				}, 15*60*1000)
