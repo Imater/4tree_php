@@ -2187,7 +2187,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     if((event.keyCode==13) && ($(this).val().length>0)) { //добавление нового дела
 			        //создаю новую заметку в текущей папке
 			        var parent_id = $(this).parents(".add_do_panel_top").parents(".panel:first").attr("id").replace("panel_","");
-			     	var new_id = api4tree.jsAddDo( parent_id, $(this).val(), undefined, undefined, "last" ); 
+			     	var new_id = api4tree.jsAddDo( parent_id, strip_tags($(this).val()), undefined, undefined, "last" ); 
 //			     	jsRefreshTree();
 //			     	api4panel.jsOpenPath(new_id.id);
 					jsRefreshTree();
