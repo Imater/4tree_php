@@ -104,6 +104,7 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 	<script src="b_menu/jquery.dimensions.min.js"></script>
 	<script src="js/pushstream.js"></script>
 	<script src="js/js_regallkeys.js"></script>
+	<script src="js/api4tree.js"></script>
 	<script src="js/all_new.js"></script>
 	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
 	<script src="redactor900/redactor/redactor.js"></script>

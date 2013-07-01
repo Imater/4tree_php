@@ -20,7 +20,7 @@ else
   return false;
  }
 
-passw = $.md5(passw);
+passw = hex_md5(passw);
 
 var mydata = { 
 		  "registrate_me" : true,
@@ -28,7 +28,7 @@ var mydata = {
 		  "passw" : passw
 		 }
 		 
-var md5email = $.md5(email+'990990');
+var md5email = hex_md5(email+'990990');
 
 var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t) { 
 	$('#reg_error').hide().html(t).fadeIn();
@@ -43,7 +43,7 @@ var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t
 	} });
 }
 
-function jsLog() //вход
+function jsLog(i_am_mobile) //вход
 {
 var email = $('#email_login').val().toLowerCase();
 var passw = $('#log_pas').val();
@@ -62,9 +62,9 @@ else
   return false;
  }
 
-var md5email = $.md5(email+'990990');
+var md5email = hex_md5(email+'990990');
 
-var passw = $.md5(passw);
+var passw = hex_md5(passw);
 
 var mydata = { 
 		  "login_me" : true,
@@ -72,7 +72,7 @@ var mydata = {
 		  "passw" : passw
 		 }
 		 
-var md5email = $.md5(email+'990990');
+var md5email = hex_md5(email+'990990');
 
 var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t) { 
 	$('#reg_error').hide().html(t).fadeIn();
@@ -84,7 +84,11 @@ var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t
 	   setTimeout(function()
 	   		{ 
 		  	localStorage.clear(); //очищаю данные, если тут был другой пользователь
-	   		document.location.href="./index.php"; 
+	   		if(!i_am_mobile) {
+	   			document.location.href="./index.php"; 
+	   		} else {
+				document.location.href="./pda.php"; 
+	   		}
 	   		},500);
 	   }
 	 else
@@ -166,7 +170,7 @@ $("*").delegate("#reremember", "click", function(event){
 	if((email.indexOf('@')>0) && (email.indexOf('.')>1)) 
 			{
 
-			md5email = $.md5(email+'990990');
+			md5email = hex_md5(email+'990990');
 
 			mydata = { 
 					  "reremember" : true,

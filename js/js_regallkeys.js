@@ -250,19 +250,6 @@ function jsSpeechComplete() //после голосового ввода быс�
 $("#add_do").keyup();
 }
 
-function jsNow(dont_need_dif) //определение текущего времени
-{
-time_dif = localStorage.getItem("time_dif");
-if(!time_dif) time_dif = 0;
-if(!dont_need_dif)
-	now_time = ( parseInt( (new Date()).getTime() ) + parseInt(time_dif)  );
-else
-	now_time = ( parseInt( (new Date()).getTime() ) );
-
-
-return now_time; 
-}	
-
 
 
 function jsDryComments(data) //убираем все данные, кроме изменённых, чтобы экономить трафик в POST
@@ -1044,7 +1031,7 @@ function jsPrepareDate()
       	{
       	cur_date = jsMakeDate($(this).attr("title"));
       	$(this).html(cur_date.mydays);
-      	$(this).addClass(cur_date.myclass);
+      	$(this).addClass(cur_date);
       	$(this).show();
       	}
       	
@@ -1887,6 +1874,7 @@ function jsShowCalendar() //отображаю календарь
 
 function jsSetTimeNow() //устанавливаю красную полоску - показывающую текущую дату
 {
+		if(typeof is_mobile != "undefined") return true;
 		var cur_view = calend.fullCalendar('getView').name;
 		var myl,myleft,mywidth;
 		
@@ -2088,6 +2076,7 @@ function jsCalendarNode(id)
 		  
 }
 
+var t2;
 
 function jsTitle(title,tim) //вывод подсказок в левый нижний угол
 {
@@ -2426,3 +2415,55 @@ return aStr;
 
 
 
+
+function jsDoPasteClipboard(e) {
+    console.info("my_paste",e);
+    var items = e.originalEvent.clipboardData.items;
+    
+    var need_text = false;
+    
+    if( (e.originalEvent.clipboardData.getData("text/html").indexOf("xml")!=-1) )
+    	if( !confirm("Преобразовать документ Office в картинку?") ) {
+       			need_text=true;
+       		}
+    
+    if(!need_text) {
+
+       for (var i = 0; i < items.length; ++i) {
+    	   console.info("asFile = ",items[i].getAsFile());
+    		
+           if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {
+    		   e.stopPropagation();					
+               var blob = items[i].getAsFile();
+    
+               window.URL = window.URL || window.webkitURL;
+               var blobUrl = window.URL.createObjectURL(blob);
+     
+               //var img = document.createElement('img');
+               //img.src = blobUrl; 
+               
+              if($(".redactor_editor:focus").hasClass("comment_enter_input"))
+              	{
+              	var insert_red = $('.comment_enter_input'); //???
+              	}
+              else
+              	{
+              	var insert_red = $("#redactor");
+              	}
+              	
+			  	insert_red.redactor("insertHtml","<img class=\'tmp_img\' title=\'Из буфера обмена "+
+    		  									  Date()+"\' src=\'"+blobUrl+"\'>"); 
+    		   var fd = new FormData();
+    		   fd.append('file', blob);
+    		   console.info(fd);
+               
+               return false;
+               
+    		   
+          } else {
+	          need_text = true;
+          }
+      } //for
+	} //if needtext
+	return need_text;
+}

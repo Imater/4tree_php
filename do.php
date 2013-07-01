@@ -4432,7 +4432,7 @@ exit;
 
 function get_map($parent,$map,$mobile)
 {
-	 $sqlnews1 = "SELECT * FROM tree WHERE del!='1' AND did!='1' user_id=".$GLOBALS['user_id']." AND id = '$parent'";
+	 $sqlnews1 = "SELECT * FROM tree WHERE user_id=".$GLOBALS['user_id']." AND id = '$parent'";
 	 $result1 = mysql_query_my($sqlnews1); 
      @$sql1 = mysql_fetch_array($result1);
      
@@ -4440,7 +4440,7 @@ function get_map($parent,$map,$mobile)
      $old_title = $sql1['title'];
      
      //user_id=".$GLOBALS['user_id']." AND 
-	 $sqlnews1 = "SELECT * FROM tree WHERE user_id=".$GLOBALS['user_id']." AND did = '0000-00-00 00:00:00' AND parent_id = '$parent' ORDER by level DESC LIMIT 0,200";
+	 $sqlnews1 = "SELECT * FROM tree WHERE user_id=".$GLOBALS['user_id']." AND did = '0000-00-00 00:00:00' AND del=0 AND parent_id = '$parent' ORDER by level DESC LIMIT 0,200";
 	 $result1 = mysql_query_my($sqlnews1); 
 
 	 while(@$sql1 = mysql_fetch_array($result1))
