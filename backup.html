@@ -1,0 +1,133 @@
+
+
+
+<!-- ///////////////////////////////////////////////////////////////////// -->
+
+<div id="home" data-role="page">
+
+	<div data-role="header" data-theme="a" data-position="fixed">
+			<a class="back1" href="pda.php" data-icon="">Назад</a>	
+			<h1>4tree.ru</h1>
+			<a href="#" id="sync_now" data-icon="refresh">Sync</a>	
+	</div><!-- /header -->
+
+	<div data-role="content">	
+
+<ul data-role="listview" data-inset="true" data-filter="false">
+		<li><a href="#user-login">Вход (смена пользователя)</a></li>
+		<li><a href="#" target="_blank" id="load_from_server">Загрузить данные с сервера</a></li>
+		<li><a href="#category-items?node=1">Все дела в 4tree.ru</a></li>
+</ul>
+
+	</div><!-- /content -->
+
+<div data-role="footer" data-theme="a" data-position="fixed">		
+	<div data-role="navbar">
+		<ul>
+			<li><a href="pda.php">Главная</a></li>
+			<li><a href="#">Календарь</a></li>
+			<li><a href="#">Добавить</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
+
+
+</div><!-- /page -->
+
+<!-- ///////////////////////////////////////////////////////////////////// -->
+
+<div id="category-items" data-role="page">
+	<div data-role="header" data-theme="a" data-position="fixed">
+			<a class="back1" href="pda.php" data-icon="">Назад</a>	
+			<h1>4tree.ru</h1>
+	
+    
+    <a id="sync_now" href="#" data-role="button" data-iconpos="notext" data-icon="refresh" data-theme="a"></a>
+    
+	
+
+	</div><!-- /header -->
+
+  <div data-role="content"></div>
+
+<div data-role="footer" data-theme="a" data-position="fixed">		
+	<div data-role="navbar">
+		<ul>
+			<li><a href="pda.php">Главная</a></li>
+			<li><a href="#">Календарь</a></li>
+			<li><a href="#">Добавить</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
+
+
+</div>
+
+<!-- ///////////////////////////////////////////////////////////////////// -->
+
+<div id="note-items" data-role="page">
+	<!--<div data-role="header" data-theme="a" data-position="fixed">
+			<a class="back1" href="pda.php" data-icon="">Назад</a>	
+			<h1>4tree.ru</h1>
+			<a href="#" data-icon="search">Поиск</a>	
+	</div> -->
+	<!-- /header -->
+  
+  <div id="fav_redactor_btn"></div>
+  <div id="editor_content" data-role="content" style="overflow:auto !important;">
+  	  
+	  <div id="redactor" style="">Редактор</div>
+
+</div>
+
+<div data-role="footer" data-theme="a" data-position="fixed">		
+	<div data-role="navbar">
+		<ul>
+			<li style="width:20%"><a class="back1" href="#">Назад</a></li>
+			<li style="width:80%"><a class="save_text" href="#">Сохранить</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
+
+
+</div>
+
+<!-- ///////////////////////////////////////////////////////////////////// -->
+
+<div id="user-login" data-role="page">
+	<div data-role="header" data-theme="a" data-position="fixed">
+			<a class="back1" href="pda.php" data-icon="">Назад</a>	
+			<h1>Вход </h1>
+			<a href="#" data-icon="plus">Регистрация</a>	
+	</div><!-- /header -->
+  
+  <div data-role="content" style="overflow:auto !important;">
+  
+	  <div data-role="fieldcontain">
+	    <label for="email_login">Email:</label>
+	    <input data-clear-btn="true" type="email" name="email_login" id="email_login" value="" placeholder="4tree@4tree.ru" />
+	  </div>	
+	  <div data-role="fieldcontain">
+	    <label for="log_pas">Пароль:</label>
+	    <input type="password" name="log_pas" id="log_pas" value=""  />
+	  </div>	
+	  
+
+	  <a href="javascript:jsLog('i_am_mobile');" data-mini="true" data-role="button" data-icon="check">Войти</a>
+
+  </div>
+
+<div data-role="footer" data-theme="a" data-position="fixed">		
+	<div data-role="navbar">
+		<ul>
+			<li><a href="pda.php">Главная</a></li>
+			<li><a href="#">Календарь</a></li>
+			<li><a href="#">Добавить</a></li>
+		</ul>
+	</div><!-- /navbar -->
+</div><!-- /footer -->
+
+
+</div>
+
+

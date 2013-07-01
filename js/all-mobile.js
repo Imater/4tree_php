@@ -1,6 +1,27 @@
 var main_data, preloader, my_all_frends, old_parent=1, old_title="4tree.ru", is_mobile = true;
 var start_sync_when_idle=false;
 
+$(document).on('pageinit', '#home', function () {
+		// code 
+		var _menuLoaded = false;
+		$('#menuPanel').load('menu.html', function () {
+			$(this).find(":jqmData(role=listview)").listview();
+			$(this).trigger("updatelayout");
+			$.mobile.loading("hide");
+			_menuLoaded = true;
+		});
+ 
+		$("#menuPanel").on("panelopen", function (event, ui) {
+			if (!_menuLoaded) {
+				$.mobile.loading("show");
+				return;
+			}
+			$("#menuPanel").off("panelopen");
+		});
+	});
+
+
+
 function jsRegAllKeys() {
 	$("#load_from_server").on("click",function(){
 		$(".ui-header h1").html("Загружаю...");
@@ -39,7 +60,7 @@ function jsRegAllKeys() {
 
 function jsLoadAllData() {
 	api4tree.js_LoadAllFromLocalDB().done(function(){
-
+		$("#open_menu").click();
 	});
 }
 
@@ -169,8 +190,20 @@ function showCategory( urlObj, options ) //показывает список
 		options.dataUrl = urlObj.href;
 		
 		$(".back1").attr("href","#category-items?node="+old_parent);
+
+		console.info("page",$page);
 		
-		$.mobile.changePage( $page, options );
+		//$.mobile.changePage( $page, options );
+
+		$('#menuPanel :jqmData(role=content)').html(markup);
+		$('#menuPanel').find(":jqmData(role=listview)").listview();
+		$('#menuPanel').trigger("updatelayout");
+		/*function () {
+			$(this).find(":jqmData(role=listview)").listview();
+			$(this).trigger("updatelayout");
+			$.mobile.loading("hide");
+			_menuLoaded = true;
+		});*/
 	}
 }
 
