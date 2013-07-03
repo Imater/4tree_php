@@ -60,6 +60,7 @@ if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/ht
 <link rel="stylesheet" type="text/css" href="js/pwdwidget.css">
 
 <script src="js/jquery.js"/></script>
+<script src="js/md5.js"/></script>
 <script src="js/4tree.js"/></script>
 <script src="jstree/_lib/jquery.cookie.js"/></script>
 <script src="js/pwdwidget.js"/></script>

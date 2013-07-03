@@ -220,7 +220,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 this.jsOpenPath = function( id, iamfrom ) {
 		   if(id != parseInt(id)) return false;
 		   if(!$("#mypanel #node_"+id).length) {
-		 	var path1 = this_db.jsFindPath( api4tree.jsFind(id) ).path;
+		 	var path1 = api4tree.jsFindPath( api4tree.jsFind(id) ).path;
 		 	if(!path1) return true;
 		 	if(path1.length<1) return false;
 			
