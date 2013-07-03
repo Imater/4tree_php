@@ -1,0 +1,437 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"text",
+				"text-decoration"
+			],
+			[
+				"show",
+				"showCalendar"
+			],
+			[
+				"sco",
+				"scrollTop"
+			],
+			[
+				"cle",
+				"clearTimeout"
+			],
+			[
+				"co",
+				"color"
+			],
+			[
+				"te",
+				"text-decoration"
+			],
+			[
+				"ma",
+				"margin-left"
+			],
+			[
+				"pa",
+				"padding-bottom"
+			],
+			[
+				"bord",
+				"border-top"
+			],
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"font",
+				"font-size"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"setTie",
+				"setTimeout"
+			],
+			[
+				"men",
+				"menuContent"
+			],
+			[
+				"menu",
+				"menuPanel"
+			],
+			[
+				"mar",
+				"margin-left"
+			],
+			[
+				"c",
+				"color"
+			],
+			[
+				"fo",
+				"font-size"
+			],
+			[
+				"ba",
+				"background-image"
+			],
+			[
+				"fon",
+				"font-size"
+			],
+			[
+				"no",
+				"nowrap"
+			],
+			[
+				"s",
+				"white-space"
+			],
+			[
+				"cat",
+				"categoryName"
+			],
+			[
+				"mi",
+				"min-width"
+			],
+			[
+				"old",
+				"old_title"
+			],
+			[
+				"border-r",
+				"border-radius"
+			],
+			[
+				"li",
+				"line-height"
+			],
+			[
+				"inli",
+				"inline-block"
+			],
+			[
+				"di",
+				"display"
+			],
+			[
+				"jsFind",
+				"jsFindFilesLinkFromTexts"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 153.0,
+		"history":
+		[
+			"https://sublime.wbond.net/alpha/packages.json",
+			"https://sublime.wbond.net/testing/packages.json",
+			"import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read()); print('Please restart Sublime Text to finish installation')"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Applications/MAMP/htdocs/fpk/4tree/!version.txt",
+		"/Applications/MAMP/htdocs/fpk/4tree/!versions.html",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/jquery.mobile-1.3.1.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/css/4tree.css",
+		"/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.css",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Applications/MAMP/htdocs/fpk/4tree/redactor/redactor/redactor.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/favicon-mobile.png",
+		"/Applications/MAMP/htdocs/fpk/4tree/favicon1.png",
+		"/Users/iBook/Downloads/images/icons-18-black.png",
+		"/Users/iBook/Downloads/images/ajax-loader.gif",
+		"/Users/iBook/Downloads/images/icons-18-white.png",
+		"/Users/iBook/Downloads/images/icons-36-black.png",
+		"/Users/iBook/Downloads/images/icons-36-white.png",
+		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.css",
+		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.js",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"jsSaveAllText",
+			"savealltext",
+			"md5(",
+			"jsFindPath(",
+			"jsFindPath =",
+			"jsFindPath",
+			"открыть",
+			"больше",
+			"divider_red",
+			"folder_closed",
+			"divider_red",
+			"divider_li",
+			"comment",
+			"handlebars",
+			"openred",
+			"api4panel.jsMakeIcontext",
+			"jsMakeIcontext",
+			"api4panel.jsMakeIconText",
+			"makeicon",
+			"jsSaveOneTextIfChanged",
+			"save_all_",
+			"myr =",
+			"api4editor",
+			"api4editor(",
+			"api4editor =",
+			"API_4PANEL",
+			"theme",
+			"showCalendar",
+			"scrollTo(",
+			"Календар",
+			"Календарь",
+			"календарь",
+			"scrollto(",
+			"n scrollto(",
+			"updatelayout",
+			"listv",
+			"open",
+			"panel",
+			"user-login",
+			"ui-panel-content-wrap",
+			"return false",
+			"ui-btn-ho",
+			"list",
+			"api4panel.jsFindPath",
+			"data-theme=\"a\"",
+			"data-theme=\"c\"",
+			"content",
+			"menuContent",
+			"touch",
+			".panel",
+			"add_do",
+			"-open",
+			"panel-inner",
+			"comment",
+			"focus",
+			"mainWindow",
+			"#redactor",
+			"#f1f1f1",
+			"paste",
+			"onpaste",
+			"hash",
+			".sos",
+			".save_text",
+			"сохранить",
+			".hash",
+			"sethash",
+			".sos",
+			".myclass",
+			"jsMakeico",
+			"icon",
+			"recursive",
+			"openredactor",
+			"openredactorrec",
+			"jsMakeIdleFunction",
+			"idle",
+			"md5",
+			"login",
+			"dropdown",
+			"dropdownhide",
+			"dropdown",
+			"place",
+			"shadow",
+			"toolbar",
+			"fav_redactor_btn",
+			"fonterll",
+			"trans",
+			"options",
+			"redac",
+			"folder_",
+			"node_img",
+			"data-theme=\"f\"",
+			"data-theme=\"e\"",
+			"data-theme=\"d\"",
+			"data-theme=\"c\"",
+			"data-theme=\"b\"",
+			"data-theme=\"a\"",
+			"have_child",
+			"vers",
+			"version",
+			"main_user_id",
+			"n jsprogress",
+			"n jsNow()",
+			"поиск",
+			"///////////////////",
+			"li_compact",
+			"draggab",
+			"n jsGo",
+			"where_to_add",
+			"jsShowTreeNode",
+			".selected",
+			"selected",
+			"-moz-",
+			"selected",
+			"idle",
+			"setInterval",
+			"fullcalendar",
+			"fc-mynow",
+			"fullcalendar",
+			"axis",
+			"agenda-axis",
+			"setwidth",
+			"width",
+			".left",
+			"width",
+			"fc-agenda-axis",
+			".left",
+			"rect.left",
+			"dropAccept"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"api4tree.jsMakeIconText",
+			"api4tree.jsFindPath",
+			"data-theme=\"b\"",
+			"data-theme=\"a\"",
+			"rgb(177,177,177)",
+			"data-theme=\"a\"",
+			"data-theme=\"f\"",
+			"data-theme=\"e\"",
+			"data-theme=\"d\"",
+			"data-theme=\"c\"",
+			"data-theme=\"b\"",
+			"tmp_childrens"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 35.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.unsaved_changes":
+	{
+		"height": 112.0
+	},
+	"project": "/Users/iBook/Documents/4tree.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 244.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+		"max_columns": 1
+	}
+}
