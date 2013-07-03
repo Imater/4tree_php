@@ -5666,6 +5666,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				{
 					// Remove bizarre <pre> tag wrappers around our json data:
 					var rawString = d.body.innerHTML;
+					console.info("RAW = ",rawString);
 					var jsonString = rawString.match(/\{(.|\n)*\}/)[0];
 
 					jsonString = jsonString.replace(/^\[/, '');

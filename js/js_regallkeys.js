@@ -1968,7 +1968,7 @@ function jsMakeLeftRightPanelResizable() //настраиваю ресайзы �
 
 
 if(true)
-  $("*").on('mousedown.presize','.presize', function(e)
+  $("body").on('mousedown.presize','.presize', function(e)
      { 
 			  e.preventDefault();
 			  widthpanel = $(this);
@@ -2467,3 +2467,21 @@ function jsDoPasteClipboard(e) {
 	} //if needtext
 	return need_text;
 }
+
+
+//быстрый перебор
+jQuery.fn.quickEach = (function() {
+  var jq = jQuery([1]);
+  return function(c) {
+   var i = -1,
+       el, len = this.length;
+   try {
+    while (++i < len && (el = jq[0] = this[i]) && c.call(jq, i, el) !== false);
+   } catch (e) {
+    delete jq[0];
+    throw e;
+   }
+   delete jq[0];
+   return this;
+  };
+ }());

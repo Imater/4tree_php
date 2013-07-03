@@ -5734,6 +5734,9 @@ var attachEvents = function() {
 				isTouchEvent = event.originalEvent && /^touch/.test( event.originalEvent.type ),
 				evt = event.type;
 
+			
+			if( $btn.hasClass("ui-li") && (evt == "vmousecancel" || evt == "vmouseover" || evt == "vmouseout") ) return true;
+
 			if ( $btn.length ) {
 				theme = $btn.attr( "data-" + $.mobile.ns + "theme" );
 
@@ -5751,6 +5754,7 @@ var attachEvents = function() {
 				} else if ( evt === "vmouseover" || evt === "focus" ) {
 					if ( isTouchEvent ) {
 						// Use a short delay to determine if the user is scrolling before highlighting
+
 						foc = setTimeout( function() {
 							updateButtonClass( $btn, "ui-btn-up-" + theme, "ui-btn-hover-" + theme, true, "" );
 						}, hoverDelay );

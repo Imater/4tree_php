@@ -1,4 +1,5 @@
 .redactor_box {
+	-webkit-overflow-scrolling: touch;	
 	position: relative;
 	overflow: visible;
 	border: 1px solid #ddd;
