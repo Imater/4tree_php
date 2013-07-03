@@ -210,6 +210,7 @@ file_compress('all.js',array(
 	"b_menu/jquery.dimensions.min.js",
 	"js/pushstream.js",
 	"js/js_regallkeys.js",
+	"js/api4tree.js",
 	"js/all_new.js",
 //	"js/!sync_modul.js",
 	"js/ztx-ydn.db-dev-0.6.2.js",
