@@ -716,7 +716,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	else
 		 	  	{
 		 	  	var w=0; 
-		 	  	$("#mypanel .panel").each(function(){w+=$(this).width()});
+		 	  	$("#mypanel .panel").quickEach(function(){w+=$(this).width()});
 		 	  	
 		 		thisWidth = w;
 		 	if(!$(".makedone").is(":visible"))
@@ -1785,6 +1785,18 @@ function jsDoFirst() { //функция, которая выполняется �
 			//jsLoadWelcome();
 			jsProgressStep(); $("#load_screen").hide();  
 			check_hash_add_do();
+			if(false)
+			setTimeout(function(){
+				alert("Шоу начинается!")
+				var t2 = api4tree.js_my_all_data2test2();
+				var t1 = api4tree.js_my_all_data2test();
+				alert(t1+" : "+t2+" = "+(t2/t1) );
+
+				var t2 = api4tree.js_my_all_data2test2(1);
+				var t1 = api4tree.js_my_all_data2test(1);
+				var t3 = api4tree.js_my_all_data2test3(1);
+				alert("t1crc="+t1+" : t2="+t2+" : t3hex="+t3+" = "+(t2/t1) );
+			},5000);
 //			$("#tab_files").click();
 		},50); //отображаю страницу
 	}); //загружаю таблицу из памяти

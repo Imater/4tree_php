@@ -2092,7 +2092,7 @@ if (!tim) mytim = 5000;
 //меняет элементы на странице местами
 jQuery.fn.swapWith = function(to) {
 	console.info("swap");
-    return this.each(function() {
+    return this.quickEach(function() {
         var copy_to = $(to).clone(true);
         var copy_from = $(this).clone(true);
         $(to).replaceWith(copy_from);

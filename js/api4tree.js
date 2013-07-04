@@ -1,10 +1,12 @@
+var my_all_parents = {};
+
 /////////////////////////////////////TREE//////////////////////////////////////////
 var API_4TREE = function(global_table_name,need_log){  //singleton
 	 if ( (typeof arguments.callee.instance=='undefined') || true) //true - отключает singleton
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		  var my_all_data=[], my_all_comments=[], my_all_frends=[], my_all_share=[],
+		  var my_all_data=[], my_all_data2 = {},my_all_comments=[], my_all_frends=[], my_all_share=[],
 		  	  recursive_array=[],
 		  	  scrolltimer, myhtml_for_comments ="",
 		  	  old_before_diary,
@@ -3167,6 +3169,65 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	return my_all_data;
 		  }
 
+
+		  //установка главного массива снаружи и возврат его значения
+		  this.js_my_all_data2test = function(set_my_all_data) {
+		  	var t1 = jsNow();
+		  	var mysum = 0;
+		  	for(j=0; j<100; j++)
+		  	$.each(my_all_data,function(i,el){
+		  		var ddd = my_all_data2["n"+el.id];
+		  		if(ddd) if(set_my_all_data) mysum = crc32(ddd.text+mysum);
+		  	});
+
+
+		  	return jsNow()-t1;
+		  }
+
+		  //установка главного массива снаружи и возврат его значения
+		  this.js_my_all_data2test3 = function(set_my_all_data) {
+		  	var t1 = jsNow();
+		  	var mysum = 0;
+		  	for(j=0; j<100; j++)
+		  	$.each(my_all_data,function(i,el){
+		  		var ddd = my_all_data2["n"+el.id];
+		  		if(ddd) if(set_my_all_data) mysum = hex_md5(ddd.text+mysum);
+		  	});
+
+		  	//Object.keys( aa ).length
+		  	return jsNow()-t1;
+		  }
+
+
+		  this.js_my_all_data2test2 = function(set_my_all_data) {
+		  	var t1 = jsNow();
+		  	var mysum = 0;
+		  	for(j=0; j<100; j++)
+		  	$.each(my_all_data,function(i,el){
+
+				var len = my_all_data.length;
+				for(var i=0;i<len;i++) {
+					var ell = my_all_data[i];
+					if(ell && ell.id==el.id) {
+						var ddd = my_all_data[i];
+						break;
+					}
+				}
+		  	
+		  		if(set_my_all_data) mysum = crc32(ddd.text+mysum);
+		  	});
+
+
+		  	return jsNow()-t1;
+		  }
+
+
+		  //установка главного массива снаружи и возврат его значения
+		  this.js_my_all_data2 = function(set_my_all_data) {
+		  	if(set_my_all_data) my_all_data2 = set_my_all_data;
+		  	return my_all_data2;
+		  }
+
 		  //установка главного массива комментариев снаружи и возврат его значения
 		  this.js_my_all_comments = function(set_my_all_comments) {
 		  	if(set_my_all_comments) my_all_comments = set_my_all_comments;
@@ -3209,7 +3270,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //поиск любого элемента или установка его значений		  	
 		  this.jsFind = function(id,fields,save_anyway) {
 		    if(!my_all_data) return false;
-
+/*
 			var len = my_all_data.length;
 			for(var i=0;i<len;i++) {
 				var el = my_all_data[i];
@@ -3217,7 +3278,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					var answer = my_all_data[i];
 					break;
 				}
-			}
+			}*/
+			answer = my_all_data2["n"+id];
 //			var answer = my_all_data.filter(function(el,i) {
 //				return el && el.id==id;
 //			})[0];
@@ -3303,7 +3365,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  		 }
 
 	  		     //сохраняю в локальную базу данных    
-		         db.put(global_table_name,record).done(function(){ after_save1(); after_save2(); });
+		         db.put(global_table_name, record).done(function(){ after_save1(); after_save2(); });
   		       } 
 
 		  	}
@@ -3627,7 +3689,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 this.jsFindAutoFolder = function(parent_id,id) {
 		 	 var answer=[];
 		 	 
-		 	 if(parent_id && (parent_id!=1) && ( parent_id.toString().indexOf("_")==-1 )) return answer;
+		 	 if(parent_id && (parent_id!=1) && ( !( /^_/.test(parent_id) ) ) ) return answer;
 		 	 	
 		 	 if(id && ( id.toString().indexOf("_")==-1 )) return answer;
 		 	 	
@@ -3834,10 +3896,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		   	
 		 //поиск всех элементов родителя  	
 		 this.jsFindByParent = function(parent_id) {
-			var answer = my_all_data.filter(function(el,i) {
+
+		 	var answer = [];
+		 	var found = my_all_parents["p"+parent_id];
+		 	answer = found?found:[];
+			/*var answer = my_all_data.filter(function(el,i) {
 				if((settings.show_did==false) && (el.did!=0)) return false;
 				return el && el.del!=1 && el.parent_id==parent_id;
-			});
+			});*/
+
+			//if(!answer) return [];
 			
 			var add_auto_folder = this_db.jsFindAutoFolder(parent_id);
 			if(add_auto_folder) {
@@ -4263,12 +4331,26 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	  	 } //js_loadAllDataFromServer
 		     
 		 //загружаю в массив все данные из локальной DB
+
 		 this.js_LoadAllFromLocalDB = function() {
+		 	
 	  		var d=new $.Deferred();
 	  				this_db.log("Начинаю загрузку данных из локальной DB");
 		    		db.values(global_table_name,null,MAX_VALUE).done(function(records) {
 		    			this_db.log("Загрузил из локальной DB: " + records.length + " записей");
 		    			my_all_data = records;
+
+		    			var len = records.length;
+		    			for(var i=0;i<len;i++) {
+		    				var element = my_all_data[i];
+		    				my_all_data2["n"+element.id] = element;
+		    				if(!my_all_parents["p"+element.parent_id]) {
+		    					my_all_parents["p"+element.parent_id]=[];
+		    				}
+		    				my_all_parents["p"+element.parent_id].push( element );
+		    			}
+		    			
+
 		    			if(records.length==0) {
 		    				this_db.log("База пуста! Загружаю с сервера.");
 		    				
@@ -4303,6 +4385,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
    								this_db.jsUpdateChildrenCnt();
    								this_db.jsUpdateNextAction();		    						
    							}, 2000);
+
    							d.resolve();
    						});
 		    			} //else records.length != 0
@@ -4826,6 +4909,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     var myrefreshtimer,comment_tm;
 	     //синхронизация данных с сервером
 	     this.jsSync = function(save_only) { 
+	     	 
 			 if ( ($("#mypanel .n_title[contenteditable=true]").length > 0) ) 
 			 	{
 				start_sync_when_idle=true;
@@ -5105,6 +5189,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				     } //if success
 				startSync("finish");
 				d.resolve();	
+
 				
 				if(need_refresh) {
 					console.info("Дерево обновлено");
@@ -5173,12 +5258,15 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  }
 		  
 		  function save_all_text_in_a_while(e, html) {
+		  			  
 	  		  		  if(",39,37,40,38,".indexOf(","+e.keyCode+",")!=-1) return true;
   					  note_saved=false;
+  					  console.info("start_change_timer");
   					  clearTimeout(my_autosave);
   					  my_autosave = setTimeout( function() { 
   					      api4editor.jsSaveAllText(1); 
-  					  }, 500 );
+  					      console.info("SAVING");
+  					  }, 1000 );
 		  }			  
 		  
 		  function refresh_file_panel() {
@@ -5201,6 +5289,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		  toolbarExternal: "#fav_redactor_btn", // ID selector 
 		  		  keydownCallback: save_all_text_in_a_while,
 		  		  keyupCallback: save_all_text_in_a_while,
+		  		  changeCallback: save_all_text_in_a_while,
 		  		  execCommandCallback: save_all_text_in_a_while,
 		  		  imageUploadCallback: refresh_file_panel,
 		  		  fileUploadCallback: refresh_file_panel,
@@ -5616,3 +5705,22 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 	 return arguments.callee.instance;
 }
 /////////////////////////////////////////////
+
+
+
+    var table = "00000000 77073096 EE0E612C 990951BA 076DC419 706AF48F E963A535 9E6495A3 0EDB8832 79DCB8A4 E0D5E91E 97D2D988 09B64C2B 7EB17CBD E7B82D07 90BF1D91 1DB71064 6AB020F2 F3B97148 84BE41DE 1ADAD47D 6DDDE4EB F4D4B551 83D385C7 136C9856 646BA8C0 FD62F97A 8A65C9EC 14015C4F 63066CD9 FA0F3D63 8D080DF5 3B6E20C8 4C69105E D56041E4 A2677172 3C03E4D1 4B04D447 D20D85FD A50AB56B 35B5A8FA 42B2986C DBBBC9D6 ACBCF940 32D86CE3 45DF5C75 DCD60DCF ABD13D59 26D930AC 51DE003A C8D75180 BFD06116 21B4F4B5 56B3C423 CFBA9599 B8BDA50F 2802B89E 5F058808 C60CD9B2 B10BE924 2F6F7C87 58684C11 C1611DAB B6662D3D 76DC4190 01DB7106 98D220BC EFD5102A 71B18589 06B6B51F 9FBFE4A5 E8B8D433 7807C9A2 0F00F934 9609A88E E10E9818 7F6A0DBB 086D3D2D 91646C97 E6635C01 6B6B51F4 1C6C6162 856530D8 F262004E 6C0695ED 1B01A57B 8208F4C1 F50FC457 65B0D9C6 12B7E950 8BBEB8EA FCB9887C 62DD1DDF 15DA2D49 8CD37CF3 FBD44C65 4DB26158 3AB551CE A3BC0074 D4BB30E2 4ADFA541 3DD895D7 A4D1C46D D3D6F4FB 4369E96A 346ED9FC AD678846 DA60B8D0 44042D73 33031DE5 AA0A4C5F DD0D7CC9 5005713C 270241AA BE0B1010 C90C2086 5768B525 206F85B3 B966D409 CE61E49F 5EDEF90E 29D9C998 B0D09822 C7D7A8B4 59B33D17 2EB40D81 B7BD5C3B C0BA6CAD EDB88320 9ABFB3B6 03B6E20C 74B1D29A EAD54739 9DD277AF 04DB2615 73DC1683 E3630B12 94643B84 0D6D6A3E 7A6A5AA8 E40ECF0B 9309FF9D 0A00AE27 7D079EB1 F00F9344 8708A3D2 1E01F268 6906C2FE F762575D 806567CB 196C3671 6E6B06E7 FED41B76 89D32BE0 10DA7A5A 67DD4ACC F9B9DF6F 8EBEEFF9 17B7BE43 60B08ED5 D6D6A3E8 A1D1937E 38D8C2C4 4FDFF252 D1BB67F1 A6BC5767 3FB506DD 48B2364B D80D2BDA AF0A1B4C 36034AF6 41047A60 DF60EFC3 A867DF55 316E8EEF 4669BE79 CB61B38C BC66831A 256FD2A0 5268E236 CC0C7795 BB0B4703 220216B9 5505262F C5BA3BBE B2BD0B28 2BB45A92 5CB36A04 C2D7FFA7 B5D0CF31 2CD99E8B 5BDEAE1D 9B64C2B0 EC63F226 756AA39C 026D930A 9C0906A9 EB0E363F 72076785 05005713 95BF4A82 E2B87A14 7BB12BAE 0CB61B38 92D28E9B E5D5BE0D 7CDCEFB7 0BDBDF21 86D3D2D4 F1D4E242 68DDB3F8 1FDA836E 81BE16CD F6B9265B 6FB077E1 18B74777 88085AE6 FF0F6A70 66063BCA 11010B5C 8F659EFF F862AE69 616BFFD3 166CCF45 A00AE278 D70DD2EE 4E048354 3903B3C2 A7672661 D06016F7 4969474D 3E6E77DB AED16A4A D9D65ADC 40DF0B66 37D83BF0 A9BCAE53 DEBB9EC5 47B2CF7F 30B5FFE9 BDBDF21C CABAC28A 53B39330 24B4A3A6 BAD03605 CDD70693 54DE5729 23D967BF B3667A2E C4614AB8 5D681B02 2A6F2B94 B40BBE37 C30C8EA1 5A05DF1B 2D02EF8D";     
+ 
+    /* Number */ 
+    crc32 = function( /* String */ str, /* Number */ crc ) { 
+        if( crc == window.undefined ) crc = 0; 
+        var n = 0; //a number between 0 and 255 
+        var x = 0; //an hex number 
+ 
+        crc = crc ^ (-1); 
+        for( var i = 0, iTop = str.length; i < iTop; i++ ) { 
+            n = ( crc ^ str.charCodeAt( i ) ) & 0xFF; 
+            x = "0x" + table.substr( n * 9, 8 ); 
+            crc = ( crc >>> 8 ) ^ x; 
+        } 
+        return crc ^ (-1); 
+    }; 
