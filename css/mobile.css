@@ -684,7 +684,7 @@ margin-top: 10px !important;
 }
 
 .rotate180 {
-	 -webkit-transform: rotate(-130]deg);     /* Chrome and other webkit browsers */
+	 -webkit-transform: rotate(-130deg);     /* Chrome and other webkit browsers */
   	-moz-transform: rotate(-130deg);        /* FF */
   	-o-transform: rotate(-130deg);          /* Opera */
   	-ms-transform: rotate(-130deg);         /* IE9 */
