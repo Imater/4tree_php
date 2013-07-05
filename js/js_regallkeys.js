@@ -1,3 +1,33 @@
+Object.defineProperty(
+    Object.prototype, 
+    'renameProperty',
+    {
+        writable : false, // Cannot alter this property
+        enumerable : false, // Will not show up in a for-in loop.
+        configurable : false, // Cannot be deleted via the delete operator
+        value : function (oldName, newName) {
+            // Check for the old property name to 
+            // avoid a ReferenceError in strict mode.
+            if (this.hasOwnProperty(oldName)) {
+                this[newName] = this[oldName];
+                delete this[oldName];
+            }
+            return this;
+        }
+    }
+);
+/*
+//переименование ключа объекта
+function renameKey (this_obj, oldName, newName) {
+    // Check for the old property name to avoid a ReferenceError in strict mode.
+    if (this_obj.hasOwnProperty(oldName)) {
+        this_obj[newName] = this_obj[oldName];
+        delete this_obj[oldName];
+    }
+    return this_obj;
+};
+*/
+
 function jsHideWelcome() {
 	myjsPlumb2.detachEveryConnection();
 	$("#start_welcome_page").removeClass("active");
@@ -2155,7 +2185,7 @@ if(type==0)
 		var frend = jsFrendById(d.user_id);
 		d.foto = frend.foto;
 		d.name = frend.fio;
-		if(jsFind(d.tree_id)) d.tree_title = "<b>["+api4others.jsShortText( jsFind(d.tree_id).title, 50 )+"]</b>";
+		if(jsFind(d.tree_id)) d.tree_title = "<b>["+api4tree.jsShortText( jsFind(d.tree_id).title, 50 )+"]</b>";
 		if(d.add_time=="0")  d.add_time_txt = "";
 		else
 			{
@@ -2485,3 +2515,51 @@ jQuery.fn.quickEach = (function() {
    return this;
   };
  }());
+
+
+
+//выбирает блок текста вокруг найденного слова
+function jsFindText(text,findtext,length) {
+
+text = text.replace(/'/g, "&apos;").replace(/"/g, "&quot;").replace(/<\/p>/g, " ").
+		    replace(/<\/div>/g, " ").replace(/<br>/g, " ").replace(/<\/li>/g, " ").replace(/<\/span>/g, " ");
+
+text = strip_tags(text);
+
+var length = parseInt(length,10);
+var lower_text = text.toLowerCase()
+var lower_findtext = findtext.toLowerCase()
+
+var findstart = lower_text.indexOf(lower_findtext);
+
+if(findstart==-1 && (lower_findtext.toLowerCase() != lower_findtext.toUpperCase()) ) {
+	var findstart = diff_plugin.match_main( lower_text, lower_findtext, 0 );
+	if(findstart!=-1){
+		var lower_findtext = getWordAt(text, findstart);
+
+		setTimeout(function(){ 
+			$(".search_panel_result li").not(":has('.highlight')").highlight(lower_findtext,"highlight"); 
+		}, 5000);
+		
+	} else {
+		return text.substr(0,length);
+	}
+}
+
+
+for(var i=findstart;i>0;i=i-1)
+   {
+   if( (text[i]=='.') || (text[i]=='!') || (text[i]=='?') || (text[i]==';') ) { i=i+1; break; }
+   }
+
+if( i<(findstart-10) ) i=findstart-10;
+answer = text.substr(i,length+(findstart-i));
+
+//answer = answer.replace(findtext.toLowerCase(),"<b>"+findtext.toLowerCase()+"</b>");
+
+if(i>0) answer = '…'+answer;
+if(length+findstart<text.length) answer = answer+'…';
+
+return answer;
+
+}

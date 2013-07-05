@@ -261,126 +261,18 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 }
 		 			 			 
 		 //заполняет массив разными данными элемента
-		 function jsInfoFolder(data,parent_node) { 
-		 	var add_text, search_sample, hide_it, need_sync, crossline, remind, add_class,img;
-		 	if(!data) return true;
-		 	if(parent_node==-1) //если это панель поиска
-		 	  {
-		 	  var ans = data.path;
-		 	  var add_text = '<br><span class="search_path">'+ans+'</span>';
-		 	  var search_panel_width = $(".bottom_left").width();
-		 	  
-		 	  var length = search_panel_width?(search_panel_width/4.5):100;
-		 	  var findtext = $('#search_filter').val();
-		 	  var founded_text = jsFindText(data.text,findtext,length);
-		 	  
-		 	  if(data.comment) 
-		 	  	{
- 	    			var findcomment = data.comment;
- 	    			var fiocomment = api4tree.jsFrendById(data.comment.user_id).fio;
- 	    			text_comment = '<div class="comment_founded"><i class="icon-comment"></i>'+
- 	    							fiocomment+": "+strip_tags(data.comment.text)+'</div>';
-		 	  	}
-		 	  else var text_comment = "";
-		 	  
-		 	  search_sample = '<div class="search_sample">'+founded_text+'</div>'+text_comment;
-		 	  } //parent_node = -1
-		 	else { add_text = ''; search_sample = ''; }
-
-		 //////
-		 	if( ((data.lsync - data.time) > 0) || (data["new"]=="position,"))
-		 	    hideit = " hideit";
-		 	else
-		 	    hideit = "";
-		 
-		 	needsync = "<div class='syncit'><i class='icon-arrows-cw sync_it_i"+hideit+"'></i></div>";
-		 //////
-		 	if(data.did!="") crossline = " do_did";
-		 	else crossline = "";
-		 //////
-		 	if(data.remind==0) remind = "";
-		 	else remind = "<i class='icon-bell-1' style='float:right;'></i>";
-		 /////
-		 	var make_icon = api4tree.jsMakeIconText(data.text);
-		 	if(data.tmp_text_is_long==1) { 
-		 		add_class="note-6"; 
-		 	} else {
-			 	add_class = make_icon.myclass;
-		 	}
-		 /////
-		 	if(!data.icon) 
-		 	  img = "<div class='node_img "+add_class+"'></div>";
-		 	else 
-		 	  {
-		 	  var icon = data.icon.replace("mini/","");
-	    	  var icon = icon?icon.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
-		 	  var img = "<div class='node_img node_box' style='background-image:url("+icon+")'></div>";
-		 	  }
-		 /////
-		 	var datacount = data.tmp_childrens?data.tmp_childrens:0;
-		 	
-		 	if(datacount>0) 
-		 	  { 
-		 	  var countdiv = "";
-		 	  var isFolder="folder"; 
-		 	  var add_class = make_icon.myclass;
-		 	  var textlength = make_icon.mylength; 
-		 
-		 	  if(textlength>0) { var isFull = " full";
-		 	  } else { var isFull = ""; }
-		 	  
-		 	  if(isMindmap || isTree) var display = "opacity:1;"; 
-		 	  else var display = "opacity:1;";
-		 	  
-		 	  var img = "<div class='folder_closed"+isFull+"'>"+"<div class='countdiv'>"+datacount+"</div>"+"</div>";
-		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-play'></i></div>";
-		 	  }
-		 	else 
-		 	  { 
-		 	  var countdiv = ''; 
-		 	  var isFolder = "";
-		 	  if(data.parent_id==1) { var display = "opacity:0;";
-		 	  } else { var display = "opacity:0;"; }
-		 	  
-		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-play'></i></div>";
-		 	  }
-		 /////////////////////////////////////////////////
-		 	var icon_share = "";
-		 
-		 	if( data.user_id != main_user_id ) {
-		 	  	var this_frend = api4tree.jsFrendById(data.user_id);
-		 	  	if(this_frend) {
-		 	  		icon_share = "<div title='"+this_frend["fio"]+" ("+this_frend["email"]+
-		 	  					  ")\nделится с вами СВОЕЙ веткой' class='share_img'><img src='"+
-		 	  					  this_frend["foto"]+"'></div>";
-		 	  	}
-	 	  	}
-		 	  
-		 	var comment_count = data.tmp_comments?data.tmp_comments:"";
-		 		    
-		 return {comment_count:comment_count?comment_count:"",
-		 	     countdiv:countdiv, //кол-во элементов внутри папки
-		 	     isFolder:isFolder, 
-		 	     img: img, 
-		 	     triangle:triangle, 
-		 	     icon_share:icon_share, 
-		 	     add_text:add_text, 
-		 	     search_sample:search_sample, 
-		 	     mytitle:data.title, 
-		 	     remind:remind, 
-		 	     crossline:crossline, 
-		 	     needsync:needsync};
-
-		 } //jsInfoFolder
 		 
 		 //возвращает один элемент для отображения в дереве
 		 this.jsRenderOneElement = function(data, ii, parent_node) {
-		 	var info = jsInfoFolder(data,parent_node);
+		 	var info = api4tree.jsInfoFolder(data,parent_node);
 		 	
 		 	var position = (typeof ii!=undefined)?ii:(parseFloat(data.position)); // - 0.9
+
+		 	if( (data.did!=0 && settings.show_did==false) || (data.del!=0) ) isVisible = "style='display:none;'";
+		 	else isVisible = "";
 		 	
-		 	myli = "<div class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'>"+"</div>"; //разделитель
-		 	myli +=  "<li id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='tree-closed "+info.isFolder+"'>";
+		 	myli = "<div "+isVisible+" class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'>"+"</div>"; //разделитель
+		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='tree-closed "+info.isFolder+"'>";
 		 	myli += "<div class='big_n_title'>";
 		 	myli += "<div class='tcheckbox fav_color_"+data.fav+"' title='"+data.id+":"+position+"'>"+info.comment_count+"</div>" + info.icon_share;
 		 	myli += "<div class='date1' myid='"+(data.tmp_next_id?data.tmp_next_id:"")+"' childdate='"+(data.tmp_nextdate?data.tmp_nextdate:"")+"' title='"+data.date1+""+(data.tmp_next_title?data.tmp_next_title:"")+"'></div>";
@@ -641,8 +533,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 		return true;
 		 		}
 		 	var h3_search_already_added = false;
-		 	if(!myjsPlumb.isSuspendDrawing() && isMindmap) myjsPlumb.setSuspendDrawing(true, true);
-		 	console.info("set_suspend");
+		 	if(!myjsPlumb.isSuspendDrawing() && isMindmap) {
+		 		myjsPlumb.setSuspendDrawing(true, true);
+		 		console.info("set_suspend");
+		 	}
 		 	
 		 	$.each(mydata, function(i,data) {
 		 		  if(!data)	return true;
@@ -794,7 +688,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 	 		var mytitle = myli.find(".n_title").html();
 	 
 	 		if(mytitle && !nohash) {
-	     		document.title = "4tree.ru: "+api4others.jsShortText( strip_tags(mytitle), 150 );
+	     		document.title = "4tree.ru: "+api4tree.jsShortText( strip_tags(mytitle), 150 );
 	 		}
 	 
 	 		if( myli.find('.countdiv').length==1 ) {//если это папка, создаю панель
@@ -831,7 +725,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 	var path = api4tree.jsFindPath( element );
 			 	var ul_text = "";
 			 	$.each(path.path, function(i,el) {
-				 	new_title = api4others.jsShortText( el.path.title, 35 );
+				 	new_title = api4tree.jsShortText( el.path.title, 35 );
 			 		ul_text += "<li myid='"+el.path.id+"'><a>"+new_title+"</a>";
 			 		ul_text += "</li>";
 			 	});
@@ -883,7 +777,7 @@ var API_4OTHERS = function() {
 		this.jsSetTitleBack = function() {
 		   var mytitle = $("#mypanel .selected").find(".n_title").html();
 		   if(mytitle) {
-    		   document.title = "4tree.ru: "+api4others.jsShortText( strip_tags(mytitle) ,150 );
+    		   document.title = "4tree.ru: "+api4tree.jsShortText( strip_tags(mytitle) ,150 );
 		   } else {
 		   	   document.title = "4tree.ru";
 		   }
@@ -942,7 +836,7 @@ var API_4OTHERS = function() {
 					} else if (mytype=="all") {
 						var date1 = sqldate( parseInt(el.add_time) );
 						html += "<li><a href='"+el.link+"'>"+find_icon_for_file_type(el.filename)+
-							api4others.jsShortText(el.filename,30)+"</a>"+
+							api4tree.jsShortText(el.filename,30)+"</a>"+
 							"<div class='date1 fromchildren' title='"+date1+
 							"'></div>"+
 							"<div class='file_size'>"+readableFileSize(el.filesize)+
@@ -959,23 +853,6 @@ var API_4OTHERS = function() {
 		
 		}
 
-
-		//сокращает текст до определённой длины
-		this.jsShortText = function(text, lng) {
-		    if(!text) return "";
-		    text = strip_tags(text);
-			if( text.length>(lng+3) ) {
-				var f_l = parseInt(lng*0.7,10);
-				var f_r = lng-f_l;
-			
-				var first = text.substr(0,f_l);
-				var last = text.substr(text.length-f_r,text.length);
-				return first + '…' + last;
-			} else {
-				return text;
-			}
-		
-		}
 		
 		//выбирает случайную шутку для завршённой помидорки
 		function getRandomPomidorJoke() {
@@ -1337,7 +1214,7 @@ var DB_INTERFACE = function(global_table_name){  //singleton
 			      				  (el.did?el.did:"");
 //			      	alldata = el.id+":"+(el.title?el.title:"")+", ";
 				if(el.id==6679) console.info("Сверка md5:"+alldata);
-					var mymd5 = hex_md5( alldata ).substr(0,5);
+					var mymd5 = crc32( alldata ).substr(0,5);
 					
 			      	longtext.push({ id:el.id, md5:mymd5 });
 			      	}
@@ -1781,7 +1658,7 @@ function jsDoFirst() { //функция, которая выполняется �
 		var view_type = localStorage.getItem("view_type");
 		if(view_type) jsMakeView(view_type);
 		setTimeout(function() { 
-			jsFotoDoFirst(); //инициализируем фото-редактор
+			//jsFotoDoFirst(); //инициализируем фото-редактор
 			//jsLoadWelcome();
 			jsProgressStep(); $("#load_screen").hide();  
 			check_hash_add_do();
@@ -1798,6 +1675,7 @@ function jsDoFirst() { //функция, которая выполняется �
 				alert("t1crc="+t1+" : t2="+t2+" : t3hex="+t3+" = "+(t2/t1) );
 			},5000);
 //			$("#tab_files").click();
+			//$('#mypanel').dragscrollable({dragSelector: '#mypanel', acceptPropagatedEvent: true, preventDefault: false});
 		},50); //отображаю страницу
 	}); //загружаю таблицу из памяти
 } //jsDoFirst
@@ -1915,57 +1793,12 @@ function jsAddFavRed(mytitle,id) {
   	return true;
   	}
 
-  var shorttitle = api4others.jsShortText( mytitle , 15 );
+  var shorttitle = api4tree.jsShortText( mytitle , 15 );
 
   $("<li fix=0 myid='"+id+"' title='"+mytitle+"'>"+shorttitle+"</li>").insertBefore("#fav_red ul li:first");
   api4tree.jsCalcTabs();
 }
 
-//выбирает блок текста вокруг найденного слова
-function jsFindText(text,findtext,length) {
-
-text = text.replace(/'/g, "&apos;").replace(/"/g, "&quot;").replace(/<\/p>/g, " ").
-		    replace(/<\/div>/g, " ").replace(/<br>/g, " ").replace(/<\/li>/g, " ").replace(/<\/span>/g, " ");
-
-text = strip_tags(text);
-
-var length = parseInt(length,10);
-var lower_text = text.toLowerCase()
-var lower_findtext = findtext.toLowerCase()
-
-var findstart = lower_text.indexOf(lower_findtext);
-
-if(findstart==-1 && (lower_findtext.toLowerCase() != lower_findtext.toUpperCase()) ) {
-	var findstart = diff_plugin.match_main( lower_text, lower_findtext, 0 );
-	if(findstart!=-1){
-		var lower_findtext = getWordAt(text, findstart);
-
-		setTimeout(function(){ 
-			$(".search_panel_result li").not(":has('.highlight')").highlight(lower_findtext,"highlight"); 
-		}, 5000);
-		
-	} else {
-		return text.substr(0,length);
-	}
-}
-
-
-for(var i=findstart;i>0;i=i-1)
-   {
-   if( (text[i]=='.') || (text[i]=='!') || (text[i]=='?') || (text[i]==';') ) { i=i+1; break; }
-   }
-
-if( i<(findstart-10) ) i=findstart-10;
-answer = text.substr(i,length+(findstart-i));
-
-//answer = answer.replace(findtext.toLowerCase(),"<b>"+findtext.toLowerCase()+"</b>");
-
-if(i>0) answer = '…'+answer;
-if(length+findstart<text.length) answer = answer+'…';
-
-return answer;
-
-}
 
 
 

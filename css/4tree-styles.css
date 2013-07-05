@@ -639,7 +639,11 @@ height: auto;
 }
 
 .v2 .all_editor_place {
-	bottom: -15px;
+	bottom: 12px;
+}
+
+.v2 .all_editor_place > .redactor_box{
+  bottom: -8px !important;
 }
 
 #bottom_panel
@@ -687,7 +691,7 @@ z-index: 1;
 top:30px;
 margin-left: 5px;
 height: auto;
-bottom:19px;
+bottom:26px;
 right: 0px;
 }
 
@@ -3634,12 +3638,10 @@ overflow-y: auto !important;
 
 .open_calendars
 {
-display: none;
 position: absolute;
-bottom: 3px;
-right: 114px;
-font-size: 18px;
-color: #555;
+bottom: 5px;
+right: 136px;
+font-size: 16px;
 cursor: pointer;
 }
 
@@ -3652,14 +3654,13 @@ color: black;
 {
 display: none;
 position: absolute;
-left: 15px;
-right: 15px;
+right: 35px;
 bottom: 28px;
 width: auto;
 background: white;
 height: 175px;
-font-size: 9px;
-z-index: 1;
+font-size: 10px;
+z-index: 30;
 overflow-x: scroll;
 overflow-y: hidden;
     -webkit-box-shadow:2px 2px 10px #000;
@@ -3675,10 +3676,10 @@ width: 0px;
 border-left: 15px solid rgba(113, 101, 58, 0);
 border-right: 15px solid rgba(113, 101, 58, 0);
 border-top: 15px solid white;
-bottom: 15px;
+bottom: 17px;
 position: absolute;
-right: 112px;
-z-index: 5;
+right: 133px;
+z-index: 31;
 }
 
 .search_arrow {
@@ -3708,6 +3709,7 @@ background: #0808A7 !important;
 .ui-has-note a
 {
 font-weight: bold !important;
+background:rgba(255, 255, 0, 0.32) !important;
 }
 
 
@@ -3866,8 +3868,8 @@ border-radius:3px;
 .divider_red
 {
 width: 100%;
-min-height: 55px;
-font-size: 13px !important;
+min-height: 45px;
+font-size: 11px !important;
 background: #2f6a23 !important;
 color: #69b12f;
 font-weight: bold;
@@ -3876,6 +3878,7 @@ margin-bottom: 0px !important;
 margin-top: 35px !important;
 cursor: pointer !important;
 padding: 5px 0px 5px 0px;
+line-height: 13px;
 }
 
 .redactor_editor .divider_red:first-child
@@ -3897,8 +3900,8 @@ margin-bottom: 0px;
 .divider_count
 {
 float: left;
-font-size: 40px !important;
-margin: 18px 5px 0px 13px;
+font-size: 33px !important;
+margin: 15px 5px 0px 13px;
 color: #538a26;
 }
 

@@ -65,6 +65,7 @@ if(isset($_GET['confirm']))
 
 <script src="js/jquery-1.10.1.min.js"></script>
 <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="js/scrollable.js"></script>
 
 <?
 if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)   

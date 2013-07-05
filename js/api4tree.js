@@ -1,4 +1,4 @@
-var my_all_parents = {};
+var my_all_parents = {}, settings = {show_did:false}; //все параметры;
 
 /////////////////////////////////////TREE//////////////////////////////////////////
 var API_4TREE = function(global_table_name,need_log){  //singleton
@@ -6,7 +6,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		  var my_all_data=[], my_all_data2 = {},my_all_comments=[], my_all_frends=[], my_all_share=[],
+		  var my_all_data3=[], my_all_data2 = {},my_all_comments=[], my_all_frends=[], my_all_share=[],
 		  	  recursive_array=[],
 		  	  scrolltimer, myhtml_for_comments ="",
 		  	  old_before_diary,
@@ -20,9 +20,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      log_i=1, //номер лога
 		      tree_font=1,did_timeout,files_link_from_texts = [],
 		      this_db = this, //эта функция
-		      MAX_VALUE = 1000000000000000; //максимальное кол-во в базе
-		      LENGTH_OF_LONG_TEXT = 300, //длина, после которой текст считается длинным и переносится в другую базу
-		      settings = {show_did:false}; //все параметры
+		      MAX_VALUE = 1000000000000000, //максимальное кол-во в базе
+		      LENGTH_OF_LONG_TEXT = 500; //длина, после которой текст считается длинным и переносится в другую базу
+		      
 
 
 
@@ -128,6 +128,137 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  return new_id;
 		  }
 
+		//сокращает текст до определённой длины
+		this.jsShortText = function(text, lng) {
+		    if(!text) return "";
+		    text = strip_tags(text);
+			if( text.length>(lng+3) ) {
+				var f_l = parseInt(lng*0.7,10);
+				var f_r = lng-f_l;
+			
+				var first = text.substr(0,f_l);
+				var last = text.substr(text.length-f_r,text.length);
+				return first + '…' + last;
+			} else {
+				return text;
+			}
+		
+		}
+
+
+		 this_db.jsInfoFolder = function(data,parent_node) { 
+		 	var add_text, search_sample, hide_it, need_sync, crossline, remind, add_class,img;
+		 	if(!data) return true;
+		 	if(parent_node==-1) //если это панель поиска
+		 	  {
+		 	  var ans = data.path;
+		 	  var add_text = '<br><span class="search_path">'+ans+'</span>';
+		 	  var search_panel_width = $(".bottom_left").width();
+		 	  
+		 	  var length = search_panel_width?(search_panel_width/4.5):100;
+		 	  var findtext = $('#search_filter').val();
+		 	  var founded_text = jsFindText(data.text,findtext,length);
+		 	  
+		 	  if(data.comment) 
+		 	  	{
+ 	    			var findcomment = data.comment;
+ 	    			var fiocomment = api4tree.jsFrendById(data.comment.user_id).fio;
+ 	    			text_comment = '<div class="comment_founded"><i class="icon-comment"></i>'+
+ 	    							fiocomment+": "+strip_tags(data.comment.text)+'</div>';
+		 	  	}
+		 	  else var text_comment = "";
+		 	  
+		 	  search_sample = '<div class="search_sample">'+founded_text+'</div>'+text_comment;
+		 	  } //parent_node = -1
+		 	else { add_text = ''; search_sample = ''; }
+
+		 //////
+		 	if( ((data.lsync - data.time) > 0) || (data["new"]=="position,"))
+		 	    hideit = " hideit";
+		 	else
+		 	    hideit = "";
+		 
+		 	needsync = "<div class='syncit'><i class='icon-arrows-cw sync_it_i"+hideit+"'></i></div>";
+		 //////
+		 	if(data.did!="") crossline = " do_did";
+		 	else crossline = "";
+		 //////
+		 	if(data.remind==0) remind = "";
+		 	else remind = "<i class='icon-bell-1' style='float:right;'></i>";
+		 /////
+		 	var make_icon = api4tree.jsMakeIconText(data.text);
+		 	if(data.tmp_text_is_long==1) { 
+		 		add_class="note-6"; 
+		 	} else {
+			 	add_class = make_icon.myclass;
+		 	}
+		 /////
+		 	if(!data.icon) 
+		 	  img = "<div class='node_img "+add_class+"'></div>";
+		 	else 
+		 	  {
+		 	  var icon = data.icon.replace("mini/","");
+	    	  var icon = icon?icon.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
+		 	  var img = "<div class='node_img node_box' style='background-image:url("+icon+")'></div>";
+		 	  }
+		 /////
+		 	var datacount = data.tmp_childrens?data.tmp_childrens:0;
+		 	
+		 	if(datacount>0) 
+		 	  { 
+		 	  var countdiv = "";
+		 	  var isFolder="folder"; 
+		 	  var add_class = make_icon.myclass;
+		 	  var textlength = make_icon.mylength; 
+		 
+		 	  if(textlength>0) { var isFull = " full";
+		 	  } else { var isFull = ""; }
+		 	  
+		 	  if(isMindmap || isTree) var display = "opacity:1;"; 
+		 	  else var display = "opacity:1;";
+		 	  
+		 	  var img = "<div class='folder_closed"+isFull+"'>"+"<div class='countdiv'>"+datacount+"</div>"+"</div>";
+		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-play'></i></div>";
+		 	  }
+		 	else 
+		 	  { 
+		 	  var countdiv = ''; 
+		 	  var isFolder = "";
+		 	  if(data.parent_id==1) { var display = "opacity:0;";
+		 	  } else { var display = "opacity:0;"; }
+		 	  
+		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-play'></i></div>";
+		 	  }
+		 /////////////////////////////////////////////////
+		 	var icon_share = "";
+		 
+		 	if( data.user_id != main_user_id ) {
+		 	  	var this_frend = api4tree.jsFrendById(data.user_id);
+		 	  	if(this_frend) {
+		 	  		icon_share = "<div title='"+this_frend["fio"]+" ("+this_frend["email"]+
+		 	  					  ")\nделится с вами СВОЕЙ веткой' class='share_img'><img src='"+
+		 	  					  this_frend["foto"]+"'></div>";
+		 	  	}
+	 	  	}
+		 	  
+		 	var comment_count = data.tmp_comments?data.tmp_comments:"";
+		 		    
+		 return {comment_count:comment_count?comment_count:"",
+		 	     countdiv:countdiv, //кол-во элементов внутри папки
+		 	     isFolder:isFolder, 
+		 	     img: img, 
+		 	     triangle:triangle, 
+		 	     icon_share:icon_share, 
+		 	     add_text:add_text, 
+		 	     search_sample:search_sample, 
+		 	     mytitle:data.title, 
+		 	     remind:remind, 
+		 	     crossline:crossline, 
+		 	     needsync:needsync};
+
+		 } //jsInfoFolder
+
+
 		 //выбирает кол-во полосок в иконке при кол-ве текста
 		 this.jsMakeIconText = function(text) { 
 		  	var mylength = strip_tags(text).replace(/\t/ig,"").length;
@@ -189,7 +320,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		      var dfdArray = []; //массив для объектов работы с асинхронными функциями
 		      
-		      $.each(my_all_data,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
+		      $.each(my_all_data2,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
 		          if(el) {
 		          	var done_element = this_db.jsFindLongText(el.id).done(function(longtext){
 		      			if(longtext) {
@@ -230,14 +361,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	    	  setTimeout(function() {
 	    	  	 var caldata2=[];
 	    	  	
-	    	  	 var caldata = my_all_data.filter(function(el) 
-	    	  			{ 
-	    	  		    if(!el) return false;
-	    	  		    if(no_did && el.did!=0) return false;
-	    	  		    if(el.date1<start || el.date1>end) return false;
-	    	  			if(el.date1!="" && el.del!=1 ) return true; 
-	    	  			else return false;
-	    	  			} );
+
+	    	  	 var caldata = [];
+
+	    	  	 $.each(my_all_data2, function(i,el) {
+	    	  		    if( el && !(no_did && el.did!=0) && !(el.date1<start || el.date1>end) && (el.date1!="" && el.del!=1 )) {
+	    	  				caldata.push(el);	    	  		   
+	    	  			} 
+	    	  	 });
+
+	    	  			
 	    	  	
 	    	  	var answer1=[];
 	    	  	var datenow = sqldate( jsNow() );
@@ -333,17 +466,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	      //создаю закладки из всех дел написанных большими буквами
     	  this.jsMakeTabs = function() { 
     		   //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
-    	  	   var data = my_all_data.filter(function(el) 
-    	  		    { 
-    	  		    if(!el) return false;
-    	  		      if(el.did==0) 
-    	  		      	if(el.del==0) 
-    	  		      	  if(el.user_id==main_user_id)
-    	  		      		if(el.title) 
-    	  		      		  if(el.title.indexOf("[@]")==-1)
-    		  		      		  if(el.title.indexOf("[[")==-1)
-    		  			  		  	if(el.parent_id>0) 
-    	  		      				{
+    	  	   var data = [];
+
+    	  	   $.each(my_all_data2, function(i,el) { 
+    	  		    if(el && (el.did==0) && (el.del==0) && (el.user_id==main_user_id) && el.title && !(/\[\@\]/.test(el.title)) && !(/\[\[/.test(el.title)) && el.parent_id>0 ) {
     	  		      				var shablon = /[a-z]|[а-я]+/; 
     	  							var matches = el.title.match(shablon);
     	  
@@ -351,7 +477,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  							var matches2 = el.title.match(shablon);
     	  							
     	  		      				if( !matches && !matches2 ) 
-    	  		      					return ( el.title==el.title.toUpperCase() ); 
+    	  		      					if( el.title==el.title.toUpperCase() ) {
+    	  		      						data.push(el);
+    	  		      					}; 
     	  		      				}
     	  		    } );
     	  
@@ -372,7 +500,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  		if(data[i].title.length>10) title = data[i].title;
     	  		else title = "";
     	  		alltabs = alltabs + "<li title='"+title+"' myid='"+
-    	  				  data[i].id+"'>"+api4others.jsShortText(data[i].title,20)+"</li>";
+    	  				  data[i].id+"'>"+api4tree.jsShortText(data[i].title,20)+"</li>";
     	  				  //<i class='icon-folder-1'></i>
     	  		}
     	  	alltabs= alltabs+ "</ul>";
@@ -420,12 +548,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      
 		  //заполняю массив allmynotes,allmydates всеми непустыми заметками из дневника (для календариков)
 		  this.jsGetAllMyNotes = function() {
-		      if(!my_all_data) return false;
-		      allmynotes = my_all_data.filter(function(el,i) { //все заметки длиннее 3 символов (без тегов)
-		        if(el && el.title && (el.del!=1) && (el.title.indexOf(" - ")!=-1) && (el.title[el.title.length-1]==")") && (strip_tags(el.text).length>3)) return true;
-		      	});	
+		  		return false;
+		      if(!my_all_data2) return false;
+		      allmynotes = [];
+		      	$.each(my_all_data2, function(i,el) { //все заметки длиннее 3 символов (без тегов)
+		        	if(el && el.title && (el.del!=1) && (el.title.indexOf(" - ")!=-1) && (el.title[el.title.length-1]==")") && (strip_tags(el.text).length>3)) {
+		        		allmynotes.push(el);
+		        	}return true;
+		  		});	
 		      	
-		      allmydates = my_all_data.filter(function(el,i) { //все дела с датами (нужно для календариков)
+		      allmydates = my_all_data2.filter(function(el,i) { //все дела с датами (нужно для календариков)
   	            if(!el) return false;
 		      	if(el.date1) 
 		      		if ((el.del!=1) && (el.date1!="")) return true;
@@ -435,7 +567,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      
 		  //поиск всех заметок на эту дату (нужно для календариков)
 		  this.jsDiaryFindDateNote = function(date) { 
-			  if(!my_all_data || !allmynotes) return false;
+			  if(!my_all_data2) return false;
 			  
 			  var today = date;
 			  var year = today.getFullYear();
@@ -444,17 +576,23 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 			  var finddate = day +"."+ (month) + "."+year+" - ";
 			  
-			  var answer = allmynotes.filter(function(el,i) {
+			  var answer = [];
+	      	  $.each(my_all_data2, function(i,el) { //все заметки длиннее 3 символов (без тегов)
+		        	if(el && el.title && (el.del!=1) && ( /-/.test(el.title) ) && ( /\)/.test(el.title) ) && (el.title.indexOf(finddate)!=-1) && (el.text.length>3)) {
+		        		answer.push(el);
+		        	}
+	  		  });	
+
+
+			  /*allmynotes.filter(function(el,i) {
 			      if(el.parent_id) return (el.title.indexOf(finddate)!=-1); 
-			  });	
+			  });	*/
 			  
 			  if(answer.length!=0) {
 			      var text = answer[0].text;
-			      text = text.replace("</p>"," ");
-			      text = text.replace("</div>"," ");
-			      text = text.replace("<br>"," ");
-			      text = text.replace("</li>"," ");
-			      var mytext = strip_tags(text); 
+			      text = text.replace("</p>"," ").replace("</div>"," ").replace("<br>"," ").replace("</li>"," ");
+
+			      var mytext = strip_tags(text).trim();  
 			  //	mytext = mytext.replace("@@@","___\r");
 			      return [true,mytext]; 
 			      }
@@ -464,7 +602,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		  //поиск всех событий назначенных на эту дату (нужен для календариков)
 		  this.jsDiaryFindDateDate = function(date) { 
-			  if(!my_all_data || !allmydates) return false;
+			  if(!my_all_data2 ) return false;
 			  
 			  var today = date;
 			  var year = today.getFullYear();
@@ -473,11 +611,19 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 			  var finddate = year +"-"+ (month) + "-"+ day +" ";
 			  
+			  var answer = [];
+	      	  $.each(my_all_data2, function(i,el) { //все заметки длиннее 3 символов (без тегов)
+		        	if(el && el.title && (el.del!=1) && (typeof el.date1 == "string") && (el.date1.indexOf(finddate)!=-1) ) {
+		        		answer.push(el);
+		        	}
+	  		  });	
+
+/*
 			  var answer = allmydates.filter(function(el,i) 
 			      { 
 			      if((el.parent_id) && (typeof el.date1 == "string")) return (el.date1.indexOf(finddate)!=-1); 
 			      });	
-			  
+*/			  
 			  
 			  if(answer.length!=0) 
 			      { 
@@ -586,9 +732,21 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  }
 		  
 		  this.jsFindByTitle = function(parent_id, title) {
-		      var elements = my_all_data.filter(function(el){ 
-		      	return (el && el.parent_id && el.parent_id==parent_id && el.did==0 && el.del==0 && el.title && el.title.indexOf(title)!=-1); 
+		      var elements = [];
+
+		      childs = api4tree.jsFindByParent(parent_id);
+
+		      $.each(childs, function(i, el){
+		      	 if (el && el.parent_id && el.parent_id==parent_id && el.did==0 && el.del==0 && el.title && el.title.indexOf(title)!=-1) {
+		      	 	elements.push(el);
+		      	 }
 		      });
+
+		   
+/*
+		      my_all_data.filter(function(el){ 
+		      	return (el && el.parent_id && el.parent_id==parent_id && el.did==0 && el.del==0 && el.title && el.title.indexOf(title)!=-1); 
+		      }); */
 		      
 		      if(elements.length) return elements[0].id;
 		  }
@@ -784,12 +942,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  		sync_now = true;
 		  		var answer = false;
 
-		  		$.each(my_all_data, function(i,el){ //удаляем из массива
-		      		if(el && (el.id == id)) { 
-		      			answer=true; 
-		      			my_all_data.splice(i,1);
-		      		}
-	      		});
+		  		var childs = my_all_parents["p"+element.parent_id];
+		  		$.each(childs, function(i,el) {
+		  			if(el && el.id == id) my_all_parents["p"+element.parent_id].splice(i,1);
+		  		});
+		  		delete my_all_data2["n"+id];
+
+
 
 				var dfdArray = [];
 					      		
@@ -902,7 +1061,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //парсер даты (позвонить послезавтра)
 		  this.jsParseDate = function(title) {
 		  
-		  	title = title.replace("один","1").replace("один","1").replace("два","2").replace("три","3").replace("четыре","4").replace("пять","5").replace("шесть","6").replace("семь","7").replace("восемь","8").replace("девять","9").replace("десять","10").replace("одинадцать","11").replace("двенадцать","12").replace("тринадцать","13").replace("четырнадцать","14").replace("пятнадцать","15").replace("шестнадцать","16").replace("семнадцать","17").replace("двадцать","20").replace("ноль","0");
+		  	title = title.replace(" один"," 1").replace(" один"," 1").replace(" два"," 2").replace(" три"," 3").replace(" четыре"," 4").replace(" пять"," 5").replace(" шесть"," 6").replace(" семь"," 7").replace("восемь","8").replace("девять","9").replace("десять","10").replace("одинадцать","11").replace("двенадцать","12").replace("тринадцать","13").replace("четырнадцать","14").replace("пятнадцать","15").replace(" шестнадцать"," 16").replace(" семнадцать"," 17").replace(" двадцать"," 20").replace(" ноль"," 0");
 		  
 		  	if(title) title = title.toLowerCase();
 		  	var answer = "";
@@ -1796,7 +1955,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 
 		  	  //календарик для makedone
-		  	  this_db.jsGetAllMyNotes();
+		  	  //this_db.jsGetAllMyNotes();
 			  $(".makedonecalendar").datepicker({
 			    	numberOfMonths: 13,
 			    	showButtonPanel: false,
@@ -2305,7 +2464,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     				   tt = ' = '+ d1 + d2;
     				} catch (e) {
     				   try {
-						   Parser.evaluate( searchtxt.replace(",",".")+"0" );    		    				   tt = '=';
+						   Parser.evaluate( searchtxt.replace(",",".")+"0" );    		    				   
+						   tt = '=';
     				   } catch (e) {
 	    				   tt = '';
     				   }
@@ -2356,7 +2516,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			$.when.apply( null, dfdArrayComments ).then( function(x){ 
 					var dfdArray = [];   			    	
-					$.each(my_all_data,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
+					$.each(my_all_data2,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
 					    if(el) {
 					    	var done_element = this_db.jsFindLongText(el.id).done(function(longtext){
 								if( (comment_ids_found && comment_ids_found[el.id]) ||
@@ -2374,7 +2534,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 										 }
 										 element_founded[new_i].text = longtext;
 										 element_founded[new_i].searchstring = searchstring;
-										 element_founded[new_i].path = api4panel.jsFindPath(el).textpath;
+										 element_founded[new_i].path = api4tree.jsFindPath(el).textpath;
 					    		}
 					    	});
 					    	
@@ -2386,7 +2546,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					$.when.apply( null, dfdArray ).then( function(x){ 
 						preloader.trigger("hide");
 						if(element_founded.length>0) {
-							if( $('#search_filter').val()==element_founded[0].searchstring ) {
+							if( $('#search_filter').val().toLowerCase()==element_founded[0].searchstring.toLowerCase() ) {
 								api4panel.jsShowTreeNode(-1,false,element_founded);
 								jsTitle("Найдено: " + element_founded.length + " шт ("+searchstring+")",5000);
 
@@ -2460,12 +2620,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      $(this).toggleClass("active");
 			      if( $(this).hasClass("active") )
 			      	{
-			      	this_db.jsGetAllMyNotes();
+			      	//this_db.jsGetAllMyNotes();
 			      	if(!$(".diary_calendar").hasClass("hasDatepicker")) 
 			      	  {
 			      	  var currentdate = new Date();		
 			      	  $(".diary_calendar").datepicker({
-			      			numberOfMonths: 13,
+			      			numberOfMonths: 2,
 			      			defaultDate:currentdate,
 			      			showButtonPanel: false,
 			      			dateFormat:"dd.mm.yy",
@@ -2578,7 +2738,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  //открыть историю изменений заметки
 			  $('#root-menu-div').on("click",".show_all_history_redactor", function () {
 			      var id = $(".makedone").attr("myid");
-			      var add = hex_md5(id).substr(0,10);
+			      var add = crc32(id).substr(0,10);
 			      api4others.open_in_new_tab("web.php?note_history="+add+id);
 			      return false;
 			      });
@@ -2660,7 +2820,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 //			  });
 			  
 		  }
-		  
+		  var hide_timer;
 		  this_db.jsChangeMakedoneCheckbox = function(element,value) {
 				    if(is_rendering_now) return true;
 				  	var id_element = element.attr("id");
@@ -3166,7 +3326,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //установка главного массива снаружи и возврат его значения
 		  this.js_my_all_data = function(set_my_all_data) {
 		  	if(set_my_all_data) my_all_data = set_my_all_data;
-		  	return my_all_data;
+		  	return my_all_data2;
 		  }
 
 
@@ -3191,7 +3351,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	for(j=0; j<100; j++)
 		  	$.each(my_all_data,function(i,el){
 		  		var ddd = my_all_data2["n"+el.id];
-		  		if(ddd) if(set_my_all_data) mysum = hex_md5(ddd.text+mysum);
+		  		if(ddd) if(set_my_all_data) mysum = crc32(ddd.text+mysum);
 		  	});
 
 		  	//Object.keys( aa ).length
@@ -3306,13 +3466,29 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
   		       	if( (record[namefield]!=newvalue) || save_anyway) 
   		       		{
   		       		is_changed = true;
-  		       		record[namefield] = newvalue;
+  		       		record[namefield] = newvalue;   //главное присвоение
+
+  		       		if(namefield=="id") {
+  		       			var myparent_id = record.parent_id;
+  		       			answer = my_all_data2.renameProperty("n"+id, "n"+newvalue);
+  		       			record = answer = my_all_data2["n"+newvalue];  		       			
+  		       			if(my_all_parents["p"+myparent_id]) {
+  		       				$.each(my_all_parents["p"+myparent_id], function(i,el){
+  		       					if(el.id=="n"+id) el = record;
+  		       				});
+  		       			}
+  		       		}
+
+  		       		if(namefield=="parent_id") {
+  		       			my_all_parents.renameProperty("p"+id, "p"+newvalue);
+  		       		}
+
 
   		       		if(namefield=="text") {
 		 	  		    if(newvalue.length==0) 
 		       		       record["tmp_txt_md5"] = "";
 		       		    else
-		       		       record["tmp_txt_md5"] = ""; //hex_md5(newvalue).substr(0,5); //md5 штамп текста, для сверки с сервером
+		       		       record["tmp_txt_md5"] = ""; //crc32(newvalue).substr(0,5); //md5 штамп текста, для сверки с сервером
   		       		}
   		       		
   		       		//console.info("need_save: ",namefield," = ",newvalue);
@@ -3348,7 +3524,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	  		         (typeof fields.date2 != "undefined") ||
 	  		         (typeof fields["del"]   != "undefined") ||
 	  		         (typeof fields.id    != "undefined") ) {
-   		         	after_save1 = function() { this_db.jsUpdateNextAction(); };
+   		         	after_save1 = function() { this_db.jsUpdateNextAction(); jsRefreshTree(); };
 		  		 }
 
   		         if(typeof fields.parent_id != "undefined") { //если нужно пересчитать детей у родителей всего дерева
@@ -3508,7 +3684,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  api4tree.jsFindLongText(id, restored_text).done(function(x) { //сохраняю восстановленный текст
 				  var element = api4tree.jsFind(id);
 			  	  api4editor.jsRefreshRedactor(element);
-				  console.info( last_step_in_history.md5, "?=" ,hex_md5(restored_text), restored_text );
+				  console.info( last_step_in_history.md5, "?=" ,crc32(restored_text), restored_text );
 				  tmp_undo = tmp_undo.slice(0,tmp_undo.length-1); //удаляем использованную delta
 				  var json_tmp = JSON.stringify(tmp_undo);
 				  api4tree.jsFind(id, {tmp_undo: json_tmp } );				 				  
@@ -3540,7 +3716,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  api4tree.jsFindLongText(id, restored_text).done(function(x) { //сохраняю восстановленный текст
 				  var element = api4tree.jsFind(id);
 			  	  api4editor.jsRefreshRedactor(element);
-				  console.info( last_step_in_history.md5, "?=" ,hex_md5(restored_text), restored_text );
+				  console.info( last_step_in_history.md5, "?=" ,crc32(restored_text), restored_text );
 				  tmp_undo = tmp_undo.slice(0,tmp_undo.length-1); //удаляем использованную delta
 				  
 				  
@@ -3571,8 +3747,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					  var delta = diff_plugin.patch_make(new_text, old_text);
 					  
 //					  console.info("DELTA of "+id+" =",delta);
-//					  console.info("new=",hex_md5(new_text),new_text);
-//					  console.info("old=",hex_md5(old_text),old_text);
+//					  console.info("new=",crc32(new_text),new_text);
+//					  console.info("old=",crc32(old_text),old_text);
 					  
 					  tmp_undo.push( {md5:"", md5new: "", delta: delta} );
 	
@@ -3615,7 +3791,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
  	  		    if(newtext.length==0) {
        		       element["tmp_txt_md5"] = "";
        		    } else {
-       		       element["tmp_txt_md5"] = ""; //hex_md5(newtext).substr(0,5); //md5 штамп текста, для сверки с сервером
+       		       element["tmp_txt_md5"] = ""; //crc32(newtext).substr(0,5); //md5 штамп текста, для сверки с сервером
        		    }
        		    
        		    api4tree.save_text_dif_snapshot(id, newtext).done(function(x){
@@ -3864,9 +4040,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 } //filters
 			 
 			 if(parent_id=="_bytime") {
-				 var filtered_elements = my_all_data.filter(function(el,i) {
-				     if((settings.show_did==false) && (el.did!=0)) return false;
-				     return el && el.del!=1;
+				 var filtered_elements = []
+				 $.each(my_all_data2, function(i, el) {
+				     if (!((settings.show_did==false) && (el.did!=0)) && el && el.del!=1 ) filtered_elements.push(el);
 				 });
 				 
 				 var clone_of_filtered = clone(filtered_elements);
@@ -3899,13 +4075,20 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		 	var answer = [];
 		 	var found = my_all_parents["p"+parent_id];
-		 	answer = found?found:[];
+
+		 	
 			/*var answer = my_all_data.filter(function(el,i) {
 				if((settings.show_did==false) && (el.did!=0)) return false;
 				return el && el.del!=1 && el.parent_id==parent_id;
 			});*/
 
 			//if(!answer) return [];
+			if(found) {
+				$.each(found, function(i, el){
+					answer.push(el);
+				});
+			}
+			
 			
 			var add_auto_folder = this_db.jsFindAutoFolder(parent_id);
 			if(add_auto_folder) {
@@ -3913,7 +4096,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					answer.push(el);
 				});
 			}
-			
+
 			return answer;
 		 }
 
@@ -4096,9 +4279,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
  
 			var new_id = -parseInt(1000000+Math.random()*10000000);
 			
-			var new_line = my_all_data.length;
-			my_all_data[new_line]=new Object(); 
-			var element = my_all_data[new_line];
+			//var new_line = my_all_data.length;
+			my_all_data2["n"+new_id] = {}; 
+			var element = my_all_data2["n"+new_id];
+			if(!my_all_parents["p"+parent_id]) my_all_parents["p"+parent_id] = [];
+			my_all_parents["p"+parent_id].push(element);
 
 			//если новый элемент нужно положить в папку "_НОВОЕ"
 		 	if(parent_id=="to_new_folder") {
@@ -4160,17 +4345,17 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 this.jsUpdateNextAction = function(id) {
 		 	console.info("jsUpdateNextAction",id);
 			this_db.log("Start filter Date");
-			var answer = my_all_data.filter(function(el,i) {
+			var answer = []
+			$.each(my_all_data2, function(i, el) {
 			    if(el.tmp_nextdate) {  //стираю временные поля установленные ранее
 			   		this_db.jsFind(el.id,{tmp_nextdate:"",
 			   							  tmp_next_id:"", 
 			   							  tmp_next_title:""});
 			    }
-			    if((el.del==1) || (el.did!=0)) return false;
-			    return el && el.date1!="";
+			    if (!((el.del==1) || (el.did!=0)) && el && el.date1!="" ) answer.push(el);
 			});
 			
-			this_db.log("Найдено "+answer.length+" записей с датой");
+			console.info("Найдено "+answer.length+" записей с датой");
 			
 			$.each(answer,function(i,el) { //обходим все элементы с датой
 			    var id_parent = el.id;
@@ -4203,7 +4388,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	console.info("jsUpdateCommentsCnt",id);
 			this_db.log("start jsUpdateCommentsTmpCnt: id="+id);
 			if(!id) { //если нужно обработать все элементы базы
-				var answer = my_all_data.filter(function(el,i){ 
+				$.each(my_all_data2, function(i, el){ 
 			        if(el) {
 			    	   	var tmp_comments = this_db.jsFindByTreeIdCommentFast(el.id).length;
 			    	   	this_db.jsFind(el.id.toString(),{tmp_comments:tmp_comments});
@@ -4218,10 +4403,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     
 		 //кэширует в базе tmp_childrens, для быстрой работы (кол-во детей)
 		 this.jsUpdateChildrenCnt = function(id) {
- 		 	console.info("jsUpdateChildrenCnt",id);
+		 	console.time("updateCnt");
 			this_db.log("start jsUpdateChildrenTmpCnt: id="+id);
 			if(!id) { //если нужно обработать все элементы базы
-				var answer = my_all_data.filter(function(el,i){ 
+				$.each(my_all_data2, function(i, el){ 
 			        if(el) {
 			    	   	var tmp_childrens = this_db.jsFindByParent(el.id).length;
 			    	   	this_db.jsFind(el.id.toString(),{tmp_childrens:tmp_childrens});
@@ -4230,6 +4415,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			} else { //если нужно посчитать детей только id родителя
 				this_db.jsFind(id.toString(),{tmp_childrens:this_db.jsFindByParent(id).length});
 			}
+		 	console.timeEnd("updateCnt");
 			this_db.log("finish jsUpdateChildrenTmpCnt");
 		 } //jsUpdateChildrenCnt
 		   	
@@ -4252,9 +4438,38 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			   	   this_db.log("Загрузил с сервера ",Object.size(data.all_data)," элементов");
 		      	   
 		      	   var long_texts=[]; //длинные тексты храню в отдельной базе данных
-		      	   my_all_data = []; //стираю главный массив
+		      	   my_all_data2 = {}; //стираю главный массив
 		      	   var lsync_now = jsNow()+500; //дата последней синхронизации +40, чтобы не синхронизировалось сразу
-		      	   
+		      	   var my_all_data_tmp = [];
+
+		    	   $.each(data.all_data, function(i, value) {
+
+		        	    value["new"] = "";
+		        	    value.lsync = lsync_now;
+		   
+		        	    if(value["text"].length==0) 
+		        	    	  value["tmp_txt_md5"] = "";
+		        	    else
+		        	       value["tmp_txt_md5"] = "";
+		        	       	
+		        	    if(value["text"].length>LENGTH_OF_LONG_TEXT) {
+	        	    		long_texts.push({id:value.id, text:value.text});
+	        	    		value.text = strip_tags(value.text).substr(0,LENGTH_OF_LONG_TEXT/2); //preview
+	        	    		value.tmp_text_is_long = 1;
+        	    		} else {
+        	    			value.tmp_text_is_long = 0;
+        	    		}
+
+		    	    	my_all_data2["n"+value.id] = value;
+		    	    	if(!my_all_parents["p"+value.parent_id]) {
+		    	    		my_all_parents["p"+value.parent_id]=[];
+		    	    	}
+		    	    	my_all_parents["p"+value.parent_id].push( value );
+		    	    	my_all_data_tmp.push(value);
+		    	    });
+ 
+/*
+		    	   if(false) 
 		      	   $.each(data.all_data, function(i, value) { //чтобы составить md5 и отправить большие тексты в базу
 		      	   	   if(value) {
 		        		   value["new"] = "";
@@ -4263,8 +4478,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		        		   if(value["text"].length==0) 
 		        		   	  value["tmp_txt_md5"] = "";
 		        		   else
-		        		      value["tmp_txt_md5"] = "";//hex_md5(value["text"]).substr(0,5);
-		        		      //hex_md5(value["text"]).substr(0,5); //md5 штамп текста, для сверки
+		        		      value["tmp_txt_md5"] = "";//crc32(value["text"]).substr(0,5);
+		        		      //crc32(value["text"]).substr(0,5); //md5 штамп текста, для сверки
 		        		      //hex_md5 - замедляет загрузку (у Safari == 5 секунд)
 		        		      	
 		        		   if(value["text"].length>LENGTH_OF_LONG_TEXT) 
@@ -4275,9 +4490,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		        		   		}
 		        		   else value.tmp_text_is_long = 0;
 		        		   	
-		        		   my_all_data.push(value);
+		        		   !my_all_data.push(value);
 		        	   }
-		      	   }); //each
+		      	   }); //each */
+
 		      	   this_db.log("Создал массив. Сохраняю локально.");
 			  	   jsProgressStep();		      	   
 		      	   if(data.comments) {
@@ -4301,8 +4517,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      	    my_all_comments = [];
 		      	   }
 		      	   jsProgressStep();
-		   
-		      	   db.put(global_table_name, my_all_data).then(function(ids) { //сохраняю главный массив
+
+		      	   db.put(global_table_name, my_all_data_tmp).then(function(ids) { //сохраняю главный массив
 		      	       this_db.log(ids.length+' записей записано в лок.базу = '+this_db.SizeOfObject(my_all_data)+'b');
 		      	       jsProgressStep();
 		      	   }, function(e) {
@@ -4338,11 +4554,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	  				this_db.log("Начинаю загрузку данных из локальной DB");
 		    		db.values(global_table_name,null,MAX_VALUE).done(function(records) {
 		    			this_db.log("Загрузил из локальной DB: " + records.length + " записей");
-		    			my_all_data = records;
+		    			my_all_data = records; //?????
 
 		    			var len = records.length;
 		    			for(var i=0;i<len;i++) {
-		    				var element = my_all_data[i];
+		    				var element = records[i];
 		    				my_all_data2["n"+element.id] = element;
 		    				if(!my_all_parents["p"+element.parent_id]) {
 		    					my_all_parents["p"+element.parent_id]=[];
@@ -4431,12 +4647,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 this.jsZipTree = function() {
 		   var zip = new JSZip();
 		   
-		   $.each(my_all_data,function(i,el){
+		   $.each(my_all_data2,function(i,el){
 		   		if(el && el.del!="" && el.did=="") {
 				 	var d=new Date; 
 				 	var today_date = d.jsDateTitleFull();  
 				 	  
-				 	var path = api4panel.jsFindPath(api4tree.jsFind(el.id)).textpath;
+				 	var path = api4tree.jsFindPath(api4tree.jsFind(el.id)).textpath;
 				 	path = path.replace(" → ","/").replace(" → ","/").replace("→","/");
 				 	path = strip_tags(path);
 				 
@@ -4489,7 +4705,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	       				  (el.did?el.did:"");
     	       	//alldata = el.id+":"+(el.title?el.title:"")+", ";
     	       	
-    	 		var mymd5 = hex_md5( alldata ).substr(0,5);
+    	 		var mymd5 = crc32( alldata ).substr(0,5);
 
     	       	if(el.id==6796) console.info("1038",alldata,mymd5);
     	 		
@@ -4590,7 +4806,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	var sync_id = localStorage.getItem("sync_id"); 
 	     	if(!sync_id) {
 	     		var time_id = $.cookie("4tree_email_md") + '-' + jsNow() + '-' + navigator.userAgent;
-	     		sync_id = hex_md5(time_id).substr(0,5)+"@"+sqldate( jsNow() )+"";
+	     		sync_id = crc32(time_id).substr(0,5)+"@"+sqldate( jsNow() )+"";
 	     		localStorage.setItem("sync_id",sync_id);
 	     		sync_id = localStorage.getItem("sync_id");
 	     	}
@@ -4602,16 +4818,17 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	var maxt = 0; 
 	     	var mint = Number.MAX_VALUE,lsync,changetime; 
 	     	
-	     	if(my_all_data) {
-		     	var m_len = my_all_data.length;
-		     	for(i=0;i<m_len;i++) {
-		     		if(!my_all_data[i]) continue;
-		     		lsync = my_all_data[i].lsync; 
-		     		changetime = my_all_data[i].time; 
+	     	if(my_all_data2) {
+		     	
+	     		$.each(my_all_data2, function(i,el){
+
+		     		if(!el) return true;
+		     		lsync = el.lsync; 
+		     		changetime = el.time; 
 		     		if(lsync>maxt) maxt=lsync; 
-		     		if(changetime>lsync) 
-		     			if( mint>changetime ) mint=parseInt(changetime,10); 
-		     	}
+		     		if( (changetime>lsync) && (mint>changetime) ) mint=parseInt(changetime,10); 
+		     	
+	     		});
 	     	}
 	     	
 		 	if(my_all_comments)
@@ -4643,7 +4860,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	   	
 	   		var element = this_db.jsFind(old_id);
 	   		if(element) {
-	       		element.id=new_id;					//заменяю id, сохраняю в базе и удаляю старый id
+	       		//element.id=new_id;					//заменяю id, сохраняю в базе и удаляю старый id
+	       		element = this_db.jsFind(old_id, {id: new_id});
 	       		db.put(global_table_name,element).done(function(){ 
 	      			db.remove(global_table_name,old_id.toString()).done(function(){
 	      				this_db.log("Удалил элемент с старым id<0: ",old_id);
@@ -4664,7 +4882,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	   		var id = parseInt(window.location.hash.replace("#",""),36); //меняем хэш в адресной строке
 	   		if(id==old_id) {
 	   			$(window).unbind('hashchange');
-	   			window.location.hash = new_id.toString(36); 
+	   			window.location.hash = parseInt(new_id).toString(36);  
 	   			$(window).bind('hashchange', jsSethash );
    			}
 	     		
@@ -4699,7 +4917,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	
 		 	if( (!this_db.jsFind(d.id)) && (d.id>0) )  //если такого id нет, то создаю (создан в другом месте)
 		 		{
-		 			var new_line = my_all_data.length;
+		 			var new_line = my_all_data.length; //??????????????
 		 			my_all_data[new_line]=new Object(); 
 		 			var element = my_all_data[new_line];
 		 			element.date1 = "";
@@ -4931,12 +5149,21 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			}
 			var sync_id = this_db.jsGetSyncId();
 			
-			var local_data_changed = my_all_data.filter(function(el) { //данные, которые буду отправлять на сервер
+			local_data_changed = [];
+			$.each(my_all_data2,function(i,el){
+				if (( (el.id<-1000) || 
+				   (el.time>=el.lsync) || 
+				   ((el["new"]!="") && (el["new"])) ) && !( /^_/.test(el.id.toString()) )) {
+						local_data_changed.push(el);
+				}
+			});
+			/*
+			var local_data_changed = my_all_data2.filter(function(el) { //данные, которые буду отправлять на сервер
 				if(el) return (( (el.id<-1000) || 
 								(el.time>=el.lsync) || 
 								((el["new"]!="") && (el["new"])) ) && ( el.id.toString().indexOf("_")==-1 )); 
 			});
-			
+			*/
 			var dfdArray = []; //массив для объектов работы с асинхронными функциями
 			var local_data_changed_tmp = [];
 			$.each(local_data_changed,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
@@ -5346,8 +5573,10 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			var all_texts = [];
 			var dfdArray = []; //для одновременного завершения асинхронных функций
 			
+	
 		    $.each(some_ids,function(i,id) { //перебираем все id и находим тексты
     	    	dfdArray.push( api4tree.jsFindLongText(id).done(function(text){
+
     	    	  	var element = api4tree.jsFind(id);
     	    	  	if(element) {
     	    	  		var path = api4tree.jsFindPath(element);
@@ -5355,6 +5584,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
     	    	  			text = "<p>&#x200b;</p>";
     	    	  		}
 				  		all_texts.push({id:id, text:text, path:path, title:element.title, s:element.s});
+	
     	    	  	}
     	    	}) );
     	    });
@@ -5388,7 +5618,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 				if(all_texts.length==1) { //если нужно загрузить только один текст
 					var el = all_texts[0];
 					mytext = el.text;
-					myr.attr("md5", hex_md5( el.text ));
+					myr.attr("md5", crc32( el.text ));
 					myr.attr("myid", el.id);
 					var scroll_top = el.s; //вспоминаю скроллинг
 				} else {
@@ -5397,15 +5627,16 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 					all_texts = all_texts.sort(sort_by_path); //сортирую табы по полю tab
 					$.each(all_texts,function(i,el) { //перебираю все найденные тексты
 						var count_div = "<div class='divider_count'>"+ (i+1) +"</div>";
-						var divider = "<div class='divider_red' contenteditable='false' md5='"+hex_md5( el.text ) + 
+						var divider = "<div class='divider_red' contenteditable='false' md5='"+crc32( el.text ) + 
 									  "' myid='"+el.id+"'>" + count_div + el.path.textpath +"<h6>" +
 									  el.title+"</h6></div>";
 						mytext = mytext + divider + "<div class='edit_text'>" + el.text + "</div>";
 					});
 					var scroll_top = 0;
 				}
-				
-				myr.redactor("set",  mytext ); //загружаю текст в редактор
+				console.profile("loading_text");
+				myr.redactor("set",  mytext, false ); //загружаю текст в редактор
+				console.profileEnd("loading_text");
 //			    setTimeout(function() {api4editor.save_text_dif_snapshot(mytext); }, 1000);
 				$(".bottom_right>.redactor_box").scrollTop(scroll_top);
 				this_db.jsParseWikiLinks();
@@ -5480,7 +5711,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 	  	    	
 	  	    	//если с сервера прислали новый текст, то обновляю редактор. 
 	  	    	//Нужно дописать, если открыто несколько заметок. bug. никогда не запускается.
-	  	    	if( (id_node==d.id) && ( hex_md5(d.text) != md5text )) {
+	  	    	if( (id_node==d.id) && ( crc32(d.text) != md5text )) {
 		  	    	  var old_scroll = $(".redactor_box:first").scrollTop();
 		  	    	  clearTimeout(scrolltimer);
 		  	    	  clearTimeout(reopen_editor_timer);
@@ -5494,7 +5725,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
   	    	    clearTimeout(scrolltimer);
   	    	    if(d) { 
 	  	    	    divider.next(".edit_text").html(d.text);
-	  	    	    divider.attr("md5", hex_md5( d.text ));
+	  	    	    divider.attr("md5", crc32( d.text ));
 	  	    	}
   	    	    
   	    	    $(".redactor_editor").scrollTop(old_scroll);
@@ -5514,7 +5745,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			  		var text = $("<div>"+html_from_editor+"</div>").find(".divider_red[myid='"+ id +"']").
 			  					next(".edit_text:first").html();
 			  		var md5text = $(el).attr('md5');
-			  		var new_md5 = hex_md5(text);
+			  		var new_md5 = crc32(text);
 					if( new_md5 != md5text ) { 
 						jsSaveOneTextIfChanged(id, md5text, text); 
 						$(".redactor_ .divider_red[myid='"+id+"']").attr("md5",new_md5);
@@ -5525,7 +5756,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 					var id = myr.attr("myid");
 					var text = html_from_editor;
 					var md5text = myr.attr("md5");
-			  		var new_md5 = hex_md5(text);
+			  		var new_md5 = crc32(text);
 					if( (new_md5 != md5text) ) { 
 						jsSaveOneTextIfChanged(id, md5text, text);
 						myr.attr("md5",new_md5); 
@@ -5612,7 +5843,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
       			     		var mini_text = wiki_founded.text.replace(/<div>/g," ");
       			     		mini_text = mini_text.replace(/<p>/g," ");
       			     		mini_text = mini_text.replace(/&nbsp;/g," ");
-      			     		mini_text = api4others.jsShortText( strip_tags(mini_text),500);
+      			     		mini_text = api4tree.jsShortText( strip_tags(mini_text),500);
       			     		
       			     		$(el).addClass("wiki_founded").attr("title", mini_text );
       			     	} else {
@@ -5622,6 +5853,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
       			}
 		  	}
 		  	
+
 		  //поиск wiki статей	
 		  function jsFindWikiForParent(parent_id, mytitle) {
 		  		mytitle = mytitle.replace("&nbsp;", " ").trim();
@@ -5717,10 +5949,10 @@ var API_4EDITOR = function(global_panel_id,need_log) {
         var x = 0; //an hex number 
  
         crc = crc ^ (-1); 
-        for( var i = 0, iTop = str.length; i < iTop; i++ ) { 
+        for( var i = 0, iTop = str.length; i < iTop; i+=1 ) { 
             n = ( crc ^ str.charCodeAt( i ) ) & 0xFF; 
             x = "0x" + table.substr( n * 9, 8 ); 
             crc = ( crc >>> 8 ) ^ x; 
         } 
-        return crc ^ (-1); 
+        return (crc ^ (-1)).toString(); 
     }; 

@@ -682,6 +682,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		setEditor: function(html, strip)
 		{
+			
 			if (strip !== false)
 			{
 				html = this.cleanSavePreCode(html);
@@ -691,9 +692,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 				if (this.opts.linebreaks === false) html = this.cleanConverters(html);
 				else html = html.replace(/<p(.*?)>([\w\W]*?)<\/p>/gi, '$2<br>');
+			
+				html = this.cleanEmpty(html);
 			}
 
-			html = this.cleanEmpty(html);
+			
 
 			this.$editor.html(html);
 			this.sync();
@@ -749,8 +752,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			html = html.replace(/<\/li><(ul|ol)>([\w\W]*?)<\/(ul|ol)>/gi, '<$1>$2</$1></li>');
 
 			if ($.trim(html) === '<br>') html = '';
-
-			if (html !== '') html = this.cleanHtml(html);
+			//alert(html.length);
+			if (html !== '' && html.length<100000) html = this.cleanHtml(html);
+			else { 
+				if( parseInt(Math.random()*42) == 13 ) html = this.cleanHtml(html);
+			}
 
 			// before callback
 			html = this.callback('syncBefore', false, html);
@@ -2711,6 +2717,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		cleanHtml: function(code)
 		{
+			console.time("cleanHtml");
 			var i = 0,
 			codeLength = code.length,
 			point = 0,
@@ -2817,7 +2824,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 					out = this.placeTag(tag, out);
 				}
 			}
-
+			console.timeEnd("cleanHtml");
 			return this.cleanFinish( out );
 		},
 		cleanGetTabs: function()

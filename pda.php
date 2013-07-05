@@ -47,12 +47,14 @@ if(isset($_GET['confirm']))
 <script src="diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>
 <script src="js/jquery.idle-timer.js"></script>
 <script src="./js/api4tree.js"></script>
+<script src="./js/fastclick.js"></script>
 <script src="./js/all-mobile.js"></script>
 <script src="js/handlebars.js"></script>
 <script src="redactor900/redactor/redactor.js"></script>
 <script src="redactor900/redactor/ru.js"></script>
 <script src="b_menu/jquery.menu.js"></script>
 <script src="./js/4tree.js"></script>
+<script src="js/parser.js"></script>
 
 
 
@@ -74,24 +76,37 @@ $(document).ready(jsDoFirstMobile);
 		<div data-role="header" data-position-fixed="true">
 		 
 		 <a class="back1" href="pda.php" data-icon="arrow-l" data-mini="true">Назад</a>	
-		 <h1>Дерево</h1>
+		 <h1>&nbsp;<span class="f_text">4tree.ru</span></h1>
+		 <a class="back1" href="pda.php" data-icon="" data-mini="true">Меню</a>	
 		 
-		</div>
+</div>
+
+
+
 		<div id="search_div">
-			<input type="search" name="search" id="search-basic" data-mini="true" placeholder="Поиск в 4tree" value="" />
+			<input type="search" name="search" id="search_filter" data-mini="true" placeholder="Поиск в 4tree" value="" />
 		</div>
 
+	<div data-role="navbar" data-mini="true" id="tree_menu">
+		<ul>
+			<li id="tree_home" title="В корень дерева"><a style="" href="#">&nbsp;<i class='icon-home'></i>&nbsp;</a></li>
+			<li id="tree_fav" title="Избранные (набранные БОЛЬШИМИ буквами)"><a style="" href="#">&nbsp;<i class='icon-star'></i>&nbsp;</a></li>
+			<li id="tree_new" title="Добавить заметку в _НОВОЕ"><a style="" href="#"><i class='icon-plus'></i>НОВОЕ</a></li>
+			<li id="tree_diary" title="Сегодняшний ДНЕВНИК"><a style="" href="#">07.07</a></li>
+		</ul>
+	</div><!-- /navbar -->
+
+
 		<div id="sync_status">
-			<div id="sync_text">Синхронизация: 10 минут назад</div>
-			<i class="icon-cd"></i>
-			<div id="myloader">
-			</div>
+			<div id="sync_text">синхронизация</div>
+			<i class="icon-down-1"></i>
+			
 
 		</div>
 
 		<div data-role="content" style="" id="menuContent" style='top: 0; -webkit-transition: top .5s ease-out'>
 
-			<ul data-theme="c" data-role="listview" data-inset="true" data-filter="false" style="margin-top:30px;">
+			<ul data-theme="c" data-role="listview" data-inset="true" data-filter="false" style="margin-top:30px;" id="fastclick">
 
 			<li data-icon='false' class="li_header"><a href="#user-login">Вход</a></li>
 			<li data-icon='false' class="li_header"><a href="#" id="load_from_server">Загрузить данные снова</a></li>
@@ -138,7 +153,8 @@ $(document).ready(jsDoFirstMobile);
 	
 
 	<div data-role="header" id="tree_header" data-theme="a">
-			<a class="menu" href="#menuPanel" data-icon="" id="open_menu" data-iconpos=""><i class='icon-align-justify'></i></a>	
+			<a class="menu" href="#menuPanel" data-icon="" id="open_menu" data-iconpos=""><i class='icon-cd'></i><div id="myloader"></div></a>	
+
 			<h1 id="editor_header">&nbsp;</h1>
 			<div data-role="controlgroup" data-type="horizontal" data-mini="true" style="position:absolute; right:5px;top:-2px;">
 				<a href="#" data-role="button" data-iconpos="">&nbsp;<i class='icon-plus'></i> </a>
@@ -196,7 +212,7 @@ $(document).ready(jsDoFirstMobile);
 
 
 		<div id="fav_redactor_btn"></div>
-		<div id="editor_content" data-role="content" style="overflow:auto !important;">
+		<div id="editor_content" class="redactor_" data-role="content" style="overflow:auto !important;">
 		  	  
 			  <div id="redactor" style="">Редактор</div>
 
@@ -245,11 +261,13 @@ $(document).ready(jsDoFirstMobile);
 
 <div id="category-items" data-role="page">
 	<div data-role="header" data-theme="b" data-position="fixed">
-			<a class="back1" href="pda.php" data-icon="">Назад</a>	
+			<a class="back1" data-icon="">Назад</a>	
 			<h1>4tree.ru</h1>
 	
     
-    <a id="sync_now" href="#" data-role="button" data-iconpos="notext" data-icon="refresh" data-theme="b"></a>
+    <a id="sync_now" href="#" data-role="button" data-iconpos="notext" data-icon="refresh" data-theme="b">
+    	
+    </a>
     
 	
 

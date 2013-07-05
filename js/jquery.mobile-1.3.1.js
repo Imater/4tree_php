@@ -5729,6 +5729,7 @@ var attachEvents = function() {
 
 	$.mobile.document.bind( {
 		"vmousedown vmousecancel vmouseup vmouseover vmouseout focus blur scrollstart": function( event ) {
+
 			var theme,
 				$btn = $( closestEnabledButton( event.target ) ),
 				isTouchEvent = event.originalEvent && /^touch/.test( event.originalEvent.type ),
@@ -5744,10 +5745,10 @@ var attachEvents = function() {
 					if ( isTouchEvent ) {
 						// Use a short delay to determine if the user is scrolling before highlighting
 						hov = setTimeout( function() {
-							updateButtonClass( $btn, "ui-btn-up-" + theme, "ui-btn-down-" + theme, undefined, "down" );
+							//updateButtonClass( $btn, "ui-btn-up-" + theme, "ui-btn-down-" + theme, undefined, "down" );
 						}, hoverDelay );
 					} else {
-						updateButtonClass( $btn, "ui-btn-up-" + theme, "ui-btn-down-" + theme, undefined, "down" );
+						//updateButtonClass( $btn, "ui-btn-up-" + theme, "ui-btn-down-" + theme, undefined, "down" );
 					}
 				} else if ( evt === "vmousecancel" || evt === "vmouseup" ) {
 					updateButtonClass( $btn, "ui-btn-down-" + theme, "ui-btn-up-" + theme, undefined, "up" );
@@ -5773,10 +5774,10 @@ var attachEvents = function() {
 			}
 		},
 		"focusin focus": function( event ) {
-			$( closestEnabledButton( event.target ) ).addClass( $.mobile.focusClass );
+			//$( closestEnabledButton( event.target ) ).addClass( $.mobile.focusClass );
 		},
 		"focusout blur": function( event ) {
-			$( closestEnabledButton( event.target ) ).removeClass( $.mobile.focusClass );
+			//$( closestEnabledButton( event.target ) ).removeClass( $.mobile.focusClass );
 		}
 	});
 

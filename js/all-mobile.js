@@ -1,5 +1,5 @@
 var main_data, preloader, my_all_frends, old_parent=1, old_title="4tree.ru", is_mobile = true;
-var start_sync_when_idle=false, myr, note_saved = false;
+var start_sync_when_idle=false, myr, note_saved = false, isMindmap = false, isTree = false;
 
 $( window ).on( "orientationchange", function( event ) {
   onResize();
@@ -94,9 +94,372 @@ function showCalendar() {
 
 }
 
+		 //сортировка по полю position
+		 function sort_by_position(a,b) {
+		   if (parseFloat(a.position) < parseFloat(b.position))
+		      return -1;
+		   if (parseFloat(a.position) > parseFloat(b.position))
+		     return 1;
+		   if (a.position == b.position && a.title && b.title) {
+			   if(a.title>b.title) return -1;
+			   if(a.title<b.title) return 1;
+		   }
+		     
+		 }
 
 
+		 function sort_by_path(a,b) {
+
+		   var aa = a.path?a.path:"_";
+		   var bb = b.path?b.path:"_";
+		   
+		   var year_position = aa.indexOf(" год → ");
+		   if(year_position!=-1) {
+			   var for_date = a.title.split(".");
+			   var mydate = "."+for_date[1]+"."+for_date[0];
+			   aa = aa.substr(0, year_position)+" "+mydate;
+		   }
+
+		   var year_position = bb.indexOf(" год → ");
+		   if(year_position!=-1) {
+			   var for_date = b.title.split(".");
+			   var mydate = "."+for_date[1]+"."+for_date[0];
+			   bb = bb.substr(0, year_position)+" "+mydate;
+		   }
+		   
+		   if( (a.id.toString().indexOf("_")!=-1) || (a.id.toString().indexOf("_")!=-1) ) return -1;
+
+		   aa = aa.replace("_ДНЕВНИК","яяя_дневник");
+
+		   bb = bb.replace("_ДНЕВНИК","яяя_дневник");
+
+		   if (aa < bb)
+		      return -1;
+		   if (aa > bb)
+		     return 1;
+
+		   if (a.title < b.title)
+		      return -1;
+		   if (a.title > b.title)
+		     return 1;
+		     
+		 }
+
+		 //сортировка по полю title для дневника
+		 function sort_by_title(a,b) {
+		   var aa = a.title?a.title:"_";
+		   var bb = b.title?b.title:"_";
+		   
+		   if( (a.id.toString().indexOf("_")!=-1) || (a.id.toString().indexOf("_")!=-1) ) return -1;
+
+		   aa = aa.replace("январь","01").replace("февраль","02").replace("март","03").
+		        replace("апрель","04").replace("май","05").replace("июнь","06").
+		        replace("июль","07").replace("август","08").replace("сентябрь","09").
+		        replace("октябрь","10").replace("ноябрь","11").replace("декабрь","12");
+
+		   bb = bb.replace("январь","01").replace("февраль","02").replace("март","03").
+		        replace("апрель","04").replace("май","05").replace("июнь","06").
+		        replace("июль","07").replace("август","08").replace("сентябрь","09").
+		        replace("октябрь","10").replace("ноябрь","11").replace("декабрь","12");
+
+		   if (aa < bb)
+		      return -1;
+		   if (aa > bb)
+		     return 1;
+		     
+		 }
+
+
+
+function jsRenderOneElement(data, parent_id) {
+	var info = api4tree.jsInfoFolder( data , parent_id);
+	console.info("info = ", info);
+
+	var li = "<li id='node_"+data.id+"' class='tree_li' data-icon='false'>" + 
+			  "<span class='wrapper'>" +
+			  	"<span class='title_left'>" + 
+			  		info.img + 
+			  	"</span>" +
+
+			  	"<span class='title_right'>"+
+			  		data.title + 
+			  	"</span>" +
+			   "</span>" +
+			  "</li>";
+	return li;
+}
+
+function jsShowTreePanel(childs, parent_id) {
+
+
+		 	if(parent_id==-1) { 
+		 		childs = childs.sort(sort_by_path); //сортирую
+		 	} else { 
+		 		var my_diary_id = api4tree.jsCreate_or_open(["_ДНЕВНИК"]);
+
+		 		if( $("span[myid='"+my_diary_id+"']").length ) {
+			 		childs = childs.sort(sort_by_title); //сортирую
+		 		} else {
+			 		childs = childs.sort(sort_by_position); //сортирую
+		 		}
+
+		 	}
+
+
+
+	var markup = "<ul data-role='listview' data-inset='false'>";
+	$.each(childs,function(i,el){
+		markup += jsRenderOneElement(el, parent_id);
+	});
+	markup += "</ul>";
+	$('#menuPanel :jqmData(role=content)').html(markup);
+	$('#menuPanel').find(":jqmData(role=listview)").listview({
+		autodividers: false,
+		autodividersSelector: function (li){
+			return "Hello";
+		}
+	});
+	$('#menuPanel').trigger("updatelayout");
+		
+	//$(".back1").attr("href","#category-items?node="+old_parent);	
+}
+
+function jsOpenNode(id, no_editor) {
+	var childs = api4tree.jsFindByParent(id);
+
+	var element = api4tree.jsFind(id);
+	if(element && element.parent_id!=0) {
+		
+		if(childs.length>0) $(".back1").attr("myid", element.parent_id);
+
+		var paths = api4tree.jsFindPath(element).path;
+		
+		var mypath = "<span class='mypath' myid='1'>&nbsp;&nbsp;<i class='icon-home'></i></span>";
+		$.each(paths,function(i,el){
+			var title = el.path.title;
+			mypath += " → ";
+			mypath = mypath + "<span class='mypath' myid='"+el.path.id+"'>"+api4tree.jsShortText(title,15)+"</span>";
+		});
+
+		$("#editor_header").html( mypath );
+
+	}
+
+
+	if(childs.length>0) {
+		jsShowTreePanel(childs, 1);
+	} else {
+
+	}
+	if(!no_editor) jsOpenRed(id);
+
+
+}
+
+
+var search_timer;
 function jsRegAllKeys() {
+
+
+
+		  $('body').delegate("#search_filter", "keyup", function(event) {
+			     if(",39,37,40,38,".indexOf(","+event.keyCode+",")!=-1) return true;
+	     		 clearTimeout(search_timer);
+	     		 var searchtxt = $('#search_filter').val();
+	     		 var len=searchtxt.length;
+
+	     		 if (len<=2) { 
+	     		 	var search_timeout = 3000;
+	     		 } else if (len<=3) { 
+	     		 	var search_timeout = 2000; 
+	     		 } else if (len>3) {
+		     		var search_timeout = 700;
+	     		 }
+	     		 
+	     		 search_timer = setTimeout(function() {
+			 		jsHighlightText("remove");
+			    	var searchstring = $('#search_filter').val();
+    		    	if(searchstring.length<2) return false;
+    		    	searchstring = searchstring.toLowerCase();
+
+					preloader.trigger("show");
+
+    		        var tt = '';
+    		        try {  //пробую вычислить как калькулятор
+    		           var calc_answer = Parser.evaluate( searchtxt.replace(",","."));
+    		           var digits = calc_answer.toString().split(".");
+    		           var d1 = digits[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    		           var d2 = digits[1]?("."+digits[1]):"";
+    				   tt = ' = '+ d1 + d2;
+    				} catch (e) {
+    				   try {
+						   Parser.evaluate( searchtxt.replace(",",".")+"0" );    		    				   
+						   tt = '=';
+    				   } catch (e) {
+	    				   tt = '';
+    				   }
+    				}
+    		    	if(tt!='') 
+    		    		{ 
+    		    		jsTitle(tt,100000); //показываю вычисленное значение
+    		    		if(tt!="=") { 
+    		    			if(!$(".search_panel_result ul").find(".calculator").length) {
+	    		    			var old_exp = localStorage.getItem("user_calculator");
+								if(old_exp && (old_exp.length>200000)) old_exp = "";
+								$(".search_panel_result ul").html(old_exp);
+							}
+    		    			setTimeout(function(){
+    		    				$(".search_panel_result").scrollTop(9999999999);
+    		    			},2000);
+    		    			var this_answer = "<li class='calculator'>"+searchtxt+"<strong>"+
+    		    							  tt+"</strong></li>";
+    		    			if( $(".search_panel_result ul li:last").html() != $(this_answer).html()) {
+    		    			$(".search_panel_result ul").append(this_answer);
+    		    			}
+    		    			
+    		    			$(".search_panel_result").scrollTop(9999999999);
+    		    			localStorage.setItem("user_calculator",$(".search_panel_result ul").html());
+    		    			}
+    		    		} else {
+	    		    	   	jsTitle("...");
+						}
+	     		 				    	
+					var dfdArrayComments =[]; //для объектов работы с асинхронными функциями
+					var comment_ids_found=new Array; //поиск по комментариям
+					var element_founded = [];
+					var my_all_comments = [];
+					searchstring = searchstring.toLowerCase();
+
+					$.each(my_all_comments,function(i,el){ //ищу комментарии, чтобы забрать из другой базы
+					    if(el) {
+					    	var done_element = this_db.jsFindComment(el.id).done(function(comment){
+					    		var longtext = comment.text;
+								if(longtext && (longtext.toLowerCase().indexOf(searchstring)!=-1)){
+										 var new_i = el.tree_id;
+										 comment_ids_found[new_i] = el;
+					    		}
+					    	});
+					    	
+					    	dfdArrayComments.push( done_element );
+					    };
+					});
+
+			$.when.apply( null, dfdArrayComments ).then( function(x){ 
+					var dfdArray = [];   			    	
+					var my_all_data2 = api4tree.js_my_all_data2();
+					$.each(my_all_data2,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
+					    if(el) {
+					    	var done_element = api4tree.jsFindLongText(el.id).done(function(longtext){
+								if( (comment_ids_found && comment_ids_found[el.id]) ||
+									(longtext && 
+								    ((longtext.toLowerCase().indexOf(searchstring)!=-1) ||
+								    ((false && diff_plugin.match_main(longtext.toLowerCase(),
+								    searchstring,longtext.length)!=-1) && searchstring.length>3 && searchstring.toLowerCase() != searchstring.toUpperCase()) ) ) ||
+									(el && el.title && el.title.toLowerCase().indexOf(searchstring)!=-1) ){
+										 var new_i = element_founded.length;
+										 element_founded[new_i] = el;
+										 
+										 
+										 if(comment_ids_found && comment_ids_found[el.id]) {
+											 element_founded[new_i].comment = comment_ids_found[el.id];
+										 }
+										 element_founded[new_i].text = longtext;
+										 element_founded[new_i].searchstring = searchstring;
+										 element_founded[new_i].path = api4tree.jsFindPath(el).textpath;
+					    		}
+					    	});
+					    	
+					    	dfdArray.push( done_element );
+					    };
+					});
+					
+					//выполняю тогда, когда все длинные тексты считаны
+					$.when.apply( null, dfdArray ).then( function(x){ 
+						preloader.trigger("hide");
+						if(element_founded.length>0) {
+							if( $('#search_filter').val().toLowerCase()==element_founded[0].searchstring.toLowerCase() ) {
+								//api4panel.jsShowTreeNode(-1,false,element_founded);
+								console.info(element_founded);
+								jsShowTreePanel(element_founded,-1);
+								jsTitle("Найдено: " + element_founded.length + " шт",5000);
+
+								setTimeout( function() {
+								    jsHighlightText(); //подсвечиваю поисковое слово
+								    jsPrepareDate();  //обрабатываю даты в поиске
+								}, element_founded.length*50);
+
+							}
+						} else {
+							if(tt=='' && searchstring.toLowerCase() != searchstring.toUpperCase()) {
+								$(".search_panel_result ul").html('Фраза "'+searchstring+'" не найдена');
+								jsTitle("Найдено: 0 шт ("+searchstring+")",5000);
+							}
+						}
+						   			    	
+						   			    	
+						if( (searchstring!='') && element_founded ) { 			   
+						    $("#tab_find").click();
+						    $("#search_empty").fadeIn(200); 
+						}
+					}); //when dfdArray
+			}); //when dfdArrayComments
+					
+					//поиск удовлетворяющих поисковой строке условий
+/*					var data = my_all_data.filter(function(el) { 
+					   if(!(!el.title)) 
+					     return ( (el.title.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ||
+					      		   (el.text.toLowerCase().indexOf(searchstring.toLowerCase())!=-1) ||
+					      		   comment_ids_found.indexOf(el.id)!=-1 ); 
+					   }); */
+	     		          
+	     		 }, search_timeout);
+			  
+			     return false;
+			  
+			     });
+
+
+
+
+
+
+
+	FastClick.attach(document.body);
+
+	setTimeout(function(){jsOpenNode(599);},1000);
+
+	$("#tree_home").on("click", function(){
+		jsOpenNode(1);
+	});
+
+	$("body").on("click", ".back1, .mypath", function(){
+		var id = $(this).attr("myid");
+		jsOpenNode(id);
+	});
+
+	$("body").on("click", ".divider_red", function(){
+		var id = $(this).attr("myid");
+		var parent_id = api4tree.jsFind(id).parent_id;
+		jsOpenNode(parent_id,"dont_open_redactor");
+		$(".selected").removeClass("selected");
+		$("#node_"+id).addClass("selected");
+	});
+
+
+	$("#menuContent").on( "click", ".node_icon_left, .countdiv, .folder_closed", function( e ) {
+		var myid = $(this).parents("li:first").attr("id").replace("node_","");
+		api4editor.jsRedactorOpenRecursive(myid);
+		return false;
+	});
+
+	$("#menuContent").on("click", "li", function(e){
+
+		$(".selected").removeClass("selected");
+		$(this).addClass("selected");
+		var id = $(this).attr("id").replace("node_","");
+		jsOpenNode(id);
+	});
+
 
 	$(".ui-panel-content-wrap").swiperight(function() {
     	
@@ -168,10 +531,6 @@ function jsRegAllKeys() {
 		return false;
 	});
 
-	$("body").on( "click", ".node_icon_left", function( e ) {
-		var myid = $(this).parents("li:first").attr("id").replace("node_","");
-		api4editor.jsRedactorOpenRecursive(myid);
-	});
 	
 
 	$("body").on( "click", "#view_menu li", function( e ) {
@@ -229,7 +588,7 @@ function jsRegAllKeys() {
 	});
 
 
-  $("*").on('mousedown.presize','#menuContent', function(e) {
+  $("body").on('mousedown.presize','#menuContent', function(e) {
 		e.preventDefault();
 		var start_y = e.pageY;
 		var new_y = e.pageY;
@@ -271,6 +630,8 @@ function jsRegAllKeys() {
   kkk=0;
   $("body").on('touchstart','#menuContent', function(e) {
 
+		if($("#menuContent").scrollTop()!=0) return true;
+
   		var touch = e.originalEvent.changedTouches[0] || e.originalEvent.touches[0];
 		//e.preventDefault();
 		//alert(1);
@@ -281,49 +642,59 @@ function jsRegAllKeys() {
 
 		$("body").bind("touchmove",function(e){
 
-			if($("#menuContent").scrollTop()!=0) return true;
 
 			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
 			new_y = touch.pageY;
 
+
 			var dif = (new_y-start_y);
 
-			if( dif>30 ) {
-				$("#menuContent").removeClass("slide_up").css("margin-top",(0+dif/3));
+			if( dif>50 ) {
+				$("#menuContent").removeClass("slide_up").css("margin-top",(0+dif/4));
 			} else {
 				//$("#menuContent").addClass("slide_up").css("margin-top",0);
 			}
 
-			if( (dif)>150 ) {
-				$("#menuContent").trigger("touchend");
+			if( (dif)>180 ) {
+				$("#sync_status i").addClass("rotate180");
+				//$("#menuContent").trigger("touchend");
+			} else {
+				$("#sync_status i").removeClass("rotate180");
+
 			}
 			if( (dif>0) ) return false;
 			else return true;
 		});
 
 		$("body").bind("touchend", function(){
+			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+			new_y = touch.pageY;
 			var dif = (new_y-start_y);
+			start_y = touch.pageY;
+			$("body").unbind("touchmove");
+			$("body").unbind("touchend");
 
 			if($("#menuContent").scrollTop()!=0) return true;
 			
-			if( dif>150 ) {
+			if( dif>180 ) {
 
+				$("#menuContent").addClass("slide_up").css("margin-top",40);
 				api4tree.jsSync().done(function(){
 					setTimeout(function(){
 						$("#menuContent").addClass("slide_up").css("margin-top",0);
-					},300);
+						$("body").unbind("touchmove");
+						$("body").unbind("touchend");
+						$("#sync_status i").removeClass("rotate180");
+					},600);
 					
 				});
 				
-				$("body").unbind("touchmove");
-				$("body").unbind("touchend");
 				return false;
 			} else {
 				$("#menuContent").addClass("slide_up").css("margin-top",0);		
+				$("#sync_status i").removeClass("rotate180");
 			}
 			
-			$("body").unbind("touchmove");
-			$("body").unbind("touchend");
 			return true;
 		});
 
@@ -346,9 +717,17 @@ function jsLoadAllData() {
 	});
 }
 
+var open_redactor_timer;
 function jsOpenRed(myid){
-		
-	if(myid) api4editor.jsRedactorOpen([myid]);
+clearTimeout(open_redactor_timer);
+if(myid) open_redactor_timer = setTimeout(function(){
+		api4editor.jsRedactorOpen([myid]);
+		setTimeout(function() { 
+			jsHighlightText(); 
+			if($(".highlight:first").length) $("#editor_content").scrollTo($(".highlight:first"),1000);
+
+		}, 800);
+	},100);
 
 }
 
@@ -357,6 +736,8 @@ function jsDoFirstMobile()
 {
 	var focus_time;
 	onResize();
+
+	initFastButtons();
 	$.mobile.buttonMarkup.hoverDelay = 10;
 	$.mobile.defaultPageTransition = "none";
 	$.mobile.touchOverflowEnabled = true;
@@ -400,7 +781,7 @@ function jsDoFirstMobile()
 					}
 		  	   });
  	
- 	preloader = $('#myloader').krutilka("show"); //глобально регистрирую крутилку
+ 	preloader = $('#myloader').krutilka({color: "#FFF", petalWidth: "2px", size:"22"}); //глобально регистрирую крутилку
 
     jsRegAllKeys();
 
@@ -422,116 +803,6 @@ function jsDoFirstMobile()
         });
 */
 
-
-
-function showCategory( urlObj, options ) //показывает список
-{
-	//console.info(urlObj,options,main_data);
-	
-	var categoryName = urlObj.hash.replace( /.*node=/, "" );
-
-	var category = api4tree.jsFindByParent(categoryName);
-	var pageSelector = urlObj.hash.replace( /\?.*$/, "" ); //шаблон страницы
-		
-	//console.info(categoryName,category,pageSelector);
-
-	if ( category ) {
-
-		var first_li = "";//<li id='refresh_list'><i class='icon-cd'></i></li>";
-
-		var markup = "<ul data-role='listview' data-inset='false'>"+first_li,
-			cItems = category,
-			numItems = cItems.length;
-		
-		$.each(cItems, function(i,data) {
-		
-		  var text_length = data.text?strip_tags(data.text).length:0;
-
-		  var my_time = '<p class="ui-li-aside"><strong>9:18</strong></p>';
-
-		  if(data.tmp_childrens>0)
-			{
-			a1 = "<a class='tree_li' href='#category-items?node="+data.id+"'>";
-			a2 = "<p>"+data.text.replace(/<\/?[^>]+>/gi, ' ')+"</p>"+my_time+"</a>";
-
-			var icon_img = "<div class='folder_closed'><b>"+data.tmp_childrens+"</b></div>";
-			if(text_length>5) {
-				var icon_img = "<div class='folder_closed full'><b>"+data.tmp_childrens+"</b></div>";
-			}
-			}
-		  else 
-		    {
-		    var note_icon = api4tree.jsMakeIconText(data.text).myclass;
-			var icon_img = "<div class='node_img "+note_icon+"'></div>";
-		    if(true)
-		    	{
-				a1 = "<a class='tree_li' href='#note-items?node="+data.id+"'>";
-				a2 = "<p>"+data.text.replace(/<\/?[^>]+>/gi, ' ')+"</p></a>";
-		    	}
-		    else
-		        {
-		        a1 = a2 = '';
-		        }
-		    }
-
-		  	a2="";
-			
-			markup += "<li id='node_"+data.id+"' data-icon='false'>" + 
-					  "<div class='node_icon_left'>" + icon_img + "</div>" +
-					  a1 +
-					  "<div class='li_header'>" + data.title + "</div></a>" + 
-					  a2 +
-					  "</li>";
-			
-			old_parent = data.parent_id;
-			old_title = data.title;
-
-		
-		});
-
-		if(old_parent && old_parent != 1) old_parent = api4tree.jsFind(old_parent).parent_id;
-		
-
-		/*if(text_note.length>5) {
-			myr.redactor("set",text_note);
-		}*/
-		//markup += "<div id='editor'><br><h1 style='center'>Заметка: "+title_note+"</h1><p>"+text_note+"</p></div>";
-		markup += "</ul>";
-		//window.location.hash = categoryName.toString(36); 
-		 
-		//$content.html( markup );
-		//$page.page();
-
-		//$content.find( ":jqmData(role=listview)" ).listview();
-		//options.dataUrl = urlObj.href;
-		
-			
-		
-
-		//console.info("page",$page);
-		
-		//$.mobile.changePage( $page, options );
-
-		$('#menuPanel :jqmData(role=content)').html(markup);
-		$('#menuPanel').find(":jqmData(role=listview)").listview({
-			autodividers: false,
-			autodividersSelector: function (li){
-				return "Hello";
-			}
-		});
-		$('#menuPanel').trigger("updatelayout");
-		
-		$(".back1").attr("href","#category-items?node="+old_parent);	
-
-		if(categoryName) jsOpenRed(categoryName);
-		/*function () {
-			$(this).find(":jqmData(role=listview)").listview();
-			$(this).trigger("updatelayout");
-			$.mobile.loading("hide");
-			_menuLoaded = true;
-		});*/
-	}
-}
 
 
 
@@ -572,7 +843,7 @@ function showCategory1( urlObj, options ) //показываю заметки
 
 
 
-	$(document).bind( "pagebeforechange", function( e, data ) {
+	$(document).bind( "pagebeforechange222", function( e, data ) {
 	if ( typeof data.toPage === "string" ) {
 		var u = $.mobile.path.parseUrl( data.toPage ),
 			re = /^#category-item/;
@@ -648,3 +919,76 @@ $(function() {
 
 
 
+
+
+
+//======================================================== FASTCLICK
+         function FastButton(element, handler) {
+            this.element = element;
+            this.handler = handler;
+            element.addEventListener('touchstart', this, false);
+         };
+         FastButton.prototype.handleEvent = function(event) {
+            switch (event.type) {
+               case 'touchstart': this.onTouchStart(event); break;
+               case 'touchmove': this.onTouchMove(event); break;
+               case 'touchend': this.onClick(event); break;
+               case 'click': this.onClick(event); break;
+            }
+         };
+         FastButton.prototype.onTouchStart = function(event) {
+
+event.stopPropagation();
+            this.element.addEventListener('touchend', this, false);
+            document.body.addEventListener('touchmove', this, false);
+            this.startX = event.touches[0].clientX;
+            this.startY = event.touches[0].clientY;
+ isMoving = false;
+         };
+         FastButton.prototype.onTouchMove = function(event) {
+            if(Math.abs(event.touches[0].clientX - this.startX) > 10 || Math.abs(event.touches[0].clientY - this.startY) > 10) {
+               this.reset();
+            }
+         };
+         FastButton.prototype.onClick = function(event) {
+            this.reset();
+            this.handler(event);
+            if(event.type == 'touchend') {
+               preventGhostClick(this.startX, this.startY);
+            }
+         };
+         FastButton.prototype.reset = function() {
+            this.element.removeEventListener('touchend', this, false);
+            document.body.removeEventListener('touchmove', this, false);
+         };
+         function preventGhostClick(x, y) {
+            coordinates.push(x, y);
+            window.setTimeout(gpop, 2500);
+         };
+         function gpop() {
+            coordinates.splice(0, 2);
+         };
+         function gonClick(event) {
+            for(var i = 0; i < coordinates.length; i += 2) {
+               var x = coordinates[i];
+               var y = coordinates[i + 1];
+               if(Math.abs(event.clientX - x) < 25 && Math.abs(event.clientY - y) < 25) {
+                  event.stopPropagation();
+                  event.preventDefault();
+               }
+            }
+         };
+         document.addEventListener('click', gonClick, true);
+         var coordinates = [];
+         function initFastButtons() {
+ 			new FastButton(document.getElementById("fastclick"), goSomewhere);
+         };
+         function goSomewhere() {
+ var theTarget = document.elementFromPoint(this.startX, this.startY);
+ if(theTarget.nodeType == 3) theTarget = theTarget.parentNode;
+
+ var theEvent = document.createEvent('MouseEvents');
+ theEvent.initEvent('click', true, true);
+ theTarget.dispatchEvent(theEvent);
+         };
+//========================================================

@@ -254,7 +254,7 @@ html .fc,
 	color: rgb(9, 117, 0);               /* default TEXT color */
 	font-size: 12px;
 	line-height: 1.1em;
-	font-family: Arialnarrow;
+	font-family: "Arial Narrow",Arial, sans-serif;
 	cursor: default;
 	border-radius: 5px;
     /*box-shadow: inset 0px 1px 5px rgba(0,0,0,1);*/
