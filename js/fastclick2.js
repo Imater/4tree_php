@@ -202,6 +202,7 @@ FastClick.prototype.deviceIsIOSWithBadTarget = FastClick.prototype.deviceIsIOS &
  * @returns {boolean} Returns true if the element needs a native click
  */
 FastClick.prototype.needsClick = function(target) {
+
   'use strict';
   switch (target.nodeName.toLowerCase()) {
 
@@ -226,6 +227,8 @@ FastClick.prototype.needsClick = function(target) {
   case 'video':
     return true;
   }
+
+  if ( $(target).attr("contenteditable")) return true;
 
   return (/\bneedsclick\b/).test(target.className);
 };

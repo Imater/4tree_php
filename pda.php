@@ -47,8 +47,8 @@ if(isset($_GET['confirm']))
 <script src="diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>
 <script src="js/jquery.idle-timer.js"></script>
 <script src="./js/api4tree.js"></script>
-<script src="./js/fastclick.js"></script>
-<script src="./js/all-mobile.js"></script>
+<script src="./js/fastclick2.js"></script>
+<script src="./js/all-mobile.js<? echo "?".rand(0,5); ?>"></script>
 <script src="js/handlebars.js"></script>
 <script src="redactor900/redactor/redactor.js"></script>
 <script src="redactor900/redactor/ru.js"></script>
