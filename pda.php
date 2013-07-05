@@ -232,8 +232,7 @@ $(document).ready(jsDoFirstMobile);
 
 <div id="user-login" data-role="page">
 	<div data-role="header" data-theme="a" data-position="fixed">
-			<a class="back1" href="pda.php" data-icon="">Назад</a>	
-			<h1>Вход </h1>
+			<h1>Вам нужно ввести логин и пароль</h1>
 			
 	</div><!-- /header -->
   

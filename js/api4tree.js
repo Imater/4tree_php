@@ -4570,9 +4570,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    			if(records.length==0) {
 		    				this_db.log("База пуста! Загружаю с сервера.");
 		    				
-	    				(function goLoad(d){ //база пустая, загружу всё с сервера
-	    					$("#pload_text").html("Загружаю данные с сервера...<br>На запросы браузера разрешить "+
-	    									"локальное хранение данных, отвечайте <b>разрешить (увеличить)</b>.");
+	    				    //база пустая, загружу всё с сервера
+	    					$("#pload_text").html("Загружаю данные с сервера...<br>На запросы браузера разрешить локальное хранение данных, отвечайте <b>разрешить (увеличить)</b>.");
 	    					jsProgressStep();
 	    					api4tree.js_LoadAllDataFromServer().done(function(){ 
 	        					jsProgressStep();
@@ -4582,8 +4581,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	        					jsProgressStep();
 	    						d.resolve(); 
 	    					});
-	    				})(d);
-
+	    				return d.promise();
 		    			} else {
 
    					    //загружаю комментарии

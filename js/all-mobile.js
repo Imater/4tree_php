@@ -711,10 +711,16 @@ function jsRegAllKeys() {
 
 
 function jsLoadAllData() {
-	api4tree.js_LoadAllFromLocalDB().done(function(){
-		$("#open_menu").click();
-		api4tree.jsSync();
-	});
+	if(!$.cookie("4tree_passw") && !$.cookie("4tree_social_md5")) {
+		$.mobile.changePage("#user-login");
+	} else {
+		api4tree.js_LoadAllFromLocalDB().done(function(){
+			jsOpenNode(1);
+			$("#menuPanel").panel("open");
+			api4tree.jsSync();
+
+		});
+	}
 }
 
 var open_redactor_timer;
