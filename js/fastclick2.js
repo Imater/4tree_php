@@ -202,7 +202,7 @@ FastClick.prototype.deviceIsIOSWithBadTarget = FastClick.prototype.deviceIsIOS &
  * @returns {boolean} Returns true if the element needs a native click
  */
 FastClick.prototype.needsClick = function(target) {
-
+  alert(target.nodeName);
   'use strict';
   switch (target.nodeName.toLowerCase()) {
 
