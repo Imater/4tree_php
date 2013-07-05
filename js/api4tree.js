@@ -4422,10 +4422,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 //загружаю данные с сервера в внутреннюю базу данных
 		 this.js_LoadAllDataFromServer = function() {
 		 	var d = new $.Deferred();
+		 	var d1 = new $.Deferred();
+		 	var d2 = new $.Deferred();
+		 	var d3 = new $.Deferred();
 		 	if(!this_db.jsIsOnline) return true; //есть ли интернет
 		 	setTimeout(function(){ this_db.log("Тип базы данных: "+db.getType());},500 );
 		 	this_db.log("Удаляю локальную DB");
-		 	
+		    var dfdArray = [];
+
+
 		 	db.clear(global_table_name+"_comments").done(function(){
 			   jsProgressStep();
 		 	   db.clear(global_table_name).done(function(){
@@ -4439,6 +4444,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	   
 		      	   var long_texts=[]; //длинные тексты храню в отдельной базе данных
 		      	   my_all_data2 = {}; //стираю главный массив
+		      	   my_all_parents = {}; //стираю родителей
 		      	   var lsync_now = jsNow()+500; //дата последней синхронизации +40, чтобы не синхронизировалось сразу
 		      	   var my_all_data_tmp = [];
 
@@ -4468,32 +4474,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    	    	my_all_data_tmp.push(value);
 		    	    });
  
-/*
-		    	   if(false) 
-		      	   $.each(data.all_data, function(i, value) { //чтобы составить md5 и отправить большие тексты в базу
-		      	   	   if(value) {
-		        		   value["new"] = "";
-		        		   value.lsync = lsync_now;
-		   
-		        		   if(value["text"].length==0) 
-		        		   	  value["tmp_txt_md5"] = "";
-		        		   else
-		        		      value["tmp_txt_md5"] = "";//crc32(value["text"]).substr(0,5);
-		        		      //crc32(value["text"]).substr(0,5); //md5 штамп текста, для сверки
-		        		      //hex_md5 - замедляет загрузку (у Safari == 5 секунд)
-		        		      	
-		        		   if(value["text"].length>LENGTH_OF_LONG_TEXT) 
-		        		   		{
-		        		   		long_texts.push({id:value.id, text:value.text});
-		        		   		value.text = strip_tags(value.text).substr(0,LENGTH_OF_LONG_TEXT/2); //preview
-		        		   		value.tmp_text_is_long = 1;
-		        		   		}
-		        		   else value.tmp_text_is_long = 0;
-		        		   	
-		        		   !my_all_data.push(value);
-		        	   }
-		      	   }); //each */
-
 		      	   this_db.log("Создал массив. Сохраняю локально.");
 			  	   jsProgressStep();		      	   
 		      	   if(data.comments) {
@@ -4503,7 +4483,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      	   		value["lsync"] = lsync_now;
 			      	   		my_all_comments.push(value);
 		      	   		});
-			      	   	db.put(global_table_name+"_comments", my_all_comments).then(function(ids){
+			      	   	var dfd1 = db.put(global_table_name+"_comments", my_all_comments).done(function(ids){
 							console.info("saved_comments",ids);
 							my_all_comments = [];
 							$.each(data.comments, function(i, value) {
@@ -4511,21 +4491,28 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 							    my_all_comments.push(value);
 							});
 							console.info(my_all_comments);
-			      	   	});
+							d1.resolve();
+			      	   	}).fail(function(e){ console.info("error",e); });
+			      	   	d1.promise();
+   			      	    dfdArray.push(d1);
+
 			      	   	
 		      	   } else {
 			      	    my_all_comments = [];
 		      	   }
 		      	   jsProgressStep();
 
-		      	   db.put(global_table_name, my_all_data_tmp).then(function(ids) { //сохраняю главный массив
+		      	   var dfd2 = db.put(global_table_name, my_all_data_tmp).done(function(ids) { //сохраняю главный массив
 		      	       this_db.log(ids.length+' записей записано в лок.базу = '+this_db.SizeOfObject(my_all_data)+'b');
 		      	       jsProgressStep();
+		      	       d2.resolve();
 		      	   }, function(e) {
 		      	       throw e;
-		      	   });
+		      	   }).fail(function(e){ console.info("error",e); });
+		      	   d2.promise();
+		      	   dfdArray.push(d2);
 		      	   
-		      	   db.put(global_table_name+"_texts", long_texts).then(function(ids) { //сохраняю длинные тексты
+		      	   var dfd3 = db.put(global_table_name+"_texts", long_texts).done(function(ids) { //сохраняю длинные тексты
 		      	       this_db.log(ids.length+' длинных текстов = '+this_db.SizeOfObject(long_texts)+'b');
 		      	       jsProgressStep();
 		      	       long_texts="";//очищаю память
@@ -4534,15 +4521,25 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	       this_db.jsUpdateChildrenCnt();
 		      	       this_db.jsUpdateCommentsCnt();
 		      	       jsProgressStep();
-		      	       d.resolve();
+		      	       setTimeout(function(){ d3.resolve(); },1500);
+		      	       
 		      	       $(this_db).triggerHandler({type:"SyncIsFinished",value:jsNow()});		    	
 		      	   }, function(e) {
 		      	       throw e;
-		      	   });
+		      	   }).fail(function(e){ console.info("error",e); });
+		      	   d3.promise();
+		      	   dfdArray.push(d3);
+
+					$.when.apply( null, dfdArray ).done( function(x){
+						d.resolve();
+					});
 
 		 	    }); //getJSON
 		 	  }); //clear(4tree_db)
 		 	}); //comments_db_clear
+
+
+
 			return d.promise();
 	  	 } //js_loadAllDataFromServer
 		     
@@ -5349,7 +5346,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				     		$.each(data.server_changes, function(i,el) {
 				     			jsSaveElement(el).done(function(){
 						 			api4editor.jsRefreshRedactor(el);
-					     			this_db.log("Получен новый элемент",el);
+					     			//this_db.log("Получен новый элемент",el);
 				     			});
 				     			need_refresh = true;
 				     		});

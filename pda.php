@@ -77,7 +77,7 @@ $(document).ready(jsDoFirstMobile);
 		 
 		 <a class="back1" href="pda.php" data-icon="arrow-l" data-mini="true">Назад</a>	
 		 <h1>&nbsp;<span class="f_text">4tree.ru</span></h1>
-		 <a class="back1" href="pda.php" data-icon="" data-mini="true">Меню</a>	
+		 <a class="back1" href="#user-login" data-icon="" data-mini="true">Вход</a>	
 		 
 </div>
 
@@ -214,7 +214,7 @@ $(document).ready(jsDoFirstMobile);
 		<div id="fav_redactor_btn"></div>
 		<div id="editor_content" class="redactor_" data-role="content" style="overflow:auto !important;">
 		  	  
-			  <div id="redactor" style="">Редактор</div>
+			  <div id="redactor" class="needsclick" style="">Редактор</div>
 
 		</div>
 
@@ -232,7 +232,7 @@ $(document).ready(jsDoFirstMobile);
 
 <div id="user-login" data-role="page">
 	<div data-role="header" data-theme="a" data-position="fixed">
-			<h1>Вам нужно ввести логин и пароль</h1>
+			<h1>Вход в 4tree</h1>
 			
 	</div><!-- /header -->
   
