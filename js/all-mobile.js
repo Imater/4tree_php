@@ -426,7 +426,7 @@ function jsRegAllKeys() {
 
 	FastClick.attach(document.body);
 
-	setTimeout(function(){jsOpenNode(599);},1000);
+	//setTimeout(function(){jsOpenNode(599);},1000);
 
 	$("#tree_home").on("click", function(){
 		jsOpenNode(1);
