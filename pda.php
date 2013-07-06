@@ -75,7 +75,7 @@ $(document).ready(jsDoFirstMobile);
 	<div data-role="panel" id="menuPanel" data-display="reveal" data-dismissible="false" style="">
 		<div data-role="header" data-position-fixed="true">
 		 
-		 <a class="back1" href="pda.php" data-icon="arrow-l" data-mini="true">Назад</a>	
+		 <a class="back1" current_myid="1" myid="1" href="pda.php" data-icon="arrow-l" data-mini="true">Назад</a>	
 		 <h1>&nbsp;<span class="f_text">4tree.ru</span></h1>
 		 <a class="back1" href="#user-login" data-icon="" data-mini="true">Вход</a>	
 		 
@@ -157,7 +157,7 @@ $(document).ready(jsDoFirstMobile);
 
 			<h1 id="editor_header">&nbsp;</h1>
 			<div data-role="controlgroup" data-type="horizontal" data-mini="true" style="position:absolute; right:5px;top:-2px;">
-				<a href="#" data-role="button" data-iconpos="">&nbsp;<i class='icon-plus'></i> </a>
+				<a id="add_to_current" href="#" data-role="button" data-iconpos="">&nbsp;<i class='icon-plus'></i> </a>
 				<a id="show_calendar" href="#" data-role="button" data-iconpos=""><i class='icon-calendar-2'></i></a>
 			</div>
 

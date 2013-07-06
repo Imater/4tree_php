@@ -960,9 +960,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					$("#panel_"+id).remove();
 					if( $("#redactor").attr("myid") == id ) {
 				     	var parent_id = api4tree.jsCreate_or_open(["_НОВОЕ"]);
-				     	api4panel.jsOpenPath(parent_id);
+				     	if(api4panel) api4panel.jsOpenPath(parent_id);
 					}
-					$('#calendar').fullCalendar( 'refetchEvents' );
+					if($('#calendar').length) $('#calendar').fullCalendar( 'refetchEvents' );
 					sync_now = false;
 				});
 		  
@@ -4872,7 +4872,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	   	    $("#node_"+old_id).attr("id", "node_"+new_id).find(".tcheckbox").attr("title", new_id);
 	   	    $("#node_"+new_id).find(".n_title").attr("myid",new_id);
 	   	    $("#node_"+new_id).attr("myid",new_id);
-	   		$('#calendar').fullCalendar( 'refetchEvents' ); 
+	   		if($('#calendar').length) $('#calendar').fullCalendar( 'refetchEvents' ); 
 	   	    
 	   		var id = parseInt(window.location.hash.replace("#",""),36); //меняем хэш в адресной строке
 	   		if(id==old_id) {
@@ -5122,6 +5122,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     var myrefreshtimer,comment_tm;
 	     //синхронизация данных с сервером
 	     this.jsSync = function(save_only) { 
+
+	     	 if (navigator.onLine == false) { jsTitle("Интернет отстутствует",5000); return true; }
 	     	 
 			 if ( ($("#mypanel .n_title[contenteditable=true]").length > 0) ) 
 			 	{
@@ -5483,11 +5485,11 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  			  
 	  		  		  if(",39,37,40,38,".indexOf(","+e.keyCode+",")!=-1) return true;
   					  note_saved=false;
-  					  console.info("start_change_timer");
+  					  //console.info("start_change_timer");
   					  clearTimeout(my_autosave);
   					  my_autosave = setTimeout( function() { 
   					      api4editor.jsSaveAllText(1); 
-  					      console.info("SAVING");
+  					    //  console.info("SAVING");
   					  }, 1000 );
 		  }			  
 		  

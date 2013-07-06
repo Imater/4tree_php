@@ -101,7 +101,7 @@ background-image: url("../img/folder-closed-full.svg");
 }
 
 .redactor_editor,.redactor_editor:focus {
-	padding-bottom: 50px !important;
+	padding-bottom: 450px !important;
 	text-shadow:none !important;
 }
 

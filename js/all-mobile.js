@@ -21,6 +21,7 @@ function onResize() {
 
 function jsRefreshTree() {
 	console.info("refresh_tree");
+	jsRefreshPanel();
 }
 
 /*
@@ -173,7 +174,6 @@ function showCalendar() {
 
 function jsRenderOneElement(data, parent_id) {
 	var info = api4tree.jsInfoFolder( data , parent_id);
-	console.info("info = ", info);
 
 	var li = "<li id='node_"+data.id+"' class='tree_li' data-icon='false'>" + 
 			  "<span class='wrapper'>" +
@@ -209,7 +209,7 @@ function jsShowTreePanel(childs, parent_id) {
 
 	var markup = "<ul data-role='listview' data-inset='false'>";
 	$.each(childs,function(i,el){
-		markup += jsRenderOneElement(el, parent_id);
+		if(el.del==0) markup += jsRenderOneElement(el, parent_id);
 	});
 	markup += "</ul>";
 	$('#menuPanel :jqmData(role=content)').html(markup);
@@ -224,13 +224,31 @@ function jsShowTreePanel(childs, parent_id) {
 	//$(".back1").attr("href","#category-items?node="+old_parent);	
 }
 
+function jsRefreshPanel() {
+	var old_scroll = $("#menuContent").scrollTop();
+	var selected = $(".selected").attr("id");
+	var myid = $(".back1").attr("current_myid");
+	var childs = api4tree.jsFindByParent(myid);
+
+	if(childs.length>0) jsShowTreePanel(childs, 1);
+
+	$("#menuContent").scrollTop(old_scroll);
+
+	$("#"+selected).addClass("selected");
+	return true;
+
+}
+
 function jsOpenNode(id, no_editor) {
 	var childs = api4tree.jsFindByParent(id);
 
 	var element = api4tree.jsFind(id);
 	if(element && element.parent_id!=0) {
 		
-		if(childs.length>0) $(".back1").attr("myid", element.parent_id);
+		if(childs.length>0) { 
+			$(".back1").attr("myid", element.parent_id);
+			$(".back1").attr("current_myid", element.id);
+		}
 
 		var paths = api4tree.jsFindPath(element).path;
 		
@@ -271,7 +289,53 @@ function jsOpenNode(id, no_editor) {
 var search_timer;
 function jsRegAllKeys() {
 
+		  $("body").on("click","#view_delete",function(){
+		  		var selected = $(".selected").attr("id");
+		  		if(!selected) return false;
+		  		var title = api4tree.jsFind(selected.replace("node_","")).title;
+		        if (confirm('Удалить "'+title+'"?')) {
+		        	  var id = selected.replace("node_","");
+	   	  			  api4tree.jsFind(id,{ del:1 });
+				   	  $(".selected").hide();
+				  	  //jsRefreshPanel();
+				}
 
+		  		return false;
+		  });
+			
+		  $('body').delegate("#node_title", "keyup", function(event) {
+			     if(",39,37,40,38,".indexOf(","+event.keyCode+",")!=-1) return true;
+			     if(event.keyCode == 13) {
+			     	var new_title = strip_tags( $("#node_title").val() ).trim();
+			     	if(new_title.length>0) {
+			     		var myid = $(".selected").attr("id");
+			     		if(myid) {
+			     			myid = myid.replace("node_","");
+			     			api4tree.jsFind(myid, {title: new_title});
+			     			jsRefreshPanel();
+			     		}
+			     	}
+			     }
+		  });
+
+
+		  $("body").on("click","#add_to_current",function(){
+		  	  var parent_id = $(".back1").attr("current_myid");
+		  	  var today = new Date( jsNow() ); 
+			  var new_title = today.jsDateTitleFull();
+
+		  	  var new_element = api4tree.jsAddDo(parent_id, new_title, undefined, undefined, "last","dont_parse_date" );
+		  	  var myid = new_element.id;
+
+		  	  jsRefreshPanel();
+		  	  jsOpenNode(myid);
+		  	  $(".selected").removeClass("selected");
+		  	  $("#node_"+myid).addClass("selected");
+
+		  	  $("#menuContent").scrollTo($(".selected"),500);
+
+		  return false;
+		  });
 
 		  $('body').delegate("#search_filter", "keyup", function(event) {
 			     if(",39,37,40,38,".indexOf(","+event.keyCode+",")!=-1) return true;

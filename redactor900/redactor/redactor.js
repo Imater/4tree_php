@@ -2717,7 +2717,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		cleanHtml: function(code)
 		{
-			console.time("cleanHtml");
 			var i = 0,
 			codeLength = code.length,
 			point = 0,
@@ -2824,7 +2823,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 					out = this.placeTag(tag, out);
 				}
 			}
-			console.timeEnd("cleanHtml");
 			return this.cleanFinish( out );
 		},
 		cleanGetTabs: function()
