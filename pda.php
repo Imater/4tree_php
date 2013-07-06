@@ -78,7 +78,9 @@ $(document).ready(jsDoFirstMobile);
 		 
 		 <a class="back1" current_myid="1" myid="1" href="pda.php" data-icon="arrow-l" data-mini="true">Назад</a>	
 		 <h1>&nbsp;<span class="f_text">4tree.ru</span></h1>
-		 <a class="back1" href="#user-login" data-icon="" data-mini="true">Вход</a>	
+		 
+
+		 <a id="add_to_current" class="back1" href="" data-icon="" data-mini="true"><i class='icon-plus'></i>&nbsp;</a>	
 		 
 </div>
 
@@ -109,7 +111,7 @@ $(document).ready(jsDoFirstMobile);
 
 			<ul data-theme="c" data-role="listview" data-inset="true" data-filter="false" style="margin-top:30px;" id="fastclick">
 
-			<li data-icon='false' class="li_header"><a href="#user-login">Вход</a></li>
+			//////////////////
 			<li data-icon='false' class="li_header"><a href="#" id="load_from_server">Загрузить данные снова</a></li>
 			<li data-icon='false' class="li_header"><a href="#category-items?node=1">Мои дела</a></li>
 			</ul>
@@ -158,7 +160,7 @@ $(document).ready(jsDoFirstMobile);
 
 			<h1 id="editor_header">&nbsp;</h1>
 			<div data-role="controlgroup" data-type="horizontal" data-mini="true" style="position:absolute; right:5px;top:-2px;">
-				<a id="add_to_current" href="#" data-role="button" data-iconpos="">&nbsp;<i class='icon-plus'></i> </a>
+				<a href="#user-login" data-role="button" data-iconpos="">вход</a>
 				<a id="show_calendar" href="#" data-role="button" data-iconpos=""><i class='icon-calendar-2'></i></a>
 			</div>
 

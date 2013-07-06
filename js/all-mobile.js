@@ -362,6 +362,10 @@ function jsRegAllKeys() {
 		  	  var today = new Date( jsNow() ); 
 			  var new_title = today.jsDateTitleFull();
 
+        	  var new_title = prompt("Введите название заметки", new_title);
+
+        	  if(!new_title || new_title.length==0) return false;
+
 		  	  var new_element = api4tree.jsAddDo(parent_id, new_title, undefined, undefined, "last","dont_parse_date" );
 		  	  var myid = new_element.id;
 
