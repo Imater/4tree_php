@@ -253,6 +253,17 @@ function jsOpenNode(id, no_editor) {
 	}
 	if(!no_editor) jsOpenRed(id);
 
+	$("#node_title").val(element.title);
+
+	if(element.date1!="") {
+		var to_value = "";
+		var mydate1 = Date.createFromMysql( element.date1 );
+		if(mydate1 && mydate1.toISOString()) to_value = mydate1.toISOString().split(".")[0]
+		$("#node_date").attr( "value", to_value );
+	} else {
+		$("#node_date").attr( "value", "" );
+	}
+
 
 }
 

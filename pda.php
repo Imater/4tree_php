@@ -179,7 +179,7 @@ $(document).ready(jsDoFirstMobile);
 	<div id="redactor_header">
 		<div class="">
 			<label for="node_title">Заголовок заметки</label>
-			<input placeholder="Заголовок заметки" value="статья про Пежо 208 на авточел" name="node_title" id="noder_title">
+			<input placeholder="Заголовок заметки" value="статья про Пежо 208 на авточел" name="node_title" id="node_title">
 		</div>
 		
 		<div class="note_date" style="width:auto;display:inline-block;">
