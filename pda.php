@@ -40,6 +40,7 @@ if(isset($_GET['confirm']))
 <script src="./js/jquery-1.8.2.js"></script>
 <script src="./js/jquery.mobile-1.3.1.js"></script>
 <script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
+<script src="js/pushstream.js"></script>
 <script src="jstree/_lib/jquery.cookie.min.js"></script>
 <script src="js/md5fast.js"></script>
 <script src="js/js_regallkeys.js"></script>

@@ -825,6 +825,8 @@ function jsDoFirstMobile()
 	$.mobile.tapholdTriggersTap = false;
 
 	main_user_id = $.cookie("4tree_user_id");
+	
+	_connect(main_user_id);
 
 	api4tree = new API_4TREE("4tree_db");
 	api4editor = new API_4EDITOR($("#redactor"));
