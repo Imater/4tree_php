@@ -5129,7 +5129,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     //синхронизация данных с сервером
 	     this.jsSync = function(save_only) { 
 
-
+	     	 console.time("PrepareSync");
 			 if ( ($("#mypanel .n_title[contenteditable=true]").length > 0) ) 
 			 	{
 				start_sync_when_idle=true;
@@ -5322,7 +5322,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				this_db.log(lnk);
 				
 				var need_refresh = false;
+				console.timeEnd("PrepareSync");
+				console.time("LoadedFromServer");
 				$.postJSON(lnk,changes, function(data,j,k) { //////////////A J A X/////////////////
+					 console.timeEnd("LoadedFromServer");
+					 console.time("FinishParsing");
 				     if(j=="success") {
 				     	this_db.log("Получен ответ от сервера: ",data);
 				     	if(data.saved) { //данные, которые сервер успешно сохранил. Отмечаю им lsync = jsNow().
@@ -5419,6 +5423,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				     	
 				     } //if success
 				startSync("finish");
+				console.timeEnd("FinishParsing");
 				d.resolve();	
 
 				
