@@ -863,6 +863,7 @@ function jsDoFirstMobile()
 		  	   });
  	
  	preloader = $('#myloader').krutilka({color: "#FFF", petalWidth: "2px", size:"22"}); //глобально регистрирую крутилку
+ 	preloader.trigger("hide");
 
     jsRegAllKeys();
 

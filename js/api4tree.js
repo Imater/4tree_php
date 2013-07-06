@@ -4912,9 +4912,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	
 		 	if( (!this_db.jsFind(d.id)) && (d.id>0) )  //если такого id нет, то создаю (создан в другом месте)
 		 		{
-		 			var new_line = my_all_data.length; //??????????????
-		 			my_all_data[new_line]=new Object(); 
-		 			var element = my_all_data[new_line];
+					//var new_line = my_all_data.length;
+					var new_id = d.id;
+					my_all_data2["n"+new_id] = {}; 
+					var element = my_all_data2["n"+new_id];
+					if(!my_all_parents["p"+parent_id]) my_all_parents["p"+parent_id] = [];
+					my_all_parents["p"+parent_id].push(element);
+
 		 			element.date1 = "";
 		 			element.date2 = "";
 		 			element.icon = "";
@@ -4937,6 +4941,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 			db.put(global_table_name,element).done(function(){ 
 		 			    this_db.log("Новый элемент записан в базу: "+element.id); 
 		 			});
+
+
 		 			need_to_add = true;
 		 			console.info("new-element",element);
 		 		}
