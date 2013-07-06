@@ -1448,7 +1448,7 @@ if($display) echo "SAVE BACKUP<br>";
 	else $note = "";
 	$md5 = sha1($note.@$changes[$i]['time']); //для предотвращения повтороного сохранения того же
 	
-	$time_to_save = (int)($changes[$i]['time'])-1*60*1000;
+	$time_to_save = (int)($changes[$i]['time'])-5*60*1000;
 	
 	$sqlnews2 = "SELECT count(*) cnt FROM `tree_backup` WHERE (md5 ='".$md5."' AND user_id='".$GLOBALS['user_id']."') OR (changedate > ".$time_to_save." AND id = ".$changes[$i]['id']." AND user_id='".$GLOBALS['user_id']."')";
 //	if($display) echo $sqlnews2;
