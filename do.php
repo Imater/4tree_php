@@ -803,7 +803,7 @@ function now()
 
 if (isset($HTTP_GET_VARS['sync3'])) 
 {
-echo get_all_share_children(11);
+print_r( get_all_share_children(11) );
 exit;
 }
 
@@ -812,9 +812,14 @@ function sqltime($now)
 return date("Y-m-d <b>H:i:s</b>",($now/1000+60*60));
 }
 
-
+///////////////////////////////////////////////////////////////////////////////////
 if (isset($HTTP_GET_VARS['sync_new'])) 
 {
+//echo "start:".now()."<hr>";
+$t1 = now();
+
+$disp_time = false;
+
 $now = now();
 $what_you_need = $HTTP_GET_VARS['what_you_need'];
 $sync_id = $HTTP_GET_VARS['sync_new']; //индентификатор клиента
@@ -826,6 +831,8 @@ $ch_comments = $HTTP_POST_VARS['changes_comments']; //POST
 
 $share_ids_answer = get_all_share_children($GLOBALS['user_id']); 
 
+if($disp_time) echo "<hr>Get_all_share_children = ".(now() - $t1)."<hr>"; $t1=now();
+
 $share_ids = $share_ids_answer[0];
 $share_ids_readonly = $share_ids_answer[1];
 
@@ -835,15 +842,23 @@ if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru"))
 	$ch_comments = stripslashes($ch_comments);
 	}
 
+
 $changes =  json_decode( $ch , true );  
 $changes_comments =  json_decode( $ch_comments , true );  
+
 
 @$version = $HTTP_GET_VARS['version']; 
 
 
+
 push(array("am"),array('type' => "sync_cnt", 'from' => $fpk_id, 'txt' => "Клиент прислал ".count($changes)." изменений + ".count($changes_comments)." комментариев. Версия: ".$version));
 
+if($disp_time) echo "<hr>Prepare_ended = ".(now() - $t1)."<hr>"; $t1=now();
+
+
 $confirm = $HTTP_POST_VARS['confirm'];
+
+
 $confirms =  json_decode( $confirm , true );  
 
 $time_dif = $now - $now_time;
@@ -856,6 +871,9 @@ $sqlnews5="UPDATE tree_users SET time_dif = '".$timezone."' WHERE id='".$GLOBALS
 $result5 = mysql_query_my($sqlnews5); //сохраняю разницу по времени с сервером
 
 $now_time = $now_time + $time_dif;
+
+
+
 
 $confirm_id = "";
 $display = false; ///////////!!!!!!!!!!!!!!
@@ -871,13 +889,16 @@ $countlines = count($changes);
 
 if($display) echo "<b>Пришли изменения с сервера (</b>".$countlines." шт<b>):</b> <font style='font-size:7px'>".$ch."</font>";
 //if($display) print_r($changes);
-if($display) echo "<hr><b>Клиент успешно синхронизировал в прошлый раз:</b> ".$confirm."<hr>";
+if($display) if($disp_time) echo "<hr><b>Клиент успешно синхронизировал в прошлый раз:</b> ".$confirm."<hr>";
 if($display) echo "<b>Начинаю обработку присланных от клиента ".$countlines." элементов:</b>";
+
+if($disp_time) echo "<hr>Prepare_ended2 = ".(now() - $t1)."<hr>"; $t1=now();
+
 for ($i=0; $i<$countlines; $i++)
 	{
 		$id = $changes[$i]['id'];
 		if($id=="") continue;
-		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
+		if($display) if($disp_time) echo "<hr><li>".($i+1)." — ".$id."</li>";
 		if($id<0)
 		   {
 		   		$old_id = $id; //сохраняю старый отрицательный id
@@ -913,16 +934,18 @@ for ($i=0; $i<$countlines; $i++)
 		   }
     } //first for_i
     
+if($disp_time) echo "<hr>First parsing = ".(now() - $t1)."<hr>"; $t1=now();
     
-if($display) echo "<hr><hr>Начинаю второй проход<br>";
+
+if($display) if($disp_time) echo "<hr><hr>Начинаю второй проход<br>";
 $dont_send_ids = "";
 //второй проход, с учётом добавленных элементов
 for ($i=0; $i<$countlines; $i++)
 	{
 		$id = $changes[$i]['id'];
 		if($id=="") continue;	
-   		if(stristr($share_ids_readonly,"'$id'")) { continue; }
-		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
+   		if(stristr($share_ids_readonly,"'$id'")) { continue; } //если запись только для чтения
+		if($display) if($disp_time) echo "<hr><li>".($i+1)." — ".$id."</li>";
 
 		$sqlnews = "SELECT id,title,parent_id,changetime FROM tree WHERE id = '".$id."'";
 		$result = mysql_query_my($sqlnews); 
@@ -957,6 +980,7 @@ for ($i=0; $i<$countlines; $i++)
 
 	}
 	
+ if($disp_time) echo "<hr>Second parsing = ".(now() - $t1)."<hr>"; $t1=now(); 
 ///делаю то же самое для комментариев
 $countlines = count($changes_comments);
 
@@ -964,7 +988,7 @@ for ($i=0; $i<$countlines; $i++)
 	{
 		$id = $changes_comments[$i]['id'];
 		if($id=="") continue;
-		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
+		if($display) if($disp_time) echo "<hr><li>".($i+1)." — ".$id."</li>";
 		if($id<0)
 		   {
 		   		$old_id = $id; //сохраняю старый отрицательный id
@@ -998,7 +1022,7 @@ for ($i=0; $i<$countlines; $i++)
 		   		$changes_comments[$i]['id']=$id;
 		   }
     } //first for_i
-if($display) echo "<hr><hr>Начинаю второй проход<br>";
+if($display) if($disp_time) echo "<hr><hr>Начинаю второй проход<br>";
 $dont_send_ids_comments = "";
 //второй проход, с учётом добавленных элементов
 for ($i=0; $i<$countlines; $i++)
@@ -1006,7 +1030,7 @@ for ($i=0; $i<$countlines; $i++)
 		$id = $changes_comments[$i]['id'];
 		if($id=="") continue;
 		
-		if($display) echo "<hr><li>".($i+1)." — ".$id."</li>";
+		if($display) if($disp_time) echo "<hr><li>".($i+1)." — ".$id."</li>";
 
 		$sqlnews = "SELECT tree_comments.id,tree_comments.text,tree_comments.parent_id,tree_comments.changetime,tree.user_id user_id_host FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE tree_comments.id = '".$id."'";
 		$result = mysql_query_my($sqlnews); 
@@ -1077,18 +1101,21 @@ if( (count($confirm_saved_id["saved"])>0) OR (count($confirm_saved_id["saved_com
 		}
 	
 	}
-		
+if($disp_time) echo "<hr>ALL saved = ".(now() - $t1)."<hr>"; $t1=now(); 		
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 if($what_you_need == "save_and_load") //если клиент хочет только сохраниться, то не загружаю новые данные (для ускорения процесса)
 	{
-	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( (user_id=".$GLOBALS['user_id']." OR ".$share_ids.") AND (changetime > '".ConvertFutureDate($client_time)."' OR lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids true) AND tree.del!=1)";
+	$sqlnews = "SELECT id, changetime, lsync, parent_id, position, title, text, date1, date2, did, user_id, node_icon, remind, tab_order, old_id, del, fav, s FROM tree WHERE ( (user_id=".$GLOBALS['user_id']." OR id IN (".$share_ids.")) AND (changetime > '".ConvertFutureDate($client_time)."' OR lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids true) AND tree.del!=1)";
 	if($display) echo $sqlnews;
+  //echo $sqlnews;
 	//все объекты у которых дата изменения позже последней синхронизации или
 	//которые синхронизировались позже последней синхронизации
 	//и исключаю те данные, которые только что обновлял $dont_send_ids
 	
+  $t1=now();    
 	$result = mysql_query_my($sqlnews); 
+  if($disp_time) echo "<hr>Query N1 = ".(now() - $t1)."<hr>"; $t1=now();    
 	$i = 0;
 	while(@$sql = mysql_fetch_array($result))
 		{
@@ -1120,10 +1147,11 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 		$server_changes[$i]['s']=($sql['s']);
 		$server_changes[$i]['del']=($sql['del']);
 		$i++;
-   		push(array("am"),array('type' => "sync_from_server", 'from' => $fpk_id, 'txt' => "Сервер отправил клиенту: <b title='".$sql['text']."'>".($sql['title'])."</b>"));
+//   		push(array("am"),array('type' => "sync_from_server", 'from' => $fpk_id, 'txt' => "Сервер отправил клиенту: <b title='".$sql['text']."'>".($sql['title'])."</b>"));
 		
 		}
-	
+	if($disp_time) echo "<hr>ALL send №1= ".(now() - $t1)."<hr>"; $t1=now();     
+
 	
 	$sqlnews = "UPDATE tree SET old_id ='' WHERE user_id = '".$GLOBALS['user_id']."'";	
 	$result = mysql_query_my($sqlnews);  //может зря добавил?
@@ -1131,7 +1159,7 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 
 	//все объекты, которые удалены, но ещё ни разу не синхронизированны
 	$sqlnews = "SELECT tree.id, tree.user_id,tree.title FROM `tree` LEFT JOIN tree_sync ON tree_sync.id = tree.id AND tree_sync.sync_id='".$sync_id."' WHERE tree.del=1 AND tree.user_id=".$GLOBALS['user_id']." AND tree_sync.id IS NULL";
-//	echo "<hr>".$sqlnews."<hr>";
+//	if($disp_time) echo "<hr>".$sqlnews."<hr>";
 	$result = mysql_query_my($sqlnews); 
 	$i = 0;
 	$k = 0;
@@ -1150,13 +1178,17 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
 	    	`sync_id` = '".$sync_id."' ";
 	    $result2 = mysql_query($sqlnews2); 
 		}
+
+    if($disp_time) echo "<hr>ALL send №2= ".(now() - $t1)."<hr>"; $t1=now();     
+
    	if($k) push(array("am"),array('type' => "sync_del", 'from' => $fpk_id, 'txt' => "Удаляю в базе: <b>".($k)." элементов</b>"));
 ////то же самое делаю с комментариями
 
-	$share_ids_tree_id = str_replace("id = ","tree.id = ",$share_ids);
+	//$share_ids_tree_id = str_replace("id = ","tree.id = ",$share_ids);
 	
-	$sqlnews = "SELECT tree_comments.*, tree.user_id tree_user_id, tree.id tree_just_id FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE ( (tree.user_id=".$GLOBALS['user_id']." OR ".$share_ids_tree_id." OR tree_comments.user_id = ".$GLOBALS['user_id']." ) AND (tree_comments.changetime > '".ConvertFutureDate($client_time)."' OR tree_comments.lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids_comments true) AND tree_comments.del!=1)";
+	$sqlnews = "SELECT tree_comments.*, tree.user_id tree_user_id, tree.id tree_just_id FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE ( (tree.user_id=".$GLOBALS['user_id']." OR tree.id IN (".$share_ids.") OR tree_comments.user_id = ".$GLOBALS['user_id']." ) AND (tree_comments.changetime > '".ConvertFutureDate($client_time)."' OR tree_comments.lsync>'".ConvertFutureDate($client_time)."') AND ($dont_send_ids_comments true) AND tree_comments.del!=1)";
 	if($display) echo $sqlnews;
+  //echo "<hr>".$sqlnews."</hr>";
 //	echo $sqlnews;
 	//все объекты у которых дата изменения позже последней синхронизации или
 	//которые синхронизировались позже последней синхронизации
@@ -1186,10 +1218,12 @@ if($what_you_need == "save_and_load") //если клиент хочет тол�
    		push(array("am"),array('type' => "sync_from_server_comments", 'from' => $fpk_id, 'txt' => "Сервер отправил клиенту комментарий: <b>".($sql['text'])."</b>"));
 		$i++;
 		}
+  if($disp_time) echo "<hr>ALL send №3= ".(now() - $t1)."<hr>"; $t1=now();     
+
 
 if(true)	
 {	//все объекты, которые удалены, но ещё ни разу не синхронизированны
-	$sqlnews = "SELECT tree_comments.id, tree_comments.user_id FROM `tree_comments` LEFT JOIN tree_sync ON tree_sync.id = tree_comments.id AND tree_sync.sync_id='comment_".$sync_id."'  LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE tree_comments.del=1 AND (tree_comments.user_id=".$GLOBALS['user_id']." OR tree.user_id=".$GLOBALS['user_id']." OR $share_ids_tree_id) AND tree_sync.id IS NULL";
+	$sqlnews = "SELECT tree_comments.id, tree_comments.user_id FROM `tree_comments` LEFT JOIN tree_sync ON tree_sync.id = tree_comments.id AND tree_sync.sync_id='comment_".$sync_id."'  LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE tree_comments.del=1 AND (tree_comments.user_id=".$GLOBALS['user_id']." OR tree.user_id=".$GLOBALS['user_id']." OR tree.id IN (".$share_ids.") AND tree_sync.id IS NULL";
 //	echo $sqlnews;
 	$result = mysql_query_my($sqlnews); 
 	$i = 0;
@@ -1230,6 +1264,7 @@ if($sql8["cnt"]>0) {
 	$confirm_saved_id["need_confirm_email"] = "need_confirm_email";
 }
 
+if($disp_time) echo "<hr>ALL loaded = ".(now() - $t1)."<hr>"; $t1=now();    
 
 
 echo json_encode($confirm_saved_id);
@@ -1374,7 +1409,7 @@ if($display) echo "SAVE CHANGES<br>";
 
 function sync_check_to_delete($changes,$i,$sql,$display,$now_time)
 {
-			echo "<hr>";
+			if($disp_time) echo "<hr>";
 			$sqlnews5 = "SELECT sync_id FROM `tree_sync` GROUP by sync_id";
 			$result5 = mysql_query_my($sqlnews5); 
 			while(@$sql5 = mysql_fetch_array($result5))
@@ -1700,7 +1735,7 @@ if($show)	echo "!!!".$dif.' change_time = '.$change_time." from_db_time=".$fromd
 //			echo "Need Del=".$changes[$i]['id'];			
 			}
 		
-//		echo "<hr>".$changes[$i]['id']." - ".$sqlnews2."<hr><hr>";
+//		if($disp_time) echo "<hr>".$changes[$i]['id']." - ".$sqlnews2."<hr><hr>";
 		
 		
 				
@@ -1747,7 +1782,7 @@ $comment .= "<hr>Прислано от клиента ".count($changes)." эл.:
 	
 
 	
-if($show) 	echo "<hr>\n\rОтбор новых значений<hr>".$sqlnews."<hr>";
+if($show) 	if($disp_time) echo "<hr>\n\rОтбор новых значений<hr>".$sqlnews."<hr>";
 
 //	echo $sqlnews.' ; ';
 	
@@ -2055,7 +2090,7 @@ $t = get_all_share_children($GLOBALS['user_id']);
 echo $t[1];
 $t2 = microtime();
 $delta = ($t2-$t1)*1000;
-echo "<hr>".$delta;
+if($disp_time) echo "<hr>".$delta;
 }
 
 function getAllChild($id, $readonly, $i_am_user)
@@ -2143,8 +2178,10 @@ global $main_array,$all_tree_id;
   	
   }
   	
-  $answerme = " id = '".implode( "' OR id = '",$main_array["all"] )."'";
-  $answerme_readonly = " id = '".implode( "' OR id = '",$main_array["readonly"] )."'";
+  $answerme = implode( ", ",$main_array["all"] );
+  $answerme_readonly = "'".implode( "', '", $main_array["readonly"] )."'";
+
+  //echo $answerme_readonly;
   
   if($answerme=="") $answerme = "false";
   if($answerme_readonly=="") $answerme_readonly = "false";
@@ -2223,7 +2260,27 @@ if($GLOBALS['user_id'])
 	create_start_database_if_need($GLOBALS['user_id']);
 	}
 
-  $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR ".$share_ids.") AND del=0 ORDER by id";
+
+
+
+  $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR id IN ( ".$share_ids.") )  AND del!=0 ORDER by id";
+
+  $result = mysql_query_my($sqlnews); 
+  
+  $sqlnews2 = "INSERT INTO `tree_sync` (`id`, `lsync_d`, `changetime_d`, `title`, `user_id`, `host_id`, `sync_id`, `del`, `lsync`, `changetime`, `text`, `confirm`)
+VALUES ";
+
+  while (@$sql = mysql_fetch_array($result))
+    {
+    $sqlnews2 .= "(".$sql['id'].", NOW(), '', '', ".$GLOBALS['user_id'].", 0, '".$sync_id."', 1, 0, 0, '', 0),";
+    }
+
+  $sqlnews2 .= "@@@";
+  $sqlnews2 = str_replace(",@@@", ";", $sqlnews2);
+
+  $result = mysql_query_my($sqlnews2); 
+
+  $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR id IN ( ".$share_ids.") )  AND del=0 ORDER by id";
 
   $result = mysql_query_my($sqlnews); 
   $i=0;
@@ -2307,7 +2364,7 @@ if($GLOBALS['user_id'])
     		{
 	    		echo $alldata;
 	    		echo " *".md5($sql['text'])."* ";
-	    		echo "<hr>".substr(md5( $alldata ),0,5)."<hr>";
+	    		if($disp_time) echo "<hr>".substr(md5( $alldata ),0,5)."<hr>";
 	    	}
 	}
 	
@@ -4535,7 +4592,7 @@ if (isset($HTTP_GET_VARS['history']))
 		   
 		   $result = mysql_query_my($sqlnews); 
 
-			 $sqlnews2 = "SELECT * FROM h116.tree WHERE id = '$h' AND ( ('".$GLOBALS['user_id']."'=11) OR (user_id='".$GLOBALS['user_id']."' OR ($share_ids) ) )";
+			 $sqlnews2 = "SELECT * FROM h116.tree WHERE id = '$h' AND ( ('".$GLOBALS['user_id']."'=11) OR (user_id='".$GLOBALS['user_id']."' OR id IN ($share_ids) ) )";
 			 
 //			 echo $sqlnews2;
 			 			 	

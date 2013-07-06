@@ -149,6 +149,7 @@ function mySaveToSocial($last_user_id,$user,$db,$db2) {
 
 
 function push ($cids, $message) {
+    //return true;
     /*
      * $cids - ID канала, либо массив, у которого каждый элемент - ID канала
      * $text - сообщение, которое необходимо отправить 

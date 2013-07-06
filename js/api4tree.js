@@ -5643,9 +5643,9 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 					});
 					var scroll_top = 0;
 				}
-				console.profile("loading_text");
+				//console.profile("loading_text");
 				myr.redactor("set",  mytext, false ); //загружаю текст в редактор
-				console.profileEnd("loading_text");
+				//console.profileEnd("loading_text");
 //			    setTimeout(function() {api4editor.save_text_dif_snapshot(mytext); }, 1000);
 				$(".bottom_right>.redactor_box").scrollTop(scroll_top);
 				this_db.jsParseWikiLinks();
