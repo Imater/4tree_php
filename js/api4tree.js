@@ -4916,8 +4916,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					var new_id = d.id;
 					my_all_data2["n"+new_id] = {}; 
 					var element = my_all_data2["n"+new_id];
-					if(!my_all_parents["p"+parent_id]) my_all_parents["p"+parent_id] = [];
-					my_all_parents["p"+parent_id].push(element);
+					if(!my_all_parents["p"+d.parent_id]) my_all_parents["p"+d.parent_id] = [];
+					my_all_parents["p"+d.parent_id].push(element);
 
 		 			element.date1 = "";
 		 			element.date2 = "";
