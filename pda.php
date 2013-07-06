@@ -165,7 +165,7 @@ $(document).ready(jsDoFirstMobile);
 	<div data-role="navbar" data-mini="true" id="view_menu">
 		<ul>
 			<li id="view_settings"><a href="#">параметры</a></li>
-			<li id="view_delete"><a style="" href="#">отмена</a></li>
+			<li id="view_undo"><a style="" href="">undo</a></li>
 			<li id="view_delete"><a style="" href="#">удалить</a></li>
 			<li id="view_makedid"><a style="text-decoration:line-through;text-shadow:none;" href="#">выполнить</a></li>
 		</ul>

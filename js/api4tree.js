@@ -463,9 +463,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  
     	  }
 
-	      //создаю закладки из всех дел написанных большими буквами
-    	  this.jsMakeTabs = function() { 
-    		   //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
+    	  this.jsGetTabs = function() {
+
     	  	   var data = [];
 
     	  	   $.each(my_all_data2, function(i,el) { 
@@ -492,7 +491,17 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  		}
     	  
     	  		data = data.sort(compare); //сортирую табы по полю tab
-    	  		
+
+    	  		return data;
+
+    	  }
+
+	      //создаю закладки из всех дел написанных большими буквами
+    	  this.jsMakeTabs = function() { 
+    		   //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
+
+			var data = api4tree.jsGetTabs();
+
     	  	var alltabs="<ul>";
     	  	var d_len = data.length;
     	  	for(i=0; i<d_len; i=i+1)

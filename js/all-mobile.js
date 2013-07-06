@@ -239,7 +239,7 @@ function jsRefreshPanel() {
 
 }
 
-function jsOpenNode(id, no_editor) {
+function jsOpenNode(id, no_editor, no_panel_open) {
 	var childs = api4tree.jsFindByParent(id);
 
 	var element = api4tree.jsFind(id);
@@ -264,7 +264,7 @@ function jsOpenNode(id, no_editor) {
 	}
 
 
-	if(childs.length>0) {
+	if(childs.length>0 && !no_panel_open) {
 		jsShowTreePanel(childs, 1);
 	} else {
 
@@ -297,6 +297,24 @@ function jsRegAllKeys() {
 		  	     }
 		  });
 
+		  
+  		  $("body").on("click","#tree_fav",function(){
+  		  		var childs = api4tree.jsGetTabs();
+
+				if(childs.length>0) jsShowTreePanel(childs, 1);
+
+  		  });
+
+
+		  $("body").on("click","#view_undo",function(){
+			  		
+			  		var id = api4tree.node_to_id( $(".selected").attr('id') );
+			  		if(!id) return true;
+			  		api4tree.jsFindLongText(id).done(function(text){
+			  		  	api4tree.undo_last_step(id, text);
+			  		});
+		  			return false;
+		  });
 
 		  $("#tree_diary .ui-btn-text").html( (new Date()).jsDateTitleFull("veryshort") );
 
@@ -595,7 +613,9 @@ function jsRegAllKeys() {
 		if(!$(e.target)) return true;
 		var attr_id =$(e.target).parents("li:first").attr("id");
 		var myid = attr_id.replace("node_", "");
-		jsOpenRed(myid);
+		jsOpenNode(myid, undefined, "dont_open_panel");
+		$(".selected").removeClass("selected");
+		$("#node_"+myid).addClass("selected");
 		return false;
 	});
 
