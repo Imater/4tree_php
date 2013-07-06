@@ -289,6 +289,26 @@ function jsOpenNode(id, no_editor) {
 var search_timer;
 function jsRegAllKeys() {
 
+		  $(window).keydown(function(e){
+		  	 if( (e.altKey==true) && (e.keyCode==82) ) { //alt+R - обновляю дерево
+			       e.preventDefault();
+		    	   api4tree.jsSync();
+			  	   return false;
+		  	     }
+		  });
+
+
+		  $("#tree_diary .ui-btn-text").html( (new Date()).jsDateTitleFull("veryshort") );
+
+		  $("body").on("click","#tree_diary",function(){
+				var myid = api4tree.jsDiaryPath( jsNow(), "dont_open_i_am_self" );				
+				jsOpenNode( api4tree.jsFind( myid ).parent_id );
+				jsOpenNode( myid );
+				$("#node_"+myid).addClass("selected");
+				setTimeout(function(){ $("#redactor").focus(); }, 500);
+		  		return false;
+		  });
+
 		  $("body").on("click","#view_delete",function(){
 		  		var selected = $(".selected").attr("id");
 		  		if(!selected) return false;
@@ -825,7 +845,7 @@ function jsDoFirstMobile()
 	$.mobile.tapholdTriggersTap = false;
 
 	main_user_id = $.cookie("4tree_user_id");
-	
+
 	_connect(main_user_id);
 
 	api4tree = new API_4TREE("4tree_db");

@@ -2150,7 +2150,14 @@ else
 	var months = [" янв", " фев", " мар", " апр", " мая", " июня", " июля", " авг", " сент", " окт", " нояб", " дек"];
 	var days = ["вc", "пн", "вт", "ср", "чт", "пт", "сб"];
 	}
-var n = this.getDate() + months[this.getMonth()] + " " + this.getFullYear() + ", " + days[this.getDay()] + " — " + (this.getHours()<10?"0":"") +this.getHours()+":"+(this.getMinutes()<10?"0":"")+this.getMinutes();
+
+	if(shortit=="veryshort") {
+	var n = this.getDate() + "" + months[this.getMonth()] + " " + days[this.getDay()];
+	return n;
+
+	}
+
+var n = this.getDate() + this.getMonth() + " " + this.getFullYear() + ", " + days[this.getDay()] + " — " + (this.getHours()<10?"0":"") +this.getHours()+":"+(this.getMinutes()<10?"0":"")+this.getMinutes();
 return n;
 }
 

@@ -93,7 +93,7 @@ $(document).ready(jsDoFirstMobile);
 			<li id="tree_home" title="В корень дерева"><a style="" href="#">&nbsp;<i class='icon-home'></i>&nbsp;</a></li>
 			<li id="tree_fav" title="Избранные (набранные БОЛЬШИМИ буквами)"><a style="" href="#">&nbsp;<i class='icon-star'></i>&nbsp;</a></li>
 			<li id="tree_new" title="Добавить заметку в _НОВОЕ"><a style="" href="#"><i class='icon-plus'></i>НОВОЕ</a></li>
-			<li id="tree_diary" title="Сегодняшний ДНЕВНИК"><a style="" href="#">07.07</a></li>
+			<li id="tree_diary" title="Сегодняшний ДНЕВНИК"><a style="" href="#">дневник</a></li>
 		</ul>
 	</div><!-- /navbar -->
 
