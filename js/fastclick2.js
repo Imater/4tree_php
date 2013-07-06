@@ -227,7 +227,7 @@ FastClick.prototype.needsClick = function(target) {
     return true;
   }
 
-  if ( $(target).parents("#redactor")) return true;
+  if ( $(target).parents("#redactor").length) { alert(target.nodeName); return true; }
 
   return (/\bneedsclick\b/).test(target.className);
 };
