@@ -960,7 +960,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					$("#panel_"+id).remove();
 					if( $("#redactor").attr("myid") == id ) {
 				     	var parent_id = api4tree.jsCreate_or_open(["_НОВОЕ"]);
-				     	if(api4panel) api4panel.jsOpenPath(parent_id);
+				     	if(typeof api4panel != undefined) api4panel.jsOpenPath(parent_id);
 					}
 					if($('#calendar').length) $('#calendar').fullCalendar( 'refetchEvents' );
 					sync_now = false;
