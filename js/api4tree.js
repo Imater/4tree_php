@@ -5136,7 +5136,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     
 		    start_sync_when_idle=false;
 			var d = new $.Deferred();
-     	    if (navigator.onLine == false) { jsTitle("Интернет отстутствует",5000); d.resolve(); return d.promise(); }
+     	    if (navigator.onLine == false) { jsTitle("Нет сети",5000); d.resolve(); return d.promise(); }
 
 			if(sync_now) { 
 				this_db.log("Синхронизация уже идёт. Отменяю новый вызов."); 
