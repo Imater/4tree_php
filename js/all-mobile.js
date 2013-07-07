@@ -570,7 +570,7 @@ function jsRegAllKeys() {
 	});
 
 	$("#menuContent").on("click", "li", function(e){
-
+		if(!$(this).attr("id")) return true;
 		$(".selected").removeClass("selected");
 		$(this).addClass("selected");
 		var id = $(this).attr("id").replace("node_","");
