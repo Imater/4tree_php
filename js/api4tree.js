@@ -3435,8 +3435,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	alert("Добро пожаловать Андроид.");
 		    } else {
 		    	var options = {}; 
-		  		db = new ydn.db.Storage('_all_tree', schema, options);
 		    }
+	  		db = new ydn.db.Storage('_all_tree', schema, options);
 		  	
 		  	this_db.log("(js_InitDB) База данных инициализирована");
 		  	return db;
