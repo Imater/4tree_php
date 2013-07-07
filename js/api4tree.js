@@ -3430,7 +3430,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	  stores: [author_store_schema, texts_store_schema, comments_store_schema]
 		  	}; 
 		  		  	
-		  	db = new ydn.db.Storage('_all_tree', schema);
+		  	if( navigator.userAgent.toLowerCase().indexOf("android") !=-1 ) {	  	
+		  	var options = {mechanisms: ['websql', 'indexeddb']}; 
+		  	alert("Добро пожаловать Андроид.");
+		    } else {
+		    	var options = {}; 
+		  		db = new ydn.db.Storage('_all_tree', schema, options);
+		    }
 		  	
 		  	this_db.log("(js_InitDB) База данных инициализирована");
 		  	return db;
@@ -3490,6 +3496,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
   		       		if(namefield=="parent_id") {
   		       			my_all_parents.renameProperty("p"+id, "p"+newvalue);
+  		       			$.each(my_all_parents["p"+newvalue],function(i,el1){
+  		       				api4tree.jsFind(el1.id, {parent_id:newvalue});
+  		       			});
   		       		}
 
 
