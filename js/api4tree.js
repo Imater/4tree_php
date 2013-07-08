@@ -4472,6 +4472,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				$("#node_"+parent_id).find(".icon-play-div:first").css("opacity",1);
 			}
 			
+			//если новый элемент нужно положить в папку "_НОВОЕ"
+		 	if(parent_id=="to_new_folder") {
+		     	var parent_id = api4tree.jsCreate_or_open(["_НОВОЕ"]);
+		 	} //to_new_folder
  
 			var new_id = -parseInt(1000000+Math.random()*10000000);
 			
@@ -4481,10 +4485,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			if(!my_all_parents["p"+parent_id]) my_all_parents["p"+parent_id] = [];
 			my_all_parents["p"+parent_id].push(element);
 
-			//если новый элемент нужно положить в папку "_НОВОЕ"
-		 	if(parent_id=="to_new_folder") {
-		     	var parent_id = api4tree.jsCreate_or_open(["_НОВОЕ"]);
-		 	} //to_new_folder
 
 		 	if(!dont_parse_date) {
 			 	var mynewdate = api4tree.jsParseDate(title).date;
@@ -5780,7 +5780,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
     	    	  		var path = api4tree.jsFindPath(element);
     	    	  		if( (( strip_tags(text).replace(/\t/ig,"") =="") || (text.indexOf("<")==-1)) ) {
     	    	  			text = "<p>&#x200b;</p>";
-    	    	  			api4tree.jsFind(id,{text:text},"dont_sync");
+    	    	  			//api4tree.jsFind(id,{text:text},"dont_sync");
     	    	  		}
 				  		all_texts.push({id:id, text:text, path:path, title:element.title, s:element.s});
 	

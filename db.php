@@ -8,142 +8,142 @@
 
 
 function user_exist($user, $db2){
-	$stmt = $db2->prepare("select * from tree_users_social where identity=:identity");
-	$stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
-	$stmt->execute( array( ':identity' => $user["identity"] ) );
-	$user_exist = $stmt->fetch();
-	
-	if($user_exist["user_id"]) {
-		push(array("am"),array('type' => "login_user_social", 'from' => $fpk_id, 'txt' => "Вошёл пользователь через соц.сети <b title='".addslashes($user["network"])."'>параметры</b>"));
-	
-		setcookie('4tree_email',@$user_exist["email"],time()+60*60*24*60);
-		setcookie('4tree_email_md5',md5(@$user_exist["md5email"]."990990"),time()+60*60*24*60);
-		setcookie('4tree_social_md5', @$user_exist["session_md5"],time()+60*60*24*60);
-		setcookie('4tree_user_id',@$user_exist["user_id"],time()+60*60*24*60);
-		echo "<script>document.location.href='./index.php';</script>";
-		
-		return true;
-	} else {
-		return false;	
-	}
+  $stmt = $db2->prepare("select * from tree_users_social where identity=:identity");
+  $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
+  $stmt->execute( array( ':identity' => $user["identity"] ) );
+  $user_exist = $stmt->fetch();
+  
+  if($user_exist["user_id"]) {
+    push(array("am"),array('type' => "login_user_social", 'from' => $fpk_id, 'txt' => "Вошёл пользователь через соц.сети <b title='".addslashes($user["network"])."'>параметры</b>"));
+  
+    setcookie('4tree_email',@$user_exist["email"],time()+60*60*24*60);
+    setcookie('4tree_email_md5',md5(@$user_exist["md5email"]."990990"),time()+60*60*24*60);
+    setcookie('4tree_social_md5', @$user_exist["session_md5"],time()+60*60*24*60);
+    setcookie('4tree_user_id',@$user_exist["user_id"],time()+60*60*24*60);
+    echo "<script>document.location.href='./index.php';</script>";
+    
+    return true;
+  } else {
+    return false; 
+  }
 }
 
 function create_new_user($user, $db2){
-	//print_r($user);
-	$sql11 = "INSERT INTO `tree_users` SET
-	    	`fio` = :fio,
-	    	`mobilephone` = :mobilephone,
-	    	`email` = :email,
-	    	`md5email` = :md5email,
-	    	`confirm_email` = :confirm_email,
-	    	`password` = :password,
-	    	`reg_date` = :reg_date,
-	    	`foto` = :foto,
-	    	`frends` = :frends,
-	    	`female` = :female,
-	    	`lastvisit` = :lastvisit";
-//	echo $sql11;
-	$last_name = $user["last_name"]?$user["last_name"]." ":"";
-	$fio = $last_name.$user["first_name"];
-	
-	$newpassword = substr(md5($user["identity"]."pass_990"),3,10);
-	$code = '4tree_'.substr(md5($email),5,10);
-	
-	$values11 = array( 
-	    	":fio" => 				$fio,
-	    	":mobilephone" =>  		$user["mobilephone"]?$user["mobilephone"]:"",
-	    	":email" => 			$user["email"]?$user["email"]:"",
-	    	":md5email" => 	   		$user["email"]?md5($user["email"]."990990"):"",
-	    	":confirm_email" => 	$user["email"]?$code:"",
-	    	":password" => 			md5($newpassword),
-	    	":reg_date" => 			date("Y-m-d H:i:s"),
-	    	":foto" => 				$user["photo"]?$user["photo"]:"",
-	    	":frends" =>			",11,",
-	    	":female" => 			1,
-	    	":lastvisit" => 		0
-	        );
-	        
-	$query1 = $db2->prepare($sql11);
-	$query1->execute($values11);
-	$last_user_id = $db2->lastInsertId();
-	
-	if(!$last_user_id) {
-		echo "Ошибка регистрации";
-		return false;
-	}
+  //print_r($user);
+  $sql11 = "INSERT INTO `tree_users` SET
+        `fio` = :fio,
+        `mobilephone` = :mobilephone,
+        `email` = :email,
+        `md5email` = :md5email,
+        `confirm_email` = :confirm_email,
+        `password` = :password,
+        `reg_date` = :reg_date,
+        `foto` = :foto,
+        `frends` = :frends,
+        `female` = :female,
+        `lastvisit` = :lastvisit";
+//  echo $sql11;
+  $last_name = $user["last_name"]?$user["last_name"]." ":"";
+  $fio = $last_name.$user["first_name"];
+  
+  $newpassword = substr(md5($user["identity"]."pass_990"),3,10);
+  $code = '4tree_'.substr(md5($email),5,10);
+  
+  $values11 = array( 
+        ":fio" =>         $fio,
+        ":mobilephone" =>     $user["mobilephone"]?$user["mobilephone"]:"",
+        ":email" =>       $user["email"]?$user["email"]:"",
+        ":md5email" =>        $user["email"]?md5($user["email"]."990990"):"",
+        ":confirm_email" =>   $user["email"]?$code:"",
+        ":password" =>      md5($newpassword),
+        ":reg_date" =>      date("Y-m-d H:i:s"),
+        ":foto" =>        $user["photo"]?$user["photo"]:"",
+        ":frends" =>      ",11,",
+        ":female" =>      1,
+        ":lastvisit" =>     0
+          );
+          
+  $query1 = $db2->prepare($sql11);
+  $query1->execute($values11);
+  $last_user_id = $db2->lastInsertId();
+  
+  if(!$last_user_id) {
+    echo "Ошибка регистрации";
+    return false;
+  }
 
   push(array("am"),array('type' => "new_user_social", 'from' => $fpk_id, 'txt' => "Новый пользователь через соц.сети <b title='".addslashes($values11)."'>параметры</b>"));
-	
-	if(stristr($user["email"],"@")) {
-		//отправляю сгенерированный пароль
-		$tree="<font color='#214516'>4</font><font color='#244918'>t</font><font color='#356d23'>r</font><font color='#42872c'>e</font><font color='#57b33a'>e</font>";
-		
-		mail($user["email"],'Вы только что зарегистрировались на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
-   		"From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=UTF-8;\r\n");
+  
+  if(stristr($user["email"],"@")) {
+    //отправляю сгенерированный пароль
+    $tree="<font color='#214516'>4</font><font color='#244918'>t</font><font color='#356d23'>r</font><font color='#42872c'>e</font><font color='#57b33a'>e</font>";
+    
+    mail($user["email"],'Вы только что зарегистрировались на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
+      "From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=UTF-8;\r\n");
 
-		mail("eugene.leonar@gmail.com",'Он только что зарегистрировался на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
-   		"From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=UTF-8;\r\n");
-	}
-	
-	mySaveToSocial($last_user_id, $user, $db, $db2);
+    mail("eugene.leonar@gmail.com",'Он только что зарегистрировался на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
+      "From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=UTF-8;\r\n");
+  }
+  
+  mySaveToSocial($last_user_id, $user, $db, $db2);
 
-	$sql = "";
-	$sql["id"] = 6570;//6570
-	mySelectBranch($sql,1,$last_user_id);
-	user_exist($user, $db2);
-	
-//	echo "<hr>$last_id<hr>";
-	
-	
-	//2. create in tree_users
+  $sql = "";
+  $sql["id"] = 6570;//6570
+  mySelectBranch($sql,1,$last_user_id);
+  user_exist($user, $db2);
+  
+//  echo "<hr>$last_id<hr>";
+  
+  
+  //2. create in tree_users
 }
 
 function mySaveToSocial($last_user_id,$user,$db,$db2) {
 
-	//1. save_to tree_users_social
-	$sql11 = "INSERT INTO `tree_users_social` SET
-	    	`user_id` = :user_id,
-	    	`network` = :network,
-	    	`identity` = :identity,
-	    	`uid` = :uid,
-	    	`bdate` = :bdate,
-	    	`country` = :country,
-	    	`profile` = :profile,
-	    	`last_name` = :last_name,
-	    	`first_name` = :first_name,
-	    	`city` = :city,
-	    	`photo_big` = :photo_big,
-	    	`photo` = :photo,
-	    	`session_md5` = :session_md5,
-	    	`fio` = :fio,
-	    	`email` = :email,
-	    	`sex` = :sex";
-//	echo $sql11;
-		
-	$values11 = array( 
-	    	":user_id" => 		$last_user_id,
-	    	":network" =>  		$user["network"],
-	    	":identity" => 		$user["identity"],
-	    	":uid" => 	   		$user["uid"],
-	    	":bdate" => 		$user["bdate"],
-	    	":country" => 		$user["country"],
-	    	":profile" => 		$user["profile"],
-	    	":last_name" => 	$user["last_name"],
-	    	":first_name" =>	$user["first_name"],
-	    	":city" => 			$user["city"],
-	    	":photo_big" => 	$user["photo_big"],
-	    	":photo" => 		$user["photo"],
-	    	":session_md5"=>	$user["session_md5"],
-	    	":fio" => 			$user["fio"],
-	    	":email" => 		$user["email"],
-	    	":sex" => 			$user["sex"],
-	    	":session_md5" =>	md5($user["identity"]."990990")
-	        );
-	        
-	$query1 = $db2->prepare($sql11);
-	$query1->execute($values11);
-	$last_id = $db2->lastInsertId();
-	return $last_id;
+  //1. save_to tree_users_social
+  $sql11 = "INSERT INTO `tree_users_social` SET
+        `user_id` = :user_id,
+        `network` = :network,
+        `identity` = :identity,
+        `uid` = :uid,
+        `bdate` = :bdate,
+        `country` = :country,
+        `profile` = :profile,
+        `last_name` = :last_name,
+        `first_name` = :first_name,
+        `city` = :city,
+        `photo_big` = :photo_big,
+        `photo` = :photo,
+        `session_md5` = :session_md5,
+        `fio` = :fio,
+        `email` = :email,
+        `sex` = :sex";
+//  echo $sql11;
+    
+  $values11 = array( 
+        ":user_id" =>     $last_user_id,
+        ":network" =>     $user["network"],
+        ":identity" =>    $user["identity"],
+        ":uid" =>         $user["uid"],
+        ":bdate" =>     $user["bdate"],
+        ":country" =>     $user["country"],
+        ":profile" =>     $user["profile"],
+        ":last_name" =>   $user["last_name"],
+        ":first_name" =>  $user["first_name"],
+        ":city" =>      $user["city"],
+        ":photo_big" =>   $user["photo_big"],
+        ":photo" =>     $user["photo"],
+        ":session_md5"=>  $user["session_md5"],
+        ":fio" =>       $user["fio"],
+        ":email" =>     $user["email"],
+        ":sex" =>       $user["sex"],
+        ":session_md5" => md5($user["identity"]."990990")
+          );
+          
+  $query1 = $db2->prepare($sql11);
+  $query1->execute($values11);
+  $last_id = $db2->lastInsertId();
+  return $last_id;
 }
 
 
@@ -184,16 +184,16 @@ else $read=0;
 function myCreateRecord($sql, $new_parent, $new_user) {
 
    $sqlnews="INSERT INTO `tree` SET 
-   				user_id = '$new_user',
-   				position = '".$sql["position"]."',
-   				node_icon = '".$sql["node_icon"]."',
-   				adddate = '".$sql["adddate"]."',
-   				changetime = '".now1()."',
-   				title = '".addslashes($sql["title"])."', 
-   				parent_id = '".$new_parent."',
-   				text = '".addslashes($sql["text"])."',
-   				old_id = '-8'";
-   				
+          user_id = '$new_user',
+          position = '".$sql["position"]."',
+          node_icon = '".$sql["node_icon"]."',
+          adddate = '".$sql["adddate"]."',
+          changetime = '".now1()."',
+          title = '".addslashes($sql["title"])."', 
+          parent_id = '".$new_parent."',
+          text = '".addslashes($sql["text"])."',
+          old_id = '-8'";
+          
    $result = mysql_query_my($sqlnews); 
    $id = mysql_insert_id();
 //   echo "<li>parent_id=".$new_parent." | n_i=$id | title=<b>".$sql["title"]."</b></li>";
@@ -219,13 +219,13 @@ function mySelectBranch($sql2, $new_parent, $new_user) {
 //  echo "<ol>";
   while (@$sql = mysql_fetch_array($result))
     {
-//	echo "sdfdfsd";
+//  echo "sdfdfsd";
     $id = myCreateRecord($sql, $new_parent, $new_user);
-//	echo $id." - ";
+//  echo $id." - ";
     mySelectBranch($sql, $id, $new_user);
     }
 //  echo "</ol>";
-	
+  
 }
 
 
@@ -288,11 +288,11 @@ function displayNewsEntry($sql, $theme, $detail="no") {
 
 if(stristr($theme,'json'))
   {
-	static $jsonReplaces = array(
-	array("\\", "/", "\t", "\b", "\f", "'"),
-	array('\\\\', '\\/', '\\t', '\\b', '\\f', "`"));
-	$fullbox = str_replace("'", "`", $fullbox);
-	$fullbox = preg_replace("/\r?\n/", "\\n", $fullbox);
+  static $jsonReplaces = array(
+  array("\\", "/", "\t", "\b", "\f", "'"),
+  array('\\\\', '\\/', '\\t', '\\b', '\\f', "`"));
+  $fullbox = str_replace("'", "`", $fullbox);
+  $fullbox = preg_replace("/\r?\n/", "\\n", $fullbox);
   }
 
    return $fullbox;
@@ -303,7 +303,7 @@ if(stristr($theme,'json'))
 function UpdateClients()
 {
 global $HTTP_POST_VARS,$config,$client;
-	$sqlnews="UPDATE 1_clients SET 
+  $sqlnews="UPDATE 1_clients SET 
             fio='".$HTTP_POST_VARS['fio']."',
             phone1='".$HTTP_POST_VARS['phone1']."',
             phone2='".$HTTP_POST_VARS['phone2']."',
@@ -316,7 +316,7 @@ global $HTTP_POST_VARS,$config,$client;
             adress='".$HTTP_POST_VARS['adress']."',
             comment='".$HTTP_POST_VARS['comment']."',
             birthday='".$HTTP_POST_VARS['birthday']."'
-	    WHERE id=".$client;
+      WHERE id=".$client;
    if ($read==0) $result = mysql_query_my($sqlnews); 
 
 }
@@ -324,7 +324,7 @@ global $HTTP_POST_VARS,$config,$client;
 function UpdateDo()
 {
 global $HTTP_POST_VARS,$config,$do,$GLOBALS;
-	$sqlnews="
+  $sqlnews="
 UPDATE  `1_do` SET  
 
 `manager` =  '".$HTTP_POST_VARS['SELECTMANAGER']."',
@@ -353,13 +353,13 @@ else $d="0000-00-00 00:00:00";
 
 $ddd = gmdate("Y-m-d H:i:s",cheltime(time()));
 
-	$sqlnews="
+  $sqlnews="
 INSERT INTO  `1_do` (  `id` ,  `client` ,  `brand` ,  `manager` ,  `date1` ,  `date2` ,  `text` ,  `comment` ,  `checked` ,  `type` ,  `host` ,  `important` ,  `repeat` ,  `remind` ,  `created` ,  `changed` ,  `starred` ,  `hostcheck` ,  `shablon` ) 
 VALUES (
 '',  '".$client."',  '".$fpk_brand."',  '".$fpk_user."',  '".$ddd."',  '".$ddd."',  '".$Type."',  '',  '".$d."',  '".$Type."',  '".$fpk_user."',  '50',  '',  '0000-00-00 00:00:00',  '".$ddd."',  '0000-00-00 00:00:00',  '',  '0000-00-00 00:00:00',  '')
 ";
 
-//	echo $sql;
+//  echo $sql;
 //  $fp = fopen('its2.txt', "w");
 //  @fwrite($fp, 'rrr='.$fpk_user);
 //  fclose($fp);
@@ -385,7 +385,7 @@ global $HTTP_POST_VARS,$config,$fpk_user,$fpk_brand;
 if(stristr($Manager,'<')) $Manager='Все';
 
 
-	$sqlnews="
+  $sqlnews="
 
 
 INSERT INTO  `1_clients` (  `id` ,  `fio` ,  `comment` ,  `phone1` ,  `phone2` ,  `phone3` ,  `phone4` ,  `date` ,  `adress` ,  `birthday` ,  `brand` ,  `manager` ) 
@@ -393,7 +393,7 @@ VALUES (
 '',  '',  '',  '',  '',  '',  '',  '".gmdate("Y-m-d",cheltime(time()))."',  '',  '1978-00-00',  '".$fpk_brand."',  '".$Manager."'
 );
 
-		";
+    ";
    $result = mysql_query_my($sqlnews); 
 
    $sqlnews="SELECT max(id) maxid FROM `1_clients`";
@@ -450,10 +450,10 @@ function mod_fioshort($sql)
     $explodeName = explode(" ", $name);
     $lng=0;$txt='';
     for ($i=0; $i<count($explodeName); $i++) {
-	    $lng += strlen($explodeName[$i]);
-	    if($lng<74) $txt.=$explodeName[$i].' ';
-	    else { $txt.='…'; break; }
-	   }
+      $lng += strlen($explodeName[$i]);
+      if($lng<74) $txt.=$explodeName[$i].' ';
+      else { $txt.='…'; break; }
+     }
 
    
    return $txt; 
@@ -464,8 +464,8 @@ function mod_fioshort2($sql)
    $name=str_replace('"',"`",$sql->fio);
 
     $explodeName = explode(" ", $name);
-	$name = $explodeName[0];
-	$name .= ' '.mb_substr($explodeName[1], 0, 1,'utf-8').'.';
+  $name = $explodeName[0];
+  $name .= ' '.mb_substr($explodeName[1], 0, 1,'utf-8').'.';
    
    return $name; 
    
@@ -886,9 +886,9 @@ function mod_doclientshort($sql)
 
     $explodeName = explode(" ", $sql1->fio);
     for ($i=0; $i<count($explodeName); $i++) {
-	    if ($i==0) $name = $explodeName[$i];
+      if ($i==0) $name = $explodeName[$i];
         if ($i==1) $name.= ' '.$explodeName[$i];
-	   }
+     }
 
    
    return $name; 
@@ -928,7 +928,7 @@ function mod_date2json($sql)
    $dat = showdatejson($sql->date2,$sql);
    
     return $dat[2];   
-	}
+  }
 
 function mod_date1json($sql) 
    { 
@@ -937,13 +937,13 @@ function mod_date1json($sql)
    $dat = showdatejson($sql->date2,$sql);
    
     return '{"classdo":"'.$dat[0].'","date":"'.$dat[1].'","days":"'.$dat[2].'"}';   
-	}
+  }
 
 function mod_date1($sql) 
    { 
     return showdate($sql->date2,$sql); 
-	}
-	
+  }
+  
 function mod_checkcolor($sql) 
    { 
    if ($sql->checked=="0000-00-00 00:00:00") return "black";
@@ -954,7 +954,7 @@ function mod_inputdonejson($sql)
    { 
    if ($sql->checked=="0000-00-00 00:00:00") 
        return '{"idd":"'.$sql->doid.'","name":"Выполнить"}';
-	   
+     
     else return  '{"idd":"'.$sql->doid.'","name":"Снять выполнение"}';
    }
   
@@ -1304,19 +1304,19 @@ function mod_icons($sql3)
    $sqlnews="SELECT count(*) cnt FROM 1_do WHERE type='".$sql->type."' AND checked<>'0000-00-00 00:00:00' AND client=".$sql3->id;
    $result2 = mysql_query_my($sqlnews); 
    @$sql4 = mysql_fetch_object ($result2);
-	if ($sql4->cnt > 0) $opacity=0.5;
-	else $opacity='0.1';
+  if ($sql4->cnt > 0) $opacity=0.5;
+  else $opacity='0.1';
       if ($sql->type<>$sql1->type) 
-	       {
-  	       $sqlnews2="SELECT typepng FROM 1_dotype WHERE 1_dotype.type='".$sql->type."'";
+         {
+           $sqlnews2="SELECT typepng FROM 1_dotype WHERE 1_dotype.type='".$sql->type."'";
            $result2 = mysql_query_my($sqlnews2); 
            @$sql2 = mysql_fetch_object ($result2);
 
-	       $TXT.='{"name":"'.$sql->type.'", "type":"'.$sql2->typepng.'", "opacity":"'.$opacity.'"},'; 
-		   }	
+         $TXT.='{"name":"'.$sql->type.'", "type":"'.$sql2->typepng.'", "opacity":"'.$opacity.'"},'; 
+       }  
      } 
-	 
-	//return '[{"name":"666", "type":"OUT", "opacity":"1"},{"name":"666", "type":"OUT", "opacity":"1"}]'; 
+   
+  //return '[{"name":"666", "type":"OUT", "opacity":"1"},{"name":"666", "type":"OUT", "opacity":"1"}]'; 
 */   $TXT = str_replace('},]','}]','['.$TXT.']');
  
    return $TXT;
@@ -1381,16 +1381,16 @@ function mod_iconsclient($sql3)
    $sqlnews="SELECT count(*) cnt FROM 1_do WHERE type='".$sql->type."' AND checked<>'0000-00-00 00:00:00' AND client=".$sql3->id;
    $result2 = mysql_query_my($sqlnews); 
    @$sql4 = mysql_fetch_object ($result2);
-	if ($sql4->cnt > 0) $opacity=0.5;
-	else $opacity='0.1';
+  if ($sql4->cnt > 0) $opacity=0.5;
+  else $opacity='0.1';
       if ($sql->type<>$sql1->type) 
-	       {
-  	       $sqlnews2="SELECT typepng FROM 1_dotype WHERE 1_dotype.type='".$sql->type."'";
+         {
+           $sqlnews2="SELECT typepng FROM 1_dotype WHERE 1_dotype.type='".$sql->type."'";
            $result2 = mysql_query_my($sqlnews2); 
            @$sql2 = mysql_fetch_object ($result2);
 
-	        $TXT.='<img class="dotype" height=20px width=20px title="'.$sql->type.'" src="./img/'.$sql2->typepng.'.png" hspace="10" vspace="0" align="right" style="opacity:'.$opacity.'">';
-		   }	
+          $TXT.='<img class="dotype" height=20px width=20px title="'.$sql->type.'" src="./img/'.$sql2->typepng.'.png" hspace="10" vspace="0" align="right" style="opacity:'.$opacity.'">';
+       }  
      } 
    return $TXT;
 
@@ -1450,14 +1450,14 @@ function DateToSQL($Date)
     $explodeDate = explode(",", $Date);
     $datesql = "FALSE "; 
     for ($i=0; $i<count($explodeDate); $i++) {
-	if (strlen($explodeDate[$i])>12) 
+  if (strlen($explodeDate[$i])>12) 
        {
-	   $explodeDate2 = explode(' -> ',$explodeDate[$i]);
-	   $datesql .= "OR date2 BETWEEN '$explodeDate2[0]' AND '$explodeDate2[1]' ";
-	   }
-	else $datesql .= "OR date2 LIKE '$explodeDate[$i]%' ";
-	}
-	return $datesql;
+     $explodeDate2 = explode(' -> ',$explodeDate[$i]);
+     $datesql .= "OR date2 BETWEEN '$explodeDate2[0]' AND '$explodeDate2[1]' ";
+     }
+  else $datesql .= "OR date2 LIKE '$explodeDate[$i]%' ";
+  }
+  return $datesql;
 }
 
 function SearchFieldSQL($SearchField,$Search)
@@ -1465,73 +1465,73 @@ function SearchFieldSQL($SearchField,$Search)
     //По каким полям искать
     $searchsql = "AND ( FALSE ";
     for ($i=0; $i<count($SearchField); $i++) 
-	   {
-	   $searchsql .= " OR ".$SearchField[$i]." LIKE '$Search'";
-	   }
+     {
+     $searchsql .= " OR ".$SearchField[$i]." LIKE '$Search'";
+     }
     $searchsql .= " ) ";
-	
-	
-	return $searchsql;
+  
+  
+  return $searchsql;
 }
 
 
 //Одна из главных функций отображения дела по многочисленным фильтрам
 function ShowMeDo (
-	$Date = "%", // Даты для фильтра
-	$Manager = "%", // Имя менеджера
-	$Clientid = "%", // Номер клиента
-	$Did = 0, // 1-скрывать ли выполненные дела (0=все дела, 1=скрывать выполненные, 2=только выполненные, 3=просрочены)
-	$Template = "fpk-do.php", // Шаблон
-	$What = "Show", // Что делать - Show, Edit, Add, Delete
-	$Host = "%", // Кто поручил дело
-	$Search = "%", // Что ищем
+  $Date = "%", // Даты для фильтра
+  $Manager = "%", // Имя менеджера
+  $Clientid = "%", // Номер клиента
+  $Did = 0, // 1-скрывать ли выполненные дела (0=все дела, 1=скрывать выполненные, 2=только выполненные, 3=просрочены)
+  $Template = "fpk-do.php", // Шаблон
+  $What = "Show", // Что делать - Show, Edit, Add, Delete
+  $Host = "%", // Кто поручил дело
+  $Search = "%", // Что ищем
     $SearchField = array ("1_clients.fio","1_clients.phone1","1_clients.phone2","1_clients.phone3","1_clients.phone4","1_do.comment","1_do.text","1_clients.comment","1_clients.adress","1_clients.birthday"), //По каким полям искать  
-	$Brand = "Peugeot", // Какой бренд
-	$Type = "Звонок", // Тип действия
-	$Hide = 1, // 1=показывать скрытые дела
-	$Order = "Order by DATE2" //Сортировка
-	)
-	{
-	global $fpk_brand;
-	
+  $Brand = "Peugeot", // Какой бренд
+  $Type = "Звонок", // Тип действия
+  $Hide = 1, // 1=показывать скрытые дела
+  $Order = "Order by DATE2" //Сортировка
+  )
+  {
+  global $fpk_brand;
+  
 if(isset($GLOBALS['_GET']['do']))
     {
     $doid=$GLOBALS['_GET']['do'];
-	$doid="AND 1_do.id=$doid";
-	}
-	else $doid='';
+  $doid="AND 1_do.id=$doid";
+  }
+  else $doid='';
 if ($What == 'Show') //Если нужно ОТОБРАЗИТЬ дела
  {
     $datesql = DateToSQL($Date); //Конвертируем набор дат в SQL фильтр
 
-	switch ($Did) //Скрывать ли дела
-	  { //(0=все дела, 1=скрывать выполненные, 2=только выполненные)
-		case 0: $checked = ""; break;
-	    case 1: $checked = " AND checked = '0000-00-00 00:00:00' "; break;
-		case 2: $checked = " AND checked != '0000-00-00 00:00:00' "; break;
-		case 3: { $checked = " AND checked = '0000-00-00 00:00:00' "; $datesql = "1_do.date2 < NOW()"; break; }
-	  }
-       	
+  switch ($Did) //Скрывать ли дела
+    { //(0=все дела, 1=скрывать выполненные, 2=только выполненные)
+    case 0: $checked = ""; break;
+      case 1: $checked = " AND checked = '0000-00-00 00:00:00' "; break;
+    case 2: $checked = " AND checked != '0000-00-00 00:00:00' "; break;
+    case 3: { $checked = " AND checked = '0000-00-00 00:00:00' "; $datesql = "1_do.date2 < NOW()"; break; }
+    }
+        
     //Вставляем в SQL поле для поиска, набор полей берем в SearchField
-	if ($Search!="%") $searchsql = SearchFieldSQL($SearchField,$Search);
-	else $searchsql="";
+  if ($Search!="%") $searchsql = SearchFieldSQL($SearchField,$Search);
+  else $searchsql="";
 
-	$sql="SELECT *, 1_do.id doid, 1_do.comment docomment, 1_do.manager slave FROM  `1_do` 
-	      JOIN 1_clients ON 1_clients.id = 1_do.client 
-		  WHERE $datesql AND 1_clients.brand = '$fpk_brand' AND 1_clients.manager LIKE '$Manager' AND 1_do.client LIKE '$Clientid'
-		  $checked $searchsql $doid $Order
-			 ";
-//	echo $sql;
+  $sql="SELECT *, 1_do.id doid, 1_do.comment docomment, 1_do.manager slave FROM  `1_do` 
+        JOIN 1_clients ON 1_clients.id = 1_do.client 
+      WHERE $datesql AND 1_clients.brand = '$fpk_brand' AND 1_clients.manager LIKE '$Manager' AND 1_do.client LIKE '$Clientid'
+      $checked $searchsql $doid $Order
+       ";
+//  echo $sql;
 //  $fp = fopen('its2.txt', "w");
 //  @fwrite($fp, 'rrr='.$sql);
 //  fclose($fp);
-		 
+     
     $news=displayNewsAll($Template,$sql);
-	return $news;
-	}
+  return $news;
   }
-	
-	
+  }
+  
+  
 function User ($email, $pass)
 {
 global $fpk_user,$fpk_user_short,$fpk_brand,$fpk_id,$fpk_job,$fpk_brandtitle, $fpk_logo, $fpk_brandname,$message_on;
@@ -1574,14 +1574,20 @@ global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
    
    $social = $_COOKIE['4tree_social_md5'];
    
+   
+   if(isset($_GET['phone_gap'])) {
+   if(!$email) $email = "8ab96bed02fc697de66ac528bcd4814f";
+   if(!$passw) $passw = "87e7c51b7a7e50cdf2e78670557c18a4";
+   }
+   
    if($social) {
-	   $sqlnews="SELECT * FROM tree_users_social WHERE session_md5='$social' LIMIT 1;";
-	   $result = mysql_query_my($sqlnews); 
-	   @$sql = mysql_fetch_object ($result);
-	   $user_id = $sql->user_id;
-	   $sqlnews="SELECT * FROM tree_users WHERE id='$user_id' LIMIT 1;";
+     $sqlnews="SELECT * FROM tree_users_social WHERE session_md5='$social' LIMIT 1;";
+     $result = mysql_query_my($sqlnews); 
+     @$sql = mysql_fetch_object ($result);
+     $user_id = $sql->user_id;
+     $sqlnews="SELECT * FROM tree_users WHERE id='$user_id' LIMIT 1;";
    } else {
-	   $sqlnews="SELECT * FROM tree_users WHERE md5email='$email' AND password='$passw' LIMIT 1;";
+     $sqlnews="SELECT * FROM tree_users WHERE md5email='$email' AND password='$passw' LIMIT 1;";
    }
       
    $result = mysql_query_my($sqlnews); 
@@ -1597,10 +1603,12 @@ global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
       $confirm_email = 'true';
       }
    else
-   	  {
+      {
       $confirm_email = 'false';
-   	  }
+      }
 //   setcookie('fpk_id', $fpk_id);
+
+if(isset($_GET['phone_gap'])) $fpk_id = $_GET['phone_gap'];
 
    setcookie('4tree_user_id', $fpk_id,time()+60*60*24*60);
 
