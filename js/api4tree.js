@@ -21,7 +21,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      tree_font=1,did_timeout,files_link_from_texts = [],
 		      this_db = this, //эта функция
 		      MAX_VALUE = 1000000000000000, //максимальное кол-во в базе
-		      LENGTH_OF_LONG_TEXT = 500; //длина, после которой текст считается длинным и переносится в другую базу
+		      LENGTH_OF_LONG_TEXT = 200; //длина, после которой текст считается длинным и переносится в другую базу
 		      
 
 
