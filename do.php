@@ -2377,7 +2377,7 @@ if(true) { $result2 = mysql_query($sqlnews2); $sqlnews2=""; }
   	
   $share_ids_tree_id = str_replace("id = ","tree_id = ",$share_ids);
 
-  $sqlnews = "SELECT tree_comments.*, tree.user_id tree_user_id FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE (tree_comments.user_id=".$GLOBALS['user_id']." OR tree.id IN(".$share_ids_tree_id.") OR tree.user_id = ".$GLOBALS['user_id'].") AND tree_comments.del=0 ORDER by parent_id, changetime";
+  $sqlnews = "SELECT tree_comments.*, tree.user_id tree_user_id FROM tree_comments LEFT JOIN tree ON tree.id = tree_comments.tree_id WHERE (tree_comments.user_id=".$GLOBALS['user_id']." OR tree_id IN(".$share_ids_tree_id.") OR tree.user_id = ".$GLOBALS['user_id'].") AND tree_comments.del=0 ORDER by parent_id, changetime";
   
   $result = mysql_query_my($sqlnews); 
   $i=0;
