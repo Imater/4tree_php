@@ -167,6 +167,7 @@ border-top: 1px solid #FFF;
 -o-transition: all 0.2s;  
 transition: all 0.2s;  
 top:65px;
+height: 385px;
 border-top: none;
 }
 
