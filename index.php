@@ -553,7 +553,7 @@ if(isset($_GET['test']))
 	  		<div class="sos" title="Синхронизация / Размер окон"><i class="icon-cd"></i><div id="myloader"></div></div>
 	  		<div class="bottom_right animate_me">
 	  		  <div class="all_editor_place">
-	  			<textarea id="redactor" placeholder="Текст заметки...">
+	  			<textarea id="redactor">
 	  			</textarea>
 
 			  <div class="favorit_tabs noselectable" id="fav_redactor_btn">
