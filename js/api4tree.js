@@ -4707,9 +4707,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	   }).fail(function(e){ console.info("error",e); });
 		      	   d2.promise();
 		      	   dfdArray.push(d2);
-		      	   
+		      	   console.info("Копирую в базу длинные тексты: "+this_db.SizeOfObject(long_texts));
 		      	   var dfd3 = db.put(global_table_name+"_texts", long_texts).done(function(ids) { //сохраняю длинные тексты
-		      	       this_db.log(ids.length+' длинных текстов = '+this_db.SizeOfObject(long_texts)+'b');
+		      	       console.info(ids.length+' длинных текстов = '+this_db.SizeOfObject(long_texts)+'b');
 		      	       jsProgressStep();
 		      	       long_texts="";//очищаю память
 		      	       this_db.jsUpdateNextAction();
