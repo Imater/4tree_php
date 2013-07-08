@@ -1,4 +1,4 @@
-var my_all_parents = {}, settings = {show_did:false}; //все параметры;
+var my_all_parents = {}, settings = {show_did:false}, is_mobile = false; //все параметры;
 
 /////////////////////////////////////TREE//////////////////////////////////////////
 var API_4TREE = function(global_table_name,need_log){  //singleton
