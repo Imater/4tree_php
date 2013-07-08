@@ -2260,7 +2260,8 @@ display: none;
 
 .red_new_window
 {
-	display: inline-block;
+
+	display: none;
 	position: absolute;
 	right: 35px;
 	top: 13px;
@@ -3427,6 +3428,7 @@ margin: 0 auto;
 
 .webcomment
 {
+display: none;
 max-width: 900px;
 margin: 0 auto;
 background: white;
@@ -5508,6 +5510,7 @@ font-family: Verdana, Arial;
 	color:#444;
 }
 
+
 .add_do_panel_top {
 	position: relative;
 	height: 25px;
@@ -5515,23 +5518,29 @@ font-family: Verdana, Arial;
 
 .add_do_panel_top input {
 -webkit-appearance: none;
-border: 1px solid #DDD;
+border: 1px solid transparent;
 top: 0px;
 left: 2.5em;
 right: 1.2em;
 width: auto;
 height: auto;
 position: absolute;
-font-size: 0.85em;
-padding: 2px 6px;
+font-size: 0.9em;
+font:inherit;
+padding: 2px;
+margin-left: 0px;
 border-radius: 0px;
 outline: none;
+}
+
+.add_do_panel_top input:focus {
+  border: 1px solid #DDD;
 }
 
 .add_do_panel_top .node_img {
 	margin: 0px;
 	margin-left: 0.5em;
-	margin-top: 3px;
+	margin-top: 5px;
 	opacity: 0.5;
 }
 

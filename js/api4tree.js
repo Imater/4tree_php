@@ -68,9 +68,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 						sender.find(".node_img").addClass('folder_closed').removeClass("node_box").
 			   				   html("<div class='countdiv'>1</div>").removeClass("node_img").
 			   				   removeAttr("style");
-			   			iii = $("#panel_"+panel+" li").length; 
+			   			iii = $("#panel_"+panel).length; 
 			   			if(iii==0) $("#mypanel").append("<div id='panel_"+panel+
-			   											"' class='panel'><ul></ul></div>");
+			   											"' class='panel hexhex'><ul></ul></div>");
 			   		}
 		   	} //right
 		  
@@ -144,6 +144,145 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			}
 		
 		}
+
+
+		  //проверяет текст на wiki ссылки и помечает их цветом
+		  this.jsMakeWiki = function(myr) { //находит всё что в квадратных скобках и заменяет на тег <wiki>
+			  var txt = myr.redactor("get");
+			  var wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
+			  if(!wiki_words) 
+			  	{
+			  	return true; //если нет символов WIKI
+			  	}
+			  else
+			  	{
+			  	var aa = rangy.saveSelection();
+			  	txt = myr.redactor("get");
+			  	wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
+			  	}
+			  
+			  if(!wiki_words) 
+			  	{
+			  	return true; //если нет символов WIKI
+			  	}
+			  
+			  var newtxt = txt;
+			  var need_refresh = false;
+			  $.each(wiki_words, function(i,myword){
+			  	if(strip_tags(myword).length>4) 
+			  		{
+			  			var mynewword = myword.replace("[[","").replace("]]","");
+			  			console.info(i,myword, mynewword);
+			  			newtxt = newtxt.replace(myword,"[&nbsp;<span class='wiki' title='Кликните, чтобы создать определение Wiki'>"+mynewword+"</span> ]");
+			  			need_refresh = true;
+			  		}
+			  	else
+			  		{
+			  		rangy.removeMarkers(aa);
+			  		}
+			  	});
+			  if(need_refresh) 
+			  	{
+			  	myr.redactor("set", newtxt);
+			  	note_saved = false;
+			    rangy.restoreSelection(aa);
+			    api4editor.jsSaveAllText(1);
+			    api4tree.jsParseWikiLinks(myr.attr("myid"));
+			  	}
+		  } //jsMakeWiki
+		  
+		  //обрабатывает wiki ссылки (ищет статьи)
+		  this.jsParseWikiLinks = function(parent_id) {
+	  			var wiki = $(".redactor_").find(".wiki");
+      			if(wiki.length) {
+      			    var wiki_founded;
+      			    wiki.each(function(i,el) {
+      			     	mytitle = strip_tags( $(el).html() );
+
+      			     	if(!parent_id) {
+      			     		var divider = $(el).prevAll(".divider_red:first");
+      			     		if(!divider) {
+      			     			parent_id = divider.attr("myid");
+      			     		} else {
+      			     			parent_id = $("#redactor").attr("myid");
+      			     		}
+      			     	}
+
+      			     	wiki_founded = jsFindWikiForParent(parent_id, mytitle);
+      			     	if(wiki_founded) {
+      			     		var mini_text = wiki_founded.text.replace(/<div>/g," ").replace(/<p>/g," ").replace(/&nbsp;/g," ").replace(/&#x200b;/ig,"").trim();
+      			     		mini_text = api4tree.jsShortText( strip_tags(mini_text),500);
+      			     		
+      			     		$(el).addClass("wiki_founded").attr("title", mini_text );
+      			     	} else {
+      			     		$(el).removeClass("wiki_founded");
+      			     	}
+      			     }); //wiki.each
+      			}
+		  	}
+		  	
+
+		  //поиск wiki статей	
+		  function jsFindWikiForParent(parent_id, mytitle) {
+		  		var mytitle = mytitle.replace("&nbsp;", " ").trim();
+		  		var mytitle = strip_tags(mytitle.trim());
+		  	
+		  		var childrens = api4tree.jsFindByParent(parent_id);
+		  		var myfilter="[["+mytitle+"]]".toLowerCase();
+		  		
+
+		  		var mynewdata = childrens.filter(function(el) { //ищу в первую очередь среди детей		  				
+		  				if(el.did!="") return false;
+		  				if(el.del==1) return false;
+		  				if(el.title) return el.title.indexOf(myfilter)!=-1;
+		  		});
+		  					
+		  		if(!mynewdata.length) { //теперь ищу по всему дереву, где я создатель заметки		  			
+		  			
+		  			var mynewdata = [];
+		  			$.each(my_all_data2, function(i,el) {
+		  				if ( !(el.did!="") && !(el.del==1) && (el.title) && (el.user_id==main_user_id) && 
+		  					  (el.title.toLowerCase().indexOf(myfilter)!=-1) ) mynewdata.push(el);
+		  			});
+		  			
+		  		}
+		  	
+		  		if(!mynewdata.length) { //теперь ищу по всему дереву, где не только я создатель заметки
+		  			var mynewdata = [];
+		  			$.each(my_all_data2, function(i,el) {
+		  				if ( !(el.did!="") && !(el.del==1) && el.title && (el.user_id!=main_user_id) && 
+		  					   el.title.toLowerCase().indexOf(myfilter)!=-1 ) mynewdata.push(el);
+		  			});
+		  		}
+		  			
+		  		if(mynewdata.length) {
+		  			return mynewdata[0];
+		  		}		
+		  }
+		  	
+		  //открытие wiki ссылки
+		  this.jsOpenWikiPage = function(parent_id, mytitle, myr) {
+		  		api4tree.log("Кликнули в "+parent_id+" wiki ссылку");
+   			 	var back_title = $(".selected .n_title").html();
+		  		var mynewdata = jsFindWikiForParent(parent_id, mytitle);
+		  		
+		  		if(!mynewdata) 
+		  			{
+		  			var element = api4tree.jsAddDo(parent_id,"[["+mytitle+"]]");
+		  			if(element) api4panel.jsOpenPath(element.id);
+		  			}
+		  		else
+		  			{
+		  			api4panel.jsOpenPath(mynewdata.id);
+		  			jsFixScroll(2);
+		  			}
+
+   			 	$("#wiki_back_button").html('<i class="icon-left-bold"></i>вернуться к '+back_title);
+		  			
+		  		$("#wiki_back_button").show().attr("myid",parent_id);
+		  		setTimeout(function(){ $(".redactor_").focus(); },200);
+		  }
+
 
 
 		 this_db.jsInfoFolder = function(data,parent_node) { 
@@ -261,7 +400,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		 //выбирает кол-во полосок в иконке при кол-ве текста
 		 this.jsMakeIconText = function(text) { 
-		  	var mylength = strip_tags(text).replace(/\t/ig,"").length;
+		  	var mylength = strip_tags(text).replace(/\t/ig,"").replace(/&#x200b;/ig,"").length;
 		  	var i_size = parseInt( mylength/50,10 );
 		  	if(i_size>6) i_size=6;
 		  	if(mylength<100) i_size = "1";	
@@ -1791,7 +1930,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	jsSetTimeNow();
 		  },30000);
 
-			$.idleTimer(5*1000);
+			$.idleTimer(500000000*1000);
 			$(document).bind("active.idleTimer", function(){
 				jsSetTimeNow();
 				clearTimeout(screensaver_tm);
@@ -2376,6 +2515,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      
 			  //при нажатии кнопок в быстрое добавление дел		      
 			  $('#mypanel').undelegate(".add_do_panel_top input", "keyup").delegate(".add_do_panel_top input", "keyup", function(event) {
+			  	 if(event.keyCode==38) {
+			  	 	$(this).blur();
+			  	 	return true;
+			  	 }
+
 			     if(",39,37,40,38,".indexOf(","+event.keyCode+",")!=-1) return true;
 			     var this_cache = $(this);
 			     if(event.keyCode==27) { //отмена добавления нового дела
@@ -2689,8 +2833,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			  //клик по кнопке "текущая неделя"
 			  $('#diary_panel').on("click", ".todayweek", function() {
-			    var lnk = "#edit_current_week";
-			    api4others.open_in_new_tab(lnk);
+			  	var my_week_num = (new Date()).getWeek();
+        	    api4tree.jsGetDateRangeOfWeek( my_week_num );
+    	    	var my_week_num = api4tree.jsDiaryPath(jsNow(),1,1);
+    	    	api4editor.jsRedactorOpenRecursive(my_week_num); 
+			    
 			    return false;
 			  });
 			    
@@ -2958,6 +3105,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	$("#load_screen").fadeOut(1000);
 				  	jsProgressStep();
 				  	jsTitle("Данные загружены с сервера заново",10000);
+				  	jsRefreshTree();
 			  	});
 			    return false;
 			  });
@@ -3334,7 +3482,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		  //установка главного массива снаружи и возврат его значения
 		  this.js_my_all_data = function(set_my_all_data) {
-		  	if(set_my_all_data) my_all_data = set_my_all_data;
+		  	if(set_my_all_data) my_all_data2 = set_my_all_data;
 		  	return my_all_data2;
 		  }
 
@@ -3444,7 +3592,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  		  	
 		  //поиск любого элемента или установка его значений		  	
 		  this.jsFind = function(id,fields,save_anyway) {
-		    if(!my_all_data) return false;
+		    if(!my_all_data2) return false;
 /*
 			var len = my_all_data.length;
 			for(var i=0;i<len;i++) {
@@ -3469,7 +3617,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			}
 			
 			
-  		    if(answer && fields && (answer.id.toString().indexOf("_")==-1)) { //если нужно присваивать значения
+  		    if(answer && fields && !(/_/ig.test(answer.id.toString())) ) { //если нужно присваивать значения
 			   var record;
   		       var is_changed = false;
   		       var fields_changed = JSON.stringify(fields);
@@ -3481,25 +3629,51 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
   		       	if( (record[namefield]!=newvalue) || save_anyway) 
   		       		{
   		       		is_changed = true;
-  		       		record[namefield] = newvalue;   //главное присвоение
 
   		       		if(namefield=="id") {
-  		       			var myparent_id = record.parent_id;
-  		       			answer = my_all_data2.renameProperty("n"+id, "n"+newvalue);
-  		       			record = answer = my_all_data2["n"+newvalue];  		       			
-  		       			if(my_all_parents["p"+myparent_id]) {
-  		       				$.each(my_all_parents["p"+myparent_id], function(i,el){
-  		       					if(el.id=="n"+id) el = record;
-  		       				});
-  		       			}
-  		       		}
+						
+						var element = record;
+  		       			var old_id = id;
+  		       			var new_id = newvalue;
 
-  		       		if(namefield=="parent_id") {
-  		       			my_all_parents.renameProperty("p"+id, "p"+newvalue);
-  		       			$.each(my_all_parents["p"+newvalue],function(i,el1){
-  		       				api4tree.jsFind(el1.id, {parent_id:newvalue});
-  		       			});
-  		       		}
+
+			       		api4tree.jsFindLongText(old_id).done( function(longtext) {
+			       			if(element.tmp_text_is_long>0) {
+					       		db.put(global_table_name+"_texts", {id: new_id, text: longtext} ).done(function(){ 
+					      			db.remove(global_table_name+"_texts",old_id.toString()).done(function(){
+					      				console.info("Удалил элемент с длинным текстом id<0: ",old_id);
+					      			});
+				  	          	});
+				       		} //если текст длинный
+
+
+
+			  	        });
+
+			  	        element.id = new_id;			  	        
+
+   			       		db.put(global_table_name, element).done(function(){ 
+			      			db.remove(global_table_name,old_id.toString()).done(function(){
+			      				this_db.log("Удалил элемент с старым id<0: ",old_id);
+			      			});
+		  	          	});
+
+
+  		       			answer = my_all_data2.renameProperty("n"+id, "n"+newvalue); //переименовываем в главном массиве
+  		       			record = answer = my_all_data2["n"+newvalue];
+
+  		       			if(my_all_parents["p"+old_id]) { //обход всех, у кого этот элемент является родителем и меняем старый id на новый
+  		       				$.each(my_all_parents["p"+old_id], function(i,el){
+  		       					api4tree.jsFind(el.id,{parent_id:new_id});
+  		       					console.info("Установил ребёнку ("+el.id+") нового родителя =",new_id);
+  		       				});
+  		       				my_all_parents.renameProperty("p"+old_id, "p"+new_id); //переименовываем в массиве родителей
+  		       				console.info("Переименовал родителя ("+old_id+") в =",new_id,my_all_parents["p"+new_id]);
+  		       			}
+
+  		       		} // namefield == "id"
+
+  		       		if(namefield!="id") record[namefield] = newvalue;   //главное присвоение !!!!!!!!!!!!!!!!!!!
 
 
   		       		if(namefield=="text") {
@@ -3521,7 +3695,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
   		         record["new"] = changed_fields;
 
   		         //если не меняли время вручную и это не временное поле
-  		         if( ((changed_fields.indexOf("new,")==-1) && (changed_fields.indexOf("time,")==-1) && (fields_changed.indexOf("tmp_")==-1) && (save_anyway != "dont_sync")) || (save_anyway=="need_sync")) 
+  		         if( (!(/new,/ig.test(changed_fields)) && !(/time,/ig.test(changed_fields)) && 
+  		         	  !(/tmp_/ig.test(fields_changed)) && (save_anyway != "dont_sync")) || 
+  		         	  (save_anyway=="need_sync")) 
   		             {
   		             //если не скроллинг
   		             if(changed_fields!="s,") $("#node_"+id+" .sync_it_i").removeClass("hideit"); 
@@ -3838,12 +4014,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
         	} else {
         		var myelement = api4tree.jsFind(id);
     			if(!myelement) { d.resolve(); return d.promise(); }
-        		if(myelement.tmp_text_is_long==0) {
+        		if(myelement.tmp_text_is_long!=1) {
 	    	  		var the_text = myelement?myelement.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
         			d.resolve(the_text);
         		} else {
+        			console.info("Забираю длинный текст из базы:",id);
 	    	  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
-	    	  			var the_text = record?record.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
+
+	    	  			var the_text = (record && record.text)?record.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
     		  			d.resolve(the_text);
 			  			});
 			  	}
@@ -4373,7 +4551,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    if (!((el.del==1) || (el.did!=0)) && el && el.date1!="" ) answer.push(el);
 			});
 			
-			console.info("Найдено "+answer.length+" записей с датой");
+			//console.info("Найдено "+answer.length+" записей с датой");
 			
 			$.each(answer,function(i,el) { //обходим все элементы с датой
 			    var id_parent = el.id;
@@ -4521,7 +4699,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	   jsProgressStep();
 
 		      	   var dfd2 = db.put(global_table_name, my_all_data_tmp).done(function(ids) { //сохраняю главный массив
-		      	       this_db.log(ids.length+' записей записано в лок.базу = '+this_db.SizeOfObject(my_all_data)+'b');
+		      	       this_db.log(ids.length+' записей записано в лок.базу = '+this_db.SizeOfObject(my_all_data_tmp)+'b');
 		      	       jsProgressStep();
 		      	       d2.resolve();
 		      	   }, function(e) {
@@ -4569,7 +4747,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	  				this_db.log("Начинаю загрузку данных из локальной DB");
 		    		db.values(global_table_name,null,MAX_VALUE).done(function(records) {
 		    			this_db.log("Загрузил из локальной DB: " + records.length + " записей");
-		    			my_all_data = records; //?????
+		    			//my_all_data = records; //?????
 
 		    			var len = records.length;
 		    			for(var i=0;i<len;i++) {
@@ -4864,22 +5042,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	
 	     //заменяет отрицательный id на положительный
 	     function jsChangeNewId(from_server_data) {
-	   	    var all_children = this_db.jsFindByParent(from_server_data.old_id);
 	   	    var old_id = from_server_data.old_id;
 	   	    var new_id = from_server_data.id;
-	   	    $.each(all_children,function(i,ddd) {//заменяю всем детям отрицательный parent_id на новый
-	   	     	this_db.jsFind(ddd.id,{ parent_id: new_id, "new":"" }); //new - не позволит пересинхронизацию
-	   	     	});
 	   	
 	   		var element = this_db.jsFind(old_id);
 	   		if(element) {
-	       		//element.id=new_id;					//заменяю id, сохраняю в базе и удаляю старый id
-	       		element = this_db.jsFind(old_id, {id: new_id});
-	       		db.put(global_table_name,element).done(function(){ 
-	      			db.remove(global_table_name,old_id.toString()).done(function(){
-	      				this_db.log("Удалил элемент с старым id<0: ",old_id);
-	      			});
-  	          	});
+
+	      		element = this_db.jsFind(old_id, {id: new_id, "new":""}); ///Главная замена внутри всей базы
+
   	        }
 	   	 
 	   		$("#panel_"+old_id).attr("id","panel_"+new_id); //заменяю индексы видимых панелей
@@ -4930,7 +5100,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	
 		 	if( (!this_db.jsFind(d.id)) && (d.id>0) )  //если такого id нет, то создаю (создан в другом месте)
 		 		{
-					//var new_line = my_all_data.length;
 					var new_id = d.id;
 					my_all_data2["n"+new_id] = {}; 
 					var element = my_all_data2["n"+new_id];
@@ -5147,6 +5316,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     //синхронизация данных с сервером
 	     this.jsSync = function(save_only) { 
 
+	     	 //api4editor.jsSaveAllText(1);  //сохраняю все несохранённые тексты
+
 	     	 console.time("PrepareSync");
 			 if ( ($("#mypanel .n_title[contenteditable=true]").length > 0) ) 
 			 	{
@@ -5351,12 +5522,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					     	$.each(data.saved, function(i,d) {
 					     		if(d.old_id) { //если нужно присвоить выданный id вместо отрицательного
 					     			jsChangeNewId(d);
-						 			$("li[myid='"+d.old_id+"'] .sync_it_i").addClass("hideit"); 
+						 			$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); 
 						 			//скрываю зелёный кружок
 					     		}
    				 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); //скрываю зелёный кружок
 			 		   		var lsync = parseInt(data.lsync);
-   				 	    	this_db.log("synced", this_db.jsFind(d.id,{"new":"",lsync: lsync},"save_anyway") );
+   				 	    	this_db.jsFind(d.id,{"new":"",lsync: lsync},"save_anyway");
+
 					     	});
 				     	}
 				     	
@@ -5395,7 +5567,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					 	 	    	//обновить панель комментариев
 					 	 	    	api4tree.jsUpdateCommentsCnt();
 					 	 	    	need_refresh = true;
-					 	 	    	my_console("Пришли новые комментарии с сервера: "+d.id);
+					 	 	    	//my_console("Пришли новые комментарии с сервера: "+d.id);
 					 	 	    	});
 					 	}
 				     	
@@ -5446,7 +5618,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 				
 				if(need_refresh) {
-					console.info("Дерево обновлено");
 	   		        this_db.jsUpdateNextAction();
 	   				this_db.jsUpdateChildrenCnt();
 					jsRefreshTree();
@@ -5609,6 +5780,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
     	    	  		var path = api4tree.jsFindPath(element);
     	    	  		if( (( strip_tags(text).replace(/\t/ig,"") =="") || (text.indexOf("<")==-1)) ) {
     	    	  			text = "<p>&#x200b;</p>";
+    	    	  			api4tree.jsFind(id,{text:text},"dont_sync");
     	    	  		}
 				  		all_texts.push({id:id, text:text, path:path, title:element.title, s:element.s});
 	
@@ -5666,7 +5838,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 				//console.profileEnd("loading_text");
 //			    setTimeout(function() {api4editor.save_text_dif_snapshot(mytext); }, 1000);
 				$(".bottom_right>.redactor_box").scrollTop(scroll_top);
-				this_db.jsParseWikiLinks();
+				api4tree.jsParseWikiLinks();
 		 	 	if(el) api4tree.jsShowAllComments(el.id); //показываю комментарии
 
 
@@ -5724,7 +5896,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		
 		  		var note_class = api4tree.jsMakeIconText(text).myclass;
 		  		$("#node_"+id+" .node_img").attr("class", "node_img "+note_class);
-		  		api4editor.jsMakeWiki();
+		  		api4tree.jsMakeWiki(myr);
 		  }
 
 		  var reopen_editor_timer;		  
@@ -5772,6 +5944,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			  		var text = $("<div>"+html_from_editor+"</div>").find(".divider_red[myid='"+ id +"']").
 			  					next(".edit_text:first").html();
 			  		var md5text = $(el).attr('md5');
+			  		if(md5text=="-1651830642") md5text = "312119037";
 			  		var new_md5 = crc32(text);
 					if( new_md5 != md5text ) { 
 						jsSaveOneTextIfChanged(id, md5text, text); 
@@ -5800,7 +5973,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			  $(".redactor_").on("click",".wiki",function() {
 			  	var mytitle = strip_tags( $(this).html() ); 
 			    var id = api4tree.node_to_id( $(".selected").attr('id') );
-			    this_db.jsOpenWikiPage(id,mytitle);
+			    api4tree.jsOpenWikiPage(id,mytitle,myr);
 			  	return false;
 			  });
 			  	
@@ -5813,137 +5986,6 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		      });
 		  }
 		  
-		  //проверяет текст на wiki ссылки и помечает их цветом
-		  this.jsMakeWiki = function() { //находит всё что в квадратных скобках и заменяет на тег <wiki>
-			  var txt = myr.redactor("get");
-			  var wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
-			  if(!wiki_words) 
-			  	{
-			  	return true; //если нет символов WIKI
-			  	}
-			  else
-			  	{
-			  	var aa = rangy.saveSelection();
-			  	txt = myr.redactor("get");
-			  	wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
-			  	}
-			  
-			  if(!wiki_words) 
-			  	{
-			  	return true; //если нет символов WIKI
-			  	}
-			  
-			  var newtxt = txt;
-			  var need_refresh = false;
-			  $.each(wiki_words, function(i,myword){
-			  	if(strip_tags(myword).length>4) 
-			  		{
-			  			var mynewword = myword.replace("[[","").replace("]]","");
-			  			console.info(i,myword, mynewword);
-			  			newtxt = newtxt.replace(myword,"[&nbsp;<span class='wiki' title='Кликните, чтобы создать определение Wiki'>"+mynewword+"</span> ]");
-			  			need_refresh = true;
-			  		}
-			  	else
-			  		{
-			  		rangy.removeMarkers(aa);
-			  		}
-			  	});
-			  if(need_refresh) 
-			  	{
-			  	myr.redactor("set", newtxt);
-			  	note_saved = false;
-			    rangy.restoreSelection(aa);
-			    this_db.jsSaveAllText(1);
-			    this_db.jsParseWikiLinks(myr.attr("myid"));
-			  	}
-		  } //jsMakeWiki
-		  
-		  //обрабатывает wiki ссылки (ищет статьи)
-		  this.jsParseWikiLinks = function(parent_id) {
-	  			var wiki = $(".redactor_").find(".wiki");
-      			if(wiki.length) {
-      			    var wiki_founded;
-      			    wiki.each(function(i,el) {
-      			     	mytitle = strip_tags( $(el).html() );
-      			     	wiki_founded = jsFindWikiForParent(parent_id, mytitle);
-      			     	if(wiki_founded) {
-      			     		var mini_text = wiki_founded.text.replace(/<div>/g," ");
-      			     		mini_text = mini_text.replace(/<p>/g," ");
-      			     		mini_text = mini_text.replace(/&nbsp;/g," ");
-      			     		mini_text = api4tree.jsShortText( strip_tags(mini_text),500);
-      			     		
-      			     		$(el).addClass("wiki_founded").attr("title", mini_text );
-      			     	} else {
-      			     		$(el).removeClass("wiki_founded");
-      			     	}
-      			     }); //wiki.each
-      			}
-		  	}
-		  	
-
-		  //поиск wiki статей	
-		  function jsFindWikiForParent(parent_id, mytitle) {
-		  		mytitle = mytitle.replace("&nbsp;", " ").trim();
-		  		mytitle = strip_tags(mytitle.trim());
-		  	
-		  		var childrens = api4tree.jsFindByParent(parent_id);
-		  		var myfilter="[["+mytitle+"]]";
-		  		var mynewdata = childrens.filter(function(el) //ищу в первую очередь среди детей
-		  				{
-		  				if(el.did!="") return false;
-		  				if(el.del==1) return false;
-		  				if(el.title) return el.title.toLowerCase().indexOf(myfilter.toLowerCase())!=-1;
-		  				});
-		  					
-		  		if(!mynewdata.length)  //теперь ищу по всему дереву, где я создатель заметки
-		  			{
-		  			var my_all_data = api4tree.js_my_all_data();
-		  			var mynewdata = my_all_data.filter(function(el) 
-		  				{
-		  				if(el.did!="") return false;
-		  				if(el.del==1) return false;
-		  				if(el.title) if(el.user_id==main_user_id) return el.title.toLowerCase().indexOf(myfilter.toLowerCase())!=-1;
-		  				});
-		  			}
-		  	
-		  		if(!mynewdata.length)  //теперь ищу по всему дереву, где не только я создатель заметки
-		  			{
-		  			var mynewdata = my_all_data.filter(function(el) 
-		  				{
-		  				if(el.did!="") return false;
-		  				if(el.del==1) return false;
-		  				if(el.title) return el.title.toLowerCase().indexOf(myfilter.toLowerCase())!=-1;
-		  				});
-		  			}
-		  			
-		  		if(mynewdata.length) 
-		  			{
-		  			return mynewdata[0];
-		  			}		
-		  }
-		  	
-		  //открытие wiki ссылки
-		  this.jsOpenWikiPage = function(parent_id,mytitle) {
-		  		api4tree.log("Кликнули в "+parent_id+" wiki ссылку");
-   			 	var back_title = $(".selected .n_title").html();
-		  		var mynewdata = jsFindWikiForParent(parent_id, mytitle);
-		  		
-		  		if(!mynewdata) 
-		  			{
-		  			var element = api4tree.jsAddDo(parent_id,"[["+mytitle+"]]");
-		  			if(element) api4panel.jsOpenPath(element.id);
-		  			}
-		  		else
-		  			{
-		  			api4panel.jsOpenPath(mynewdata.id);
-		  			jsFixScroll(2);
-		  			}
-
-   			 	$("#wiki_back_button").html('<i class="icon-left-bold"></i>вернуться к '+back_title);
-		  			
-		  		$("#wiki_back_button").show().attr("myid",parent_id);
-		  		myr.setFocus();
-		  }
 		  
   		  //отправляет содержимое редактора по электронной почте
 		  this.jsSendMail = function (mytitle, mailto) {

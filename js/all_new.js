@@ -1,6 +1,6 @@
 //v1.01
 var myjsPlumb,isMindmap = false, isTree = false;
-var note_saved=true,myr,t1,t2,my_all_data,my_all_comments,my_all_share,
+var note_saved=true,myr,t1,t2,my_all_comments,my_all_share,
 	my_all_frends,remember_old_panel="top_panel";
 var main_x = 50; //ширина левой панели в процентах
 var main_y = 250,pwidth=300;//высота верхней панели в пикселях
@@ -17,7 +17,7 @@ var timestamp=new Date().getTime(),start_sync_when_idle=false,there_was_message_
 var hoverListener,is_changed,only_save=false,main_user_id;
 var db, diff_plugin;
 var top_of_panel = "<div class='add_do_panel_top'>"+
-	"<div class='node_img note-clean'></div><input title='alt + (вниз, вправо) - добавляет дело' placeholder='Добавить...'>"+
+	"<div class='node_img note-clean'></div><input title='alt + (вниз, вправо) - добавляет дело' placeholder='добавить...'>"+
     "<i class='icon-plus'></i></div>";
 //var top_of_panel = "";
 
@@ -1192,206 +1192,6 @@ var API_4OTHERS = function() {
 	 }
 }
 
-///////////////////////////////////////////////////////////////////////////////////
-var DB_INTERFACE = function(global_table_name){  //singleton
-	 if (typeof arguments.callee.instance=='undefined')
-	 {
-	  arguments.callee.instance = new function()
-		  {
-		    var db = new ydn.db.Storage('4tree_db');    
-	    	console.info("tree_db started"); 
-		    
-		    this.calculate_md5 = function() //проверяю целостность данных
-		    	{
-		    	var d=$.Deferred();
-		    	db.values('tree',null,9999999999999999999).done(function(records) {
-		    	  var longtext=[];
-			      for(var i=0; len = records.length, i<len; i=i+1 )
-			      	{
-			      	el = records[i];
-			      	var alldata = (el.id?el.id:"") + (el.title?el.title:"") + (el.text?el.text:"") + 
-			      				  (el.date1?el.date1:"") + (el.date2?el.date2:"") + 
-			      				  (el.did?el.did:"");
-//			      	alldata = el.id+":"+(el.title?el.title:"")+", ";
-				if(el.id==6679) console.info("Сверка md5:"+alldata);
-					var mymd5 = crc32( alldata ).substr(0,5);
-					
-			      	longtext.push({ id:el.id, md5:mymd5 });
-			      	}
-		    	  d.resolve(longtext);
-		    	  });
-		    	return d.promise();
-		    	}
-		    
-		    this.clear_all_data = function() //очищаю всю базу данных
-		    	{
-		    	var d=$.Deferred();
-		    	if( JSON.stringify(db.getSchema().stores).indexOf('"tree"') != -1 ) //если таблицы tree нет
-			    	db.clear().done(function(){ d.resolve(); });
-			    else
-			    	d.resolve();
-		    	return d.promise();
-		    	}
-
-		    this.clear_tree_data = function() //Очищаю таблицу в базе данных "tree"
-		    	{
-		    	var d=$.Deferred();
-		    	
-		    	if( JSON.stringify(db.getSchema().stores).indexOf('"tree"') != -1 ) //если таблицы tree нет
-		    		{
-		    		db.clear("tree").done(function(){ d.resolve(); });
-		    		}
-		    	return d.promise();
-		    	}
-		    	
-		    this.FindByParent = function(parent_id)
-		    	{
-		    	var d=$.Deferred();
-		    	db.executeSql("SELECT * FROM tree WHERE 1273 = 1273").done(function(records){ d.resolve(records) });
-		    	return d.promise();
-		    	}
-		    	
-		    this.setItem = function(param_name, param_value)
-		    	{
-		    	var d=$.Deferred();
-		    	if( typeof param_value == 'undefined' ) //считать параметр
-		    		{
-			    	var iter = ydn.db.KeyRange.only(param_name);
-			    	db.values("tree_settings",iter).done(function(records) {
-				    	var x = records[0].value;
-				    	d.resolve(x); 
-				    	});
-		    		}
-		    	else
-		    		{
-			    	db.put('tree_settings', {value:param_value}, param_name).
-			    						done(function(){ d.resolve(param_value); }); 
-		    		}
-		    	return d.promise();
-		    	}
-		    	
-		    this.compare_md5_local_and_server = function()
-		    	{
-		    	return true;
-		    	var d=$.Deferred();
-		    	var sync_id = this_db.jsGetSyncId();
-		    	//передаю время, чтобы заполнить время последней синхронизации
-				var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id+"&only_md5=1"; 
-	
-				$.getJSON(lnk,function(data){
-			    	tree_db.calculate_md5().done(function(md5)
-			    		{ 
-			    			var test_ok = "выполнил успешно.";
-				    		$.each(md5, function(i,el)
-					    		{ 
-					    		if( (el.id>0) && (el.md5!=data.md5[el.id]) )
-					    			{
-						    		console.info("!!!!!MD5!!!!!Данные на сервере не совпадают"+
-						    					 " с локальными:",el.id,el.md5, data.md5[el.id],jsFind(el.id)); 
-						    		
-						    		trampampam = api4tree.jsFind(el.id,{lsync:0}); //восстанавливаю целостность, забирая элемент с сервера
-						    		jsSync();
-						    		test_ok = "ПРОВАЛИЛ!!!!!!!!! :( ИСПРАВЛЯЮ :).";
-						    		}
-					    		});
-					    console.info("Сверку с сервером по md5 "+test_ok);
-   				    	d.resolve(test_ok);
-			    		});
-			    	});
-			    return d.promise();
-		    	}
-		    	
-		    	
-		    this.load_from_server = function()
-		    	{
-		    	var d=$.Deferred();
-		    	var sync_id = this_db.jsGetSyncId();
-		    	//передаю время, чтобы заполнить время последней синхронизации
-				var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id; 
-				preloader.trigger('show');
-	
-				$.getJSON(lnk,function(data){
-					if(!data.all_data) 
-						{
-						tree_db.clear_all_data();
-						alert("Данные с сервера не доступны");
-						}
-					jsTitle('Данные загружены с сервера');
-					if(data.time_dif) localStorage.setItem("time_dif",data.time_dif);
-					localStorage.setItem("last_sync_time",jsNow());
-					localStorage.setItem("sync_time_server",jsNow());
-					localStorage.setItem("sync_id",sync_id);
-					my_all_data = $.map(data.all_data, function (value, key) { return value; });
-					my_all_comments = $.map(data.comments, function (value, key) { return value; });
-					if(!my_all_data) my_all_data=[];
-					if(!my_all_comments) my_all_comments=[];
-					tree_db.save_data();
-//					jsSaveDataComment();
-					preloader.trigger('hide');
-					console.info("my_all_data:",my_all_data);
-					console.info("my_all_comments:",my_all_comments);
-					});
-
-		    	return d.promise();
-		    	}
-
-		    this.save_data = function(id) //сохраняю my_all_data в базу данных, 
-		    	{ 
-		    	var d=$.Deferred();
-			    var my_length = my_all_data.length;
-			    var elements = [], ids = [];
-			    for(i=0;i<my_length;i=i+1)
-			    	{
-			    	var el=my_all_data[i];
-			    	if(typeof id == 'undefined' || el.id==id) //если есть id, то сохраняю не всё
-			    		{
-				    	elements.push( el );
-				    	ids.push( parseInt(el.id) );
-				    	}
-			    	}
-
-			    if(typeof id == 'undefined')
-				    {
-				    tree_db.clear_tree_data().done( function()
-				    	{ 
-				    	db.put('tree', elements, ids).done(function(){ d.resolve(); }); 
-				    	});
-				    }
-				else //если нужно сохранить один элемент
-					{
-				    	db.put('tree', elements, ids).done(function(){ d.resolve(); }); 
-					}
-			    
-			    return d.promise();
-		    	};
-		    
-		    //считаю кол-во элементов t=tree_db.count_lines().done(function(x){console.info("lines="+x)})
-		    this.count_lines = function() 
-		    	{
-		    	var d=$.Deferred();
-		    	db.count('tree').done(function(x) 
-		    		{
-		    		console.info(x);
-				    d.resolve(x);
-				    });
-				return d.promise();
-		    	};
-		    
-		    //загружаю все данные в my_all_data
-		    this.load_data = function() 
-		    	{
-		    	var d=$.Deferred();
-		    	db.values('tree',null,9999999999999999999).done(function(records) {
-			      my_all_data = $.map(records, function (value, key) { return value; });
-		    	  d.resolve(records);
-		    	});
-				return d.promise();
-		    	};
-		    
-		  };
-	 }
-	 return arguments.callee.instance;
-};
 
 /////////////////////////////////////CALENDAR//////////////////////////////////////
 var API_4CALENDAR = function() {
@@ -1406,14 +1206,11 @@ var API_4CALENDAR = function() {
 			//поиск повторяющихся дел
 			function jsFindRecur(date) {
 			
-			var recur_dates = my_all_data.filter(function(el,i) 
-				{ 
-				if(!el) return false;
-				if(el.date1) 
-					if ((el.del!=1) && (el.date1!="")) 
-						if(el.r)
-							if(el.r!="") return true;
-				});	
+			var recur_dates = [];
+			$.each(my_all_data2, function(i,el) {
+				if(el && el.date1 && ((el.del!=1) && (el.date1!="")) && (el.r) && 
+					(el.r!="") ) recur_dates.push(el);
+			});	
 			/* r = recur_type
 			//0 - внутри дня
 			//1 - ежедневные
@@ -1823,6 +1620,7 @@ if(element)
 //				var divider = "<div class='divider_li' pos='"+(iii+0.2)+"' myid='"+element.parent_id+"'></div>";
 				var myrender = api4panel.jsRenderOneElement(element,iii);
 				where_to_add.append( myrender );
+				$("#panel_"+element.parent_id).find(".add_do_panel_top").appendTo($("#panel_"+element.parent_id+" ul"));
 			}
 		else
 			{

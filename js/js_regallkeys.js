@@ -258,8 +258,8 @@ var last_message_sync_time = 0;
 var progress_load=0;
 function jsProgressStep()
 {
-	if(progress_load>=200) var how_long = 100;
-	else var how_long = 200;
+	if(progress_load>=200) var how_long = 80;
+	else var how_long = 20;
 
 	progress_load = progress_load + 30;
 	$("#inside_bar").animate({width:progress_load},how_long);
@@ -583,6 +583,11 @@ if(arrow=='down')
 		prev.addClass("selected");
 		prev.find(".n_title:first").click();
 		}
+
+	if(current.next(".add_do_panel_top").length) {
+		current.next(".add_do_panel_top").find("input").focus();
+	}
+
 	}
 
 if(arrow=='right')
@@ -1601,7 +1606,10 @@ function onResize() //вызывается при каждом ресайзе с
 			//если мышка подошла близко к краю, то скрываю одну панель
 			if(main_x<15) 
 				{
-				if( !$("html").hasClass("v4") ) $(".bottom_left").hide();
+				if( !$("html").hasClass("v4") ) {
+					$(".bottom_left").hide();
+					$("#bottom_panel").css("left",20);
+				}
 				main_x = -1;
 				
 				if( $("#content1").hasClass("v2") ) $(".place_of_top").hide();
@@ -1610,20 +1618,24 @@ function onResize() //вызывается при каждом ресайзе с
 			else
 				{
 				$(".bottom_left").show();
+				$("#bottom_panel").css("left",0);
 				if( $("#content1").hasClass("v2") ) $(".place_of_top").show();
 				}
 
 			if( main_x>85 ) 
 				{
 				$(".bottom_right").hide();
+				$("#bottom_panel").css("right",20);
+
 				$(".bottom_left").css('width','auto');
-				$(".bottom_left").css('right','15px');
-				main_x = 97.5;
+				$(".bottom_left").css('right',-15);
+				main_x = 96.5;
 				}
 			else
 				{
 				$(".bottom_left").css('width','100%');
 				$(".bottom_left").css('right','0px');
+				$("#bottom_panel").css("right",0);
 				$(".bottom_right").show();
 				}
 				
@@ -2422,8 +2434,8 @@ var stemmer = (function() {
 var index = [];
 
 function jsIndex(){
-	var my_all_data = api4tree.js_my_all_data();
-	$.each(my_all_data,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
+	var my_all_data2 = api4tree.js_my_all_data();
+	$.each(my_all_data2,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы
 	    if(el) {
 	    	var done_element = api4tree.jsFindLongText(el.id).done(function(longtext){
 	    		if(longtext.length) {
