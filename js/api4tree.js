@@ -4708,8 +4708,22 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	   d2.promise();
 		      	   dfdArray.push(d2);
 		      	   console.info("Копирую в базу длинные тексты: "+this_db.SizeOfObject(long_texts));
-		      	   var dfd3 = db.put(global_table_name+"_texts", long_texts).done(function(ids) { //сохраняю длинные тексты
-		      	       console.info(ids.length+' длинных текстов = '+this_db.SizeOfObject(long_texts)+'b');
+
+		      	var dfd_longtext = [];
+
+		      	$.each( long_texts, function(i, one_long_text) {
+		      	   dfd_longtext[one_long_text.id] = new $.Deferred();
+		      	   var dfd3 = db.put(global_table_name+"_texts", one_long_text).done(function(ids) { //сохраняю длинные тексты
+		      	       console.info(ids.length+' длинный текст = '+this_db.SizeOfObject(one_long_text)+'b');
+		      	       dfd_longtext[one_long_text.id].resolve();
+		      	   }, function(e) {
+		      	       throw e;
+		      	   }).fail(function(e){ console.info("error",e); });
+		      	   dfd_longtext[one_long_text.id].promise();
+		      	   dfdArray.push(dfd_longtext[one_long_text.id]);
+		      	});
+
+					$.when.apply( null, dfdArray ).done( function(x){
 		      	       jsProgressStep();
 		      	       long_texts="";//очищаю память
 		      	       this_db.jsUpdateNextAction();
@@ -4720,13 +4734,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	       setTimeout(function(){ d3.resolve(); },1500);
 		      	       
 		      	       $(this_db).triggerHandler({type:"SyncIsFinished",value:jsNow()});		    	
-		      	   }, function(e) {
-		      	       throw e;
-		      	   }).fail(function(e){ console.info("error",e); });
-		      	   d3.promise();
-		      	   dfdArray.push(d3);
-
-					$.when.apply( null, dfdArray ).done( function(x){
 						d.resolve();
 					});
 

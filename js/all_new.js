@@ -284,6 +284,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	myli += "</div>"; //big_n_title
 		 	myli += "</li>";
 
+		 	if( (data.did!=0 && settings.show_did==false) || (data.del!=0) ) myli = "";
+
 		 	return myli;
 		 } //jsRenderOneElement
 
