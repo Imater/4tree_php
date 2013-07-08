@@ -1930,7 +1930,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	jsSetTimeNow();
 		  },30000);
 
-			$.idleTimer(500000000*1000);
+			$.idleTimer(2*1000);
 			$(document).bind("active.idleTimer", function(){
 				jsSetTimeNow();
 				clearTimeout(screensaver_tm);
