@@ -12,7 +12,10 @@ if($h)
 	{
 		   $txt = "";
 		   $title = "История редактирования";
+
+
 		   $sqlnews = "SELECT * FROM h116.tree_backup WHERE id = '$h' ORDER by changedate DESC";
+
 		   
 		   $result = mysql_query_my($sqlnews); 
 		   $i = 1;

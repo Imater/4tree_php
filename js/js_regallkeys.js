@@ -819,9 +819,9 @@ function jsFixScroll(type,only_selected_panel)
 			var panel_scroll = $(this).scrollTop();
 			var scrollto = panel_scroll;
 			
-			if(li_top < 50)
+			if(li_top < 80)
 			  {
-			  scrollto = panel_scroll+li_top- 50;
+			  scrollto = panel_scroll+li_top- 80;
 			  }
 			  
 			if(li_top > panel_height-20)

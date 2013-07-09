@@ -1783,6 +1783,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
      	      	}
  	    	  });
 
+
+
+	     	  $('#mypanel').on("contextmenu","li", function(e){
+	     	  		$(this).find(".tcheckbox").click();
+	     	  		return false;
+	     	  });
+
 			  //нажатие на кнопку вызова меню настройки элемента
 			  $('#mypanel').delegate(".tcheckbox","click", function(e) {
 		    	e.preventDefault();
@@ -2749,7 +2756,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      var year = $(this).parents(".ui-datepicker-group").find(".ui-datepicker-year").html();
 			      var week = $(this).html();
 			      
-			      var dd = my_all_data.filter(function(el){ return el.title==year+" год"; });
+			      var dd = [];
+			      $.each(my_all_data2, function(i,el){ 
+			      	if( el.title==year+" год" ) dd.push(el); 
+			      });
 			      if(!dd) return false;
 			      
 			      recursivedata=[];
