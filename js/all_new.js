@@ -214,15 +214,15 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		      	log_i++;
 		    }
 		 } //log
-		 
-		 		 	
+		 		 		 	
 		 //открывает путь до указанного элемента
 		 this.jsOpenPath = function( id, iamfrom ) {
 		   if(id != parseInt(id)) return false;
 		   if(!$("#mypanel #node_"+id).length) {
-		 	var path1 = api4tree.jsFindPath( api4tree.jsFind(id) ).path;
+		  var mypath = api4tree.jsFindPath( api4tree.jsFind(id) );
+		 	var path1 = mypath.path;
 		 	if(!path1) return true;
-		 	if(path1.length<1) return false;
+		 	//if(path1.length<0) return false;
 			
 			var p_len = path1.length;
    			for(var ik=0; ik<p_len; ik=ik+1) {
@@ -630,12 +630,31 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	
 		 } //jsShowTreeNode
 		 
+
+		 this.jsPathTitle = function(id) {
+		 		var mypath = api4tree.jsFindPath( api4tree.jsFind( id ) );
+				var new_folder = api4tree.jsCreate_or_open(["_НОВОЕ"]);
+		 		var new_path = "<li myid='"+new_folder+"'>&nbsp;<i class='icon-home'></i></li>";
+		 		$.each(mypath.path, function(i, el) {
+		 			  new_path += "<i class='icon-right-open'></i>";
+		 				new_path += "<li myid='"+el.path.id+"'>"+el.path.title+"</li>"
+
+		 		});
+		 		$(".path_line ul").html( new_path );
+		 		var top_panel_width_proc = $("#top_panel").width() / $("body").width() * 100;
+		 		var width = parseInt( top_panel_width_proc / (mypath.path.length-1) )-1;
+		 		$(".path_line li").css("max-width",width+"%");
+		 }
+
+
 		 var set_title_timer,repaint_timer;
 		 
 		 //открыть заметку с номером, если она на экране (make .selected)
 		 this.jsOpenNode = function(id,nohash,iamfrom) {
 			      $(".makedone,.makedone_arrow,.makedone_arrow2").hide();
 			      $.Menu.closeAll();
+
+			this_db.jsPathTitle(id);
 
 		 	var element = api4tree.jsFind(id);
 	 		$("#mypanel .selected").addClass("old_selected").removeClass("selected");

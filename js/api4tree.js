@@ -641,19 +641,19 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			var data = api4tree.jsGetTabs();
 
-    	  	var alltabs="<ul>";
+    	  	var alltabs="";
     	  	var d_len = data.length;
     	  	for(i=0; i<d_len; i=i+1)
     	  		{
     	  		if(data[i].title.length>10) title = data[i].title;
     	  		else title = "";
-    	  		alltabs = alltabs + "<li title='"+title+"' myid='"+
-    	  				  data[i].id+"'>"+api4tree.jsShortText(data[i].title,20)+"</li>";
+    	  		alltabs = alltabs + "<li dont_close='true' title='"+title+"' myid='"+
+    	  				  data[i].id+"'><a>"+api4tree.jsShortText(data[i].title,20)+"</a></li>";
     	  				  //<i class='icon-folder-1'></i>
     	  		}
-    	  	alltabs= alltabs+ "</ul>";
+    	  	alltabs= alltabs+ "<div id='fav_help'>Заголовки дерева написанные БОЛЬШИМИ буквами</div>";
     	  		
-    	  	$('#fav_tabs').html("").append(alltabs);	
+    	  	$('#all_my_favorits ul').html("").append(alltabs);	
     	  
     	  	this_db.jsCalcTabs();  //раcсчитываю ширину табов и перекидываю лишние в всплывающий список
     	  }
@@ -2483,6 +2483,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  $('#add_do_panel').delegate("input","focus", function () {
 			      if(!$(this).hasClass("active")) {
 			      	$(this).addClass("active");
+			      	$(".header_text").addClass("active");
 //			      	$(this).focus();
 //			        setTimeout(function(){ document.execCommand('selectAll',false,null); },50);
 				    var inp = this;
@@ -2497,6 +2498,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  //при покидании add_do, свернуть его
 			  $('#add_do_panel').delegate("input","blur", function () {
 		      	  $(this).removeClass("active");
+		      	  $(".header_text").removeClass("active");
 		  		  $(".header_text").html("").attr("title","");
 			      return true;
 		      });
@@ -3079,8 +3081,32 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	return false;
 			  	});
 
+
+			  $(".path_line").delegate("li","click", function () {
+			  	var myid = $(this).attr("myid");
+			  	if(myid) {
+			  		api4panel.jsOpenPath(myid);
+			  	}
+
+			  	return false;
+			  });
+
+			  var mydontclose = false;
 			  $("#myslidemenu").delegate("li","click", function () {
-			  	if(!$(this).attr("dont_close")) api4panel.jsCloseAllMenu();
+			  	var myid = $(this).attr("myid");
+			  	if(myid) {
+			  		api4panel.jsOpenPath(myid);
+			  		return false;
+			  	}
+
+			  	if(!$(this).attr("dont_close") && !mydontclose) {
+			  		api4panel.jsCloseAllMenu();
+			  		mydontclose = false;
+			  	} else {
+			  		mydontclose = true;
+			  		setTimeout(function(){ mydontclose=false; },200);
+			  	}
+			  	return true;
 			  });
 			     
 			  //меню добавления дел

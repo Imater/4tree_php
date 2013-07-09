@@ -303,6 +303,11 @@ if(isset($_GET['test']))
     </ul>
 </li>
 
+<li class="top_level" id="all_my_favorits"><a href="#">Избранные</a>
+  <ul>
+  </ul>
+</li>
+
 <li  style="display:none" class="top_level"><a href="http://www.dynamicdrive.com/style/">Правка</a>
   <ul>
   <li><a href="#">Undo/Redo/History</a>
@@ -456,8 +461,8 @@ if(isset($_GET['test']))
 	<div class="header_toolbar">
 	</div>
 
-			<div id="path_line">
-				<ul><li>Статьи</li><li>Про личную эффективность и ТМ</li><li>Так ли необходим нам GTD-статья</li><li>Ещё раз пробую</li><li>Ух ты</li><li>Газманов</li></ul>
+			<div class="path_line noselectable">
+				<ul></ul>
 			</div>
 			<div id="mypanel" style="">
 			</div>
