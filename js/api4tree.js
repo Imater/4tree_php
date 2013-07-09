@@ -417,7 +417,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		 //поиск всех родителей
 		 this.jsFindPath = function(element) { 
-		 		 if(!element || element.id==1) return true;
+		 		 if(!element || element.id==1) return false;
 		 		 var parent_id = element.parent_id;
 		 		 var answer = [];
 		 		 var j=0,textpath="";

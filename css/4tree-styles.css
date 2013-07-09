@@ -6137,3 +6137,15 @@ padding: 5px 0px;
 font-weight: normal;
 text-align: center;
 }
+
+.jqueryslidemenu ul li.top_level:hover {
+background: rgb(50,50,50) !important;
+color:#888 !important;
+}
+
+.jqueryslidemenu ul li.top_level.active {
+background: rgb(50,50,50) !important;
+color:#888 !important;
+}
+
+

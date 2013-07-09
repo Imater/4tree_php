@@ -94,13 +94,13 @@ background: #638cdc; /*tab link background during hover state*/
 
 
 .jqueryslidemenu ul li.top_level:hover > a{
-color: #000 !important;
+/*color: #000 !important;*/
 box-shadow: inset 0px 1px 3px rgba(0,0,0,0.9);
 }
 
 .jqueryslidemenu ul li.active{
 background: #638cdc !important; /*tab link background during hover state*/
-color: #EEE !important;
+/*color: #EEE !important;*/
 }
 
 

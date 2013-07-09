@@ -638,6 +638,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 this.jsPathTitle = function(id) {
 		 		var mypath = api4tree.jsFindPath( api4tree.jsFind( id ) );
+		 		if(!mypath) return true;
 				var new_folder = api4tree.jsCreate_or_open(["_НОВОЕ"]);
 		 		var new_path = "<li myid='"+new_folder+"'>&nbsp;&nbsp;<i class='icon-home'></i></li>";
 		 		$.each(mypath.path, function(i, el) {
