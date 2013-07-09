@@ -6024,8 +6024,8 @@ body > ._jsPlumb_connector {
     position: absolute;
     left: 0px;
     right: 10px;
-    top: -27px;
-    height: 27px;
+    top: -23px;
+    height: 23px;
 /*    background-image:url(../img/textures/18.png);    */
     z-index: 7;
     color: inherit;
@@ -6041,8 +6041,8 @@ body > ._jsPlumb_connector {
     font-size: 12px;
     overflow: hidden;
     padding: 0px 5px;
-    height: 27px;
-    line-height: 27px;
+    height: 23px;
+    line-height: 23px;
     vertical-align: middle;
     margin: 0px;
     cursor: pointer;    
@@ -6061,7 +6061,7 @@ body > ._jsPlumb_connector {
 
 .path_line .icon-right-open{
 font-size: 11px;
-line-height: 27px;
+line-height: 23px;
 vertical-align: middle;
 }
 
