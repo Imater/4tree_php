@@ -4097,7 +4097,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 this.jsFindAutoFolder = function(parent_id,id) {
 		 	 var answer=[];
 		 	 
-		 	 if(parent_id && (parent_id!=1) && ( !( /^_/.test(parent_id) ) ) ) return answer;
+		 	 if(parent_id && (parent_id!=1) && ( !( /_/.test(parent_id) ) ) ) return answer;
 		 	 	
 		 	 if(id && ( id.toString().indexOf("_")==-1 )) return answer;
 		 	 	
