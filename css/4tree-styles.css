@@ -47,9 +47,9 @@ border-bottom-left-radius:5px;
 min-width: 300px;
 height: 20px;
 text-align: right;
--moz-box-shadow: 0px 1px 0px #CCC;
--webkit-box-shadow: 0px 1px 0px #CCC;
-box-shadow: 0px 1px 0px #CCC;
+-moz-box-shadow: 1px 2px 2px #000;
+-webkit-box-shadow: 1px 2px 2px #000;
+box-shadow: 1px 2px 2px #000;
 -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 z-index: 50;
@@ -404,7 +404,7 @@ position: absolute;
 z-index: 5;
 width: auto;
 height: auto;
-top:23px;
+top:0px;
 left: 0px;
 right: 0px;
 bottom: 0px;
@@ -593,7 +593,7 @@ padding-left: 7px;
 #top_panel /* Верхняя панель */
 {
 position: absolute;
-top:0px;
+top:15px;
 left: 0px;
 right: 0px;
 height: auto; 
@@ -6023,14 +6023,13 @@ body > ._jsPlumb_connector {
 	display: block;
     position: absolute;
     left: 0px;
-    right: 0px;
-    top: 0px;
-    height: 23px;
-    background-color: #FFF;
+    right: 10px;
+    top: -27px;
+    height: 27px;
 /*    background-image:url(../img/textures/18.png);    */
     z-index: 7;
-    border-bottom: 1px solid #CCC;
-    color:#222;
+    color: inherit;
+    font-weight: normal;
 
     
 }
@@ -6039,11 +6038,11 @@ body > ._jsPlumb_connector {
     max-width: 30%;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-size: 11px;
+    font-size: 12px;
     overflow: hidden;
     padding: 0px 5px;
-    height: 23px;
-    line-height: 24px;
+    height: 27px;
+    line-height: 27px;
     vertical-align: middle;
     margin: 0px;
     cursor: pointer;    
@@ -6062,7 +6061,7 @@ body > ._jsPlumb_connector {
 
 .path_line .icon-right-open{
 font-size: 11px;
-line-height: 24px;
+line-height: 27px;
 vertical-align: middle;
 }
 

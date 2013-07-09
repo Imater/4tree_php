@@ -1694,7 +1694,7 @@ function onResize() //вызывается при каждом ресайзе с
 			  }
 			else
 			  {
-				$(".place_of_top").height(main_y);
+				$(".place_of_top").height(main_y-15);
 			  }
 			  
 			if( $("html").hasClass("v4") ) 
