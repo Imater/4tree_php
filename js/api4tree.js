@@ -5785,7 +5785,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
     	    	  	var element = api4tree.jsFind(id);
     	    	  	if(element) {
     	    	  		var path = api4tree.jsFindPath(element);
-    	    	  		if( (( strip_tags(text).replace(/\t/ig,"") =="") || (text.indexOf("<")==-1)) ) {
+    	    	  		if( (( strip_tags(text).replace(/\t/ig,"") =="") || (text.indexOf("<")==-1)) && (/img/ig.test(text)==false)) {
     	    	  			text = "<p>&#x200b;</p>";
     	    	  			//api4tree.jsFind(id,{text:text},"dont_sync");
     	    	  		}
