@@ -379,6 +379,11 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		} else {
 			 			$(this).next(".presize").next(".presize").remove();
 			 			$(this).next(".presize").next(".presize").remove();
+			 			$(this).next(".presize").next(".presize").remove();
+			 			$(this).next(".presize").next(".presize").remove();
+			 			$(this).next(".presize").next(".presize").remove();
+			 			$(this).next(".presize").next(".presize").remove();
+			 			$(this).next(".presize").next(".presize").remove();
 			 		}
 		 		});
 		 }

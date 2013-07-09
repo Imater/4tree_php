@@ -421,12 +421,16 @@ font-size: 0.9em;
 vertical-align: top;
 width: 300px;
 display: inline-block;
-border-right: 1px solid #CCC;
+border-left: 1px solid #CCC;
 height: 100%;
 margin-right: 0px;
 overflow-y: auto;
 overflow-x: hidden;
 max-width: 600px;
+}
+
+#mypanel .panel:first-child {
+  border-left: none;
 }
 
 .mindmap #mypanel .panel
@@ -444,7 +448,7 @@ padding-bottom: 0px;
 }
 
 .panel > ul {
-margin-top:2px;
+margin-top:0px;
 }
 
 .panel ul li1:before
@@ -466,6 +470,7 @@ width: 10px;
 
 .panel .big_n_title {
   padding: 2px 0px;
+  padding-right: 3px;
 }
 
 .panel ul li
@@ -2297,22 +2302,12 @@ display: none;
 display: none;
 position: absolute;
 left: 16px;
-top: 22px;
+top: 15px;
 right: 35px;
-font-size: 10px;
-background: #426522;
+font-size: 12px;
 cursor: pointer;
-padding: 2px 2px;
-color: white;
 z-index: 1;
 text-align: center;
-border-top-left-radius: 10px;
-border-top-right-radius: 10px;
--moz-box-shadow: 1px -1px 6px #444;
--webkit-box-shadow: 1px -1px 6px #444;
-box-shadow: 1px -1px 6px #444;
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 }
 
 
