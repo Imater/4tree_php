@@ -1655,7 +1655,7 @@ function onResize() //вызывается при каждом ресайзе с
 			//ресайзим высоту главных панелей
 			if( $("#content1").hasClass("v2") ) 
 			  {
-				$(".place_of_top").height(main_y-13);
+				$(".place_of_top").height(main_y+5);
 			  }
 			else
 			  {
@@ -1671,7 +1671,7 @@ function onResize() //вызывается при каждом ресайзе с
 			
 			
 			var newheight=$('#calendar').parent("div").height()-20;
-			if( $("#content1").hasClass("v3")  ) newheight += 30;
+			if( $("#content1").hasClass("v3")  ) newheight += 0;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight);
 			$("#tree_news").height(newheight);

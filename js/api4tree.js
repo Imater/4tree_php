@@ -3824,7 +3824,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				       		} //если текст длинный
 
 
-
 			  	        });
 
 			  	        element.id = new_id;			  	        
@@ -3849,6 +3848,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
   		       			}
 
   		       		} // namefield == "id"
+
+  		       		if(namefield=="parent_id") {
+  		       		}
+
 
   		       		if(namefield!="id") record[namefield] = newvalue;   //главное присвоение !!!!!!!!!!!!!!!!!!!
 

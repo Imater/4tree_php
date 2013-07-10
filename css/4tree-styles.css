@@ -32,7 +32,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 }
 
 .place_of_top > .calendar_and_others{
-	margin: 0px 15px;
+	margin: 0px 0px 0px 15px;
 }
 
 .header_text {
@@ -668,6 +668,7 @@ height: auto;
 
 .v2 .all_editor_place {
 	bottom: 12px;
+  top:10px;
 }
 
 .v2 .all_editor_place > .redactor_box{
@@ -725,7 +726,7 @@ right: 0px;
 
 .v2 .place_of_top
 {
-top:33px;
+top:15px;
 right: auto;
 }
 
@@ -761,7 +762,7 @@ z-index: 2;
 
 .sos
 {
-top:-3px;
+top:-4px;
 font-size: 12px;
 cursor: move;
 opacity: 0.9;
@@ -773,8 +774,8 @@ margin-top: 6px;
 }
 
 .v2 .sos {
-	margin-left: -3px;
-	margin-top: 7px;
+	margin-left: 8px;
+	margin-top: 6px;
 }
 
 .noselectable
@@ -1448,6 +1449,16 @@ left:0px;
 
 .v3 #top_panel {
 	margin-right: 25px !important;
+  top:20px !important;
+}
+
+.v3 .calendar_and_others {
+  bottom: 20px !important;
+  top: 5px !important;
+}
+
+.v3 .all_editor_place {
+  top:5px !important;
 }
 
 
@@ -1472,7 +1483,7 @@ margin-right: 20px;
 .v4 #footer
 {
 position: absolute;
-top: 56px;
+top: 35px;
 left: -14px;
 right: 1px;
 }
