@@ -686,7 +686,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 	 		var myli = $("#top_panel #node_"+id+":last");
 
-	 		var mypanel = $("#panel_"+element.parent_id);
+	 		var mypanel = myli.parents(".panel");
 	 		
 	 		var panels_right_count = mypanel.nextAll(".panel").length;
 
