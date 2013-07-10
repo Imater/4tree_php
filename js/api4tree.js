@@ -4305,7 +4305,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			 }
 			 
-			 if(my_all_frends && parent_id && (parent_id=="_contacts" || id)) {
+			 if( my_all_frends && ( (parent_id && parent_id=="_contacts") || 
+			 	 (id && /user_/ig.test(id.toString()) ) ) ) {
 				 	
 				 if(!id) {
 				 	$.each(my_all_frends,function(i,frend){
@@ -4319,7 +4320,17 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					 	 element.title = "<i class='icon-user'></i> "+frend.fio;
 						 answer.push(element);
 				 	});
-				 }
+				 } else {
+					 	 var element = clone( shablon );
+					 	 element.id = id;
+					 	 element.icon = "";
+					 	 element.parent_id = "_contacts";
+					 	 element.position = 0;
+					 	 element.tmp_childrens = "3";
+					 	 element.user_id = id.replace("user_","");
+					 	 element.title = "<i class='icon-user'></i>";
+						 answer.push(element);
+						}
 			 }
 			 
 			 if(parent_id && parent_id.toString().indexOf("user_")!=-1) {
