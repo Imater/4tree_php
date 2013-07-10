@@ -3849,7 +3849,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
   		       		} // namefield == "id"
 
-  		       		if(namefield=="parent_id") {
+  		       		if(namefield=="parent_id" && (record[namefield] != newvalue) ) {
+  		       			var my_old_parents = my_all_parents["p"+answer.parent_id];
+  		       			$.each(my_old_parents, function(i,el) {
+  		       				if(el && answer && (el.id == answer.id) ) {
+  		       					my_all_parents["p"+answer.parent_id].splice(i,1);
+
+								if(!my_all_parents["p"+newvalue]) my_all_parents["p"+newvalue] = [];
+								my_all_parents["p"+newvalue].push(answer);
+
+
+  		       				}
+  		       			})
   		       		}
 
 

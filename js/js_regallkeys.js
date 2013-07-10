@@ -1521,12 +1521,12 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 						api4tree.jsFind(draggable,{ position:(newposition), parent_id : dropto_parent_id });
 			   			setTimeout(function(){ 
 			   				jsRefreshTree(); 
-			   			},300);
+			   			},100);
 						
 					}
 
 
-					jsRefreshTree();
+					//jsRefreshTree();
             		}
             	else //если уронили на другой элемент
             		{
