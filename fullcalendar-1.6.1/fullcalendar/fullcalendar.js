@@ -51,7 +51,7 @@ var defaults = {
 	// time formats
 	titleFormat: {
 		month: 'MMMM yyyy',
-		week: "d [ MMM] [ yyyy]{ '&#8212;'d MMM yyyy}",
+		week: "d [ MMM] [ yyyy]{ '&#8212;'d.MM.yyyy}",
 		day: 'dddd, d MMM, yyyy'
 	},
 	columnFormat: {
@@ -69,10 +69,10 @@ var defaults = {
 	monthNames: ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'],
 	monthNamesShort: ['янв','февр','март','апр','май','июнь','июль','авг','сент','окт','нояб','дек'],
 	dayNames: ['Воскресение','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'],
-	dayNamesShort: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+	dayNamesShort: ['вс','пн','вт','ср','чт','пт','сб'],
 	buttonText: {
-		prev: '&nbsp;&#9668;&nbsp;',
-		next: '&nbsp;&#9658;&nbsp;',
+		prev: '&#9668;',
+		next: '&#9658;',
 		prevYear: '&nbsp;&lt;&lt;&nbsp;',
 		nextYear: '&nbsp;&gt;&gt;&nbsp;',
 		today: 'сегодня',

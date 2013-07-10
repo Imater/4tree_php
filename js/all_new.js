@@ -255,7 +255,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				$("#mypanel").scrollTo($("#node_"+id),1500,{offset:{ top: -offset_top, left: -offset_left}});
 			} else {
 //				$("#mypanel").scrollLeft(9999999);
-				$("#mypanel").stop().animate({"scrollLeft":99999999},500);		 		
+				//$("#mypanel").stop().animate({"scrollLeft":99999999},500);		 		
 			}
 			
 		 }
@@ -343,8 +343,11 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 }
 		 
 		 //сканирую все даты на странице и превращаю в (-2дн)
-		 this.jsPrepareDate = function() {
-		   $(".date1").quickEach( function(){  
+		 this.jsPrepareDate = function( where_to_find ) {
+
+		 	 var dates = where_to_find?( where_to_find.find(".date1") ):($(".date1"));
+
+		   dates.quickEach( function(){  
 		       if(this.attr("childdate")) {
 			       	var cur_date = jsMakeDate($(this).attr("childdate"));
 			       	if(cur_date.mydays!=$(this).html()) {
@@ -534,16 +537,20 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 		}
 		 	}
 		 	
-		 	if(mydata.length==0) 
+		 	if(mydata.length==0)  //если папку уже удалили, скрываю её
 		 		{
 		 		$(".panel[myid='"+parent_node+"']").remove();
 		 		return true;
 		 		}
+
 		 	var h3_search_already_added = false;
 		 	if(!myjsPlumb.isSuspendDrawing() && isMindmap) {
 		 		myjsPlumb.setSuspendDrawing(true, true);
 		 		console.info("set_suspend");
 		 	}
+
+		 	var where_to_add_cache = $("<div></div>");
+		 	var line_cache = [];
 		 	
 		 	$.each(mydata, function(i,data) {
 		 		  if(!data)	return true;
@@ -577,36 +584,52 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		  } //if(i==0) Если это первый элемент, создать место, куда добавлять.
 		 		  } //-1 -2
 		 		  
-		 		  if(!where_to_add) {
-		 		 		  if(isTree) where_to_add = $("ul[myid="+parent_node+"]");
-		 		  		else where_to_add = $("#panel_"+parent_node+" ul");
-		 		  }
-		 		  
-		 		  if(parent_node==-1) { //функция отображения результатов поиска//
-			 		  	where_to_add = $(".search_panel_result ul");
-		 		  		if((data.path.indexOf("_ДНЕВНИК")!=-1) && (!h3_search_already_added)) {
-							where_to_add.append("<h3>Дневник</h3>");
+		 			if((/_ДНЕВНИК/.test(data.path)) && (!h3_search_already_added)) {
+							where_to_add_cache.append("<h3>Дневник</h3>");
 							h3_search_already_added = true;		 		  		    
-		 		  		}
+				  }
 
-		 		  	}
 
-		 		  where_to_add.append( api4panel.jsRenderOneElement(data,data.position,parent_node) );
+		 		  where_to_add_cache.append( api4panel.jsRenderOneElement(data,data.position,parent_node) );
 		 		  
 		 		  if(parent_node!=1 && parent_node!=-1) {
-		 		  if(isMindmap) {
-			 		  myjsPlumb.connect({source:"node_"+parent_node+" .big_n_title:first", 
-			 		  					 target: "node_"+data.id+" .big_n_title:first", scope:"someScope"});
-		 		  }
+			 		  if(isMindmap) {
+			 		  	line_cache.push( {source: "node_"+parent_node+" .big_n_title:first", target: "node_"+data.id+" .big_n_title:first"} );
+			 		  }
 		 		  }
 		 		  
 		 	}); //each(mydata)
+
+
+		 	if(!where_to_add) {
+		 		  if(isTree) where_to_add = $("ul[myid="+parent_node+"]");
+		 			else where_to_add = $("#panel_"+parent_node+" ul");
+		 	}
+		 	
+		 	if(parent_node==-1) { //функция отображения результатов поиска//
+			  	where_to_add = $(".search_panel_result ul");
+		 	}
+
+		 	api4panel.jsPrepareDate( where_to_add_cache );
+
+		 	where_to_add.html( where_to_add_cache );
+
+ 		  if(isMindmap) {
+
+ 		    $.each(line_cache, function(i, el){
+ 		  		  myjsPlumb.connect({source: el.source, 
+			 											   target: el.target, scope:"someScope"});
+ 		  	});
+
+ 		  }
+
+
 		 	if(!isTree && !isMindmap && parent_node != -1) if(where_to_add) where_to_add.append(top_of_panel);
 //		 	if(parent_node!=1) myjsPlumb.repaint("node_"+parent_node);
 //		 	console.info("suspend_repaint");
 //		 	if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);		 	
 		 	
- 	 	    api4panel.jsPrepareDate();
+ 	 	    
 		 	  
 		 	if(parent_node==-1) return true;
 		 	  	
@@ -616,14 +639,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	  	}
 		 	else
 		 	  	{
-		 	  	var w=0; 
-		 	  	$("#mypanel .panel").quickEach(function(){w+=$(this).width()});
-		 	  	
-		 		thisWidth = w;
-		 	if(!$(".makedone").is(":visible"))
+/*		 	if(!$(".makedone").is(":visible"))
 		 		if(!isTree && !isMindmap) {
 			 		if($('#mypanel').scrollLeft()!=thisWidth) mypanel.stop().animate({"scrollLeft":thisWidth},700);		 		
-		 		}
+		 		}*/
 		 		}
 		 	
 		 	if(!isTree) 
@@ -646,10 +665,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 				new_path += "<li myid='"+el.path.id+"'>"+el.path.title+"</li>"
 
 		 		});
-		 		$(".path_line ul").html( new_path );
+		 		$("#path_tree ul").html( new_path );
 		 		var top_panel_width_proc = $("#top_panel").width() / $("body").width() * 100;
 		 		var width = parseInt( top_panel_width_proc / (mypath.path.length-1) )-1;
-		 		$(".path_line li").css("max-width",width+"%");
+		 		$("#path_tree li").css("max-width",width+"%");
 		 }
 
 
@@ -664,7 +683,23 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 	var element = api4tree.jsFind(id);
 	 		$("#mypanel .selected").addClass("old_selected").removeClass("selected");
+
 	 		var myli = $("#top_panel #node_"+id+":last");
+
+	 		var mypanel = $("#panel_"+element.parent_id);
+	 		
+	 		var panels_right_count = mypanel.nextAll(".panel").length;
+
+	 		if( $("#node_"+id).length ) {
+
+	 				var left_offset = $("#node_"+id).offset().left;
+	 				if(left_offset==0) left_offset = -1;
+
+	 		}
+
+	 		mypanel.nextAll(".panel").remove(); ////REMOVE_PANEL////
+
+
 	 		if(element) $("#panel_"+element.parent_id+" li").removeClass("old_selected");
 
 	 		myli.addClass("selected");
@@ -687,14 +722,13 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 			{ 
 		 			ignorehashchange = true; //делаю так, чтобы изменение хэша не привело к переходу на заметку
 		 			setTimeout( function() { ignorehashchange=false; }, 200 );
-		 			if(window.location.hash.indexOf("edit")==-1) if(num_id) window.location.hash = num_id.toString(36); 
-		 			},1000);
+		 			if(window.location.hash.indexOf("edit")==-1) if(num_id) {
+		 					jsSetHashAndPath(num_id);  
+		 					//window.location.hash = num_id.toString(36); 
+		 				}
+		 			},100);
 		 	}
-		 		
-	 		var mypanel = myli.parents(".panel");
-	 		
-	 		mypanel.nextAll(".panel").remove();
-	 		    	
+		 			 		    	
 	 		if(!isTree) {
 	 			$(".panel li").removeClass("tree-open").addClass("tree-closed");
 	 			$(".selected,.old_selected").removeClass("tree-closed").addClass("tree-open");
@@ -719,9 +753,11 @@ var API_4PANEL = function(global_panel_id,need_log) {
 	 		}
 	 
 	 		if( myli.find('.countdiv').length==1 ) {//если это папка, создаю панель
+
 	     		this_db.jsShowTreeNode( id, isTree );
+
 	     	} else {
-	     		if( ($("#content1").hasClass("v1")) || ($("#content1").hasClass("v4")) ) {
+	     		if( ($("#content1").hasClass("v1")) || ($("#content1").hasClass("v4")) || ($("#content1").hasClass("v2")) ) {
 	 		  		if(!pwidth) pwidth = 300;
 
  		  			if(pwidth>130) {
@@ -736,6 +772,59 @@ var API_4PANEL = function(global_panel_id,need_log) {
 	 		  		jsPresize();
 	     		}
 	     	}
+
+
+		    		if(left_offset && !isMindmap && !isTree) {
+
+		    			need_width = 0;
+		    			//need_width += mypanel.nextAll(".panel:not(.width_panel):last").width()+2;
+
+		    			var new_left_offset = $("#node_"+id).offset().left;
+		    			//console.info("old_offset = ",left_offset, "new_offset = ", new_left_offset);
+		    			var dif = left_offset - new_left_offset;
+
+		    			need_width = -dif + $("#mypanel").width() - $(".presize:last").offset().left + 50;
+		     			if(dif!=0) $("#mypanel").append("<div class='panel width_panel' style='width:"+need_width+"px;max-width:"+need_width+"px;'></div>");
+
+		    			$("#mypanel").stop().scrollLeft( $("#mypanel").scrollLeft() - dif );
+
+		    			var dif_left = $(".selected").offset().left - $("#mypanel").offset().left;
+
+							var old_left = $("#mypanel").scrollLeft();
+
+		    			if(dif_left < 0) {		    				
+		    				$("#mypanel").stop().animate({"scrollLeft":old_left+dif_left - 60 },500, "swing");	
+		    			}
+
+		    			var next_panel_div = $(".selected").parents(".panel").nextAll(".panel:not(width_panel):first").find("li");
+							var next_panel = next_panel_div.width()+60;
+
+
+							
+		    			var dif_right = ($(".selected").offset().left + $(".selected").width()) - ($("#mypanel").offset().left + $("#mypanel").width()) + next_panel;
+		    			//console.info("dif_right = ",dif_right);
+
+		    			if(dif_right > 0) {
+
+		    				$("#mypanel").stop().animate({"scrollLeft":old_left+dif_right },500);		
+		    			}
+
+
+
+		     		} else {
+
+		 	  			var w=0; 
+		 			  	$("#mypanel .panel").quickEach(function(){w+=$(this).width()});
+		 	  			//console.info("OH END");
+					 		var thisWidth = w;
+						 	if(!$(".makedone").is(":visible"))
+						 		if(!isTree && !isMindmap) {
+							 		//if($('#mypanel').scrollLeft()!=thisWidth) $("#mypanel").stop().animate({"scrollLeft":thisWidth},500);		 		
+						 		}
+
+					 	} //if(need_width)
+
+
 //	     if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
 //		 console.info("rep-open_node_1");
 	     
@@ -1522,7 +1611,8 @@ function jsDoAfterLoad() {
 	
 	jsSetDiaryDate(0); //устанавливаю сегодняшнюю дату в дневнике в заголовке
 	
-	preloader = $('#myloader').krutilka("show"); //глобально регистрирую крутилку
+	//preloader = $('#myloader').krutilka("show"); //глобально регистрирую крутилку
+	preloader = $('#myloader').krutilka({color: "#333", petalWidth: "2px", size:"20"}); //глобально 
 				
 	$(window).bind('hashchange', jsSethash ); //при смене хеша, запускать функцию перехода на заметку
 			
@@ -1587,12 +1677,13 @@ function jsShowTreePanel() {//запускается единожды
     	}
     } else {
 
-		var myhash = window.location.hash;
+/*		var myhash = window.location.hash;
     	if(myhash && myhash.indexOf("_")!=-1) {
     		var id = myhash.replace("#","");	
     	} else {
       		var id = parseInt(myhash.replace("#",""),36);///перехожу на заметку указанную в hash
-      	}
+      	}*/
+      	var id = jsSethash();
       	fullscreen_mode = false;
       	if(!id) id = api4tree.jsCreate_or_open(["_НОВОЕ"]).toString();
     }

@@ -835,25 +835,50 @@ function jsFixScroll(type,only_selected_panel)
 		});
 }
 
-function jsSethash()
+function jsSetHashAndPath(new_id) {
+	var id_hash = parseInt(new_id).toString(36);
+
+	var mypath = api4tree.jsFindPath( api4tree.jsFind( new_id ) );
+	if(!mypath) return true;
+	var new_path = "/home";
+
+	$.each(mypath.path, function(i, el) {
+		  new_path += "/";
+		  new_path += strip_tags(el.path.title).trim().replace(/ /ig,"_");
+
+	});
+
+
+
+
+	window.location.hash = new_path+"/"+id_hash;
+}
+
+function jsSethash(dont_open)
 {
 			if(ignorehashchange) return false;
 		
 			check_hash_add_do();
 			var myhash = window.location.hash;
-			if(myhash && myhash.indexOf("_")!=-1) {
+			if(false && myhash && myhash.indexOf("_")!=-1) {
 				var id = myhash;	
 			} else {
-		  		var id = parseInt(myhash.replace("#",""),36);
+				var tmp_hash = myhash.split("/");
+				var id_hash = tmp_hash[tmp_hash.length-1];
+
+				//var id_hash = myhash.replace("#","");
+		  		var id = parseInt(id_hash,36);
 		  	}
 	  		
-	  		if(("#"+id!=window.location.hash) && (id))
-	  			{
-				$(window).unbind('hashchange');
-		  		api4panel.jsOpenPath( id );
-				$(window).bind('hashchange', jsSethash );
-//	  			console.info(id,'from_hash');
-	  			}
+	  		if(!dont_open) {
+		  		if(("#"+id!=window.location.hash) && (id))
+		  			{
+					$(window).unbind('hashchange');
+			  		api4panel.jsOpenPath( id );
+					$(window).bind('hashchange', jsSethash );
+		  			}
+	  		}
+	 return id;
 }
 
 function jsOpenChildrens(id)
@@ -939,66 +964,6 @@ Date.createFromMysql = function(mysql_string)
 }
 
 
-function jsFindComment(id,fields)
-{
-		var answer = my_all_comments.filter(function(el,i) 
-			{ 
-			if(el)
-				if( el.id==id ) 
-					return true; 
-			} );
-		if(!answer) return false;
-
-if(answer.length>0 && fields) //если нужно присваивать значения
-	{
-	if(answer[0]["new"]) changed_fields = answer[0]["new"]; //беру список изменённых полей
-	else changed_fields = "";
-	
-	is_changed=false;
-	$.each(fields, function(namefield,newvalue) 
-		{ 		
-		if(answer[0][namefield] != newvalue) 
-			{
-			if( (namefield!="new") )
-				{ 
-				if(changed_fields.indexOf(namefield+",")==-1) changed_fields = changed_fields + namefield + ","; 
-				}
-			else changed_fields = "UPS"; //сохраняю список полей, которые были изменены, если есть new, то обнуляю
-			is_changed=true; //фиксирую, что произошли изменения
-						
-			answer[0][namefield] = newvalue; //присваиваю новое значение
-			}
-
-		} );
-
-	answer[0]["new"] = changed_fields;
-	if(is_changed) 
-		{
-		if( changed_fields.indexOf("time,")==-1 ) //если не меняли время вручную
-			{
-			if(answer[0]) answer[0].time = parseInt(jsNow(),10); //ставлю время изменения (для синхронизации)
-		    var need_to_save_id=id;
-		    }
-		else
-			{
-			answer[0]["new"] = "";
-			}
-			
-		    clearTimeout(mytimer[need_to_save_id]);
-		    
-		    mytimer[need_to_save_id] =
-		    setTimeout(function() 
-		    	{ 
-		    	if( localStorage.getItem("c_length") ) jsSaveDataComment(need_to_save_id); 
-		    	else jsSaveDataComment(1);
-		    	},80); //сохряню этот элемент в localStorage через 80 миллисекунд
-
-		}
-	}
-
-	
-return answer[0];
-}
 
 
 function jsMakeDate(mydate)
@@ -1604,7 +1569,7 @@ function onResize() //вызывается при каждом ресайзе с
 			var y = $(document).height();
 			
 			//если мышка подошла близко к краю, то скрываю одну панель
-			if(main_x<15) 
+			if(main_x<28) 
 				{
 				if( !$("html").hasClass("v4") ) {
 					$(".bottom_left").hide();
@@ -1622,7 +1587,7 @@ function onResize() //вызывается при каждом ресайзе с
 				if( $("#content1").hasClass("v2") ) $(".place_of_top").show();
 				}
 
-			if( main_x>85 ) 
+			if( main_x>72 ) 
 				{
 				$(".bottom_right").hide();
 				$("#bottom_panel").css("right",20);
@@ -1705,7 +1670,7 @@ function onResize() //вызывается при каждом ресайзе с
 			$("#bottom_panel").css('top',main_y);
 			
 			
-			var newheight=$('#calendar').parent("div").height()-62;
+			var newheight=$('#calendar').parent("div").height()-20;
 			if( $("#content1").hasClass("v3")  ) newheight += 30;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight);
@@ -2173,52 +2138,6 @@ var n = this.getDate() + "" + months[this.getMonth()] + " " + this.getFullYear()
 return n;
 }
 
-function jsShowNews(type) //отображение всех комментариев
-{
-$("#tree_news").html("");
-if(type==0)
-	{
-	var source = $("#comment_template").html();
-	template = Handlebars.compile(source);
-	
-	   var data = my_all_comments.filter(function(el) //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
-		    { 
-		    return el.del==0;
-		    } );
-
-		function compare(a,b) {
-		  if (parseFloat(a.add_time) < parseFloat(b.add_time))
-		     return 1;
-		  if (parseFloat(a.add_time) > parseFloat(b.add_time))
-		    return -1;
-		  return 0;
-		}
-
-		chat = data.sort(compare); //сортирую табы по полю tab
-
-	var i;
-	var txt="";
-	var myhtml = "<h3>Новые комментарии:</h3>";
-	$.each(chat, function(i,d)
-		{
-		var frend = jsFrendById(d.user_id);
-		d.foto = frend.foto;
-		d.name = frend.fio;
-		if(jsFind(d.tree_id)) d.tree_title = "<b>["+api4tree.jsShortText( jsFind(d.tree_id).title, 50 )+"]</b>";
-		if(d.add_time=="0")  d.add_time_txt = "";
-		else
-			{
-			var add_time = new Date( parseInt(d.add_time,10) );
-			d.add_time_txt = add_time.jsDateTitleFull("need_short_format");
-			}
-		
-		myhtml += template(d);
-		if(i>100) return true;
-		});
-	
-	$("#tree_news").append(myhtml);
-	}
-}
 
 
 if (!Array.prototype.filter)

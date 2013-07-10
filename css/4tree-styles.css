@@ -9,13 +9,21 @@ body { -webkit-tap-highlight-color: rgba(0,0,0,0); }
 body:link { -webkit-tap-highlight-color: rgba(0,0,0,0); }
 
 .calendar_and_others{
-	height: 100%;
+	height: auto;
 margin-right: 10px;
 width: auto;
 position: absolute;
 right: 15px;
 left: 0px;
-top:1px;	
+top:15px;	
+bottom: 29px;
+background:#FFF;
+    -webkit-box-shadow:0px 1px 10px #000;
+       -moz-box-shadow:0px 1px 10px #000;
+            box-shadow:0px 1px 10px #000;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');*/
+
 }
 
 .v4 .calendar_and_others {
@@ -47,9 +55,9 @@ border-bottom-left-radius:5px;
 min-width: 300px;
 height: 20px;
 text-align: right;
--moz-box-shadow: 1px 2px 2px #000;
--webkit-box-shadow: 1px 2px 2px #000;
-box-shadow: 1px 2px 2px #000;
+-moz-box-shadow: 1px 1px 10px rgb(64,64,64);
+-webkit-box-shadow: 1px 1px 10px rgb(64,64,64);
+box-shadow: 1px 1px 10px rgb(64,64,64);
 -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 z-index: 50;
@@ -421,17 +429,14 @@ font-size: 0.9em;
 vertical-align: top;
 width: 300px;
 display: inline-block;
-border-left: 1px solid #CCC;
+border-right: 1px solid #CCC;
 height: 100%;
 margin-right: 0px;
 overflow-y: auto;
 overflow-x: hidden;
-max-width: 600px;
+max-width: 400px;
 }
 
-#mypanel .panel:first-child {
-  border-left: none;
-}
 
 .mindmap #mypanel .panel
 {
@@ -598,11 +603,11 @@ padding-left: 7px;
 #top_panel /* Верхняя панель */
 {
 position: absolute;
-top:15px;
+top:10px;
 left: 0px;
 right: 0px;
 height: auto; 
-bottom: 15px;
+bottom: 17px;
 margin-left: 15px;
 margin-right: 15px;
 width: auto;	        
@@ -703,7 +708,7 @@ top:0px;
 /* background: white; */
 width: auto;
 height: 100%;
-margin-left: 5px;
+margin-left: 4px;
 }
 
 .v2 .bottom_right
@@ -756,13 +761,13 @@ z-index: 2;
 
 .sos
 {
-top:6px;
-font-size: 16px;
+top:-3px;
+font-size: 12px;
 cursor: move;
 opacity: 0.9;
 //left: -3px;
 position: absolute;
-margin-left: 7px;
+margin-left: 9px;
 z-index: 2;
 margin-top: 6px;
 }
@@ -969,6 +974,7 @@ margin-bottom: 6px !important;
 #calendar
 {
 font-size: 0.8em;
+margin-top: -5px;
 }
 
 .place_of_top #calendar
@@ -1000,7 +1006,7 @@ font-size: 0.75em;
 */	
 	
 	overflow: hidden !important;
-	height: 32px !important;
+	height: 25px !important;
 	border-bottom: 1px solid #bbb;
 
 }
@@ -1020,26 +1026,29 @@ left: 10px;
 .fc-header-center
 {
 position: absolute;
-left: 140px;
-right: 140px;
+left: 95px;
+right: 125px;
 text-align: center;
+text-overflow: ellipsis;
+overflow: hidden;
 top:8px;
 }
 .fc-header-right
 {
 position: absolute;
-right: 20px;
+right: 5px;
+width: auto !important;
 top:5px;
 }
 
 #calendar thead th
 {
 font-size: 0.8em;
-color: #BBB;
 padding-top: 7px;
 border-top:none;
 border-left:none;
 border-right: none;
+font-weight: normal;
 }
 
 .fc-agenda-allday th
@@ -1103,8 +1112,13 @@ font-weight: bold;
 -o-transition: all 0.5s;  
 transition: all 0.5s;  
 border: 1px solid #888;
-background-color: #EEE;
 }
+
+.fc-button {
+  padding: 0px 5px !important;
+  border-radius: 0px !important;
+}
+
 .fc-header-left
 {
 width: auto;
@@ -1641,8 +1655,8 @@ text-align: center;
 
 #myloader
 {
-margin-left: -7px;
-margin-top: -24px;
+margin-left: -4px;
+margin-top: -17px;
 }
 
 
@@ -2120,7 +2134,7 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 #fav_calendar,#fav_mypanel
 {
 position: absolute;
-top: 30px;
+top: 0px;
 left:-25px;
 padding-left: 0px;
 }
@@ -2253,27 +2267,37 @@ display: none;
 
     display:block !important;
     position:fixed  !important;
-    z-index: 1000000 !important;
+    z-index: 100 !important;
     top:0  !important;
-    left:0  !important;
-    width:100%  !important; 
+    left:-15px !important;
+    right:0px !important; 
+    width: auto !important;
     height:auto  !important;
-    margin-bottom: -0px;
+    margin-bottom: 0px;
     margin-top: 0px;
-    bottom:27px;
-	background-image:url("../img/textures/18.png"); 
+    bottom:0px;
+	  background:#000; 
+}
+
+.fullscreen .redactor_toolbar {
+  color:#CCC;
 }
 
 .fullscreen_button
 {
 	display: inline-block;
 	position: absolute;
-	right: 12px;
-	top: 13px;
-	color: gray;
+	right: 10px;
+	top: 17px;
+	color: inherit;
 	cursor: pointer;
 	z-index: 10;
 }
+
+.fullscreen .fullscreen_button {
+  color:#CCC;
+}
+
 
 .fullscreen_button:hover
 {
@@ -2445,17 +2469,12 @@ color: white;
 display: none;
 width: auto;
 height: auto;
-margin-top: 33px;
+margin-top: 0px;
 background: #FFF;
 padding-left: 10px;
 overflow-y: auto;
 background: white;
 z-index: 9999999;
--moz-box-shadow: 2px 2px 8px #000;
--webkit-box-shadow: 2px 2px 8px #000;
-box-shadow: 2px 2px 8px #000;
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 }
 
 .search_panel_result .tcheckbox
@@ -4841,7 +4860,7 @@ min-height: 60px;
 .bottom_right .redactor_box
 {
 overflow-y: auto !important;
-top:34px !important;
+top:16px !important;
 bottom:27px !important;
 left:16px !important;
 right: 15px;
@@ -4883,7 +4902,7 @@ background: none !important;
 color:black;
 }
 
-.fc-content,.all_editor_place>.redactor_box
+.all_editor_place>.redactor_box
 {
     -webkit-box-shadow:2px 2px 10px #000;
        -moz-box-shadow:2px 2px 10px #000;
@@ -4892,39 +4911,26 @@ color:black;
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');*/
 }
 
-.fc-content,.bottom_right>.redactor_box:focus
-{
-    -webkit-box-shadow:0px 1px 10px #000;
-       -moz-box-shadow:0px 1px 10px #000;
-            box-shadow:0px 1px 10px #000;
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');*/
-}
 
 #tree_files_panel
 {
 display: none;
 width: auto;
 height: auto;
-margin-top: 33px;
+margin-top: 20px;
 background: #FFF;
 padding-left: 10px;
 overflow-y: auto;
 background: white;
 z-index: 9999999;
--moz-box-shadow: 2px 2px 8px #000;
--webkit-box-shadow: 2px 2px 8px #000;
-box-shadow: 2px 2px 8px #000;
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 font-size: 13px;
 }
 
 #files_header
 {
 position: absolute;
-top:10px;
-left: 10px;
+top:1px;
+left: 3px;
 }
 
 
@@ -5077,24 +5083,46 @@ transition: all 0.05s ease-in 0s;
 display: none;
 width: auto;
 height: auto;
-margin-top: 33px;
+margin-top: 20px;
 background: #FFF;
 padding-left: 10px;
 overflow-y: auto;
 background: white;
 z-index: 9999999;
--moz-box-shadow: 2px 2px 8px #000;
--webkit-box-shadow: 2px 2px 8px #000;
-box-shadow: 2px 2px 8px #000;
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
 font-size: 13px;
+}
+
+#tree_news ul
+{
+margin: 0px;
+padding: 0px;
+}
+
+#tree_news li 
+{
+border-radius: 2px;
+font-size: 12px;
+cursor: pointer;
+color: #3f3f3f;
+display: inline-block;
+padding: 4px 10px 4px 10px;
+}
+
+#tree_news li:hover
+{
+background: #EEE;
+}
+
+#tree_news li.active
+{
+font-weight: bold;
+background: none;
 }
 
 #news_header
 {
 position: absolute;
-top:10px;
+top:1px;
 }
 
 #tree_news .comment_reply
@@ -5495,12 +5523,9 @@ box-shadow: none !important;
 background: #eee !important;	
 }
 
-.fc-header-right {
-margin-right: 15px;
-}
 
 .fc-header {
-top:4px !important;
+top:1px !important;
 box-shadow: none !important;
 }
 
@@ -5508,6 +5533,11 @@ box-shadow: none !important;
 margin-top: -4px !important;
 white-space: nowrap;
 overflow: hidden;
+font-size: 11px !important;
+}
+
+.fc-header-space {
+  padding-left: 0px !important;
 }
 
 .calculator {
@@ -6025,6 +6055,7 @@ body > ._jsPlumb_connector {
     z-index: 7;
     color: inherit;
     font-weight: normal;
+    font-size: 11px;
 
     
 }
@@ -6068,6 +6099,9 @@ vertical-align: middle;
     white-space: nowrap;
     overflow: hidden;
 }
+
+
+
 
 #hide_welcome {
 	position: absolute;

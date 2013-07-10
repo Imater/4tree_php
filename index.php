@@ -461,7 +461,7 @@ if(isset($_GET['test']))
 	<div class="header_toolbar">
 	</div>
 
-			<div class="path_line noselectable">
+			<div id="path_tree" class="path_line noselectable">
 				<ul></ul>
 			</div>
 			<div id="mypanel" style="">
@@ -512,8 +512,10 @@ if(isset($_GET['test']))
 
 	  			<div id="tree_news">
 	  				<div id="news_header">
-		  				Заметки | Все комментарии | Мои комментарии
+		  				<li class="active">Новые комментарии</li>
 		  			</div>
+            <div id="tree_news_content">
+            </div>
 		  		</div>
 
 	  			<div id="tree_files_panel">
@@ -531,7 +533,7 @@ if(isset($_GET['test']))
 		  		</div>
 
 				
-			    <div id="calendar" class="noselectable1">
+			  <div id="calendar" class="noselectable1">
 				</div>	
 
 				<div class="favorit_tabs noselectable" id="fav_calendar">

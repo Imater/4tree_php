@@ -146,6 +146,137 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		}
 
 
+/*		this.jsFindComment = function(id,fields)
+		{
+				var answer = my_all_comments.filter(function(el,i) 
+					{ 
+					if(el)
+						if( el.id==id ) 
+							return true; 
+					} );
+				if(!answer) return false;
+
+		if(answer.length>0 && fields) //если нужно присваивать значения
+			{
+			if(answer[0]["new"]) changed_fields = answer[0]["new"]; //беру список изменённых полей
+			else changed_fields = "";
+			
+			is_changed=false;
+			$.each(fields, function(namefield,newvalue) 
+				{ 		
+				if(answer[0][namefield] != newvalue) 
+					{
+					if( (namefield!="new") )
+						{ 
+						if(changed_fields.indexOf(namefield+",")==-1) changed_fields = changed_fields + namefield + ","; 
+						}
+					else changed_fields = "UPS"; //сохраняю список полей, которые были изменены, если есть new, то обнуляю
+					is_changed=true; //фиксирую, что произошли изменения
+								
+					answer[0][namefield] = newvalue; //присваиваю новое значение
+					}
+
+				} );
+
+			answer[0]["new"] = changed_fields;
+			if(is_changed) 
+				{
+				if( changed_fields.indexOf("time,")==-1 ) //если не меняли время вручную
+					{
+					if(answer[0]) answer[0].time = parseInt(jsNow(),10); //ставлю время изменения (для синхронизации)
+				    var need_to_save_id=id;
+				    }
+				else
+					{
+					answer[0]["new"] = "";
+					}
+					
+				    clearTimeout(mytimer[need_to_save_id]);
+				    
+				    mytimer[need_to_save_id] =
+				    setTimeout(function() 
+				    	{ 
+				    	if( localStorage.getItem("c_length") ) jsSaveDataComment(need_to_save_id); 
+				    	else jsSaveDataComment(1);
+				    	},80); //сохряню этот элемент в localStorage через 80 миллисекунд
+
+				}
+			}
+
+			
+		return answer[0];
+		}*/
+
+
+
+		this.jsShowNews = function(type) //отображение всех комментариев
+		{
+		$("#tree_news_content").html("");
+		if(type==0)
+			{
+			var source = $("#comment_template").html();
+			template = Handlebars.compile(source);
+			
+			   var data = my_all_comments.filter(function(el,i) //поиск всех дел написанных БОЛЬШИМИ буквами и не начинающиеся с цифры
+				    { 
+				    return el.del==0 && api4tree.jsFind(el.tree_id);
+				    } );
+
+				function compare(a,b) {
+				  if (parseFloat(a.add_time) < parseFloat(b.add_time))
+				     return 1;
+				  if (parseFloat(a.add_time) > parseFloat(b.add_time))
+				    return -1;
+				  return 0;
+				}
+
+				chat = data.sort(compare); //сортирую табы по полю tab
+
+			var dfdArray = [];
+			var chat_limited = [];
+			$.each(chat, function(i,d) {
+
+				if(i<50) dfdArray.push( api4tree.jsFindComment(d.id).done( function(el){
+					d.text = el.text;
+					chat_limited.push(d);
+				})
+				);
+
+			});
+
+
+
+			$.when.apply( null, dfdArray ).then( function(x){ 
+						var i;
+						var txt="";
+						var myhtml = "";
+						$.each(chat_limited, function(i,d)
+							{
+							var frend = api4tree.jsFrendById(d.user_id);
+							d.foto = frend.foto;
+							d.name = frend.fio;
+							if(api4tree.jsFind(d.tree_id)) {
+								d.tree_title = "<b>["+api4tree.jsShortText( api4tree.jsFind(d.tree_id).title, 50 )+"]</b>";
+							}
+
+							if(d.add_time=="0") {
+								d.add_time_txt = "";	
+							} else {
+								var add_time = new Date( parseInt(d.add_time,10) );
+								d.add_time_txt = add_time.jsDateTitleFull("need_short_format");
+							}
+							
+							myhtml += template(d);
+							if(i>100) return true;
+							});
+
+								$("#tree_news_content").append(myhtml);
+		    	});			
+			
+			}
+		}
+
+
 		  //проверяет текст на wiki ссылки и помечает их цветом
 		  this.jsMakeWiki = function(myr) { //находит всё что в квадратных скобках и заменяет на тег <wiki>
 			  var txt = myr.redactor("get");
@@ -2261,7 +2392,17 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  $("#tree_news").delegate(".comment_box","click",function(){
 			      var comment_id = $(this).attr("id");
 			      if(comment_id) comment_id = comment_id.replace("comment_","");
-			      api4panel.jsOpenPath( jsFindComment(comment_id).tree_id );
+			      api4tree.jsFindComment(comment_id).done(function(el){
+			      		api4panel.jsOpenPath( el.tree_id );
+			      		setTimeout(function(){
+			      			$(".redactor_box:first #comment_"+el.id).addClass("highlight");
+			      			$(".redactor_box:first").scrollTo( $("#comment_"+el.id), 800, function(){
+			      			  setTimeout(function(){ $(".redactor_box:first #comment_"+el.id).removeClass("highlight"); },1000);
+			      			} );
+			      		},500);
+
+			      });
+			      
 			      return false;
 			      });
 			  
@@ -2438,7 +2579,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 			      if( tab_name == "tab_news" ) {
 			      	$("#tree_news").show();
-			      	jsShowNews(0);
+			      	api4tree.jsShowNews(0);
 			      } else {
 			      	$("#tree_news").hide();
 			      }
@@ -4054,7 +4195,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	    	  		var the_text = myelement?myelement.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
         			d.resolve(the_text);
         		} else {
-        			console.info("Забираю длинный текст из базы:",id);
 	    	  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
 
 	    	  			var the_text = (record && record.text)?record.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
@@ -4363,7 +4503,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 	myhtml_for_comments += "";
 			 	$("#tree_comments_container").html(myhtml_for_comments); //выводим на экран
 			 	onResize();
-			 	if( $("#tree_news").is(":visible") ) jsShowNews(0);
+			 	//if( $("#tree_news").is(":visible") ) api4tree.jsShowNews(0);
 			});
 		 }
 
@@ -5016,8 +5156,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     function startSync(status) { 
 	     	if(status=="start") {
 				preloader.trigger("show");
-				$(".sos").css("opacity","1");
-				$(".sos .icon-cd").css("color","#417b2e");
+				//$(".sos").css("opacity","1");
+				//$(".sos .icon-cd").css("color","#417b2e");
 				this_db.log("Начинаю синхронизацию.");
 				sync_now = true;
 				clearTimeout(sync_now_timer);
@@ -5026,8 +5166,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				}, 30000); //если синхр.не прошла сама
 			} else {
 				preloader.trigger("hide");
-				$(".sos").css("opacity","");
-				$(".sos .icon-cd").css("color","");
+				//$(".sos").css("opacity","");
+				//$(".sos .icon-cd").css("color","");
 				this_db.log("Синхронизация завершена.");
 				sync_now = false;
 				clearTimeout(sync_now_timer);
@@ -5108,7 +5248,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	   		var id = parseInt(window.location.hash.replace("#",""),36); //меняем хэш в адресной строке
 	   		if(id==old_id) {
 	   			$(window).unbind('hashchange');
-	   			window.location.hash = parseInt(new_id).toString(36);  
+	   			jsSetHashAndPath(new_id);  
 	   			$(window).bind('hashchange', jsSethash );
    			}
 	     		
@@ -5606,7 +5746,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					 	 	    	if(myselected == d.tree_id) {
 					 	 	    		api4tree.jsShowAllComments(d.tree_id);
 					 	 	    	}
-					 	 	    	if( $("#tree_news").is(":visible") ) jsShowNews(0);
+					 	 	    	if( $("#tree_news").is(":visible") ) api4tree.jsShowNews(0);
 					 	 	    	//обновить панель комментариев
 					 	 	    	api4tree.jsUpdateCommentsCnt();
 					 	 	    	need_refresh = true;
