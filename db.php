@@ -1575,7 +1575,7 @@ global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
    $social = $_COOKIE['4tree_social_md5'];
    
    
-   if(isset($_GET['phone_gap'])) {
+   if(isset($_GET['phonegap'])) {
    if(!$email) $email = "8ab96bed02fc697de66ac528bcd4814f";
    if(!$passw) $passw = "87e7c51b7a7e50cdf2e78670557c18a4";
    }
@@ -1608,7 +1608,7 @@ global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
       }
 //   setcookie('fpk_id', $fpk_id);
 
-if(isset($_GET['phone_gap'])) $fpk_id = $_GET['phone_gap'];
+if(isset($_GET['phonegap'])) $fpk_id = $_GET['phonegap'];
 
    setcookie('4tree_user_id', $fpk_id,time()+60*60*24*60);
 

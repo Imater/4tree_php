@@ -33,7 +33,7 @@ function jsHideWelcome() {
 	$("#start_welcome_page").removeClass("active");
 	$("#mypanel").off("scroll.my");
 	$("#welcome_screen").fadeOut(500);
-	var lnk = "do.php?off_welcome";
+	var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&off_welcome";
  	$.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
  	});
 
@@ -96,7 +96,7 @@ function jsLoadWelcome() {
 		}
 	});
 
-	lnk = "do.php?load_welcome";
+	lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&load_welcome";
 	$("#welcome_screen").load(lnk, function(){
 		setTimeout(function(){ $("#welcome_screen").fadeIn(500,function(){
 			jsDrawWelcomeLine();
@@ -1781,7 +1781,7 @@ function jsShowCalendar() //отображаю календарь
 			 	$('#calendar').fullCalendar( 'refetchEvents' ); 
 			    jsRefreshTree();
 			    
-			    var lnk="do.php?date_to_do="+$(this).attr('id')+"&date1="+mydate+"&allday="+allday;
+			    var lnk=web_site + "do.php?phonegap=" + phonegap_user_id + "&date_to_do="+$(this).attr('id')+"&date1="+mydate+"&allday="+allday;
 		 		$('#bubu').load(lnk, function () 
 		 		  { 
 		 		    var new_date = $('#bubu').html();

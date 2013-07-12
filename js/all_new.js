@@ -584,7 +584,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		  } //if(i==0) Если это первый элемент, создать место, куда добавлять.
 		 		  } //-1 -2
 		 		  
-		 			if((/_ДНЕВНИК/.test(data.path)) && (!h3_search_already_added)) {
+		 			if((/_ДНЕВНИК/.test(data.path)) && (!h3_search_already_added) && (parent_node==-1))  {
 							where_to_add_cache.append("<h3>Дневник</h3>");
 							h3_search_already_added = true;		 		  		    
 				  }
@@ -937,7 +937,7 @@ var API_4OTHERS = function() {
 		
 			api4tree.jsFindFilesLinkFromTexts();
 		
-			var lnk = "do.php?get_files="+mytype;
+			var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_files="+mytype;
 		    var html = "";
 		    
 		    if(mytype=="all") html = "<ul class='files_list'>";

@@ -160,7 +160,8 @@ $(document).ready(jsDoFirstMobile);
 
 			<h1 id="editor_header">&nbsp;</h1>
 			<div data-role="controlgroup" data-type="horizontal" data-mini="true" style="position:absolute; right:5px;top:-2px;">
-				<a href="#user-login" data-role="button" data-iconpos="">вход</a>
+				<a id="load_from_server" href="" data-role="button" data-iconpos="">данные</a>
+				<a id="oAuth" href="" data-role="button" data-iconpos="">oAuth</a>
 				<a id="show_calendar" href="#" data-role="button" data-iconpos=""><i class='icon-calendar-2'></i></a>
 			</div>
 

@@ -4,6 +4,118 @@
 		"selected_items":
 		[
 			[
+				"high",
+				"highlight"
+			],
+			[
+				"pa",
+				"padding-left"
+			],
+			[
+				"fon",
+				"font-size"
+			],
+			[
+				"font",
+				"font-weight"
+			],
+			[
+				"left",
+				"left_offset"
+			],
+			[
+				"scro",
+				"scroll_timer"
+			],
+			[
+				"scrol",
+				"scrollLeft"
+			],
+			[
+				"next_pane",
+				"next_panel_div"
+			],
+			[
+				"whe",
+				"where_to_find"
+			],
+			[
+				"line",
+				"line_cache"
+			],
+			[
+				"where",
+				"where_to_add_cache"
+			],
+			[
+				"ma",
+				"margin-left"
+			],
+			[
+				"f",
+				"font-weight"
+			],
+			[
+				"min",
+				"min-width"
+			],
+			[
+				"header",
+				"header_text"
+			],
+			[
+				"jsFind",
+				"jsFindPath"
+			],
+			[
+				"tmp",
+				"tmp_text_is_long"
+			],
+			[
+				"cl",
+				"className"
+			],
+			[
+				"node",
+				"nodeName"
+			],
+			[
+				"отсу",
+				"отстутствует"
+			],
+			[
+				"menu",
+				"menuContent"
+			],
+			[
+				"jsRef",
+				"jsRefreshPanel"
+			],
+			[
+				"jsRefresh",
+				"jsRefreshTree"
+			],
+			[
+				"jsOpen",
+				"jsShowTreePanel"
+			],
+			[
+				"margin",
+				"margin-right"
+			],
+			[
+				"toc",
+				"touchend"
+			],
+			[
+				"n",
+				"normal"
+			],
+			[
+				"p",
+				"padding"
+			],
+			[
 				"open",
 				"open_redactor_timer"
 			],
@@ -32,24 +144,12 @@
 				"text-decoration"
 			],
 			[
-				"ma",
-				"margin-left"
-			],
-			[
-				"pa",
-				"padding-bottom"
-			],
-			[
 				"bord",
 				"border-top"
 			],
 			[
 				"inline",
 				"inline-block"
-			],
-			[
-				"font",
-				"font-size"
 			],
 			[
 				"wid",
@@ -62,10 +162,6 @@
 			[
 				"men",
 				"menuContent"
-			],
-			[
-				"menu",
-				"menuPanel"
 			],
 			[
 				"mar",
@@ -82,10 +178,6 @@
 			[
 				"ba",
 				"background-image"
-			],
-			[
-				"fon",
-				"font-size"
 			],
 			[
 				"no",
@@ -122,10 +214,6 @@
 			[
 				"di",
 				"display"
-			],
-			[
-				"jsFind",
-				"jsFindFilesLinkFromTexts"
 			]
 		]
 	},
@@ -135,7 +223,7 @@
 			"file": "all_new.js",
 			"settings":
 			{
-				"buffer_size": 73729,
+				"buffer_size": 63454,
 				"line_ending": "Unix"
 			}
 		},
@@ -143,7 +231,7 @@
 			"file": "api4tree.js",
 			"settings":
 			{
-				"buffer_size": 204217,
+				"buffer_size": 219153,
 				"line_ending": "Unix"
 			}
 		},
@@ -151,47 +239,15 @@
 			"file": "/Applications/MAMP/htdocs/fpk/4tree/pda.php",
 			"settings":
 			{
-				"buffer_size": 10113,
+				"buffer_size": 10899,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/compress.php",
+			"file": "fastclick2.js",
 			"settings":
 			{
-				"buffer_size": 11449,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/!versions.html",
-			"settings":
-			{
-				"buffer_size": 9481,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "md5.js",
-			"settings":
-			{
-				"buffer_size": 11918,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "4tree.js",
-			"settings":
-			{
-				"buffer_size": 6895,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/4tree.php",
-			"settings":
-			{
-				"buffer_size": 11211,
+				"buffer_size": 21794,
 				"line_ending": "Unix"
 			}
 		},
@@ -199,15 +255,7 @@
 			"file": "all-mobile.js",
 			"settings":
 			{
-				"buffer_size": 16628,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "jquery.mobile-1.3.1.js",
-			"settings":
-			{
-				"buffer_size": 359127,
+				"buffer_size": 29937,
 				"line_ending": "Unix"
 			}
 		},
@@ -215,7 +263,15 @@
 			"file": "/Applications/MAMP/htdocs/fpk/4tree/css/4tree-styles.css",
 			"settings":
 			{
-				"buffer_size": 101039,
+				"buffer_size": 100321,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/css/jqueryslidemenu.css",
+			"settings":
+			{
+				"buffer_size": 3401,
 				"line_ending": "Unix"
 			}
 		},
@@ -223,23 +279,47 @@
 			"file": "/Applications/MAMP/htdocs/fpk/4tree/do.php",
 			"settings":
 			{
-				"buffer_size": 143065,
+				"buffer_size": 145075,
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/db.php",
+			"settings":
+			{
+				"buffer_size": 48403,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/!versions.html",
+			"settings":
+			{
+				"buffer_size": 10346,
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "/Applications/MAMP/htdocs/fpk/4tree/index.php",
 			"settings":
 			{
-				"buffer_size": 43570,
+				"buffer_size": 43642,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.js",
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.js",
 			"settings":
 			{
-				"buffer_size": 147220,
+				"buffer_size": 130355,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/iBook/.bash_profile",
+			"settings":
+			{
+				"buffer_size": 168,
 				"line_ending": "Unix"
 			}
 		},
@@ -255,16 +335,27 @@
 			"file": "/Applications/MAMP/htdocs/fpk/4tree/css/mobile.css",
 			"settings":
 			{
-				"buffer_size": 11252,
+				"buffer_size": 13294,
 				"line_ending": "Unix",
 				"name": "img {"
 			}
 		},
 		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/4tree./js/js_regallkeys.js",
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/css/jquery.mobile-1.3.1.css",
 			"settings":
 			{
-				"buffer_size": 66794,
+				"buffer_size": 136299,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Object.defineProperty(\n    Object.prototype, \n    'renameProperty',\n    {\n        writable : false, // Cannot alter this property\n        enumerable : false, // Will not show up in a for-in loop.\n        configurable : false, // Cannot be deleted via the delete operator\n        value : function (oldName, newName) {\n            // Check for the old property name to \n            // avoid a ReferenceError in strict mode.\n            if (this.hasOwnProperty(oldName)) {\n                this[newName] = this[oldName];\n                delete this[oldName];\n            }\n            return this;\n        }\n    }\n);\n/*\n//переименование ключа объекта\nfunction renameKey (this_obj, oldName, newName) {\n    // Check for the old property name to avoid a ReferenceError in strict mode.\n    if (this_obj.hasOwnProperty(oldName)) {\n        this_obj[newName] = this_obj[oldName];\n        delete this_obj[oldName];\n    }\n    return this_obj;\n};\n*/\n\nfunction jsHideWelcome() {\n	myjsPlumb2.detachEveryConnection();\n	$(\"#start_welcome_page\").removeClass(\"active\");\n	$(\"#mypanel\").off(\"scroll.my\");\n	$(\"#welcome_screen\").fadeOut(500);\n	var lnk = web_site + \"do.php?phonegap=\" + phonegap_user_id + \"&off_welcome\";\n 	$.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////\n 	});\n\n}\n\n\nfunction jsLoadWelcome() {\n	var w_tm;\n	$(\"#start_welcome_page\").addClass(\"active\");\n\n	$(\"#welcome_screen\").off(\"click\",\"#hide_welcome\").on(\"click\",\"#hide_welcome\",function(e){\n		e.preventDefault();\n		jsHideWelcome();\n		return false;\n	});\n\n\n	$(\"#welcome_screen\").off(\"click\",\".welcome_page a\").on(\"click\",\".welcome_page a\",function(e){\n		e.preventDefault();\n		api4others.open_in_new_tab($(this).attr(\"href\"));\n		return false;\n	});\n\n	$(\"#welcome_screen\").off(\"click\",\".welcome_page\").on(\"click\",\".welcome_page\",function(){\n		clearTimeout(w_tm);\n		w_tm = setTimeout(function(){\n			var next_point = $(\"#welcome_screen .pointer.active\").next(\".pointer\");\n			if(next_point.length) {\n				next_point.click();\n			} else {\n				$(\"#welcome_screen .pointer:first\").click();\n			}\n		},100);\n		return false;\n	});\n\n	\n	$(\"#welcome_screen\").off(\"click\",\".pointer\").on(\"click\",\".pointer\",function(){\n		var myid = $(this).attr(\"myid\");\n		$(\".pointer.active\").removeClass(\"active\");\n		$(this).addClass(\"active\");\n		$(\".welcome_page.active\").removeClass(\"active\");;\n		$(\".welcome_page[myid='\"+myid+\"']\").addClass(\"active\");\n		jsDrawWelcomeLine();\n		return false;\n	});\n	var tm;\n	$(\"#mypanel\").on(\"scroll.my\",function(){\n		clearTimeout(tm);\n		tm = setTimeout(function(){\n			myjsPlumb2.setSuspendDrawing(false,true);\n		}, 5);\n		return false;\n	});\n\n	$(\"#welcome_screen\").draggable({\n		drag:function(){\n					myjsPlumb2.setSuspendDrawing(false,true);\n					clearTimeout(w_tm);\n		}\n	});\n\n	lnk = web_site + \"do.php?phonegap=\" + phonegap_user_id + \"&load_welcome\";\n	$(\"#welcome_screen\").load(lnk, function(){\n		setTimeout(function(){ $(\"#welcome_screen\").fadeIn(500,function(){\n			jsDrawWelcomeLine();\n		}); }, 500);\n	});\n}\n\nfunction jsDrawWelcomeLine(){\n	myjsPlumb2.detachEveryConnection();\n	jsPlumb.Defaults.Container = $(\"body\");\n	var stateMachineConnector = {				\n		connector:\"Bezier\",\n		paintStyle:{lineWidth:2,strokeStyle:\"#005200\"},\n		endpoint:\"Blank\",\n		anchor:\"AutoDefault\",\n		Container:$(\"#wrap\"),\n		overlays:[ [\"PlainArrow\", {location:1, width:6, length:18} ]]\n	};\n\n	var line_to = $(\".welcome_page.active\").attr(\"line_to\");\n	var t_check;\n    	if(line_to) {\n    		if($(line_to).length) {\n    			myjsPlumb2.connect({source:\"welcome_screen\", target: $(line_to), scope:\"someScope\"},stateMachineConnector);\n    			myjsPlumb2.setSuspendDrawing(false,true);\n    			if(line_to == \".tcheckbox:eq(2)\") {\n    				clearTimeout(t_check);\n    				t_check = setTimeout(function(){ $(line_to).click(); }, 500 );\n    			} else {\n	    			clearTimeout(t_check);\n	    			$(\".makedone\").hide();\n    			}\n    			\n    	}\n    }\n   	jsPlumb.Defaults.Container = $(\"#mypanel\");\n\n}\n\nfunction getWordAt(s, pos) {\n  // make pos point to a character of the word\n//  while (s[pos].toLowerCase() == s[pos].toUpperCase()) pos--;\n  // find the space before that word\n  // (add 1 to be at the begining of that word)\n  // (note that it works even if there is no space before that word)\n//  pos = s.lastIndexOf(\" \", pos) + 1;\n  // find the end of the word\n  var end = s.indexOf(\" \", pos);\n  if (end == -1) end = s.length; // set to length if it was the last word\n  // return the result\n  return s.substring(pos, end);\n}\n\nfunction jsHighlightText(remove)\n{\n		var searchstring = $('#search_filter').val();\n		if(searchstring.length<2 || remove) \n			{ \n			$(\".search_panel_result\").removeHighlight();\n			$(\".comment_text\").removeHighlight();\n			$(\".redactor_\").removeHighlight();\n			$(\"#mypanel .n_title\").removeHighlight();\n			return true; \n			}\n//		$(\".highlight\").contents().unwrap();\n		$(\".search_panel_result\").highlight(searchstring,\"highlight\"); \n		$(\".redactor_\").highlight(searchstring,\"highlight\"); \n\n		var longtext = $(\".redactor_\").html().toLowerCase();\n		var founded_match = diff_plugin.match_main( longtext, searchstring, 0 );\n		if(founded_match!=-1){\n			var searchstring_more = getWordAt(longtext, founded_match);\n			console.info(\"Founded_more:\",searchstring_more);\n			if (searchstring_more != searchstring) {\n				$(\".redactor_\").not(\":has('.highlight')\").highlight(searchstring_more,\"highlight\"); \n				$(\".search_panel_result li\").not(\":has('.highlight')\").highlight(searchstring_more,\"highlight\"); \n			}\n\n		}\n		$(\".comment_text\").highlight(searchstring,\"highlight\"); \n		$(\"#mypanel .n_title\").highlight(searchstring,\"highlight\"); \n}\n\n\n\nfunction sqldate(UNIX_timestamp){ //показываю время в виде mysql. timeConverter( jsFindLastSync ) используются для отладки\n var a = new Date(UNIX_timestamp);\n var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];\n     var year = a.getFullYear();\n     var month = a.getMonth()+1;\n     if(month<10) month = \"0\"+month;\n     var date = a.getDate();\n     if(date<10) date = \"0\"+date;\n     var hour = a.getHours();\n     if(hour<10) hour = \"0\"+hour;\n     var min = a.getMinutes();\n     if(min<10) min = \"0\"+min;\n     var sec = a.getSeconds();\n     if(sec<10) sec = \"0\"+sec;\n     var msec = a.getMilliseconds();\n     if(msec<10) msec = \"0\"+msec;\n     var time = year+\"-\"+month+'-'+date+' '+hour+':'+min+':'+sec;\n     return time;\n }\n\n\nfunction sqltime(UNIX_timestamp){ //показываю время в виде mysql. timeConverter( jsFindLastSync ) используются для отладки\n var a = new Date(UNIX_timestamp);\n     var hour = a.getHours();\n     if(hour<10) hour = \"0\"+hour;\n     var min = a.getMinutes();\n     if(min<10) min = \"0\"+min;\n     var time = hour+':'+min;\n     return time;\n }\n\n\n\n\nfunction jsCloneChat(user_id) //клонирую чат из template\n{\n		var new_chat = $(\".chat_box[user_id='template']\").clone().attr(\"user_id\",user_id);\n		user_el = jsFrendById(user_id);\n		new_chat.find(\".chat_user_name\").html( user_el.fio );\n		new_chat.find(\".chat_user_img\").html('<img src=\"image_remote.php?width=33&height=33&cropratio=1:1&image=/'+user_el.foto+'\">');\n		$(\"body\").append(new_chat);\n		\n		var cnt=0;\n		$(\".chat_box[user_id!=template]\").quickEach(function(el){\n			console.info( $(this).css(\"top\") );\n			if( $(this).css(\"top\")==\"auto\" )\n				{\n				cnt = cnt+1;\n				}\n			});\n		var new_right = 30+(new_chat.width()+10)*(cnt-1);\n		if( (new_right+new_chat.width()+50)>$(\"body\").width() ) \n			{\n			var new_right = 50+(new_chat.width()+10)*(cnt-1-$(\"body\").width()/(new_chat.width()+50) );\n			new_chat.css(\"bottom\",new_chat.height()+80);\n			}\n		new_chat.css(\"right\", parseInt(new_right) ).show().draggable({appendTo: \"body\", handle: \".chat_header\"});\n		\n		var chat_editor = new_chat.find(\".chat_editor_input\");\n		  myr_comment = chat_editor.redactor({ imageUpload: './redactor/demo/scripts/image_upload.php?user='+main_user_id, lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php?user='+main_user_id, autoresize:true,  \n  			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']\n     });\n	    myhtml=\"\";\n     	var chat_html = jsShowChatHistory( \"chat_\"+main_user_id+\"_\"+user_id );\n     	new_chat.find(\".chat_content\").html(chat_html).scrollTop(99999999999);\n     	\n\n\n}\n\nvar last_message_sync_time = 0;\n\n\nvar progress_load=0;\nfunction jsProgressStep()\n{\n	if(progress_load>=200) var how_long = 80;\n	else var how_long = 20;\n\n	progress_load = progress_load + 30;\n	$(\"#inside_bar\").animate({width:progress_load},how_long);\n}	\n\n\n////////////////////////////////////////////////////////////\nvar my_array;\n	\njQuery.extend({ //добавляю функцию postJSON (ради названия)\n   postJSON: function( url, data, callback) {\n      return jQuery.post(url, data, callback, \"json\");\n   }\n});\n\nfunction jsSpeechComplete() //после голосового ввода быстрого добавления заметки\n{\n$(\"#add_do\").keyup();\n}\n\n\n\nfunction jsDryComments(data) //убираем все данные, кроме изменённых, чтобы экономить трафик в POST\n{\n	answer1 = new Array();\n	\n	$.each(data, function(i,node){\n		changed_fields = node['new'];\n		element = new Object;\n		element.id = node.id;\n		if((node.id<0) || (node[\"new\"]==\"\") )  \n			{\n			element = jsFindComment(node.id);\n			answer1.push(element);\n			changed_fields = \"\";\n			}\n		else\n		$.each(node, function(keyname, keyvalue)\n			{\n			if(changed_fields)\n			  if(( changed_fields.indexOf(keyname+',') != -1 ) || keyname==\"time\" || keyname==\"lsync1\" )\n				{\n				element[keyname] = keyvalue;\n				}\n			});\n		if(changed_fields) answer1.push(element);\n		});\n	\n	return answer1;\n}\n\n\nvar NeedToRefresh = false;\nvar sync_now=false;\nvar sync_now_timer,myrefreshtimer;\n\nfunction jsShowChatHistory(tree_id) //возвращает комментарии являющиеся чатом (история) tree_id = \"chat_11_12\"\n{\n	var source = $(\"#chat_template\").html();\n	var parent_id = -1;\n	template = Handlebars.compile(source);\n	\n	var chat = jsFindByTreeId(tree_id,parent_id);\n	var html = \"\";\n	$.each(chat, function(i,d)\n		{\n		var frend = jsFrendById(d.user_id);\n		d.foto = frend.foto;\n		d.name = frend.fio;\n		d.tree_title = \"\";\n\n		if(d.add_time==\"0\")  d.add_time_txt = \"\";\n		else\n			{\n			var add_time = new Date( parseInt(d.add_time) );\n			d.add_time_txt = add_time.jsDateTitleFull(\"need_short_format\");\n			}\n		\n		myhtml += template(d);\n		\n		if(jsFindByParentComments(d.id).length>0)\n		  {\n		  myhtml +=\"<ul>\";\n		  jsShowComments(tree_id, d.id);\n		  myhtml +=\"</ul>\";\n		  }\n		\n		});\nreturn myhtml;\n}\n\nfunction jsRefreshFrends()\n{\n	if(!my_all_frends) return false;\n	var text = \"\";\n	var m_len = my_all_frends.length;\n	for(var i=0;i<m_len;i=i+1)\n		{\n		var el = my_all_frends[i];\n		if(el.lastvisit!=0) { var lastvisit = \"Последний визит:\\n\"+(new Date( parseInt(el.lastvisit) )).jsDateTitleFull(); }\n		else lastvisit = \"\";\n		\n		var time_dif = parseInt( (jsNow()-el.lastvisit)/1000 );\n		\n		if( (time_dif)<20*60 ) var online_div = '<div class=\"contact_online contact_long\" title=\"Online '+parseInt(time_dif/60)+' мин. назад\"></div>';\n		else var online_div = '';\n\n		if( (time_dif)<3*60 ) var online_div = '<div class=\"contact_online\" title=\"Online '+time_dif+' сек. назад\"></div>';\n		\n		\n		text += '<li user_id=\"'+el.user_id+'\">'+\n					online_div+\n					'<img src=\"image_remote.php?width=33&height=33&cropratio=1:1&image=/'+el.foto+'\" title=\"'+el.fio\n						+\"\\n\"+el.email+\"\\n\"+lastvisit+'\">'+\n					'<div class=\"contact_round\">'+el.user_id+'</div>'+\n				'</li>';\n		}\n	$(\".right_contacts\").html(text);\n\n\n}\n\n\n\nfunction jsAddComment(tree_id,parent_id,text)\n{\n	var new_id = -parseInt(1000000+Math.random()*10000000);\n\n	new_line = my_all_comments.length;\n	my_all_comments[new_line]=new Object(); element = my_all_comments[new_line];\n\n	element.id = new_id;\n	element.parent_id = parseInt(parent_id);\n	element.tree_id = tree_id;\n	element.text = text;\n	element.del = 0;\n	element[\"new\"] = \"\";\n	element.time = jsNow();\n	element.add_time = jsNow();\n	element.lsync = jsNow()-1;\n	element.user_id = main_user_id;\n	\n	jsSaveDataComment(new_id);\n\n}\n\n\nfunction jsGo(arrow)\n{\n\nif(isMindmap) {\n	if(arrow=='down')\n		{\n		lastclick = new Date();\n		current = $(\"#mypanel .selected\");\n		if(current.length==0) current = $(\"#mypanel li:first\").addClass(\"selected\");\n		prev = current.nextAll(\"li:first\");\n		if(prev.length==1) \n			{\n			current.removeClass(\"selected\");\n			prev.addClass(\"selected\");\n\n			var el = prev;\n			if(el.length) {\n				var new_id = el.attr(\"id\").replace(\"node_\",\"\");\n				//api4panel.jsOpenNode(new_id);\n				api4panel.jsSelectNode(new_id);		\n			}\n\n			//prev.find(\".n_title:first\").click();\n			}\n		}\n\n	if(arrow=='up')\n		{\n		lastclick = new Date();\n		current = $(\"#mypanel .selected\");\n		if(current.length==0) current = $(\"#mypanel li:first\").addClass(\"selected\");\n		prev = current.prevAll(\"li:first\");\n		if(prev.length==1) \n			{\n			current.removeClass(\"selected\");\n			prev.addClass(\"selected\");\n\n			var el = prev;\n			if(el.length) {\n				var new_id = el.attr(\"id\").replace(\"node_\",\"\");\n				//api4panel.jsOpenNode(new_id);\n				api4panel.jsSelectNode(new_id);		\n			}\n\n			//prev.find(\".n_title:first\").click();\n			}\n		}\n\nif(arrow=='right')\n	{\n	current = $(\"#mypanel .selected\");\n	\n	if(isTree)\n		{\n		if(current.hasClass(\"tree-open\"))\n			{\n			\n			var el = current.find(\"li:first\");\n			if(el.length) {\n				var new_id = el.attr(\"id\").replace(\"node_\",\"\");\n				api4panel.jsOpenNode(new_id);\n				api4panel.jsSelectNode(new_id);				\n			}\n\n			}\n		else\n			{\n			current.click();\n			jsGo(\"right\");\n			}\n		}\n	else\n		{\n		current.parents(\".panel\").nextAll(\".panel:first\").find(\"li:first\").click();\n		}\n\n	}\n\nif(arrow==\"left\")\n	{\n	current = $(\"#mypanel .selected\");\n	\n	if(isTree)\n		{\n		if(current.hasClass(\"tree-open\"))\n			{\n			current.click();\n			}\n		else\n			{\n			var el = current.parents(\"ul:first\").parent(\"li\");\n			if(el.length) {\n				var new_id = el.attr(\"id\").replace(\"node_\",\"\");\n				api4panel.jsOpenNode(new_id);\n				api4panel.jsSelectNode(new_id);		\n			}\n			\n			}\n		}\n	else\n		{\n		current.parents(\".panel\").prevAll(\".panel:first\").find(\"li.old_selected\").click();\n		}\n	}\n\nif(isMindmap || isTree) {\n				var offset_top = $(\"#mypanel\").height()/2;\n				var offset_left = $(\"#mypanel\").width()/2;// - $(\".selected\").parent(\"ul:first\").width()*1.5;\n				$(\"#mypanel\").stop().scrollTo($(\".selected\"),600,{offset:{ top: -offset_top, left: -offset_left}});\n			}\nreturn true;\n}\n\n\nif(arrow=='up')\n	{\n	lastclick = new Date();\n	current = $(\"#mypanel .selected\");\n	if(current.length==0) current = $(\"#mypanel li:first\").addClass(\"selected\");\n	prev = current.prev(\"div\").prev(\"li:visible\").find(\"ul:first\").find(\"li:visible:last\");\n	\n	if(prev.length==0)\n	  {\n	  prev = current.prev('div').prev('li');\n	  }\n	if(prev.length==0)\n	  {\n	  prev = current.parents(\"li:visible:first\");\n	  }\n	if(prev.length==0)\n	  {\n	  prev = current.parents(\"li:visible:first\").parents(\"li:visible:last\").prev('div').prev('li');\n	  }\n	if(prev.length==0)\n	  {\n	  prev = current.parents(\"li:visible:first\").parents(\"li:visible:first\").parents(\"li:visible:last\").prev('div').prev('li');\n	  }\n	\n	\n	if(prev.length==1) \n		{\n		current.removeClass(\"selected\");\n		prev.addClass(\"selected\");\n		prev.find(\".n_title:first\").click();\n		}\n	}\n\nif(arrow=='down')\n	{\n	lastclick = new Date();\n	current = $(\"#mypanel .selected\");\n	if(current.length==0) current = $(\"#mypanel li:first\").addClass(\"selected\");\n	prev = current.find(\"li:visible:first\");\n	if(prev.length==0)\n	  {\n	  prev = current.next('div').next('li');\n	  }\n	if(prev.length==0)\n	  {\n	  prev = current.parents(\"li:visible:first\").next('div').next('li');\n	  }\n	if(prev.length==0)\n	  {\n	  prev = current.parents(\"li:visible:first\").parents(\"li:visible:first\").next('div').next('li');\n	  }\n	if(prev.length==0)\n	  {\n	  prev = current.parents(\"li:visible:first\").parents(\"li:visible:first\").parents(\"li:visible:first\").next('div').next('li');\n	  }\n	\n	if(prev.length==1) \n		{\n		current.removeClass(\"selected\");\n		prev.addClass(\"selected\");\n		prev.find(\".n_title:first\").click();\n		}\n\n	if(current.next(\".add_do_panel_top\").length) {\n		current.next(\".add_do_panel_top\").find(\"input\").focus();\n	}\n\n	}\n\nif(arrow=='right')\n	{\n	current = $(\"#mypanel .selected\");\n	\n	if(isTree)\n		{\n		if(current.hasClass(\"tree-open\"))\n			{\n			\n			var el = current.find(\"li:first\");\n			if(el.length) {\n				var new_id = el.attr(\"id\").replace(\"node_\",\"\");\n				api4panel.jsOpenNode(new_id);\n				api4panel.jsSelectNode(new_id);		\n			}\n\n			}\n		else\n			{\n			current.click();\n			}\n		}\n	else\n		{\n		current.parents(\".panel\").nextAll(\".panel:first\").find(\"li:first\").click();\n		}\n	}\nif(arrow==\"left\")\n	{\n	current = $(\"#mypanel .selected\");\n	\n	if(isTree)\n		{\n		if(current.hasClass(\"tree-open\"))\n			{\n			current.click();\n			}\n		else\n			{\n			var el = current.parents(\"ul:first\").parent(\"li\");\n			if(el.length) {\n				var new_id = el.attr(\"id\").replace(\"node_\",\"\");\n				api4panel.jsOpenNode(new_id);\n				api4panel.jsSelectNode(new_id);		\n			}\n			\n			}\n		}\n	else\n		{\n		current.parents(\".panel\").prevAll(\".panel:first\").find(\"li.old_selected\").click();\n		}\n	}\n\n\njsFixScroll(2,\"only_selected_panel\");\n}\n\n\n\nfunction jsMakeAnimatePanel(status)\n{\nvar p1,p2;\n	if(status==1) howlong = 0;\n	if(status==2) howlong = 500;\n	\n	who_is_on_top = $(\".place_of_top\").children(\"div\").attr(\"id\");\n	\nif(howlong==0)\n	if( who_is_on_top=='top_panel' )\n		{\n		  $(\"#p2\").css(\"background\", \"#fefcca\");\n		  $(\"#p1\").css(\"background\", \"#dddeec\");\n		}\n	else\n		{\n		  $(\"#p1\").css(\"background\", \"#fefcca\");\n		  $(\"#p2\").css(\"background\", \"#dddeec\");\n		}\n\n	if( remember_old_panel == who_is_on_top )\n	  {\n	  p1 = $(\"#p1\");\n	  p2 = $(\"#p2\");\n	  }\n	else\n	  {\n	  p1 = $(\"#p2\");\n	  p2 = $(\"#p1\");\n	  }\n\n	p1div = $(\".place_of_top\").children('div');\n	\n	p1.animate({\"left\":p1div.offset().left,\"top\":p1div.offset().top,\"width\":p1div.width()-2,\"height\":p1div.height()-2},howlong);\n\n	if( who_is_on_top=='top_panel' )\n		p1div = $(\".bottom_left\").children('div').children('div').next('div');\n	else\n		p1div = $(\".bottom_left\").children('div').children('div').next('div').next('div');\n	\n	\n	p2.animate({\"left\":p1div.offset().left,\"top\":p1div.offset().top,\"width\":p1div.width()-2,\"height\":p1div.height()-2},howlong);\n\n	p1div = $(\".redactor_editor\");\n	$(\"#p3\").animate({\"left\":p1div.offset().left,\"top\":p1div.offset().top,\"width\":p1div.width()+26,\"height\":p1div.height()+26},howlong);\n\n	$(\"#p1,#p2,#p3\").show();\n	$(\"#content1\").addClass(\"transparent\");\n	\nif(howlong>0)	\n	setTimeout( function() \n		{\n		$(\"#content1\").removeClass(\"transparent\");\n		$(\"#p1,#p2,#p3\").fadeOut(400);\n		},howlong);\n		\n	remember_old_panel = who_is_on_top; //запоминаю какая панель была вверху\n		\n	\n}\n\nfunction jsMakeView(view_type)\n{\n	localStorage.setItem(\"view_type\",view_type);\n\n	$(\".place_of_top\").show();\n	$(\".place_of_top #calendar\").show();\n	$(\".bottom_left,.bottom_right\").show();\n	if($(\"#below_footer .redactor_box\").length==1) $(\".redactor_box\").appendTo($(\".bottom_right\"));\n	\n//	jsMakeAnimatePanel(1);\n	$(\"html\").removeClass(\"v4\");	\n\n//	setTimeout( function() { jsMakeAnimatePanel(2); },400);\n\n	if($(\"#content1 .bottom_right\").length==1)\n		{\n		$(\"#content1\").removeClass(\"v2\");\n		$(\".bottom_right\").appendTo($(\"#bottom_panel\"));\n		}\n\n\n  if(view_type=='v1')\n    {\n    	if( $(\".place_of_top #calendar\").length == 1 )\n    		{\n	    	$(\"#calendar\").fullCalendar(\"destroy\");\n			$(\".calendar_and_others\").swapWith($(\"#top_panel\"));\n			jsShowCalendar();\n			}\n		$(\"html\").removeClass(\"v4\");\n		$(\"#content1\").attr(\"class\",\"\").addClass(\"v1\");\n		onResize();\n    }\n  if(view_type=='v3')\n    {\n\n    	if( $(\".place_of_top #calendar\").length == 0 )\n    		{\n	    	$(\"#calendar\").fullCalendar(\"destroy\");\n			$(\".calendar_and_others\").swapWith($(\"#top_panel\"));\n			jsShowCalendar();\n			}\n		$(\"html\").removeClass(\"v4\");\n		$(\"#content1\").attr(\"class\",\"\").addClass(\"v3\");\n		onResize();\n    }\n\n  if(view_type=='v2')\n    {\n    	if( $(\".place_of_top #calendar\").length == 1 )\n    		{\n	    	$(\"#calendar\").fullCalendar(\"destroy\");\n			$(\".calendar_and_others\").swapWith($(\"#top_panel\"));\n			jsShowCalendar();\n			}\n		$(\".bottom_right\").appendTo($(\"#content1\"));\n//		$(\".all_editor_place\").appendTo($(\"#below_footer\"));\n		$(\"html\").removeClass(\"v4\");\n		$(\"#content1\").attr(\"class\",\"\").addClass(\"v2\");\n\n		onResize();\n    }\n\n  if(view_type=='v4') //похож на v3\n    {\n    	if( $(\".place_of_top #calendar\").length == 0 )\n    		{\n	    	$(\"#calendar\").fullCalendar(\"destroy\");\n			$(\".calendar_and_others\").swapWith($(\"#top_panel\"));\n			jsShowCalendar();\n			}\n		$(\".all_editor_place\").appendTo($(\"#below_footer\"));\n\n		$(\"html\").addClass(\"v4\");\n		$(\"#content1\").attr(\"class\",\"\").addClass(\"v4\");\n		onResize();\n    } else {\n   		$(\".all_editor_place\").appendTo($(\".bottom_right\"));\n    }\n    \n	$('#fav_calendar li.active').click();\n\n\n\n}\n\nfunction jsFixScroll(type,only_selected_panel)\n{\n//	console.info(\"fix_scroll\",type,only_selected_panel);\n	\n	if(only_selected_panel) var add_id = \".old_selected,\"\n	else var add_id = \"\";\n	$(\"#mypanel .panel\").quickEach(function()\n		{ \n		if(type==2) var add = \".selected\";\n		else var add = \"\";\n		\n		var selected = $(this).find(add_id+add);\n		if(selected.length) \n		  	{\n			//scrollto = selected.offset().top + $(this).scrollTop() - $(this).height()/2+30;\n			\n			var li_top = selected.offset().top;\n			var li_height = selected.height();\n			var panel_height = $(this).height();\n			var panel_scroll = $(this).scrollTop();\n			var scrollto = panel_scroll;\n			\n			if(li_top < 80)\n			  {\n			  scrollto = panel_scroll+li_top- 80;\n			  }\n			  \n			if(li_top > panel_height-20)\n			  {\n			  if(li_height>50) var addheight = li_height-30;\n			  else var addheight=0;\n			  scrollto = li_top - panel_height + panel_scroll + 20 + addheight;\n			  }\n			$(this).scrollTop(scrollto);\n			}\n		});\n}\n\nfunction jsSetHashAndPath(new_id) {\n	var id_hash = parseInt(new_id).toString(36);\n\n	var mypath = api4tree.jsFindPath( api4tree.jsFind( new_id ) );\n	if(!mypath) return true;\n	var new_path = \"/home\";\n\n	$.each(mypath.path, function(i, el) {\n		  new_path += \"/\";\n		  new_path += strip_tags(el.path.title).trim().replace(/ /ig,\"_\");\n\n	});\n\n\n\n\n	window.location.hash = new_path+\"/\"+id_hash;\n}\n\nfunction jsSethash(dont_open)\n{\n			if(ignorehashchange) return false;\n		\n			check_hash_add_do();\n			var myhash = window.location.hash;\n			if(false && myhash && myhash.indexOf(\"_\")!=-1) {\n				var id = myhash;	\n			} else {\n				var tmp_hash = myhash.split(\"/\");\n				var id_hash = tmp_hash[tmp_hash.length-1];\n\n				//var id_hash = myhash.replace(\"#\",\"\");\n		  		var id = parseInt(id_hash,36);\n		  	}\n	  		\n	  		if(!dont_open) {\n		  		if((\"#\"+id!=window.location.hash) && (id))\n		  			{\n					$(window).unbind('hashchange');\n			  		api4panel.jsOpenPath( id );\n					$(window).bind('hashchange', jsSethash );\n		  			}\n	  		}\n	 return id;\n}\n\nfunction jsOpenChildrens(id)\n{\nul = $(\".ul_childrens[myid=\"+id+\"]\");\nif(ul.length)\n  {\n  ul.show();\n  }\nelse\n  {\n  jsShowTreeNode(id,true); $(\".ul_childrens[myid=\"+id+\"]\").show();\n  }\n}\n\n\nfunction jsSaveDataComment(id_one,old_id,dontsync)\n{\n//last_local_sync = jsNow()+1000; //если менял данные, то отменяю локальную синхронизацию\nstart_sync_when_idle = false;\njsSync(\"save_only\");\n//if(!dontsync) jsStartSync(\"soon\",\"SAVED DATA\"); //запущу синхронизацию примерно через 15 секунд\n\n//console.info(\"old_id\",old_id);\nvar mc_len = my_all_comments.length;\nfor(var ik=0;ik<mc_len;ik++)\n	{\n	if(id_one) \n	  {\n	  if(my_all_comments[ik].id == old_id)\n	  	{\n	  	localStorage.removeItem(\"c_\"+ik);\n	  	console.info(\"remove:\",\"c_\"+ik);\n	  	}\n	  if(my_all_comments[ik].id == id_one) \n		{\n		localStorage.setItem(\"c_\"+ik,JSON.stringify(my_all_comments[ik]));\n		localStorage.setItem(\"c_length\",my_all_comments.length);\n//		console.info(\"savedata = \",ik,id_one);\n		return false;\n		}\n	  }\n	else\n	  {\n		   localStorage.setItem(\"c_\"+ik,JSON.stringify(my_all_comments[ik]));\n	  }\n	}\n\nlocalStorage.setItem(\"c_length\",my_all_comments.length);\n\n}\n\nvar db;\n\n//добавление дела через поисковую строку\nfunction check_hash_add_do()\n{\n\nvar add_do = window.location.hash;\nif(add_do.indexOf(\"add_do:\")!=-1)\n	{\n	var text_of_do = decodeURIComponent(add_do).replace(\"#add_do:\",\"\").replace(\"+\",\" \");\n	setTimeout(function() { \n	     	var new_id = api4tree.jsAddDo( \"to_new_folder\", text_of_do, undefined, undefined, \"last\" ); \n	     	api4panel.jsOpenPath(new_id.id);\n			}, 500);\n	}\n\n}\n\n\nDate.createFromMysql = function(mysql_string)\n{ \n   if(typeof mysql_string === 'string')\n   {\n      var t = mysql_string.split(/[- :]/);\n\n      //when t[3], t[4] and t[5] are missing they defaults to zero\n      return new Date(t[0], t[1] - 1, t[2], t[3] || 0, t[4] || 0, t[5] || 0);          \n   }\n\n   return null;   \n}\n\n\n\n\nfunction jsMakeDate(mydate)\n{\n	today = new Date;\n	mylong = \"\";\n	result = new Object();\n	\n	dd = Math.round((Date.createFromMysql(mydate).getTime()-today.getTime())/60/60/1000*10)/10;\n\n	if(mydate.indexOf(\"00:00:00\")!=-1 && (mydate.split(\" \")[0] == today.toMysqlFormat().split(\" \")[0] ))\n		{\n		   result.mydays = \"0 дн\";\n		   result.myclass = \"shortdate\";\n		   return result;\n		}\n	\n	if (mydate==\"\") return '';\n\n   if (dd>0) myclass='shortdate';\n   else myclass='shortdatepast';\n\n   ddd=dd;\n\nif ((dd>24) || (dd<-24) || (mydate.search(\"00:00:00\")!=-1)) \n   { \n    dd=Math.round(dd/24); \n    mylong=\"long\";\n    if (dd>=0) mydays=\"+ \"+dd+\" дн\";\n       else\n    mydays=dd+\" дн\";\n   }\n\nelse\n   { \n    if (dd>=0) mydays=\"+ \"+dd+\" ч\";\n       else\n    mydays=dd+\" ч\";\n   }\n   \n   result.mydays = mydays;\n   result.myclass = myclass+mylong;\n   \n   if(dd<-15000) result.mydays = \"<font title='Много лет назад' size=3px>&infin;</font>\";\n   \n   return result;\n\n\n}\n\nfunction jsPrepareDate()\n{\n  $(\".date1\").quickEach( function()\n      {  \n      if($(this).attr(\"childdate\")) \n      	{\n      	cur_date = jsMakeDate($(this).attr(\"childdate\"));\n      	$(this).html(cur_date.mydays);\n      	$(this).addClass(cur_date.myclass);\n      	$(this).addClass(\"fromchildren\");\n      	$(this).show();\n      	}\n      else	\n       if($(this).attr(\"title\")) \n      	{\n      	cur_date = jsMakeDate($(this).attr(\"title\"));\n      	$(this).html(cur_date.mydays);\n      	$(this).addClass(cur_date);\n      	$(this).show();\n      	}\n      	\n      	\n      });\n}\n\nif (!Array.prototype.filter)\n{\n  Array.prototype.filter = function(fun /*, thisp */)\n  {\n    \"use strict\";\n\n    if (this === void 0 || this === null)\n      throw new TypeError();\n\n    var t = Object(this);\n    var len = t.length >>> 0;\n    if (typeof fun !== \"function\")\n      throw new TypeError();\n\n    var res = [];\n    var thisp = arguments[1];\n    for (var i = 0; i < len; i++)\n    {\n      if (i in t)\n      {\n        var val = t[i]; // in case fun mutates this\n        if (fun.call(thisp, val, i, t))\n          res.push(val);\n      }\n    }\n\n    return res;\n  };\n}\n\nfunction jsIsThereElement(id)\n{\nif(id==-5) //отборы\n	{\n		element = new Object;\n\n		element.date1 = \"\";\n		element.date2 = \"\";\n		element.icon = \"\";\n		element.id = -5;\n		element.img_class = \"note-clean\";\n		element.parent_id = 1;\n		element.position = \"100\";\n		element.text = \"\";\n		element.did = \"\";\n		element.del = 0;\n		element.tab = 0;\n		element.fav = 0;\n		element[\"new\"] = \"\";\n		element.time = 0;\n		element.lsync = 1;\n		element.user_id = main_user_id;\n		element.s = 0;\n		element.remind = 0;\n		element.title = \"<i class='icon-search'></i> Отборы\";\n		return element;\n	}\n\nif(id==-6) //по дате изменения\n	{\n		element = new Object;\n\n		element.date1 = \"\";\n		element.date2 = \"\";\n		element.icon = \"\";\n		element.id = -6;\n		element.img_class = \"note-clean\";\n		element.parent_id = 1;\n		element.position = \"100\";\n		element.text = \"Все заметки, которые недавно редактировались\";\n		element.did = \"\";\n		element.del = 0;\n		element.tab = 0;\n		element.fav = 0;\n		element[\"new\"] = \"\";\n		element.time = 0;\n		element.lsync = 1;\n		element.user_id = main_user_id;\n		element.s = 0;\n		element.remind = 0;\n		element.title = \"<i class='icon-clock-3'></i> 100 недавних изменений\";\n		return element;\n	}\n\nif(id==-7) //по дате изменения\n	{\n		element = new Object;\n\n		element.date1 = \"\";\n		element.date2 = \"\";\n		element.icon = \"\";\n		element.id = -7;\n		element.img_class = \"note-clean\";\n		element.parent_id = 1;\n		element.position = \"100\";\n		element.text = \"Все дела отсортированные по дате выполнения\";\n		element.did = \"\";\n		element.del = 0;\n		element.tab = 0;\n		element.fav = 0;\n		element[\"new\"] = \"\";\n		element.time = 0;\n		element.lsync = 1;\n		element.user_id = main_user_id;\n		element.s = 0;\n		element.remind = 0;\n		element.title = \"<i class='icon-calendar'></i> отсортированы по дате\";\n		return element;\n	}\n\nif(id==-8) //по дате изменения\n	{\n		element = new Object;\n\n		element.date1 = \"\";\n		element.date2 = \"\";\n		element.icon = \"\";\n		element.id = -8;\n		element.img_class = \"note-clean\";\n		element.parent_id = 1;\n		element.position = \"100\";\n		element.text = \"Все заметки, в которых вы нажали <b>поделиться</b> и у которых есть короткая ссылка\";\n		element.did = \"\";\n		element.del = 0;\n		element.tab = 0;\n		element.fav = 0;\n		element[\"new\"] = \"\";\n		element.time = 0;\n		element.lsync = 1;\n		element.user_id = main_user_id;\n		element.s = 0;\n		element.remind = 0;\n		element.title = \"<i class='icon-export-1'></i> вы поделились\";\n		return element;\n	}\n\nif(id==-9) //по дате изменения\n	{\n		element = new Object;\n\n		element.date1 = \"\";\n		element.date2 = \"\";\n		element.icon = \"\";\n		element.id = -9;\n		element.img_class = \"note-clean\";\n		element.parent_id = 1;\n		element.position = \"100\";\n		element.text = \"Отбор всех записей в названии которых есть символ [@]\";\n		element.did = \"\";\n		element.del = 0;\n		element.tab = 0;\n		element.fav = 0;\n		element[\"new\"] = \"\";\n		element.time = 0;\n		element.lsync = 1;\n		element.user_id = main_user_id;\n		element.s = 0;\n		element.remind = 0;\n		element.title = \"<i class='icon-mail'></i> электронная почта\";\n		return element;\n	}\n\nif(id==-10) //по дате изменения\n	{\n		element = new Object;\n\n		element.date1 = \"\";\n		element.date2 = \"\";\n		element.icon = \"\";\n		element.id = -10;\n		element.img_class = \"note-clean\";\n		element.parent_id = 1;\n		element.position = \"100\";\n		element.text = \"всё что вы оборачиваете в двойные [[квадратные скобки]], становится wiki статьёй<br>При клике, создаётся новая запись с таким заголовком.\";\n		element.did = \"\";\n		element.del = 0;\n		element.tab = 0;\n		element.fav = 0;\n		element[\"new\"] = \"\";\n		element.time = 0;\n		element.lsync = 1;\n		element.user_id = main_user_id;\n		element.s = 0;\n		element.remind = 0;\n		element.title = \"[[wiki]] определения\";\n		return element;\n	}\n\n\nif(id==-3)\n	{\n		element = new Object;\n\n		element.date1 = \"\";\n		element.date2 = \"\";\n		element.icon = \"img/contacts.png\";\n		element.id = -3;\n		element.img_class = \"note-clean\";\n		element.parent_id = 1;\n		element.position = \"100\";\n		element.text = \"\";\n		element.did = \"\";\n		element.del = 0;\n		element.tab = 0;\n		element.fav = 0;\n		element[\"new\"] = \"\";\n		element.time = 0;\n		element.lsync = 1;\n		element.user_id = main_user_id;\n		element.s = 0;\n		element.remind = 0;\n		element.title = \"<i class='icon-users'></i> Контакты\";\n		return element;\n	}\n\nif(id)\n if( (id.toString().indexOf(\"user_\")!=-1) && (my_all_frends))\n	{\n				\n				id = id.toString().replace(\"user_\",\"\");\n				fio = my_all_frends.filter(function(el){ return el.user_id == id })[0].fio;\n				\n				if(id==main_user_id)\n					{ this_is_you=\"&nbsp;&nbsp;<i title='Ветки которыми вы поделились' class='icon-export-2'></i>\"; myorder = 1;  myicon=\"<i class='icon-heart'></i>\"; }\n				else\n					{ this_is_you=\"\"; myorder = 100; myicon=\"<i class='icon-vcard'></i>\"; }\n				\n				element = new Object;\n			   	element.date1 = \"\";\n				element.date2 = \"\";\n			   	element.icon = \"\";\n			   	element.id = \"user_\"+id;\n			   	element.share = id;\n			   	element.img_class = \"note-clean\";\n			   	element.parent_id = -3;\n			   	element.position = myorder.toString();\n			   	element.text = \"\";\n			   	element.did = \"\";\n			   	element.del = 0;\n			   	element.tab = 0;\n			   	element.fav = 0;\n			   	element[\"new\"] = \"\";\n			   	element.time = 0;\n				element.user_id = id;\n			   	element.lsync = 1;\n			   	element.s = 0;\n			   	element.remind = 0;\n			   	element.title = myicon+\" \"+fio+this_is_you;\n			   	\n			   	return element;\n	}\n\n}\n\n/**\nПодбирает элементы, подходящие под критерии\n**/\nfunction jsFindByTreeId(tree_id,parent_id)\n{\nreturn false;\nif(!tree_id) return false;	\n\nvar data = my_all_comments.filter(function(el) \n   {\n   if(el.del == 1) return false;\n   return ( (el.tree_id==tree_id) && ( (el.parent_id==parent_id) || (parent_id==-1) )); \n   });\n   \nreturn data;\n}\n\nfunction jsFindByParentComments(parent_id,need_did,need_add_line)\n{\nif(!parent_id) return false;	\n\nvar data = my_all_comments.filter(function(el) \n   {\n   if(el.del == 1) return false;\n   return ( (el.parent_id==parent_id) ); \n   });\n   \nreturn data;\n}\n\nvar last_load_frends_time=0;\n\n\nfunction strip_tags( str ){	// Strip HTML and PHP tags from a string\n	// \n	// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)\n	if(!str) return \"\";\n	answer = str.replace(/<\\/?[^>]+>/gi, '');\n\n	answer = answer.replace(/\\n/gi, '');\n\n	return answer;\n}\n\n\nfunction jsPresize() //удаляю и добавляю узкие полоски для регулировки ширины панелей\n{\n	$(\"#mypanel .panel\").quickEach(function() \n		{ \n		if( this.next(\".presize\").length==0 )\n			$(\"<div class='presize'></div>\").insertAfter($(this)); \n		else\n			{\n			this.next(\".presize\").next(\".presize\").remove();\n			this.next(\".presize\").next(\".presize\").remove();\n			}\n		});\n}\n\n\nfunction jsAddToTree(id_node)\n{\n	if($(\"#node_\"+id_node).length) return true; //если элемент уже есть, то добавлять не нужно\n\n//	var isTree = $(\"#top_panel\").hasClass(\"panel_type1\");\n	console.info(\"ADD TO TREE = \",id_node);\n	var element = api4tree.jsFind(id_node);\n	\n	var render_node = api4panel.jsRenderOneElement( api4tree.jsFind(id_node) );\n	\n    if(isTree) {\n    	where_to_add = $(\"ul[myid=\"+element.parent_id+\"]\");\n    } else {\n    	where_to_add = $(\"#panel_\"+element.parent_id+\" ul\");\n    }\n\n	where_to_add.find(\".divider_li:last\").remove();\n	var iii = element.position;\n	var divider = \"<div class='divider_li' pos='\"+(iii+0.1)+\"' myid='\"+element.parent_id+\"'></div>\";\n	\n	var before_div = where_to_add.find(\".divider_li[pos='\"+iii+\".1']\");\n	if(before_div.length)	$(render_node + divider).insertBefore(before_div);\n	else where_to_add.append(render_node + divider);\n\n}\n\nfunction jsSnapShotMake()\n{\n	var snapshot={};\n	var tree_open = $(\".tree-open\");\n	\n	snapshot.tree_open = []; //открытые папки\n	var len = tree_open.length;\n	for(var i=0;i<=len;i++)\n	   {\n	   if(tree_open[i]) snapshot.tree_open.push( $(tree_open[i]).attr(\"id\") );\n	   }\n\n	snapshot.tree_selected = $(\".selected\").attr(\"id\");	  //выбранные\n\n	snapshot.tree_old_selected = []; //ранее выбранные папки\n	var tree_old_selected = $(\".old_selected\");\n	var len = tree_old_selected.length;\n	for(var i=0;i<=len;i++)\n	   {\n	   if(tree_old_selected[i]) snapshot.tree_old_selected.push( $(tree_old_selected[i]).attr(\"id\") );\n	   }\n\n	snapshot.tree_scroll = {};\n	var tree_panel = $(\".panel\");\n	var len = tree_panel.length;\n	for(var i=0;i<=len;i++)\n	   {\n	   if(tree_panel[i]) snapshot.tree_scroll[$(tree_panel[i]).attr(\"id\")] = ( $(tree_panel[i]).scrollTop() );\n	   }\n	  \n	return snapshot;\n	\n}\n\nfunction jsSnapShotApply(snapshot)\n{\n	$(\".selected\").removeClass(\".selected\");\n	$(\".old_selected\").removeClass(\".old_selected\");\n	$(\".tree_open\").removeClass(\"tree_open\");\n\n	$.each(snapshot.tree_open, function(i,el){\n		$(\"#\"+el).click();\n	})\n	\n	$.each(snapshot.tree_old_selected, function(i,el){\n		$(\"#\"+el).addClass(\"old_selected\");\n	})\n\n	$.each(snapshot.tree_scroll, function(i,el){\n		$(\".\"+i).scrollTop(el);\n	})\n	\n	\n}\n\nfunction jsRefreshOneFolder(panel_id)\n{\n	elements = $(\"#mypanel li\").clone();\n	var len=elements.length;\n	for(var i=0;i<len;i++)\n		{\n		var id = api4tree.node_to_id( $(elements[i]).attr(\"id\") );\n		var changetime_from_base = api4tree.jsFind(id).time;\n		var changetime_from_screen = $(elements[i]).attr(\"time\");\n		\n		if(changetime_from_base != changetime_from_screen) //если элемент на экране не совпадает с базой\n			{\n			var isFolderOpen = $(elements[i]).hasClass(\"tree-open\");\n			api4panel.jsRefreshOneElement(id);\n			if(isFolderOpen) $(\"#mypanel #node_\"+id).addClass(\"tree-open\");\n			console.info(\"Обновляю один элемент - \"+id);\n			}\n		\n		}\n	\n}\n\n\n\n\nfunction jsMakeDrop() //обеспечивает элементам drag&drop\n{\n//return true;\n		$(\"body\").unbind(\"mousemove\");\n		$(\"body\").unbind(\"mouseup\");\n		\n	$(\"#mypanel li\").not(\"ui-draggable\").draggable({\n				zIndex: 999,\n				delay:100,\n				revert: false,      // will cause the event to go back to its\n				helper:\"clone\",\n				appendTo: \"#content1\",\n				start: function(event, ui) {\n					console.info(\"start-drag\");\n					$(\"#mypanel\").addClass(\"li_compact\");\n				},\n				stop: function(event, ui) {\n					console.info(\"stop-drag\");\n					$(\"#mypanel\").removeClass(\"li_compact\");\n				}\n//				revertDuration: 500  //  original position after the drag\n			});\n			\n	$( \"#mypanel .big_n_title,.divider_li\" ).not(\"ui-droppable\").droppable({\n			accept: \"li\",\n			activeClass: \"ui-can-recieve\",\n			tolerance: \"pointer\",\n			hoverClass: \"ui-can-hover\",\n			over: function (event, ui) {\n				//$(this).click();\n				},\n            drop: function( event, ui ) {\n            	console.info(\"drop-all\",usedOverlays,ui,ui.draggable[0] );\n            	\n            	\n            	if( (usedOverlays.length!=0) || ($(ui.draggable[0]).hasClass(\"fc-event\")) ){ return true; } //если под делом есть другое дело, но мы над календарём\n            	\n            	if(event.target.attributes.pos) //если уронили на разделитель\n            		{\n	            	dropto_pos = parseFloat(event.target.attributes.pos.nodeValue);\n	            	dropto_parent_id = event.target.attributes.myid.nodeValue;\n	            	dropto = event.target.attributes.myid.nodeValue;\n	            	draggable = ui.draggable[0].attributes.myid.nodeValue;\n\n	            	console.info(\"drop=\",dropto,dropto_pos,draggable);\n\n	            	el = api4tree.jsFind(dropto);\n//					if(el) jsReorder( el.parent_id );\n//					else return true;\n\n					if(el.id && draggable && (draggable!=dropto_parent_id)) {\n						\n						var pos1 = parseFloat( $(event.target).prev(\"li\").prev(\".divider_li\").attr(\"pos\") );\n						var pos2 = parseFloat( $(event.target).attr(\"pos\") );\n						if(!pos1) pos1 = pos2 - 5;\n						var dif = (pos2 - pos1)/2;\n						if(dif==0) dif = 0.01;\n						newposition = pos1+dif;\n						\n						api4tree.jsFind(draggable,{ position:(newposition), parent_id : dropto_parent_id });\n			   			setTimeout(function(){ \n			   				jsRefreshTree(); \n			   			},100);\n						\n					}\n\n\n					//jsRefreshTree();\n            		}\n            	else //если уронили на другой элемент\n            		{\n            		if(!$(ui.draggable).attr(\"myid\")) return true;\n	            	dropto = $(event.target).parent(\"li\").attr(\"myid\");\n	            	draggable = $(ui.draggable).attr(\"myid\");\n	            	\n	            	var drop_to_element = api4tree.jsFind(dropto);\n	            	\n/*	          	if(jsFind(draggable).share)\n	            	if( jsFind(dropto).share != jsFind(draggable).share ) \n	            		{ alert(\"Вы не можете переместить чужую заметку к себе — \"+jsFind(draggable).share+\"!=\"+jsFind(dropto).share); return true; }*/\n	            	\n	           		if(drop_to_element.id && (draggable!=dropto)) {\n	           			api4tree.jsFind(draggable, {parent_id : dropto});\n			   			setTimeout(function(){ \n			   				jsRefreshTree(); \n			   				api4panel.jsOpenPath(draggable);\n			   			},800);\n			   		}\n			    	\n		           	}\n            	$(\".fc-cell-overlay\").remove();\n   				$(\".ui-draggable-dragging\").remove();\n\n        }});\n\n\n}\n\nvar tm_resize;\nfunction onResize() //вызывается при каждом ресайзе страницы\n{	\n	clearTimeout(tm_resize);\n	if(isMindmap) tm_resize = setTimeout(function(){ myjsPlumb.setSuspendDrawing(false,true) },1000);\n	\n	if($(\".ui-resizable-resizing\").length) return true;\n	\n			var w = $(document).width();\n			var y = $(document).height();\n			\n			//если мышка подошла близко к краю, то скрываю одну панель\n			if(main_x<28) \n				{\n				if( !$(\"html\").hasClass(\"v4\") ) {\n					$(\".bottom_left\").hide();\n					$(\"#bottom_panel\").css(\"left\",20);\n				}\n				main_x = -1;\n				\n				if( $(\"#content1\").hasClass(\"v2\") ) $(\".place_of_top\").hide();\n				\n				}\n			else\n				{\n				$(\".bottom_left\").show();\n				$(\"#bottom_panel\").css(\"left\",0);\n				if( $(\"#content1\").hasClass(\"v2\") ) $(\".place_of_top\").show();\n				}\n\n			if( main_x>72 ) \n				{\n				$(\".bottom_right\").hide();\n				$(\"#bottom_panel\").css(\"right\",20);\n\n				$(\".bottom_left\").css('width','auto');\n				$(\".bottom_left\").css('right',-15);\n				main_x = 96.5;\n				}\n			else\n				{\n				$(\".bottom_left\").css('width','100%');\n				$(\".bottom_left\").css('right','0px');\n				$(\"#bottom_panel\").css(\"right\",0);\n				$(\".bottom_right\").show();\n				}\n				\n				\n			if(main_y<50)\n			  {\n			  main_y=0;\n			  $(\".place_of_top\").children(\"div\").hide();\n			  }\n			else\n			  {\n			  $(\".place_of_top\").children(\"div\").show();\n			  }\n			 \n			  \n			if(main_y>y-150)\n			  {\n			  main_y=y-90;\n			  $(\".bottom_left\").hide();\n			  if( !$(\"#content1\").hasClass(\"v2\") ) $(\".bottom_right\").hide();\n			  }\n			else\n			  {\n			if( (main_x>15) && (main_x<85) )\n			  $(\".bottom_left,.bottom_right\").show();\n			  }\n\n			\n			//ресайзим ширину главных панелей\n			if(main_x!=97.5) $(\".bottom_left\").css(\"width\",(main_x)+'%');\n			$(\".bottom_right\").css(\"left\",main_x+'%');\n			\n//			if(main_x==101)	$(\".resize_me\").css(\"margin-left\",\"-25px\");\n//			else $(\".resize_me\").css(\"margin-left\",\"18px\");\n			\n			center = main_x;\n			$(\".resize_me\").css(\"left\",center+'%');\n			$(\".sos\").css(\"left\",center+'%');\n\n			y = $(\".resize_me\").width();\n			\n//			left = -3*(19-y);\n//			$(\".resize_me i\").css(\"left\",left);\n\n			if( $(\"#content1\").hasClass(\"v2\") ) \n			  {\n			  $(\".place_of_top\").css(\"width\",main_x+'%');\n			  }\n			else\n			  $(\".place_of_top\").css(\"width\",'auto');\n\n			//ресайзим высоту главных панелей\n			if( $(\"#content1\").hasClass(\"v2\") ) \n			  {\n				$(\".place_of_top\").height(main_y+5);\n			  }\n			else\n			  {\n				$(\".place_of_top\").height(main_y);\n			  }\n			  \n			if( $(\"html\").hasClass(\"v4\") ) \n			  {\n			  $(\"#wrap\").css(\"min-height\",main_y+510); //510 - высота bottom\n			  }\n			  \n			$(\"#bottom_panel\").css('top',main_y);\n			\n			\n			var newheight=$('#calendar').parent(\"div\").height()-20;\n			if( $(\"#content1\").hasClass(\"v3\")  ) newheight += 0;\n			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря\n			$(\".search_panel_result\").height(newheight);\n			$(\"#tree_news\").height(newheight);\n			$(\"#tree_files_panel\").height(newheight);\n			\n//			$(\"#tree_comments\").height(newheight);\n			\n			if( $(\"#comment_enter\").parents(\".comment_box\").length ) \n				{\n				var reply_height = 0;\n				}\n			else \n				{\n				var reply_height = parseInt( $(\"#comment_enter\").height(),10 );\n				}\n			\n//			$(\"#tree_comments_container\").height( newheight - reply_height );\n\n\n			jsSetTimeNow(); //обновляю указатель текущего времени\n			\n			api4tree.jsCalcTabs();\n\n}\n\n\n\n//дописывает ноль к цифре\nfunction twoDigits(d) {\n    if(0 <= d && d < 10) return \"0\" + d.toString();\n    if(-10 < d && d < 0) return \"-0\" + (-1*d).toString();\n    return d.toString();\n}\n\n//Перевожу дату new Date в mySQL формат\nDate.prototype.toMysqlFormat = function() {\n    return this.getFullYear() + \"-\" + twoDigits(1 + this.getMonth()) + \"-\" + twoDigits(this.getDate()) + \" \" + twoDigits(this.getHours()) + \":\" + twoDigits(this.getMinutes()) + \":\" + twoDigits(this.getSeconds());\n};\n\n\nvar caldata;\n\nfunction jsShowCalendar() //отображаю календарь\n{\n\n		var date = new Date();\n		var d = date.getDate();\n		var m = date.getMonth();\n		var y = date.getFullYear();\n\n//Большой календарь ##calendar\n	if(true)\n		calend = $('#calendar').fullCalendar({\n			editable:true,\n			firstHour: firstHour,\n			slotMinutes: 15,\n			timeFormat: 'H:mm',\n			axisFormat: 'H:mm',\n			contentHeight:361,\n			weekends:true,\n			defaultView:'agendaWeek',\n			droppable:true,\n			eventResize: function(event,dayDelta,minuteDelta,revertFunc) {\n        \n        console.info(event.id,dayDelta,minuteDelta);\n\n		var el = api4tree.jsFind(event.id);\n		\n		if(el.date2<el.date1) \n			{\n			var mydate1 = Date.createFromMysql( el.date1 );\n			mydate1.setMinutes( mydate1.getMinutes() + 60 );\n			el.date2 = mydate1.toMysqlFormat();\n			console.info(\"Был глюк с датой\", el.date2);\n			}\n\n		var mydate = Date.createFromMysql( el.date2 );\n		\n		mydate.setMinutes( mydate.getMinutes() + parseInt(minuteDelta,10) );\n		mydate.setDate( mydate.getDate() + parseInt(dayDelta,10) );\n		\n		var mydate2 = mydate.toMysqlFormat();\n		api4tree.jsFind(event.id,{date2:mydate2});\n		\n		console.info(\"newdate = \",mydate,mydate2);\n        \n\n    		},\n			drop: function(date1,allday,ev,et)\n			  { \n////////////////После того как элемент дерева брошен на календарь, присваиваем дату при помощи AJAX и обновляем календарь			  			\n			 if(ev.target.attributes.myid) {\n			 	 var mynode = ev.target.attributes.myid.nodeValue;\n				\n				var newdate = date1.toMysqlFormat();\n				console.info(\"drop=\",date1,allday,ev,et);\n				api4tree.jsFind(mynode,{ date1:newdate });\n				jsRefreshTree();\n				}\n			 else\n			 if(et.data)\n 			   et.data.obj.each(function()\n			     { \n			    var mynode = this.id;\n			    var mydate = encodeURIComponent(date1.toMysqlFormat());\n			    api4tree.jsFind(mynode, { date1 : mydate });\n			 	$('#calendar').fullCalendar( 'refetchEvents' ); \n			    jsRefreshTree();\n			    \n			    var lnk=web_site + \"do.php?phonegap=\" + phonegap_user_id + \"&date_to_do=\"+$(this).attr('id')+\"&date1=\"+mydate+\"&allday=\"+allday;\n		 		$('#bubu').load(lnk, function () \n		 		  { \n		 		    var new_date = $('#bubu').html();\n		 		    $(\"#\"+mynode).attr('date1',new_date);\n			 		jsRefreshDate(mynode.replace('node_',''));\n			 		$('#calendar').fullCalendar( 'refetchEvents' ); \n\n		 		  });\n			     });\n			  \n\n			  },\n			header: {\n				left: 'prev,next today',\n				center: 'title',\n				right: 'month,agendaWeek,agendaDay'\n			},\n			firstDay: 1,\n\n		\n			eventSources: [{ events: function(start, end, callback){ api4tree.jsGetEvents(start, end, callback); }, \n							 className: 'my_event' }],					\n					\n			eventMouseover: function (event) \n			   { 			   			   \n			   },					\n			eventAfterAllRender: function() { jsSetTimeNow(); },\n			eventMouseout: function (event) \n			   { \n			   },					\n			eventClick: function(event) {\n				console.info(event);\n				api4panel.jsOpenPath( event.id );\n				//(,\"calendar\");\n			},\n			eventDrop: function(event, delta, minutedelta, allday) {\n			   \n			   var today = new Date( event.start );\n			   \n			   if(allday) \n			    	{\n			    	today.setHours(0);\n			    	today.setMinutes(0);\n			    	today.setSeconds(0);\n			    	}\n			   \n			   api4tree.jsFind(event.id,{ date1 : today.toMysqlFormat() });\n			   jsRefreshTree();\n			   \n			  \n			},\n			\n			loading: function(bool) {\n				if (bool) {\n					$('#loading').show();\n				}else{\n					$('#loading').hide();\n					jsSetTimeNow();\n					$('#time_now_to').scrollTop(400);\n				}\n			},\n			selectable: true,\n			selectHelper: true,\n			select: function(start, end, allDay) {\n			console.info(end-start);\n			if( end-start <= 900000 ) { 	calend.fullCalendar('unselect'); return true; }\n				var title = prompt('Название события:');\n				if (title) { \n				var manager = encodeURIComponent($('#selectmanager').html()); \n				\n			if(allDay==false)\n				{	\n				var st = start.toString();\n				var en = end.toString();\n				}\n			else\n			 	{\n				var st = start.toDateString();\n				var en = end.toDateString();\n			 	}\n				\n				console.info(start.toMysqlFormat(),end.toMysqlFormat(), title);\n				api4tree.jsAddDo(\"to_new_folder\",title, start.toMysqlFormat(),end.toMysqlFormat() );\n\n				};\n				calend.fullCalendar('unselect');\n				$('#calendar').fullCalendar( 'refetchEvents' ); \n				\n			}\n			\n			\n		});\n				\n\n\n}\n\nfunction jsSetTimeNow() //устанавливаю красную полоску - показывающую текущую дату\n{\n		if(typeof is_mobile != \"undefined\") return true;\n		var cur_view = calend.fullCalendar('getView').name;\n		var myl,myleft,mywidth;\n		\n		\n		if ((cur_view=='agendaWeek') || (cur_view=='agendaDay'))\n			$(\"* #time_now_to\").quickEach(function(){				\n				if ($(this).children('.fc-mynow').html()==null)\n				   $('<div class=\"fc-mynow\"></div>').prependTo(this);\n				   \n		if (cur_view=='agendaWeek')\n		           {\n		           if($('.fc-today').height()) myl = $('.fc-today').offset().left;\n		           else { myl=0; $('.fc-mynow').remove(); }\n		           \n		           \n				   if($.cookie('swap_calendar')==0)\n		           var swap = 1;\n		           else\n		           var swap = $('#left_top').width()+1;\n		           \n				   myleft=myl-$('.fc-agenda-axis').width()-swap+18-20;\n				   				   \n				   if($('#top').hasClass('fullscreen')) myleft=myl-2;\n				   if($('#left_bottom2').hasClass('fullscreen')) myleft=myl-swap-3;\n				   				   \n				   mywidth=$('.fc-today').width()+1; //ширина указателя текущего времени\n				   \n				   }\n		if (cur_view=='agendaDay')\n		           {\n		           myleft=$('.fc-agenda-axis').width()+7;\n				   mywidth='100%';\n				   }\n				   \n				   $(this).children('.fc-mynow').css('top',0).css('width',mywidth).css('left',myleft);\n				   \n				   \n					var currentTime=new Date;\n					var tim=currentTime.getHours() + currentTime.getMinutes()/60;\n					var timenow=$(this).height()/24*(tim);\n					$(this).children(\".fc-mynow\").css({\"top\": timenow});\n				   \n				   });\n\n}\n\nfunction jsMakeLeftRightPanelResizable() //настраиваю ресайзы и джойстик\n{\n  $('.resize_me,.sos').bind(\"touchstart\", function(e)\n     { \n			  e.preventDefault();\n			  \n			  if( e.pageY > ($(\".sos\").offset().top+21) ) may_vertical = false;\n			  else may_vertical = true; //в каких направлениях ресайзить\n			  \n\n			  $('.bottom_left,.resize_me i').addClass('noselectable');\n\n\n		$('body').bind(\"touchmove\",function(e){\n			  var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];\n			  \n			  e.pageX = touch.pageX;\n			  e.pageY = touch.pageY;\n			  \n			  w = $(document).width();\n			  neww = e.pageX-25;			  \n			  if(may_vertical) //меняю только горизонтальный размер\n				{\n				newy = e.pageY-$(\"#header\").height()-15;\n				main_y = newy;//высота верхней панели в пикселях\n				}\n			   procent = parseInt( 100*(parseFloat(neww)/parseFloat(w)*100),10 )/100;\n			   main_x = procent;\n			   onResize();	\n		       });\n\n\n     });\n\n  $(\"body\").bind(\"touchend\", function()\n     { \n		$(\"body\").unbind(\"touchmove\");\n	    $('.bottom_left,.resize_me i').removeClass('noselectable');\n\n		$.cookie('main_x',main_x,{ expires: 300 });			\n		$.cookie('main_y',main_y,{ expires: 300 });			\n\n     });\n\n\n\nif(true)\n  $(\"body\").on('mousedown.presize','.presize', function(e)\n     { \n			  e.preventDefault();\n			  widthpanel = $(this);\n			  var oldleft = e.pageX-25;		\n			  var oldwidth = widthpanel.prev(\".panel\").width();\n			  $('.bottom_left,.resize_me i').addClass('noselectable');\n\n		$(\"body\").on(\"mousemove.presize\",function(e){\n			  neww = oldwidth - oldleft+e.pageX-25;			  \n			  if(mymetaKey) $(\"#mypanel .panel\").width(neww);\n			  else\n			  	if(widthpanel) widthpanel.prev(\".panel\").width(neww);\n			  \n			  return false;\n		      });\n\n  $(\"body\").on(\"mouseup.presize\", function()\n     { \n		$(\"body\").off(\"mousemove.presize\");\n		$(\"body\").off(\"mouseup.presize\");\n	    $('#left').removeClass('noselectable');\n		if(mymetaKey) { \n			$.cookie('pwidth',widthpanel.prev(\".panel\").width(),{ expires: 300 });			\n			pwidth = widthpanel.prev(\".panel\").width();\n			if(pwidth<130) {\n				$(\"#mypanel .panel\").width(\"auto\");\n				jsTitle(\"Включена автоматическая ширина панелей\");\n			}\n		}\n//		$.cookie('main_y',main_y,{ expires: 300 });			\n		jsMakeDrop();\n		return false;\n     });\n\n		return false;\n     });\n\n\n\n\n\n\n\n	   \n	\n/////////////////////////////////////////\n\n}\n\n//переход в календаре на указанный id заметки\nvar anotherday = false;\nfunction jsCalendarNode(id)\n{\n	var i_am_scroll;\n	if(!(element = api4tree.jsFind(id))) return true;\n	var gotodate = element.date1;\n	if ((gotodate!='0000-00-00 00:00:00') && (gotodate)) //прыгаем календарем на выбранную делом дату \n		  {\n		  gotodate = Date.createFromMysql(gotodate);\n		  i_am_scroll = 1;\n		  anotherday = true;\n		  }\n	else  {\n		  if(!anotherday) return false;\n		  anotherday = false;\n		  gotodate = new Date;\n		  i_am_scroll = 0;\n		  }\n	\n		  if(!gotodate) return false;\n	\n		  var d = gotodate.getDate();\n		  var m = gotodate.getMonth();\n		  var y = gotodate.getFullYear();\n\n		  var h = gotodate.getHours();\n		  var slot = parseInt((95/24)*h,10)-6;\n\n		  $('#calendar').fullCalendar('gotoDate',y,m,d);		  \n		  \n		  $(\".fc-event\").removeClass('event-selected');\n		  setTimeout( function() \n		  	{ \n				if((slot!=0) && (i_am_scroll == 1))\n					{\n					$('* #slot_scroll').each(function() \n					  { \n					  	if(slot<0) return true;\n					  	var slot2 = $(this).find('.fc-slot'+slot);\n					  	if(slot2.offset())\n					  	  {\n							var selected_event = $(\".fc-event[myid=\"+id+\"]:visible:first\");\n							selected_event.addClass(\"event-selected\");\n							var offset = $(\"#calendar\").height()/2-80;\n							$(this).stop().scrollTo(selected_event[0],400,{offset:-offset}); \n						  }\n					  });\n					}\n				else\n					i_am_scroll = 1;\n\n				var selected_event = $(\".fc-event[myid=\"+id+\"]:visible:first\");\n				selected_event.addClass(\"event-selected\");\n		  	},100 );\n		  \n}\n\nvar t2;\n\nfunction jsTitle(title,tim) //вывод подсказок в левый нижний угол\n{\nvar mytim = tim;\nif (!tim) mytim = 5000;\n\n $('.f_text').html(title).fadeIn('slow');\n clearTimeout(t2);\n if(mytim<60000) t2 = setTimeout(function() { $('.f_text').fadeOut('slow').html('');} ,mytim);\n\n}\n\n//меняет элементы на странице местами\njQuery.fn.swapWith = function(to) {\n	console.info(\"swap\");\n    return this.quickEach(function() {\n        var copy_to = $(to).clone(true);\n        var copy_from = $(this).clone(true);\n        $(to).replaceWith(copy_from);\n        $(this).replaceWith(copy_to);\n    });\n};\n\nObject.size = function(obj) {\n    var size = 0, key;\n    for (key in obj) {\n        if (obj.hasOwnProperty(key)) size++;\n    }\n    return size;\n}; //подсчёт кол-ва элементов в объектах\n\nDate.prototype.jsDateTitleFull = function(shortit) //вывожу полную дату с днём недели\n{\nif(!shortit) \n	{\n	var months = [\" января\", \" февраля\", \" марта\", \" апреля\", \" мая\", \" июня\", \" июля\", \" августа\", \" сентября\", \" октября\", \" ноября\", \" декабря\"];\n	var days = [\"воскресенье\", \"понедельник\", \"вторник\", \"среда\", \"четверг\", \"пятница\", \"суббота\"];\n	}\nelse \n	{\n	var months = [\" янв\", \" фев\", \" мар\", \" апр\", \" мая\", \" июн\", \" июл\", \" авг\", \" сен\", \" окт\", \" ноя\", \" дек\"];\n	var days = [\"ВС\", \"ПН\", \"ВТ\", \"СР\", \"ЧТ\", \"ПТ\", \"СБ\"];\n	}\n\n	if(shortit==\"veryshort\") {\n	var n = this.getDate() + \"\" + months[this.getMonth()] + \" \" + days[this.getDay()];\n	return n;\n\n	}\n\nvar n = this.getDate() + \"\" + months[this.getMonth()] + \" \" + this.getFullYear() + \", \" + days[this.getDay()] + \" — \" + (this.getHours()<10?\"0\":\"\") +this.getHours()+\":\"+(this.getMinutes()<10?\"0\":\"\")+this.getMinutes();\nreturn n;\n}\n\n\n\nif (!Array.prototype.filter)\n{\n  console.info(\".FILTER IS NOT HERE\");\n  Array.prototype.filter = function(fun /*, thisp */)\n  {\n    if (this == null)\n      throw new TypeError();\n \n    var t = Object(this);\n    var len = t.length >>> 0;\n    if (typeof fun != \"function\")\n      throw new TypeError();\n \n    var res = [];\n    var thisp = arguments[1];\n    for (var i = 0; i < len; i++)\n    {\n      if (i in t)\n      {\n        var val = t[i]; // in case fun mutates this\n        if (fun.call(thisp, val, i, t))\n          res.push(val);\n      }\n    }\n \n    return res;\n  };\n}\n\n\n\n\n\n/**\n * Copyright (c) 2007-2012 Ariel Flesler - aflesler(at)gmail(dot)com | http://flesler.blogspot.com\n * Dual licensed under MIT and GPL.\n * @author Ariel Flesler\n * @version 1.4.3.1\n */\n(function($){var h=$.scrollTo=function(a,b,c){\n\nsetTimeout(function(){ if(scrolltimer) clearTimeout(scrolltimer); },800);\n\n$(window).scrollTo(a,b,c)};h.defaults={axis:'xy',duration:parseFloat($.fn.jquery)>=1.3?0:1,limit:true};h.window=function(a){return $(window)._scrollable()};$.fn._scrollable=function(){return this.map(function(){var a=this,isWin=!a.nodeName||$.inArray(a.nodeName.toLowerCase(),['iframe','#document','html','body'])!=-1;if(!isWin)return a;var b=(a.contentWindow||a).document||a.ownerDocument||a;return/webkit/i.test(navigator.userAgent)||b.compatMode=='BackCompat'?b.body:b.documentElement})};$.fn.scrollTo=function(e,f,g){if(typeof f=='object'){g=f;f=0}if(typeof g=='function')g={onAfter:g};if(e=='max')e=9e9;g=$.extend({},h.defaults,g);f=f||g.duration;g.queue=g.queue&&g.axis.length>1;if(g.queue)f/=2;g.offset=both(g.offset);g.over=both(g.over);return this._scrollable().each(function(){if(e==null)return;var d=this,$elem=$(d),targ=e,toff,attr={},win=$elem.is('html,body');switch(typeof targ){case'number':case'string':if(/^([+-]=)?\\d+(\\.\\d+)?(px|%)?$/.test(targ)){targ=both(targ);break}targ=$(targ,this);if(!targ.length)return;case'object':if(targ.is||targ.style)toff=(targ=$(targ)).offset()}$.each(g.axis.split(''),function(i,a){var b=a=='x'?'Left':'Top',pos=b.toLowerCase(),key='scroll'+b,old=d[key],max=h.max(d,a);if(toff){attr[key]=toff[pos]+(win?0:old-$elem.offset()[pos]);if(g.margin){attr[key]-=parseInt(targ.css('margin'+b))||0;attr[key]-=parseInt(targ.css('border'+b+'Width'))||0}attr[key]+=g.offset[pos]||0;if(g.over[pos])attr[key]+=targ[a=='x'?'width':'height']()*g.over[pos]}else{var c=targ[pos];attr[key]=c.slice&&c.slice(-1)=='%'?parseFloat(c)/100*max:c}if(g.limit&&/^\\d+$/.test(attr[key]))attr[key]=attr[key]<=0?0:Math.min(attr[key],max);if(!i&&g.queue){if(old!=attr[key])animate(g.onAfterFirst);delete attr[key]}});animate(g.onAfter);function animate(a){$elem.animate(attr,f,g.easing,a&&function(){a.call(this,e,g)})}}).end()};h.max=function(a,b){var c=b=='x'?'Width':'Height',scroll='scroll'+c;if(!$(a).is('html,body'))return a[scroll]-$(a)[c.toLowerCase()]();var d='client'+c,html=a.ownerDocument.documentElement,body=a.ownerDocument.body;return Math.max(html[scroll],body[scroll])-Math.min(html[d],body[d])};function both(a){return typeof a=='object'?a:{top:a,left:a}}})(jQuery);\n\n\n\n/*\n\nhighlight v4\n\nHighlights arbitrary terms.\n\n<http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html>\n\nMIT license.\n\nJohann Burkard\n<http://johannburkard.de>\n<mailto:jb@eaio.com>\n\n*/\n\njQuery.fn.highlight = function(pat) {\n function innerHighlight(node, pat) {\n  var skip = 0;\n  if (node.nodeType == 3) {\n   var pos = node.data.toUpperCase().indexOf(pat);\n   if (pos >= 0) {\n    var spannode = document.createElement('span');\n    spannode.className = 'highlight';\n    var middlebit = node.splitText(pos);\n    var endbit = middlebit.splitText(pat.length);\n    var middleclone = middlebit.cloneNode(true);\n    spannode.appendChild(middleclone);\n    middlebit.parentNode.replaceChild(spannode, middlebit);\n    skip = 1;\n   }\n  }\n  else if (node.nodeType == 1 && node.childNodes && !/(script|style)/i.test(node.tagName)) {\n   for (var i = 0; i < node.childNodes.length; ++i) {\n    i += innerHighlight(node.childNodes[i], pat);\n   }\n  }\n  return skip;\n }\n return this.length && pat && pat.length ? this.each(function() {\n  innerHighlight(this, pat.toUpperCase());\n }) : this;\n};\n\njQuery.fn.removeHighlight = function() {\n return this.find(\"span.highlight\").each(function() {\n  this.parentNode.firstChild.nodeName;\n  with (this.parentNode) {\n   replaceChild(this.firstChild, this);\n   normalize();\n  }\n }).end();\n};\n\n\njQuery.uaMatch = function( ua ) {\n	ua = ua.toLowerCase();\n\n	var match = /(chrome)[ \\/]([\\w.]+)/.exec( ua ) ||\n		/(webkit)[ \\/]([\\w.]+)/.exec( ua ) ||\n		/(opera)(?:.*version|)[ \\/]([\\w.]+)/.exec( ua ) ||\n		/(msie) ([\\w.]+)/.exec( ua ) ||\n		ua.indexOf(\"compatible\") < 0 && /(mozilla)(?:.*? rv:([\\w.]+)|)/.exec( ua ) ||\n		[];\n\n	return {\n		browser: match[ 1 ] || \"\",\n		version: match[ 2 ] || \"0\"\n	};\n};\n\n// Don't clobber any existing jQuery.browser in case it's different\nif ( !jQuery.browser ) {\n	matched = jQuery.uaMatch( navigator.userAgent );\n	browser = {};\n\n	if ( matched.browser ) {\n		browser[ matched.browser ] = true;\n		browser.version = matched.version;\n	}\n\n	// Chrome is Webkit, but Webkit is also Safari.\n	if ( browser.chrome ) {\n		browser.webkit = true;\n	} else if ( browser.webkit ) {\n		browser.safari = true;\n	}\n\n	jQuery.browser = browser;\n}\n\n\nvar stemmer = (function() {\n    \n    var DICT = {\n        RVRE: /^(.*?[аеиоуыэюя])(.*)$/i,\n        PERFECTIVEGROUND_1: /([ая])(в|вши|вшись)$/gi,\n        PERFECTIVEGROUND_2: /(ив|ивши|ившись|ыв|ывши|ывшись)$/i,\n        REFLEXIVE: /(с[яь])$/i,\n        ADJECTIVE: /(ее|ие|ые|ое|ими|ыми|ей|ий|ый|ой|ем|им|ым|ом|его|ого|ему|ому|их|ых|ую|юю|ая|яя|ою|ею)$/i,\n        PARTICIPLE_1: /([ая])(ем|нн|вш|ющ|щ)$/gi,\n        PARTICIPLE_2: /(ивш|ывш|ующ)$/i,\n        VERB_1: /([ая])(ла|на|ете|йте|ли|й|л|ем|н|ло|но|ет|ют|ны|ть|ешь|нно)$/gi,\n        VERB_2: /(ила|ыла|ена|ейте|уйте|ите|или|ыли|ей|уй|ил|ыл|им|ым|ен|ило|ыло|ено|ят|ует|уют|ит|ыт|ены|ить|ыть|ишь|ую|ю)$/i,\n        NOUN: /(а|ев|ов|ие|ье|е|иями|ями|ами|еи|ии|и|ией|ей|ой|ий|й|иям|ям|ием|ем|ам|ом|о|у|ах|иях|ях|ы|ь|ию|ью|ю|ия|ья|я)$/i,\n        DERIVATIONAL: /.*[^аеиоуыэюя]+[аеиоуыэюя].*ость?$/i,\n        DER: /ость?$/i,\n        SUPERLATIVE: /(ейше|ейш)$/i,\n        I: /и$/i,\n        P: /ь$/i,\n        NN: /нн$/i\n    };\n    \n    return function stemmer(word) {\n        word = word.replace(/ё/gi, 'e');\n        var wParts = word.match(DICT.RVRE);\n        if (!wParts) {\n            return word;\n        }\n        var start = wParts[1];\n        var rv = wParts[2];\n        var temp = rv.replace(DICT.PERFECTIVEGROUND_2, '');\n        if (temp == rv) {\n            temp = rv.replace(DICT.PERFECTIVEGROUND_1, '$1');\n        }\n        if (temp == rv) {\n            rv = rv.replace(DICT.REFLEXIVE, '');\n            temp = rv.replace(DICT.ADJECTIVE, '');\n            if (temp != rv) {\n                rv = temp;\n                temp = rv.replace(DICT.PARTICIPLE_2, '');\n                if (temp == rv) {\n                    rv = rv.replace(DICT.PARTICIPLE_1, '$1');\n                }\n            } else {\n                temp = rv.replace(DICT.VERB_2, '');\n                if (temp == rv) {\n                    temp = rv.replace(DICT.VERB_1, '$1');\n                }\n                if (temp == rv) {\n                    rv = rv.replace(DICT.NOUN, '');\n                } else {\n                    rv = temp;\n                }\n            }\n        } else {\n            rv = temp;\n        }\n        rv = rv.replace(DICT.I, '');\n        if (rv.match(DICT.DERIVATIONAL)) {\n            rv = rv.replace(DICT.DER, '');\n        }\n        temp = rv.replace(DICT.P, '');\n        if (temp == rv) {\n            rv = rv.replace(DICT.SUPERLATIVE, '');\n            rv = rv.replace(DICT.NN, 'н');\n        } else {\n            rv = temp;\n        }\n        return start + rv;\n    };\n})();\n\nvar index = [];\n\nfunction jsIndex(){\n	var my_all_data2 = api4tree.js_my_all_data();\n	$.each(my_all_data2,function(i,el){ //ищу длинные тексты, чтобы забрать из другой базы\n	    if(el) {\n	    	var done_element = api4tree.jsFindLongText(el.id).done(function(longtext){\n	    		if(longtext.length) {\n		    		longtext = strip_tags( longtext ).toLowerCase();\n		    		var words = split_to_words(longtext);\n		    		if(words.length)\n		    		$.each(words,function(i,el){\n			    		if(el) var stem = stemmer(el);\n			    		console.info( stem );\n			    		if(stem && stem.length>2 && ([\"nbsp\"].indexOf(stem)==-1)) \n			    			index[stem]=(el.id);\n		    		});\n	    		}\n			});\n		}\n	});\n}\n\nfunction split_to_words(str) {\nvar aStr = str.match(/\\w+|\"[^\"]+\"/g), i = aStr?aStr.length:0;\nwhile(i--){\n    aStr[i] = aStr[i].replace(/\"/g,\"\");\n}\nreturn aStr;\n}\n\n\n\n\nfunction jsDoPasteClipboard(e) {\n    console.info(\"my_paste\",e);\n    var items = e.originalEvent.clipboardData.items;\n    \n    var need_text = false;\n    \n    if( (e.originalEvent.clipboardData.getData(\"text/html\").indexOf(\"xml\")!=-1) )\n    	if( !confirm(\"Преобразовать документ Office в картинку?\") ) {\n       			need_text=true;\n       		}\n    \n    if(!need_text) {\n\n       for (var i = 0; i < items.length; ++i) {\n    	   console.info(\"asFile = \",items[i].getAsFile());\n    		\n           if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1) {\n    		   e.stopPropagation();					\n               var blob = items[i].getAsFile();\n    \n               window.URL = window.URL || window.webkitURL;\n               var blobUrl = window.URL.createObjectURL(blob);\n     \n               //var img = document.createElement('img');\n               //img.src = blobUrl; \n               \n              if($(\".redactor_editor:focus\").hasClass(\"comment_enter_input\"))\n              	{\n              	var insert_red = $('.comment_enter_input'); //???\n              	}\n              else\n              	{\n              	var insert_red = $(\"#redactor\");\n              	}\n              	\n			  	insert_red.redactor(\"insertHtml\",\"<img class=\\'tmp_img\\' title=\\'Из буфера обмена \"+\n    		  									  Date()+\"\\' src=\\'\"+blobUrl+\"\\'>\"); \n    		   var fd = new FormData();\n    		   fd.append('file', blob);\n    		   console.info(fd);\n               \n               return false;\n               \n    		   \n          } else {\n	          need_text = true;\n          }\n      } //for\n	} //if needtext\n	return need_text;\n}\n\n\n//быстрый перебор\njQuery.fn.quickEach = (function() {\n  var jq = jQuery([1]);\n  return function(c) {\n   var i = -1,\n       el, len = this.length;\n   try {\n    while (++i < len && (el = jq[0] = this[i]) && c.call(jq, i, el) !== false);\n   } catch (e) {\n    delete jq[0];\n    throw e;\n   }\n   delete jq[0];\n   return this;\n  };\n }());\n\n\n\n//выбирает блок текста вокруг найденного слова\nfunction jsFindText(text,findtext,length) {\n\ntext = text.replace(/'/g, \"&apos;\").replace(/\"/g, \"&quot;\").replace(/<\\/p>/g, \" \").\n		    replace(/<\\/div>/g, \" \").replace(/<br>/g, \" \").replace(/<\\/li>/g, \" \").replace(/<\\/span>/g, \" \");\n\ntext = strip_tags(text);\n\nvar length = parseInt(length,10);\nvar lower_text = text.toLowerCase()\nvar lower_findtext = findtext.toLowerCase()\n\nvar findstart = lower_text.indexOf(lower_findtext);\n\nif(findstart==-1 && (lower_findtext.toLowerCase() != lower_findtext.toUpperCase()) ) {\n	var findstart = diff_plugin.match_main( lower_text, lower_findtext, 0 );\n	if(findstart!=-1){\n		var lower_findtext = getWordAt(text, findstart);\n\n		setTimeout(function(){ \n			$(\".search_panel_result li\").not(\":has('.highlight')\").highlight(lower_findtext,\"highlight\"); \n		}, 5000);\n		\n	} else {\n		return text.substr(0,length);\n	}\n}\n\n\nfor(var i=findstart;i>0;i=i-1)\n   {\n   if( (text[i]=='.') || (text[i]=='!') || (text[i]=='?') || (text[i]==';') ) { i=i+1; break; }\n   }\n\nif( i<(findstart-10) ) i=findstart-10;\nanswer = text.substr(i,length+(findstart-i));\n\n//answer = answer.replace(findtext.toLowerCase(),\"<b>\"+findtext.toLowerCase()+\"</b>\");\n\nif(i>0) answer = '…'+answer;\nif(length+findstart<text.length) answer = answer+'…';\n\nreturn answer;\n\n}\n\n\n\nfunction _manageEvent(eventMessage) {\n      var chat = $(\"#chat\");\n      if (eventMessage != '') {\n//        var values = $.parseJSON(eventMessage);\n       	var mysync_id = api4tree.jsGetSyncId();\n        if(mysync_id!=eventMessage.sync_id) {\n        	console.info(\"@mymessage:\",eventMessage);\n        } else {\n	    	console.info(\"@mymessage:\",\"Разослал сообщение о изменениях...\")    \n        }\n        \n        if( eventMessage.type == \"need_refresh_now\" ) { \n        		api4tree.jsSync(); \n        		setTimeout(function(){ alert(\"Пришло новое письмо!\");},800); \n        }\n        if( eventMessage.type == \"need_refresh_id\" ) //сообщение о изменившихся данных от do.php\n        	{ \n        	there_was_message_about_change = true;\n        	if(mysync_id!=eventMessage.sync_id) //не нужно обновлять, если сообщение пришло благодаря этому клиенту\n        		{\n	        		if( jsNow() - last_message_sync_time > 500 )\n	        			{\n	        			 setTimeout(function()\n	        			 	{ \n		        			last_message_sync_time = jsNow();\n	        			 	if($(\"#mypanel .n_title[contenteditable=true]\").length == 0) api4tree.jsSync(); \n	        			 	},300); \n	        			 jsTitle(\"Ваши данные изменились на другом комьютере. Обновляю.\",5000); \n	        			}\n	        		console.info(eventMessage.sync_id,eventMessage.txt);\n        		}\n        	}\n      }\n    };\n\nfunction _statuschanged(state) {\n      if (state == PushStream.OPEN) {\n        $(\".icon-dot\").show();\n        $(\".icon-dot\").attr(\"title\",\"Online соединение установленно (\"+pushstream.wrapper.type+\")\");\n      } else {\n        $(\".icon-dot\").hide();\n        $(\"#mode\").html(\"\");\n      }\n    };\n\nfunction _connect(channel) {\n      if(!channel) return true;\n      pushstream.removeAllChannels();\n      try {\n        pushstream.addChannel(channel);\n        pushstream.connect();\n      } catch(e) {alert(e)};\n\n      $(\"#chat\").val('');\n    }\n\nPushStream.LOG_LEVEL = 'debug';\n//PushStream.LOG_OUTPUT_ELEMENT_ID = \"tree_news\";\n\nvar pushstream = new PushStream({\n      host: \"4do.me\", //window.location.hostname\n      port: window.location.port,\n      modes: \"websocket|longpolling\" //websocket|longpolling|eventsource|stream\n    });\n\npushstream.onmessage = _manageEvent;\npushstream.onstatuschange = _statuschanged;\n\n\n\n",
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/4tree./js/js_regallkeys.js",
+			"file_size": 71691,
+			"file_write_time": 130179401920000000,
+			"settings":
+			{
+				"buffer_size": 68716,
 				"line_ending": "Unix"
 			}
 		},
@@ -308,9 +399,18 @@
 	},
 	"file_history":
 	[
-		"/Applications/MAMP/htdocs/fpk/4tree/!version.txt",
-		"/Applications/MAMP/htdocs/fpk/4tree/!versions.html",
+		"/Users/iBook/.bash_profile",
+		"/Applications/MAMP/htdocs/fpk/4tree/web.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/loader.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js",
 		"/Applications/MAMP/htdocs/fpk/4tree/js/jquery.mobile-1.3.1.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/4tree.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/4tree.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/compress.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/!versions.html",
+		"/Applications/MAMP/htdocs/fpk/4tree/js/md5.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/!version.txt",
 		"/Applications/MAMP/htdocs/fpk/4tree/css/4tree.css",
 		"/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.css",
 		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
@@ -324,8 +424,7 @@
 		"/Users/iBook/Downloads/images/icons-36-white.png",
 		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.css",
 		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.js",
-		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
-		"/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js"
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings"
 	],
 	"find":
 	{
@@ -344,134 +443,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"\"vmouse",
-			"mouseenter",
-			"== \"mouse",
-			"openRed",
-			"jsSaveAllText",
-			"savealltext",
-			"md5(",
-			"jsFindPath(",
-			"jsFindPath =",
-			"jsFindPath",
-			"открыть",
-			"больше",
-			"divider_red",
-			"folder_closed",
-			"divider_red",
-			"divider_li",
-			"comment",
-			"handlebars",
-			"openred",
-			"api4panel.jsMakeIcontext",
-			"jsMakeIcontext",
-			"api4panel.jsMakeIconText",
-			"makeicon",
-			"jsSaveOneTextIfChanged",
-			"save_all_",
-			"myr =",
-			"api4editor",
-			"api4editor(",
-			"api4editor =",
-			"API_4PANEL",
-			"theme",
-			"showCalendar",
-			"scrollTo(",
-			"Календар",
-			"Календарь",
-			"календарь",
-			"scrollto(",
-			"n scrollto(",
-			"updatelayout",
-			"listv",
-			"open",
-			"panel",
-			"user-login",
-			"ui-panel-content-wrap",
-			"return false",
-			"ui-btn-ho",
-			"list",
-			"api4panel.jsFindPath",
-			"data-theme=\"a\"",
-			"data-theme=\"c\"",
-			"content",
-			"menuContent",
-			"touch",
-			".panel",
-			"add_do",
-			"-open",
-			"panel-inner",
-			"comment",
-			"focus",
-			"mainWindow",
-			"#redactor",
-			"#f1f1f1",
-			"paste",
-			"onpaste",
+			"jsRefreshPanel",
+			"web_site",
+			"\"do.php?phonegap",
+			"do.php?",
+			"idle",
+			"my_all_parents",
+			"splice",
+			"jsFind =",
+			"jsFindAutoFolder",
+			"jsFind = ",
+			"path_line",
+			"path_li",
 			"hash",
-			".sos",
-			".save_text",
-			"сохранить",
-			".hash",
+			"window.location.hash",
+			"window.location",
+			"jsSethash",
+			"hash",
 			"sethash",
-			".sos",
-			".myclass",
-			"jsMakeico",
-			"icon",
-			"recursive",
-			"openredactor",
-			"openredactorrec",
-			"jsMakeIdleFunction",
-			"idle",
-			"md5",
-			"login",
-			"dropdown",
-			"dropdownhide",
-			"dropdown",
-			"place",
-			"shadow",
-			"toolbar",
-			"fav_redactor_btn",
-			"fonterll",
-			"trans",
-			"options",
-			"redac",
-			"folder_",
-			"node_img",
-			"data-theme=\"f\"",
-			"data-theme=\"e\"",
-			"data-theme=\"d\"",
-			"data-theme=\"c\"",
-			"data-theme=\"b\"",
-			"data-theme=\"a\"",
-			"have_child",
-			"vers",
-			"version",
-			"main_user_id",
-			"n jsprogress",
-			"n jsNow()",
-			"поиск",
-			"///////////////////",
-			"li_compact",
-			"draggab",
-			"n jsGo",
-			"where_to_add",
+			"add_do",
+			"console",
+			"path_li",
+			"files_header",
+			"tree_news",
+			"comment_box",
+			"jsShowNews",
+			"comment_box",
+			"новые комментарии",
+			"startSync",
+			"jsFindComment",
+			"jsShowNe",
+			"jsFrendById",
+			"jsShowNews",
+			".fc-button",
+			"fc-header-left",
+			"titleFormat",
+			"fc-hea",
+			"thisWidth",
 			"jsShowTreeNode",
-			".selected",
-			"selected",
-			"-moz-",
-			"selected",
+			"(\".panel\").remove();",
+			".nextAll(\".panel\").remove();",
+			"jsShowTreeNode",
+			".panel",
+			"jsPrepareDate",
+			"where_to_add",
+			"krut",
+			"path_line",
+			"my_fa",
+			"jsFindAutoFolder",
+			"autofo",
+			"jsFindPath =",
+			"jsPathTitle",
+			"big_n_title",
+			"icon-home",
+			"jsFindPath =",
+			"dont_cl",
+			"path_line",
+			"#path_line",
+			"jsOpenPath =",
+			"dont_close",
+			".favorit_tabs",
+			"favorit_tabs",
+			"поделиться",
+			"checkbox",
+			"makedone",
+			"contextme",
+			"jsFixScroll",
+			"jsGo =",
+			"jsOpenNode =",
+			"tcheckbox",
+			"note_his",
+			"cookie",
+			"LONG",
+			"js_LoadAllDataFromServer",
 			"idle",
-			"setInterval",
-			"fullcalendar",
-			"fc-mynow",
-			"fullcalendar",
-			"axis",
-			"agenda-axis",
-			"setwidth",
-			"width",
-			".left",
-			"width"
+			"x200b",
+			"add_do",
+			"share_ids_answer",
+			"jsSaveElement",
+			"n jsGo",
+			"jsFind =",
+			"jsRefreshTreeFast",
+			"jsAddDoLeftRight",
+			"jsRefreshTree",
+			"n jsRefreshTree",
+			"jsRefreshTree",
+			"n jsRefreshTree",
+			"jsRefreshTree",
+			"n jsRefreshTree",
+			"jsRefreshTreeF",
+			"my_all_data",
+			"my_all_data(!2)",
+			"my_all_data\\s",
+			"my_all_data",
+			"my_all_data\\s",
+			"Добавить",
+			"placeholder",
+			"redactor",
+			"placeholder",
+			"redactor",
+			"placehold",
+			"emptyHtml",
+			"<p>&#x200b;</p>",
+			"jsRedactorOpen",
+			"openrecursive",
+			"my_week_num",
+			"jsGetDateRangeOfWeek",
+			"edit_current_week",
+			"focus()",
+			"jsOpenWikiPage",
+			".divider",
+			"jsParseWikiLinks",
+			"jsFindWikiForParent",
+			"jsOpenWikiPage",
+			"jsFindWikiForParent",
+			"jsMakeWiki",
+			"jsParseWikiLinks",
+			"jsOpenWikiPage",
+			"my_all_data\\s",
+			"jsMakeIconText",
+			"jsRenderOneElement",
+			"Render",
+			"changenewid",
+			"global_table_name+\"_texts\"",
+			"global_table_name",
+			"idle",
+			"indle",
+			" db.",
+			"db."
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -479,6 +578,9 @@
 		"regex": false,
 		"replace_history":
 		[
+			"web_site + \"do.php?phonegap",
+			"do.php?phonegap=\" + phonegap_user_id + \"&",
+			"api4tree.jsShortText",
 			"api4tree.jsMakeIconText",
 			"api4tree.jsFindPath",
 			"data-theme=\"b\"",
@@ -501,7 +603,7 @@
 	"groups":
 	[
 		{
-			"selected": 9,
+			"selected": 12,
 			"sheets":
 			[
 				{
@@ -510,15 +612,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 73729,
+						"buffer_size": 63454,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								29283,
-								29294
+								1199,
+								1199
 							]
 						],
 						"settings":
@@ -529,7 +631,7 @@
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 14214.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -540,23 +642,24 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 204217,
+						"buffer_size": 219153,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								88692,
-								88698
+								159,
+								159
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 42757.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -567,15 +670,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10113,
+						"buffer_size": 10899,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1770,
-								1770
+								5828,
+								5828
 							]
 						],
 						"settings":
@@ -584,82 +687,26 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 804.0,
+						"translation.y": 2739.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/compress.php",
+					"file": "fastclick2.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11449,
+						"buffer_size": 21794,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8371,
-								8371
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 3742.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/!versions.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9481,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2024,
-								2024
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1407.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "md5.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11918,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9702,
-								9702
+								5845,
+								5845
 							]
 						],
 						"settings":
@@ -669,80 +716,26 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 4768.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "4tree.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6895,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								722,
-								722
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/4tree.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 11211,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2846,
-								2846
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 971.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
+					"buffer": 4,
 					"file": "all-mobile.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16628,
+						"buffer_size": 29937,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9019,
-								9019
+								7824,
+								7824
 							]
 						],
 						"settings":
@@ -751,54 +744,26 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5765.0,
+						"translation.y": 4847.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "jquery.mobile-1.3.1.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 359127,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								190507,
-								190507
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 107605.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
+					"buffer": 5,
 					"file": "/Applications/MAMP/htdocs/fpk/4tree/css/4tree-styles.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 101039,
+						"buffer_size": 100321,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								61520,
-								62281
+								12954,
+								12954
 							]
 						],
 						"settings":
@@ -808,26 +773,53 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 66406.0,
+						"translation.y": 12521.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/do.php",
+					"buffer": 6,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/css/jqueryslidemenu.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 143065,
+						"buffer_size": 3401,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								137920,
-								137920
+								2222,
+								2222
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1199.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/do.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 145075,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5893,
+								5893
 							]
 						],
 						"settings":
@@ -838,53 +830,112 @@
 							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 88886.0,
+						"translation.y": 3130.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 12,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/index.php",
+					"buffer": 8,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/db.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 43570,
+						"buffer_size": 48403,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9241,
-								9241
+								47791,
+								47791
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3800.0,
+						"translation.y": 27336.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 13,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.js",
+					"buffer": 9,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/!versions.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 147220,
+						"buffer_size": 10346,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								138045,
-								138057
+								2025,
+								2025
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1378.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/index.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 43642,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								19672,
+								19672
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 8852.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 130355,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								543,
+								543
 							]
 						],
 						"settings":
@@ -893,7 +944,34 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 97181.0,
+						"translation.y": 180.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "/Users/iBook/.bash_profile",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 168,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								168,
+								168
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -905,7 +983,7 @@
 			"sheets":
 			[
 				{
-					"buffer": 14,
+					"buffer": 13,
 					"file": "/Applications/MAMP/htdocs/fpk/4tree/backup.html",
 					"semi_transient": false,
 					"settings":
@@ -933,20 +1011,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 14,
 					"file": "/Applications/MAMP/htdocs/fpk/4tree/css/mobile.css",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11252,
+						"buffer_size": 13294,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1600,
-								1600
+								2425,
+								2425
 							]
 						],
 						"settings":
@@ -956,7 +1034,35 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1396.0,
+						"translation.y": 2151.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/css/jquery.mobile-1.3.1.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 136299,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								42085,
+								42088
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 21072.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -967,15 +1073,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 66794,
+						"buffer_size": 68716,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								65851,
-								65851
+								449,
+								449
 							]
 						],
 						"settings":
@@ -984,7 +1090,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 310526.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1012,7 +1118,7 @@
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3489.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1048,7 +1154,7 @@
 		"cols":
 		[
 			0.0,
-			0.691345087829,
+			0.556051259172,
 			1.0
 		],
 		"rows":
@@ -1098,7 +1204,7 @@
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 244.0,
 	"status_bar_visible": true,
 	"template_settings":

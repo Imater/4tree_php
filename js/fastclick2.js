@@ -202,7 +202,9 @@ FastClick.prototype.deviceIsIOSWithBadTarget = FastClick.prototype.deviceIsIOS &
  * @returns {boolean} Returns true if the element needs a native click
  */
 FastClick.prototype.needsClick = function(target) {
+
   'use strict';
+  //console.info("Target! = " + $(target).parents("#redactor").length + "class:" + $(target).attr("class")+" id:"+$(target).attr("id")+" name:"+(target).nodeName+" : "+$(target).hasClass("ui-body-b"));
   switch (target.nodeName.toLowerCase()) {
 
   // Don't send a synthetic click to disabled inputs (issue #62)
@@ -227,7 +229,8 @@ FastClick.prototype.needsClick = function(target) {
     return true;
   }
 
-  if ( $(target).parents("#redactor").length) { return true; }
+  if ( $(target).parents("#redactor").length || 
+       $(target).is("#redactor").length || $(target).hasClass("ui-body-b") ) { return true; }
 
   return (/\bneedsclick\b/).test(target.className);
 };

@@ -778,6 +778,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			// after callback
 			this.callback('syncAfter', false, html);
+			this.$editor.focus();
 		},
 		syncClean: function(html)
 		{

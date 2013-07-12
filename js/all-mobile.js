@@ -297,6 +297,30 @@ function jsRegAllKeys() {
 		  	     }
 		  });
 
+		  $(".redactor_editor").blur(function(){ $(".f_text").html("x"+$(".f_text").html()) });
+		  $(".redactor_editor").focus(function(){ $(".f_text").html("."+$(".f_text").html()) });
+
+/*
+		  $("body").on("touchstart",".redactor_editor",function(){
+		  		console.info("click");
+		  		setTimeout(function(){ $("#redactor").focus(); }, 100);
+		  });
+*/
+
+		  $("body").on("click","#oauth",function(){
+		  		console.info("click");
+		  		
+		  });
+
+
+		  $("body").on("click", "#load_from_server",function(){
+		  	alert("Starting...");
+		  	api4tree.js_LoadAllDataFromServer().done(function(){
+		  		alert("Данные успешно загружены");
+		  		jsRefreshPanel();
+		  	});
+		  	return false;
+		  })
 		  
   		  $("body").on("click","#tree_fav",function(){
   		  		var childs = api4tree.jsGetTabs();
@@ -748,6 +772,7 @@ function jsRegAllKeys() {
 
   kkk=0;
   $("body").on('touchstart','#menuContent', function(e) {
+  		console.info("touch_start");
 
 		if($("#menuContent").scrollTop()!=0) return true;
 
@@ -785,7 +810,9 @@ function jsRegAllKeys() {
 			else return true;
 		});
 
-		$("body").bind("touchend", function(){
+		$("body").bind("touchend", function(e){
+			e.preventDefault();
+			console.info("touch_end");
 			var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
 			new_y = touch.pageY;
 			var dif = (new_y-start_y);
@@ -830,7 +857,7 @@ function jsRegAllKeys() {
 
 
 function jsLoadAllData() {
-	if(!$.cookie("4tree_passw") && !$.cookie("4tree_social_md5")) {
+	if(!$.cookie("4tree_passw") && !$.cookie("4tree_social_md5") && is_mobile == false) {
 		$.mobile.changePage("#user-login");
 	} else {
 		api4tree.js_LoadAllFromLocalDB().done(function(){
@@ -879,11 +906,11 @@ function jsDoFirstMobile()
 	var mydb = api4tree.js_InitDB(); 
 
 		if(false)
-		  	myr = $('#redactor').redactor({ imageUpload: 'do.php?save_file='+11,
+		  	myr = $('#redactor').redactor({ imageUpload: 'do.php?phonegap=" + phonegap_user_id + "&save_file='+11,
 		  		  lang:'ru', focus:false, 
 		  		  toolbarExternal: "#fav_redactor_btn",
-		  		  fileUpload: './do.php?save_file='+11,
-		  		  imageUpload: './do.php?save_file='+11,
+		  		  fileUpload: './do.php?phonegap=" + phonegap_user_id + "&save_file='+11,
+		  		  imageUpload: './do.php?phonegap=" + phonegap_user_id + "&save_file='+11,
 		  		  focusCallback: function(e)
 					{
 					clearTimeout(focus_time);
@@ -920,7 +947,7 @@ function jsDoFirstMobile()
    main_data = JSON.parse(localStorage.getItem("alltree"));
 
    main_node = 1;
-   $.getJSON( "do.php?mobile="+main_node ,function(data)
+   $.getJSON( web_site + "do.php?phonegap=" + phonegap_user_id + "&mobile="+main_node ,function(data)
 	{
 	main_data = data;
 	localStorage.setItem("alltree",JSON.stringify(main_data));

@@ -1,4 +1,11 @@
-var my_all_parents = {}, settings = {show_did:false}, is_mobile = false; //все параметры;
+var my_all_parents = {}, settings = {show_did:false}, is_mobile = true; //все параметры;
+if(is_mobile) {
+	var phonegap_user_id = "11";
+	var web_site = "http://192.168.0.52/fpk/4tree/";
+} else {
+	var phonegap_user_id = "";
+	var web_site = "";
+}
 
 /////////////////////////////////////TREE//////////////////////////////////////////
 var API_4TREE = function(global_table_name,need_log){  //singleton
@@ -1140,7 +1147,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 			//включаю или выключаю ссылку
 			if(need_to_off==0 || need_to_off==1) { 
-				var lnk = "do.php?onLink="+id+"&is_on="+need_to_off+"&shortlink="+
+				var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&onLink="+id+"&is_on="+need_to_off+"&shortlink="+
 						   $("#makeshare").val().split("/")[1];
 				
 				$.getJSON(lnk,function(data){
@@ -1155,7 +1162,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				}
 			
 			//считываю ссылку и статистику
-			var lnk = "do.php?getLink="+id;
+			var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&getLink="+id;
 			$.getJSON(lnk,function(data){
 				$("#makesharestat_count span").text("0");
 				$("#makeshare").val("4tree.ru/"+data.shortlink);
@@ -1671,7 +1678,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  
 		  this.jsMakeTheme = function() { //применяю тему, так как система оффлайн
-		  	  	  var lnk = "do.php?get_settings=true";
+		  	  	  var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_settings=true";
 		  	  	  console.info(lnk);
 		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
 				     if(j=="success") {
@@ -1724,7 +1731,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	  
 			  	  $("#tree_settings #login_social_form").html(loginform);
 			  	  
-		  	  	  var lnk = "do.php?get_settings=true";
+		  	  	  var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_settings=true";
 		  	  	  console.info(lnk);
 		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
 				     if(j=="success") {
@@ -1784,7 +1791,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	  	  var sel = $("#tree_settings .theme_selected");
 		  	  	  params += "&theme="+ encodeURIComponent(sel.attr("theme_img"))+"&dark="+sel.attr("dark");
 		  	  	  
-		  	  	  var lnk = "do.php?send_settings=true&"+params;
+		  	  	  var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&send_settings=true&"+params;
 		  	  	  console.info(lnk);
 		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
 				     if(j=="success") {
@@ -2061,14 +2068,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 }
 		 }
 		 
-		  //функция запуска при бездействии пользователя
+		  //функция запуска при бездействии пользователя ЖОПА//
 		  this_db.jsMakeIdleFunction = function() {
 
 		  setInterval(function(){
 		  	jsSetTimeNow();
 		  },30000);
 
-			$.idleTimer(2*1000);
+			$.idleTimer(5*1000);
 			$(document).bind("active.idleTimer", function(){
 				jsSetTimeNow();
 				clearTimeout(screensaver_tm);
@@ -4823,7 +4830,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 	jsProgressStep();
 		 	    this_db.log("Удалил локальную DB. Читаю данные с сервера.");
 		 	    var sync_id = this_db.jsGetSyncId();
-		 	    var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id; 
+		 	    var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_all_data2="+jsNow()+"&sync_id="+sync_id; 
 		 	    $.getJSON(lnk,function(data){
 		 	       jsProgressStep();
 			   	   this_db.log("Загрузил с сервера ",Object.size(data.all_data)," элементов");
@@ -5110,7 +5117,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	     	var d=$.Deferred();
 	     	var sync_id = this_db.jsGetSyncId();
 
-	     	var lnk = "do.php?get_all_data2="+jsNow()+"&sync_id="+sync_id+"&only_md5=1"; 
+	     	var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_all_data2="+jsNow()+"&sync_id="+sync_id+"&only_md5=1"; 
 	     
 	     	$.getJSON(lnk,function(data){
 	         	js_Calculate_md5_from_local_DB().done(function(md5) {
@@ -5447,7 +5454,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				   
 				   $.ajax({
 				       type: 'POST',
-				       url: 'do.php?save_file=clipboard',
+				       url: 'do.php?phonegap=" + phonegap_user_id + "&save_file=clipboard',
 				       data: fd,
 				       processData: false,
 				       contentType: false
@@ -5494,7 +5501,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	  				   replace(".gif","_p2.gif").replace(".png","_p2.png");
 			  	  	  d.resolve(p2_url);		  	  	  
 			  	  } else if(src) {
-			  	  	  var lnk = "do.php?save_thumb_remote="+encodeURIComponent(src);
+			  	  	  var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&save_thumb_remote="+encodeURIComponent(src);
 				  	  $.getJSON(lnk,function(data){
 				  	  	 console.info("thumb",data);
 				  	  	 p2_url = data.filelink;
@@ -5703,7 +5710,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				var timezone = offsetdate.getTimezoneOffset()/60;
 				var this_vers = encodeURIComponent($("#this_version").html());
 				
-				var lnk = "do.php?sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do+"&timezone="+timezone+"&version="+this_vers;
+				var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do+"&timezone="+timezone+"&version="+this_vers;
+
 				
 				this_db.log(lnk);
 				
@@ -5897,10 +5905,10 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 
 		  //создаёт редактор на странице и регистрирует глобальную переменную myr
 		  this.initRedactor = function() {
-		  	myr = $('#redactor').redactor({ imageUpload: 'do.php?save_file='+main_user_id,
+		  	myr = $('#redactor').redactor({ imageUpload: 'do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id,
 		  		  lang:'ru', focus:false, 
-		  		  fileUpload: 'do.php?save_file='+main_user_id,
-		  		  imageUpload: './do.php?save_file='+main_user_id,
+		  		  fileUpload: 'do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id,
+		  		  imageUpload: './do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id,
 		  		  autoresize:true, 
 		  			focusCallback: function() {
 		  			   $("#fav_redactor_btn").show();
@@ -5949,7 +5957,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	$(".redactor_box").append('<div class="comment_in"></div>');
 		  	$(".comment_in").append( $("#tree_comments") );
 		  	
-		  	myr_comment = $('.comment_enter_input').redactor({imageUpload: './do.php?save_file='+main_user_id, lang:'ru', focus:false, fileUpload: 'do.php?save_file='+main_user_id, autoresize:false, toolbarExternal: "#fav_redactor_btn_comment",
+		  	myr_comment = $('.comment_enter_input').redactor({imageUpload: './do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id, lang:'ru', focus:false, fileUpload: 'do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id, autoresize:false, toolbarExternal: "#fav_redactor_btn_comment",
 		  			toolbar: true,
 		  			focusCallback: function() {
 		  			   $("#fav_redactor_btn").hide();
@@ -6192,7 +6200,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	var mailto_uri = encodeURIComponent(mailto);
 		  	var mytitle_uri = encodeURIComponent(mytitle);
 		  	
-		  	var lnk = "do.php?send_mail_to="+mailto_uri+"&mytitle="+mytitle_uri;
+		  	var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&send_mail_to="+mailto_uri+"&mytitle="+mytitle_uri;
 		  	$.postJSON(lnk,mynote,function(data,j,k){
 		  		alert('Письмо "'+mytitle+'" для '+"\r"+mailto+"\rуспешно отправлено.");
 		  		});
