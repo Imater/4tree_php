@@ -297,8 +297,29 @@ function jsRegAllKeys() {
 		  	     }
 		  });
 
-		  $(".redactor_editor").blur(function(){ $(".f_text").html("x"+$(".f_text").html()) });
-		  $(".redactor_editor").focus(function(){ $(".f_text").html("."+$(".f_text").html()) });
+		  $(".redactor_editor11").blur(function(){ 
+		  	//plugins.SoftKeyBoard.hide(function(){},);
+		  	window.plugins.SoftKeyBoard.hide(function () {
+  // success
+},function () {
+  // fail
+});
+
+
+		  });
+
+		  $(".redactor_editor").focus(function(){ 
+		  	//plugins.SoftKeyBoard.show();
+
+		  	window.plugins.SoftKeyBoard.show(function () {
+		  		console.info("Keyboard show!");
+  // success
+},function () {
+  // fail
+});
+
+		  	$(".f_text").html("."+$(".f_text").html()) 
+		  });
 
 /*
 		  $("body").on("touchstart",".redactor_editor",function(){
@@ -892,12 +913,15 @@ function jsDoFirstMobile()
 	//initFastButtons();
 	$.mobile.buttonMarkup.hoverDelay = 10;
 	$.mobile.defaultPageTransition = "none";
-	$.mobile.touchOverflowEnabled = true;
+//	$.mobile.touchOverflowEnabled = true;
+	$.mobile.useFastClick  = false;
 	$.mobile.tapholdTriggersTap = false;
+    $.mobile.defaultDialogTransition = 'none';
 
 	main_user_id = $.cookie("4tree_user_id");
 
 	_connect(main_user_id);
+
 
 	api4tree = new API_4TREE("4tree_db");
 	api4editor = new API_4EDITOR($("#redactor"));
@@ -1027,50 +1051,7 @@ function jsList()
 
 
 
-$(function() {
-    // WARNING: Extremely hacky code ahead. jQuery mobile automatically
-    // sets the current "page" height on page resize. We need to unbind the
-    // resize function ONLY and reset all pages back to auto min-height.
-    // This is specific to jquery 1.8
 
-    // First reset all pages to normal
-    $('[data-role="page"]').css('min-height', 'auto');
-
-    // Is this the function we want to unbind?
-    var check = function(func) {
-        var f = func.toLocaleString ? func.toLocaleString() : func.toString();
-        // func.name will catch unminified jquery mobile. otherwise see if
-        // the function body contains two very suspect strings
-        if(func.name === 'resetActivePageHeight' || (f.indexOf('padding-top') > -1 && f.indexOf('min-height'))) {
-            return true;
-        }
-    };
-
-    // First try to unbind the document pageshow event
-    try {
-        // This is a hack in jquery 1.8 to get events bound to a specific node
-        var dHandlers = $._data(document).events.pageshow;
-
-        for(x = 0; x < dHandlers.length; x++) {
-            if(check(dHandlers[x].handler)) {
-                $(document).unbind('pageshow', dHandlers[x]);
-                break;
-            }
-        }
-    } catch(e) {}
-
-    // Then try to unbind the window handler
-    try {
-        var wHandlers = $._data(window).events.throttledresize;
-
-        for(x = 0; x < wHandlers.length; x++) {
-            if(check(wHandlers[x].handler)) {
-                $(window).unbind('throttledresize', wHandlers[x]);
-                break;
-            }
-        }
-    } catch(e) {}
-});
 
 
 

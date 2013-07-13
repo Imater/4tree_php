@@ -70,11 +70,9 @@ $(document).ready(jsDoFirstMobile);
 
 
 
-
-
 <div data-role="page" data-theme="b" id="mainWindow" class="hide_options show_calendar">
 	<div data-role="panel" id="menuPanel" data-display="reveal" data-dismissible="false" style="">
-		<div data-role="header" data-position-fixed="true">
+		<div data-role="header" style="background:#000;" data-position-fixed1="false">
 		 
 		 <a class="back1" current_myid="1" myid="1" href="pda.php" data-icon="arrow-l" data-mini="true">Назад</a>	
 		 <h1>&nbsp;<span class="f_text">4tree.ru</span></h1>
@@ -124,7 +122,7 @@ $(document).ready(jsDoFirstMobile);
 	<!-- //////////////////////////////////////// -->
 
 		<div data-role="panel" id="menuPanelRight" data-display="reveal" data-dismissible="false" style="" data-position="right"  data-theme="c" >
-		<div data-role="header" data-position-fixed="true" data-theme="a" >
+		<div data-role="header" data-position-fixed="false" data-theme="a" >
 		 
 		 
 		 <h1>Календарь</h1>
@@ -235,7 +233,7 @@ $(document).ready(jsDoFirstMobile);
 
 
 <div id="user-login" data-role="page">
-	<div data-role="header" data-theme="a" data-position="fixed">
+	<div data-role="header" data-theme="a" data-position1="1fixed">
 			<h1>Вход в 4tree</h1>
 			
 	</div><!-- /header -->
@@ -263,7 +261,7 @@ $(document).ready(jsDoFirstMobile);
 <!-- ///////////////////////////////////////////////////////////////////// -->
 
 <div id="category-items" data-role="page">
-	<div data-role="header" data-theme="b" data-position="fixed">
+	<div data-role="header" data-theme="b" data-position1="1fixed">
 			<a class="back1" data-icon="">Назад</a>	
 			<h1>4tree.ru</h1>
 	
@@ -278,7 +276,7 @@ $(document).ready(jsDoFirstMobile);
 
   <div data-role="content"></div>
 
-<div data-role="footer" data-theme="b" data-position="fixed">		
+<div data-role="footer" data-theme="b" data-position1="1fixed">		
 	<div data-role="navbar">
 		<ul>
 			<li><a href="pda.php">Главная</a></li>
@@ -337,6 +335,7 @@ $(document).ready(jsDoFirstMobile);
 
 
 <div id="this_version" style="display:none">Mobile</div>
+
 
 </body>
 

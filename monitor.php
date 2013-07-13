@@ -31,7 +31,7 @@ if (isset($HTTP_GET_VARS['send_message']))
 </head>
 
 
-<body onload="javascript:jsDoFirst();">
+<body onload="javascript:jsDoFirst();" style="font-size:10px;">
 <h1>Монитор <span class="icon-dot">&middot;</span></h1>
 <div id="container"></div>
 

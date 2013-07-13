@@ -58,8 +58,13 @@ class Pdo implements AuthorizationCodeInterface,
     /* OAuth2_Storage_ClientCredentialsInterface */
     public function checkClientCredentials($client_id, $client_secret = null)
     {
+
         $stmt = $this->db->prepare(sprintf('SELECT * from %s where client_id = :client_id', $this->config['client_table']));
+//        echo sprintf('SELECT * from %s where client_id = :client_id', $this->config['client_table']). " : ";
+        //print_r(compact('client_id'));
+        
         $stmt->execute(compact('client_id'));
+        
         $result = $stmt->fetch();
 
         // make this extensible
@@ -196,11 +201,15 @@ class Pdo implements AuthorizationCodeInterface,
     // plaintext passwords are bad!  Override this for your application
     protected function checkPassword($user, $password)
     {
-        return $user['password'] == sha1($password);
+//    	echo "Г".$user['password']." : ".sha1($password)." : ".sha1("fuck");
+        return $user['password'] == ($password);
+        //sha1
     }
 
     public function getUser($username)
     {
+/*        $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
+        $stmt->execute(array('username' => $username)); */
         $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
         $stmt->execute(array('username' => $username));
         return $stmt->fetch();

@@ -9,7 +9,7 @@
 
 <script>
 		setInterval( function(){
-			$("#editor").focus().click();
+			$("#myinput").focus().trigger("click");
 			$("#log").append("focus<br>");
 		}, 5000 );
 </script>
@@ -20,12 +20,14 @@
 <body>
 
 
-<div contenteditable="true" id="editor">
+<div tabindex="0" contenteditable="true" id="editor">
 Тестовый текст
 <p>Мы тут</p>
 <p>Мы тут</p>
 <p>Мы тут</p>
 </div>
+
+<input id="myinput" value="Привет">
 
 <span id="log" style="color:#888"> </span>
 

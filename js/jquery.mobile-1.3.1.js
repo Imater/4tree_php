@@ -52,7 +52,7 @@
 		focusClass: "ui-focus",
 
 		// Automatically handle clicks and form submissions through Ajax, when same-domain
-		ajaxEnabled: true,
+		ajaxEnabled: false,
 
 		// Automatically load and show pages based on location.hash
 		hashListeningEnabled: true,
@@ -61,7 +61,7 @@
 		linkBindingEnabled: true,
 
 		// Set default page transition - 'none' for no transitions
-		defaultPageTransition: "fade",
+		defaultPageTransition: "none",
 
 		// Set maximum window width for transitions to apply - 'false' for no limit
 		maxTransitionWidth: false,
@@ -9988,6 +9988,7 @@ $( document ).bind( "pagecreate create", function( e ) {
 		},
 
 		_handleAnimationStart: function() {
+
 			if ( this.options.updatePagePadding ) {
 				this.updatePagePadding( this._thisPage );
 			}
@@ -10001,6 +10002,7 @@ $( document ).bind( "pagecreate create", function( e ) {
 		},
 
 		_handlePageBeforeHide: function( e, ui ) {
+			alert(1);
 			var o = this.options;
 
 			if ( o.disablePageZoom ) {
@@ -10032,6 +10034,7 @@ $( document ).bind( "pagecreate create", function( e ) {
 
 		// This will set the content element's top or bottom padding equal to the toolbar's height
 		updatePagePadding: function( tbPage ) {
+			alert(2);
 			var $el = this.element,
 				header = $el.is( ".ui-header" ),
 				pos = parseFloat( $el.css( header ? "top" : "bottom" ) );

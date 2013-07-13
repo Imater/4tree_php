@@ -32,7 +32,7 @@ class UserCredentials implements GrantTypeInterface
             $response->setError(400, 'invalid_request', 'Missing parameters: "username" and "password" required');
             return null;
         }
-
+        
         if (!$this->storage->checkUserCredentials($request->request("username"), $request->request("password"))) {
             $response->setError(400, 'invalid_grant', 'Invalid username and password combination');
             return null;
@@ -44,7 +44,7 @@ class UserCredentials implements GrantTypeInterface
             $response->setError(400, 'invalid_grant', 'Unable to retrieve user information');
             return null;
         }
-
+//		print_r($userInfo);
         if (!isset($userInfo['user_id'])) {
             throw new LogicException("you must set the user_id on the array returned by getUserDetails");
         }
