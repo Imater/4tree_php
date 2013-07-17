@@ -133,7 +133,6 @@ class TokenController implements TokenControllerInterface
             $response->setError(400, 'invalid_scope', 'An unsupported scope was requested');
             return null;
         }
-
         return $grantType->createAccessToken($this->accessToken, $clientId, $grantType->getUserId(), $requestedScope);
     }
 

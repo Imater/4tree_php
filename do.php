@@ -61,6 +61,115 @@ function ShowTree($cnt,$note,$tree, $pid=0){
 }    
 
 
+if (isset($_GET['test_it_now'])) {
+ echo "Ok = ".$_POST['test_it_now'];
+ print_r($_POST);
+ exit;
+}
+
+if (isset($_GET['curl'])) {
+  $user = array( "identity" => "vk/1" );
+    
+  echo user_exist($user,$db2);
+
+  if( false && $curl = curl_init() ) {
+    
+    $path = "http://".$_SERVER["HTTP_HOST"].$_SERVER["PHP_SELF"];
+    
+    $path = str_replace("do.php", "oauth2/token.php", $path);
+    
+    curl_setopt($curl, CURLOPT_URL, $path);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+    curl_setopt($curl, CURLOPT_POST, true);
+    
+    $md5email = "8ab96bed02fc697de66ac528bcd4814f";
+    $passw = "a64d33f4d3ff0271e4c915089edae413";
+    
+    $params_post = 'grant_type=password&username='.$md5email.
+									  '&password='.$passw.
+									  '&client_id=4tree_web'.
+									  '&client_secret=4tree_passw'.
+									  '&secret=888';
+
+    
+    curl_setopt($curl, CURLOPT_POSTFIELDS, "test_it_now=1&".$params_post);
+    $out = curl_exec($curl);
+    echo $out;
+    curl_close($curl);
+  }
+ exit;
+}
+
+
+if (isset($_GET['remind_me_password'])) 
+  {
+  sleep( rand(1,5) );
+  $email = $_GET['remind_me_password'];
+  
+  $stmt = $db2->prepare('SELECT * from tree_users WHERE email = :email');        
+  $stmt->execute( array( ":email" => $email ) );        
+  $result = $stmt->fetch();
+  
+  if( isset($_GET["forget_code"]) && isset($_GET["new_pass"] ) ) {
+  
+  	  if($_GET["forget_code"]=="") exit;
+  		
+	  $stmt = $db2->prepare('UPDATE tree_users SET password=:pass, forget_password="" WHERE email = :email AND forget_password = :forget_password');
+	  $pass_code = md5($email."990990".now());
+	  $stmt->execute( array( ":email" => $email, 
+	  						 ":pass" => $_GET["new_pass"], 
+	  						 ":forget_password" => $_GET["forget_code"] 
+	  						 ) ); 
+//	  print_r( $stmt );       	   
+  echo json_encode(true);
+  exit;
+  }
+  
+  if($result && !isset($_GET["forget_code"])) {
+	  $stmt = $db2->prepare('UPDATE tree_users SET forget_password=:pass WHERE email = :email');
+	  $pass_code = md5($email."990990".now());
+	  $stmt->execute( array( ":email" => $email, ":pass" => $pass_code ) );        	  
+//	  echo $pass_code;
+	  /////////////////////////////////////////////////////
+	  
+	  push(array("am"),array('type' => "send_mail", 'from' => $fpk_id, 'txt' => "Пользователь запросил восстановление пароля: ".$email));
+	  
+	  $mytxt = "<b>".$result['fio'].", вы или кто-то другой запросил смену пароля:</b><br><br>".
+	  		   "<h1><a href='https://4tree.ru/login.php?change_pass=".$pass_code."'>Ввести новый пароль</a></h1>".
+	  		   "<br><br><font size='0.9em'>Если это сделали не вы, то игнорируйте это письмо. Ваш 4tree.ru</font><br>";
+	  
+	  require_once('Zend/Mail.php');
+	  require_once('Zend/Mail/Transport/Smtp.php');
+	  
+//	  $transport = new Zend_Mail_Transport_Smtp(array('host' => 'mail.4tree.ru',
+//	  										 'user'=> '4tree@4tree.ru',
+//	  										 'password' => 'uuS4foos_VE')); 
+	  
+	  $mail = new Zend_Mail("UTF-8");
+
+	  $mail->setBodyHtml($mytxt);
+	  $mail->setFrom("4tree@4tree.ru", "4tree@4tree.ru");
+	  $mail->setReplyTo("4tree@4tree.ru", "Ваш 4tree");
+	  
+	  $mail->addTo($email, $email);
+	  
+	  $mail->setSubject("Восстановление пароля 4tree");
+	  $mail->send();
+//Send
+	  $sent = true;
+
+
+	  /////////////////////////////////////////////////////
+  }
+        
+
+  echo json_encode(true);
+  
+  exit;
+}
+
+
+
 if (isset($_GET['test-speed'])) 
   {
   $sqlnews = "SELECT * FROM tree";
@@ -815,7 +924,6 @@ return date("Y-m-d <b>H:i:s</b>",($now/1000+60*60));
 ///////////////////////////////////////////////////////////////////////////////////
 if (isset($HTTP_GET_VARS['sync_new'])) 
 {
-//echo "start:".now()."<hr>";
 $t1 = now();
 
 $disp_time = false;
@@ -850,7 +958,7 @@ $changes_comments =  json_decode( $ch_comments , true );
 @$version = $HTTP_GET_VARS['version']; 
 
 
-
+if(count($changes)>0 || count($changes_comments)>0)
 push(array("am"),array('type' => "sync_cnt", 'from' => $fpk_id, 'txt' => "Клиент прислал ".count($changes)." изменений + ".count($changes_comments)." комментариев. Версия: ".$version));
 
 if($disp_time) echo "<hr>Prepare_ended = ".(now() - $t1)."<hr>"; $t1=now();
@@ -939,6 +1047,7 @@ if($disp_time) echo "<hr>First parsing = ".(now() - $t1)."<hr>"; $t1=now();
 
 if($display) if($disp_time) echo "<hr><hr>Начинаю второй проход<br>";
 $dont_send_ids = "";
+$for_push = "";
 //второй проход, с учётом добавленных элементов
 for ($i=0; $i<$countlines; $i++)
 	{
@@ -965,13 +1074,19 @@ for ($i=0; $i<$countlines; $i++)
    			{
 	   		if($display) echo "<span style='color:green'><b>Сохраняю этот элемент в базе данных</b></span><br>";
 	   		sync_save_changes($changes,$i,$sql,$display,$now_time,$time_dif);
-		    push(array("am"),array('type' => "sync_change", 'from' => $fpk_id, 'txt' => "Изменилась заметка: <b title='".$changes[$i]['text']."'>".($changes[$i]['title']?$changes[$i]['title']:$sql["title"])."</b>"));
+		    $for_push .= "Изменилась заметка: <b title='".$changes[$i]['text']."'>".($changes[$i]['title']?$changes[$i]['title']:$sql["title"])."</b><br>";
+//		    push(array("am"),array('type' => "sync_change", 'from' => $fpk_id, 'txt' => ));
+		    
 	   		$dont_send_ids .= " `id` != ".$id." AND ";
    			}
    		else
    			{
 	   		if($display) echo "<span style='color:red'><b>Делаю резервную копию, но не сохраняю! Есть более свежие изменения сделанные ".$dif." мс. назад; ".@$changes[$i]['old_id']."</b></span><br>";
-		    push(array("am"),array('type' => "sync_change", 'from' => $fpk_id, 'txt' => "Изменилась заметка, НО НЕ СОХРАНЯЮ: <b title='".$changes[$i]['text']."'>".($changes[$i]['title']?$changes[$i]['title']:$sql["title"])."</b>"));
+//		    push(array("am"),array('type' => "sync_change", 'from' => $fpk_id, 'txt' => "Изменилась заметка, НО НЕ СОХРАНЯЮ: <b title='".$changes[$i]['text']."'>".($changes[$i]['title']?$changes[$i]['title']:$sql["title"])."</b>"));
+		    
+		    $for_push .= "Изменилась заметка, но не сохраняю: <b title='".$changes[$i]['text']."'>".($changes[$i]['title']?$changes[$i]['title']:$sql["title"])."</b><br>";
+		    
+		    
    			}
    			//тут нужно будет поставить ограничение по времени, чтобы не бэкапить каждый раз
 	   		sync_save_backup($changes,$i,$sql,$display,$now_time);
@@ -979,6 +1094,9 @@ for ($i=0; $i<$countlines; $i++)
 	   		if(@$changes[$i]['old_id']) $confirm_saved_id["saved"][$i]["old_id"] = "".@$changes[$i]['old_id'];
 
 	}
+	
+    if($for_push) push(array("am"),array('type' => "sync_change", 'from' => $fpk_id, 'txt' => $for_push));
+	
 	
  if($disp_time) echo "<hr>Second parsing = ".(now() - $t1)."<hr>"; $t1=now(); 
 ///делаю то же самое для комментариев
@@ -2262,7 +2380,8 @@ if($GLOBALS['user_id'])
 
 
 
-
+if($only_md5!=1) 
+  {
   $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR id IN ( ".$share_ids.") )  AND del!=0 ORDER by id";
 
   $result = mysql_query_my($sqlnews); 
@@ -2279,6 +2398,7 @@ VALUES ";
   $sqlnews2 = str_replace(",@@@", ";", $sqlnews2);
 
   $result = mysql_query_my($sqlnews2); 
+  }
 
   $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR id IN ( ".$share_ids.") )  AND del=0 ORDER by id";
 
@@ -2352,19 +2472,21 @@ VALUES ";
 	    
 	    $answer[$i]['date2']=$date2;
 	    
-	    if($sql['text']=="") $text_md5="";
-	    else $text_md5 = substr(md5($sql['text']),0,5);
+//	    if($sql['text']=="") $text_md5="";
+//	    else 
+	    $text_md5 = substr(md5($sql['text']),0,5);
 
 	    $alldata = $sql['id'].$sql['title'].$text_md5.$date1.
     				  $date2.$did;
     				  
     	$longtext[$sql['id']] = substr(md5( $alldata ),0,5);
     	
-    	if($sql['id']==6796 && false)
+    	if($sql['id']==6403 && false)
     		{
 	    		echo $alldata;
 	    		echo " *".md5($sql['text'])."* ";
-	    		if($disp_time) echo "<hr>".substr(md5( $alldata ),0,5)."<hr>";
+	    		if(true) echo "<hr>".substr(md5( $alldata ),0,5)."<hr>";
+	    		echo $sql['text'];
 	    	}
 	}
 	
@@ -2404,9 +2526,10 @@ if($only_md5!=1)
 	{	
 	$res["comments"] = $comments;
 	$res["all_data"] = $answer;
+		push(array("am"),array('type' => "get_all_db", 'from' => $fpk_id, 'txt' => "Загружаю всю базу целиком: ".count($answer)." заметок + ".count($comments)." комментариев"));
+	} else {	
+	push(array("am"),array('type' => "get_all_db", 'from' => $fpk_id, 'txt' => "Делаю сверку: ".count($answer)." заметок"));
 	}
-	
-	push(array("am"),array('type' => "get_all_db", 'from' => $fpk_id, 'txt' => "Загружаю всю базу целиком: ".count($answer)." заметок + ".count($comments)." комментариев"));
 
 ///	echo md5($longtext)."<hr>";
 //	echo ($longtext);
@@ -4380,14 +4503,14 @@ if (isset($HTTP_GET_VARS['onLink']))  //нужно добавить отбор �
 				NULL ,  '$s1',  '$s2',  '$q',  '',  '1'
 				);";
     $result = mysql_query_my($sqlnews);   
-    echo $sqlnews;
+//    echo $sqlnews;
     
     exit;
     }
 
    //если запись уже существует, то включаем её или выключаем
    $sqlnews = "UPDATE tree_shortlink SET is_on = '".$is_on."' WHERE shortlink='$s1' LIMIT 5";
-   echo $sqlnews;
+//   echo $sqlnews;
    $result = mysql_query_my($sqlnews);   
 
   

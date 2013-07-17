@@ -45,7 +45,7 @@ class UserCredentials implements GrantTypeInterface
             return null;
         }
 //		print_r($userInfo);
-        if (!isset($userInfo['id'])) {
+        if (!isset($userInfo['user_id'])) {
             throw new LogicException("you must set the user_id on the array returned by getUserDetails");
         }
 
@@ -61,7 +61,7 @@ class UserCredentials implements GrantTypeInterface
 
     public function getUserId()
     {
-        return $this->userInfo['id'];
+        return $this->userInfo['user_id'];
     }
 
     public function getScope()

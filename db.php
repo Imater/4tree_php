@@ -6,30 +6,67 @@
 
  require_once('db2.php');
 
+function startsWith($haystack, $needle)
+{
+    return !strncmp($haystack, $needle, strlen($needle));
+}
+
 
 function user_exist($user, $db2){
+  
   $stmt = $db2->prepare("select * from tree_users_social where identity=:identity");
   $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
   $stmt->execute( array( ':identity' => $user["identity"] ) );
   $user_exist = $stmt->fetch();
   
-  if($user_exist["user_id"]) {
-    push(array("am"),array('type' => "login_user_social", 'from' => $fpk_id, 'txt' => "Вошёл пользователь через соц.сети <b title='".addslashes($user["network"])."'>параметры</b>"));
-  
-    setcookie('4tree_email',@$user_exist["email"],time()+60*60*24*60);
-    setcookie('4tree_email_md5',md5(@$user_exist["md5email"]."990990"),time()+60*60*24*60);
-    setcookie('4tree_social_md5', @$user_exist["session_md5"],time()+60*60*24*60);
-    setcookie('4tree_user_id',@$user_exist["user_id"],time()+60*60*24*60);
-    echo "<script>document.location.href='./index.php';</script>";
-    
-    return true;
+  if($user_exist["user_id"] && $curl = curl_init()) {
+	    $stmt = $db2->prepare("select * from tree_users where id=:user_id");
+	    $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
+	    $stmt->execute( array( ':user_id' => $user_exist["user_id"] ) );
+	    $user_exist = $stmt->fetch();
+	    
+  	    $path = "http://".$_SERVER["HTTP_HOST"].$_SERVER["PHP_SELF"];
+
+  	    $path = str_replace("login.php", "oauth2/token.php", $path);
+  	    
+  	    curl_setopt($curl, CURLOPT_URL, $path);
+  	    curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+  	    curl_setopt($curl, CURLOPT_POST, true);
+  	    
+  	    $md5email = $user_exist["md5email"];
+  	    $passw = $user_exist["password"];
+  	    
+  	    $params_post = 'grant_type=password&username='.$md5email.
+  	    								  '&password='.$passw.
+  	    								  '&client_id=4tree_web'.
+  	    								  '&client_secret=4tree_passw'.
+  	    								  '&secret=888';
+  	    								  
+  	  
+  	    curl_setopt($curl, CURLOPT_POSTFIELDS, "test_it_now=1&".$params_post);
+  	    $out = curl_exec($curl);
+  	    curl_close($curl);
+  	    echo $params_post."<br>".$out;
+  	    return $out;
   } else {
-    return false; 
+	    return ""; 
   }
 }
 
 function create_new_user($user, $db2){
   //print_r($user);
+  	    $stmt = $db2->prepare("select * from tree_users where email=:email");
+	    $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
+	    $stmt->execute( array( ':email' => $user["email"] ) );
+	    $user_exist = $stmt->fetch();
+	    
+	    if($user_exist) {
+		    echo "<center style='margin: 90px;position: absolute;width: 300px;left: 50%;margin-left: -150px;color: #CCC;font-size: 10px;'>Пользователь с электронным адресом: ".$user["email"]." уже зарегистирован. Нажмите: 'забыл пароль' внизу страницы. Войдите и связывайте соц.сервис в настройках.</center>"; 
+		    
+	    } else {
+
+  
+  
   $sql11 = "INSERT INTO `tree_users` SET
         `fio` = :fio,
         `mobilephone` = :mobilephone,
@@ -78,10 +115,10 @@ function create_new_user($user, $db2){
     //отправляю сгенерированный пароль
     $tree="<font color='#214516'>4</font><font color='#244918'>t</font><font color='#356d23'>r</font><font color='#42872c'>e</font><font color='#57b33a'>e</font>";
     
-    mail($user["email"],'Вы только что зарегистрировались на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
+    mail($user["email"],'Вы только что зарегистрировались на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <h2>".$newpassword."</h2>",
       "From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=UTF-8;\r\n");
 
-    mail("eugene.leonar@gmail.com",'Он только что зарегистрировался на 4tree.ru',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
+    mail("eugene.leonar@gmail.com",'Регистрация через соц.сеть',"<font size='3em'>&nbsp;Привет,<br><br>Вы только что зарегистрировались на ".$tree.".<br>Чтобы подтвердить регистрацию, пожалуйста, пройдите по ссылке ниже:<br><a href='http://4tree.ru/?confirm=".$code."'><font size=5em><b>http://4tree.ru/?confirm=".$code."</b></font></a></font><br><br><br>Желаю успехов в делах, ваш ".$tree.".<br><br><br>PS: Между прочим, вы регистрировались через ".$user["network"].",<br>поэтому мы сгенерировали вам пароль сами: <b>".$newpassword."</b>",
       "From: 4tree-mailer <noreply@4tree.ru>\r\nContent-type: text/html; charset=UTF-8;\r\n");
   }
   
@@ -91,6 +128,8 @@ function create_new_user($user, $db2){
   $sql["id"] = 6570;//6570
   mySelectBranch($sql,1,$last_user_id);
   user_exist($user, $db2);
+  
+  }
   
 //  echo "<hr>$last_id<hr>";
   
@@ -1569,17 +1608,31 @@ function loginuser ()
 {
 global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
 
-   @$email = $_COOKIE['4tree_email_md'];
-   @$passw = $_COOKIE['4tree_passw'];
+// include our OAuth2 Server object
+require_once "./oauth2/server.php";
+
+// Handle a request for an OAuth2.0 Access Token and send the response to the client
+if (!($tt = $server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))) {
+    $server->getResponse()->send();
+//    die;
+}
+
+  $server_answer =  $server->getAccessTokenData( OAuth2\Request::createFromGlobals() );
+
+  $fpk_id =  $server_answer["user_id"];
+
+
+
+   $token = $_GET['token'];
+	
+  // echo $token."<br>";
+   
+//   @$email = $_COOKIE['4tree_email_md'];
+//   @$passw = $_COOKIE['4tree_passw'];
    
    $social = $_COOKIE['4tree_social_md5'];
    
-   
-   if(isset($_GET['phonegap'])) {
-   if(!$email) $email = "8ab96bed02fc697de66ac528bcd4814f";
-   if(!$passw) $passw = "87e7c51b7a7e50cdf2e78670557c18a4";
-   }
-   
+      
    if($social) {
      $sqlnews="SELECT * FROM tree_users_social WHERE session_md5='$social' LIMIT 1;";
      $result = mysql_query_my($sqlnews); 
@@ -1587,14 +1640,12 @@ global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
      $user_id = $sql->user_id;
      $sqlnews="SELECT * FROM tree_users WHERE id='$user_id' LIMIT 1;";
    } else {
-     $sqlnews="SELECT * FROM tree_users WHERE md5email='$email' AND password='$passw' LIMIT 1;";
+     $sqlnews="SELECT * FROM tree_users WHERE id = ".$fpk_id." LIMIT 1;";
    }
       
    $result = mysql_query_my($sqlnews); 
    @$sql = mysql_fetch_object ($result);
    
-   
-   $fpk_id = $sql->id;
    $theme_img = $sql->theme_img;
    $theme_dark = $sql->theme_dark;
    
@@ -1607,9 +1658,7 @@ global $fpk_id,$confirm_email, $fio_user, $theme_img, $theme_dark;
       $confirm_email = 'false';
       }
 //   setcookie('fpk_id', $fpk_id);
-
-if(isset($_GET['phonegap'])) $fpk_id = $_GET['phonegap'];
-
+	
    setcookie('4tree_user_id', $fpk_id,time()+60*60*24*60);
 
 if($fpk_id=='') return false;

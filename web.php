@@ -92,6 +92,7 @@ if($q)
 <link rel="icon" href="favicon1.png" type="image/x-icon" />
 
 <script src="js/jquery-1.10.1.min.js"></script>
+<script src="js/login.js"></script>
     
     
 <?

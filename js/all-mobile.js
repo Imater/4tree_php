@@ -271,15 +271,17 @@ function jsOpenNode(id, no_editor, no_panel_open) {
 	}
 	if(!no_editor) jsOpenRed(id);
 
-	$("#node_title").val(element.title);
-
-	if(element.date1!="") {
-		var to_value = "";
-		var mydate1 = Date.createFromMysql( element.date1 );
-		if(mydate1 && mydate1.toISOString()) to_value = mydate1.toISOString().split(".")[0]
-		$("#node_date").attr( "value", to_value );
-	} else {
-		$("#node_date").attr( "value", "" );
+	if(element) {
+		$("#node_title").val(element.title);
+	
+		if(element.date1!="") {
+			var to_value = "";
+			var mydate1 = Date.createFromMysql( element.date1 );
+			if(mydate1 && mydate1.toISOString()) to_value = mydate1.toISOString().split(".")[0]
+			$("#node_date").attr( "value", to_value );
+		} else {
+			$("#node_date").attr( "value", "" );
+		}
 	}
 
 
@@ -299,7 +301,8 @@ function jsRegAllKeys() {
 
 		  $(".redactor_editor11").blur(function(){ 
 		  	//plugins.SoftKeyBoard.hide(function(){},);
-		  	window.plugins.SoftKeyBoard.hide(function () {
+		  	if(typeof window.plugins != 'undefined') 
+		  		window.plugins.SoftKeyBoard.hide(function () {
   // success
 },function () {
   // fail
@@ -311,14 +314,13 @@ function jsRegAllKeys() {
 		  $(".redactor_editor").focus(function(){ 
 		  	//plugins.SoftKeyBoard.show();
 
-		  	window.plugins.SoftKeyBoard.show(function () {
-		  		console.info("Keyboard show!");
+		  	if(typeof window.plugins != 'undefined') 
+		  		window.plugins.SoftKeyBoard.show(function () {
   // success
 },function () {
   // fail
 });
 
-		  	$(".f_text").html("."+$(".f_text").html()) 
 		  });
 
 /*

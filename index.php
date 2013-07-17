@@ -89,6 +89,7 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 
 
 	echo '<script src="jstree/_lib/jquery.cookie.min.js"></script>
+	<script src="js/login.js"></script>
 	<script src="b_menu/jquery.menu.js"></script>
 	<script src="js/jquery.jsPlumb-1.4.1-all.js"></script>
 	<script src="js/handlebars.js"></script>
@@ -107,7 +108,7 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 	<script src="js/js_regallkeys.js"></script>
 	<script src="js/api4tree.js"></script>
 	<script src="js/all_new.js"></script>
-	<script src="js/ztx-ydn.db-dev-0.6.2.js"></script>
+	<script src="js/ydn.db-jquery-0.7.5.js"></script>
 	<script src="redactor900/redactor/redactor.js"></script>
 	<script src="redactor900/redactor/ru.js"></script>
 	<script src="js/iphone-style-checkboxes.js"></script>
@@ -136,8 +137,8 @@ if(isset($_GET['test']))
 
 
 <script type="text/javascript">
-$(document).ready(jsDoFirst); 
-if(!$.cookie("4tree_passw") && !$.cookie("4tree_social_md5")) document.location.href="./4tree.php";
+$(document).ready(jsLoginUser); 
+//if(!$.cookie("4tree_passw") && !$.cookie("4tree_social_md5")) document.location.href="./4tree.php";
 
 </script>
 </head>
@@ -229,7 +230,7 @@ if(isset($_GET['test']))
         	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank"><i class="icon-info-circle"></i>Что нового в версии <span id="this_version"><? echo $compress_stamp; ?></span></a>
         </li>
         <li class="blank"></li>
-        <li><a href="./4tree.php"><i class="icon-home-2"></i>Выход (смена пользователя)</a></li>
+        <li><a href="./login.php?logout"><i class="icon-home-2"></i>Выход (смена пользователя)</a></li>
     </ul>  
 
 

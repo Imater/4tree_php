@@ -50,7 +50,7 @@ class Pdo implements AuthorizationCodeInterface,
             'access_token_table' => 'oauth_access_tokens',
             'refresh_token_table' => 'oauth_refresh_tokens',
             'code_table' => 'oauth_authorization_codes',
-            'user_table' => 'tree_users',
+            'user_table' => 'oauth_users',
             'jwt_table' => 'oauth_jwt',
         ), $config);
     }
@@ -210,7 +210,7 @@ class Pdo implements AuthorizationCodeInterface,
     {
 /*        $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
         $stmt->execute(array('username' => $username)); */
-        $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where md5email=:username', $this->config['user_table']));
+        $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
         $stmt->execute(array('username' => $username));
         return $stmt->fetch();
     }

@@ -1,4 +1,4 @@
-var my_all_parents = {}, settings = {show_did:false}, is_mobile = true; //все параметры;
+var my_all_parents = {}, settings = {show_did:false}, is_mobile = false; //все параметры;
 if(is_mobile) {
 	var phonegap_user_id = "11";
 	var web_site = "http://192.168.0.52/fpk/4tree/";
@@ -1147,7 +1147,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 			//включаю или выключаю ссылку
 			if(need_to_off==0 || need_to_off==1) { 
-				var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&onLink="+id+"&is_on="+need_to_off+"&shortlink="+
+			
+			jsGetToken().done(function(token){
+
+				var lnk = web_site + "do.php?access_token=" + token + "&onLink="+id+"&is_on="+need_to_off+"&shortlink="+
 						   $("#makeshare").val().split("/")[1];
 				
 				$.getJSON(lnk,function(data){
@@ -1158,12 +1161,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 							$(".makesharediv").hide();
 						}
 				});
+			}); //jsGetToken
 				return true;
 				}
 			
-			//считываю ссылку и статистику
-			var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&getLink="+id;
-			$.getJSON(lnk,function(data){
+			jsGetToken().done(function(token){
+			
+				//считываю ссылку и статистику
+				var lnk = web_site + "do.php?access_token=" + token + "&getLink="+id;
+				$.getJSON(lnk,function(data){
 				$("#makesharestat_count span").text("0");
 				$("#makeshare").val("4tree.ru/"+data.shortlink);
 				if(data.is_on=="0") {
@@ -1193,6 +1199,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				}
 			
 					
+			});
+			
 			});
 			
 			
@@ -1678,7 +1686,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  
 		  this.jsMakeTheme = function() { //применяю тему, так как система оффлайн
-		  	  	  var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_settings=true";
+		  
+  			jsGetToken().done(function(token){
+
+		  	  	  var lnk = web_site + "do.php?access_token=" + token + "&get_settings=true";
 		  	  	  console.info(lnk);
 		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
 				     if(j=="success") {
@@ -1703,6 +1714,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				     	});
 				     }
 				  });
+		  	});
 			  
 		  }
 		  
@@ -1726,12 +1738,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	  				  '<div id="uLogin" data-ulogin="display=panel;'+
 			  	  				  'fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;'+
 								  'providers=vkontakte,odnoklassniki,google,mailru,facebook,yandex,twitter;'+
-			  	  				  'hidden=other;redirect_uri=http%3A%2F%2F4tree.ru%2F4tree.php%3Fset_to_current_account"'+
+			  	  				  'hidden=other;redirect_uri=http://localhost/fpk/4tree/login.php?set_to_current_account"'+
 			  	  				  '></div>';
 			  	  
 			  	  $("#tree_settings #login_social_form").html(loginform);
 			  	  
-		  	  	  var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_settings=true";
+ 	  			jsGetToken().done(function(token){
+
+		  	  	  var lnk = web_site + "do.php?access_token=" + token + "&get_settings=true";
 		  	  	  console.info(lnk);
 		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
 				     if(j=="success") {
@@ -1761,6 +1775,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					 	$("#tree_settings").slideDown(900);
 				     }
 				  });
+		  	  	  
+		  	  	 });
 			  	  return false;
 		  	  });
 		  	  
@@ -1791,7 +1807,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	  	  var sel = $("#tree_settings .theme_selected");
 		  	  	  params += "&theme="+ encodeURIComponent(sel.attr("theme_img"))+"&dark="+sel.attr("dark");
 		  	  	  
-		  	  	  var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&send_settings=true&"+params;
+   			jsGetToken().done(function(token){
+
+		  	  	  var lnk = web_site + "do.php?access_token=" + token + "&send_settings=true&"+params;
 		  	  	  console.info(lnk);
 		  	  	  $.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
 				     if(j=="success") {
@@ -1800,6 +1818,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				     	start_sync_when_idle = true;
 				     }
 				  });
+
+  	  	    }); //jsGetToken
 							  	  	  
 			  	  return false;
 		  	  });
@@ -2055,13 +2075,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 var old_title_of_screensaver;
 		 this.jsScreenSaver = function(is_on) {
 			 if(is_on) {
-				$("#mypanel .n_title").addClass("blur");
+				$("#mypanel .n_title,.calendar_and_others .tree-closed").addClass("blur");
 				$("#calendar .fc-event").addClass("blur");
 				$(".redactor_").addClass("blur");
 				old_title_of_screensaver = window.document.title;
 				window.document.title = "4tree.ru - Screensaver...";
+				api4tree.js_Compare_md5_local_vs_server();
 			 } else {
-				$("#mypanel .n_title").removeClass("blur");
+				$("#mypanel .n_title,.calendar_and_others .tree-closed").removeClass("blur");
 				$("#calendar .fc-event").removeClass("blur");
 				$(".redactor_").removeClass("blur");
 				if(old_title_of_screensaver) window.document.title = old_title_of_screensaver;
@@ -2085,7 +2106,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				jsSetTimeNow();
 				screensaver_tm = setTimeout(function(){
 					this_db.jsScreenSaver(true);
-				}, 15*60*1000)
+				}, 15*60*1000);
 			    if(start_sync_when_idle) { this_db.jsSync(only_save); only_save=false; }
 			});
 		  }
@@ -4213,12 +4234,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
         		var myelement = api4tree.jsFind(id);
     			if(!myelement) { d.resolve(); return d.promise(); }
         		if(myelement.tmp_text_is_long!=1) {
-	    	  		var the_text = myelement?myelement.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
+	    	  		var the_text = myelement?myelement.text:"";
         			d.resolve(the_text);
         		} else {
 	    	  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
 
-	    	  			var the_text = (record && record.text)?record.text.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
+	    	  			var the_text = (record && record.text)?record.text:"";
     		  			d.resolve(the_text);
 			  			});
 			  	}
@@ -4830,7 +4851,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 	jsProgressStep();
 		 	    this_db.log("Удалил локальную DB. Читаю данные с сервера.");
 		 	    var sync_id = this_db.jsGetSyncId();
-		 	    var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_all_data2="+jsNow()+"&sync_id="+sync_id; 
+		 	    
+   			jsGetToken().done(function(token){
+
+		 	    var lnk = web_site + "do.php?access_token=" + token + "&get_all_data2="+jsNow()+"&sync_id="+sync_id; 
 		 	    $.getJSON(lnk,function(data){
 		 	       jsProgressStep();
 			   	   this_db.log("Загрузил с сервера ",Object.size(data.all_data)," элементов");
@@ -4935,6 +4959,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					});
 
 		 	    }); //getJSON
+		 	    
+		 	});//jsGetToken    
+		 	    
 		 	  }); //clear(4tree_db)
 		 	}); //comments_db_clear
 
@@ -5088,39 +5115,57 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     
 		 //api4tree.js_Calculate_md5_from_local_DB().done(function(x){console.info(x)})
 		 //вычисляю md5 всех данных из локальной DB
-	     function js_Calculate_md5_from_local_DB() { 
+	     this.js_Calculate_md5_from_local_DB = function() { 
          	var d=$.Deferred();
+         	var dfdArray = [];
          	db.values(global_table_name,null,MAX_VALUE).done(function(records) {
-         	   var longtext=[],len;
-    	       for(var i=0; len = records.length, i<len; i=i+1 )
+         	   var answer=[],len;
+//         	   console.info(records)
+    	       $.each(records, function(i,el)
     	       	{
-    	       	var el = records[i];
-    	       	var alldata = (el.id?el.id:"") + (el.title?el.title:"") + (el.tmp_txt_md5?el.tmp_txt_md5:"") + 
-    	       				  (el.date1?el.date1:"") + (el.date2?el.date2:"") + 
-    	       				  (el.did?el.did:"");
-    	       	//alldata = el.id+":"+(el.title?el.title:"")+", ";
     	       	
-    	 		var mymd5 = crc32( alldata ).substr(0,5);
+			   	var done_element = this_db.jsFindLongText(el.id).done(function(longtext){
 
-    	       	if(el.id==6796) console.info("1038",alldata,mymd5);
-    	 		
-    	       	longtext.push({ id:el.id, md5:mymd5 });
-    	       	}
-         	  d.resolve(longtext);
+			   		var tmp_txt_md5 = hex_md5(longtext).substr(0,5);
+	    	       	var alldata = (el.id?el.id:"") + (el.title?el.title:"") + (tmp_txt_md5?tmp_txt_md5:"") + 
+    		       				  (el.date1?el.date1:"") + (el.date2?el.date2:"") + 
+				   				  (el.did?el.did:"");
+
+			   		var mymd5 = hex_md5( alldata ).substr(0,5);
+//			   		console.info(el.id)
+			   		if(el.id==6403 && false) {
+				   		console.info("3340 = ",alldata,mymd5);
+			   		}
+			   		answer.push({ id:el.id, md5:mymd5 });
+
+			   	});
+					    	
+			    dfdArray.push( done_element );
+    	       	
+    	       	});
+    	       	
+			   	$.when.apply( null, dfdArray ).then( function(x){
+				   	d.resolve(answer);
+			   	});
+    	       	
+         	  
          	});
          	return d.promise();
          }
 		     
+
 		 //сверяю md5 сервера с локальной DB
 	     this.js_Compare_md5_local_vs_server = function() { 
 		    if(!this_db.jsIsOnline) { d.resolve(); return d.promise(); } //есть ли интернет
 	     	var d=$.Deferred();
 	     	var sync_id = this_db.jsGetSyncId();
+   		jsGetToken().done(function(token){
 
-	     	var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_all_data2="+jsNow()+"&sync_id="+sync_id+"&only_md5=1"; 
+	     	var lnk = web_site + "do.php?access_token=" + token + "&get_all_data2="+jsNow()+"&sync_id="+sync_id+"&only_md5=1"; 
 	     
+  			var fixed_count = 0;
 	     	$.getJSON(lnk,function(data){
-	         	js_Calculate_md5_from_local_DB().done(function(md5) {
+	         	api4tree.js_Calculate_md5_from_local_DB().done(function(md5) {
 	     			var test_ok = "выполнил успешно.";
 	 	    		$.each(md5, function(i,el)
 	 		    		{ 
@@ -5128,16 +5173,24 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	 		    			{
 	 			    		console.info("!!!!!MD5!!!!!Данные на сервере не совпадают"+
 	 			    					 " с локальными:",el.id,el.md5, data.md5[el.id],api4tree.jsFind(el.id)); 
+	 			    		fixed_count += 1;
 	 			    		
-	 			    		trampampam = this_db.jsFind(el.id,{lsync:0}); //восстанавливаю целостность, забирая элемент с сервера
-	 			    		//jsSync();
-	 			    		test_ok = "ПРОВАЛИЛ!!!!!!!!! :( ИСПРАВЛЯЮ :).";
+	 			    		if(fixed_count<100) {
+	 			    		trampampam = this_db.jsFind(el.id,{lsync:0, time:0}); //восстанавливаю целостность, забирая элемент с сервера
+	 			    		}
+	 			    		test_ok = "сделал. Исправил ошибки.";
 	 			    		}
 	 		    		});
-	 		    console.info("Сверку с сервером по md5 "+test_ok);
+
+	    		if(fixed_count>0) api4tree.jsSync();
+	
+	 		    jsTitle("Сверку с сервером "+test_ok, 30000);
    	 	    	d.resolve(test_ok);
 	     		}); //done
 	         }); //JSON
+	     	
+	     }); //jsGetToken
+	     
 	         return d.promise();
 	     }
 	     	
@@ -5437,6 +5490,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 	   return d.promise();
 		 	   }
 		 	   
+		 	   
+   			jsGetToken().done(function(token){
+		 	   
+		 	   
     		   var fd = new FormData();
 
 			   var xhr = new XMLHttpRequest();
@@ -5452,9 +5509,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 				   fd.append('file', myBlob);
 				   
+				   
 				   $.ajax({
 				       type: 'POST',
-				       url: 'do.php?phonegap=" + phonegap_user_id + "&save_file=clipboard',
+				       url: 'do.php?access_token=' + token + '&save_file=clipboard',
 				       data: fd,
 				       processData: false,
 				       contentType: false
@@ -5467,15 +5525,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				          	console.info("BLOB SAVED TO AMAZONE",filename);
 				          	d.resolve(filename);
 				    	  	}
-				   }); 
-			       
-			       
+				   }); 			       
 			       
 			       
 			       // myBlob is now the blob that the object URL pointed to.
 			     }
 			   };
 			   xhr.send();
+			   
+			 }); //jsGetToken
 
 			 return d.promise();
 		 }
@@ -5483,6 +5541,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 
 		 this.jsThumbnail = function(src, id) {
 		 	  var d= new $.Deferred();
+		 	  
+   			jsGetToken().done(function(token){
+		 	  
 		 
 		 	  if(!src) { d.resolve(""); return d.promise(); }
 		 	  
@@ -5501,7 +5562,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	  				   replace(".gif","_p2.gif").replace(".png","_p2.png");
 			  	  	  d.resolve(p2_url);		  	  	  
 			  	  } else if(src) {
-			  	  	  var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&save_thumb_remote="+encodeURIComponent(src);
+			  	  
+			  	  	  var lnk = web_site + "do.php?access_token=" + token + "&save_thumb_remote="+encodeURIComponent(src);
 				  	  $.getJSON(lnk,function(data){
 				  	  	 console.info("thumb",data);
 				  	  	 p2_url = data.filelink;
@@ -5512,6 +5574,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	    console.info("Иконка ок",src,id);			  	
 			  	d.resolve(""); //если иконку менять не нужно
 			  }
+			  
+			  });//jsGetToken
+			  
 			  return d.promise();
 		  }
 		 
@@ -5710,7 +5775,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				var timezone = offsetdate.getTimezoneOffset()/60;
 				var this_vers = encodeURIComponent($("#this_version").html());
 				
-				var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do+"&timezone="+timezone+"&version="+this_vers;
+			jsGetToken().done(function(token){
+				
+				var lnk = web_site + "do.php?access_token=" + token + "&sync_new="+sync_id+"&time="+lastsync_time_client+"&now_time="+jsNow(true)+"&what_you_need="+what_to_do+"&timezone="+timezone+"&version="+this_vers;
 
 				
 				this_db.log(lnk);
@@ -5831,6 +5898,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				
 				}); //postJSON
 				
+		    }); //jsGetToken
+				
 				
 			}); //$.when
 						
@@ -5843,18 +5912,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 } ///end of api4tree
 
 
-function jsNow(dont_need_dif) //определение текущего времени
-{
-time_dif = localStorage.getItem("time_dif");
-if(!time_dif) time_dif = 0;
-if(!dont_need_dif)
-	now_time = ( parseInt( (new Date()).getTime() ) + parseInt(time_dif)  );
-else
-	now_time = ( parseInt( (new Date()).getTime() ) );
-
-
-return now_time; 
-}	
 
 
 
@@ -5905,10 +5962,13 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 
 		  //создаёт редактор на странице и регистрирует глобальную переменную myr
 		  this.initRedactor = function() {
-		  	myr = $('#redactor').redactor({ imageUpload: 'do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id,
+		  
+   			jsGetToken().done(function(token){
+
+		  	myr = $('#redactor').redactor({ imageUpload: 'do.php?access_token=' + token + '&save_file='+main_user_id,
 		  		  lang:'ru', focus:false, 
-		  		  fileUpload: 'do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id,
-		  		  imageUpload: './do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id,
+		  		  fileUpload: 'do.php?access_token=' + token + '&save_file='+main_user_id,
+		  		  imageUpload: './do.php?access_token=' + token + '&save_file='+main_user_id,
 		  		  autoresize:true, 
 		  			focusCallback: function() {
 		  			   $("#fav_redactor_btn").show();
@@ -5957,7 +6017,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	$(".redactor_box").append('<div class="comment_in"></div>');
 		  	$(".comment_in").append( $("#tree_comments") );
 		  	
-		  	myr_comment = $('.comment_enter_input').redactor({imageUpload: './do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id, lang:'ru', focus:false, fileUpload: 'do.php?phonegap=" + phonegap_user_id + "&save_file='+main_user_id, autoresize:false, toolbarExternal: "#fav_redactor_btn_comment",
+		  	myr_comment = $('.comment_enter_input').redactor({imageUpload: './do.php?access_token=' + token + '&save_file='+main_user_id, lang:'ru', focus:false, fileUpload: 'do.php?access_token=' + token + '&save_file='+main_user_id, autoresize:false, toolbarExternal: "#fav_redactor_btn_comment",
 		  			toolbar: true,
 		  			focusCallback: function() {
 		  			   $("#fav_redactor_btn").hide();
@@ -5965,6 +6025,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  			}
 //		  			buttons: ['bold' , 'italic' , 'deleted' , '|', 'orderedlist', '|' ,'image', 'video', 'file', 'link']
 		  	   });
+		  }); //jsGetToken
 		  
 		  }
 		  
@@ -6200,10 +6261,14 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	var mailto_uri = encodeURIComponent(mailto);
 		  	var mytitle_uri = encodeURIComponent(mytitle);
 		  	
-		  	var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&send_mail_to="+mailto_uri+"&mytitle="+mytitle_uri;
+		  jsGetToken().done(function(token){
+		  	
+		  	var lnk = web_site + "do.php?access_token=" + token + "&send_mail_to="+mailto_uri+"&mytitle="+mytitle_uri;
 		  	$.postJSON(lnk,mynote,function(data,j,k){
 		  		alert('Письмо "'+mytitle+'" для '+"\r"+mailto+"\rуспешно отправлено.");
 		  		});
+		  }); //jsGetToken
+		  
 		  }
 	  
 	  }

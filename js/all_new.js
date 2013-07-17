@@ -937,7 +937,8 @@ var API_4OTHERS = function() {
 		
 			api4tree.jsFindFilesLinkFromTexts();
 		
-			var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&get_files="+mytype;
+		  jsGetToken().done(function(token){
+			var lnk = web_site + "do.php?access_token=" + token + "&get_files="+mytype;
 		    var html = "";
 		    
 		    if(mytype=="all") html = "<ul class='files_list'>";
@@ -966,7 +967,7 @@ var API_4OTHERS = function() {
 				$("#tree_files_content").html(html);
 				jsPrepareDate();
 				});
-		
+		  }); //jsGetToken
 		}
 
 		
@@ -1482,6 +1483,8 @@ function jsSetDiaryDate(skipdays) {
 	$(".todayweek").html( "(" + today.getWeek() + " неделя)");
 }
 	 
+	 
+	 
 //////////////////////////////////DO FIRST///////////////////////////////////////
 //эта функция запускается первой
 function jsDoFirst() { //функция, которая выполняется при запуске
@@ -1599,7 +1602,11 @@ function jsDoAfterLoad() {
 	
 	if(typeof(test)!="undefined") { jsTestIt2(); }; //запуск теста, если необходимо
 	
-	main_user_id = $.cookie("4tree_user_id");
+	var oauth2 = localStorage.getItem( "oauth2" );
+
+	if( oauth2 ) {
+		main_user_id = JSON.parse(oauth2).user_id;
+	}
 	
 	_connect(main_user_id);
 	

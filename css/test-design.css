@@ -1,0 +1,64 @@
+body,html {
+	margin: 0px;
+	height: 100%;
+	color: #888;
+	font-size: 12px;
+	font-family: Tahoma, Arial, sans-serif;
+}
+
+#tree_header {
+	background: #2d2d2d;
+	padding: 3px 0px 0px 0px;
+}
+
+.tree_tab_menu {
+	list-style: none;	
+	margin: 0px;
+	font-weight: normal;
+	margin-top: 5px;
+	padding: 0px;
+	white-space: nowrap;
+	height: 20px;
+}
+
+.tree_tab_menu li {
+	display: inline-block;
+	list-style: none;
+	height:0px;
+border-left: 20px solid transparent;
+border-bottom: 20px solid #3D3D3D;
+margin-left: -4px;
+max-width: 11%;
+}
+
+.tree_tab_menu li:hover {
+	color: #CCC;
+}
+
+.tree_tab_menu li.active {
+border-bottom: 20px solid #FFF;
+}
+
+.tree_tab_menu li a {
+padding: 3px 10px 3px 10px;
+cursor: pointer;
+max-width: 90%;
+white-space: nowrap;
+text-overflow: ellipsis;
+overflow: hidden;
+position: relative;
+display: inline-block;
+margin-top: 0px;
+}
+
+
+#tree_fav {
+	background: #FFF;
+}
+
+#tree_left_panel {
+	border-right: 1px solid #CCC;
+	width: 200px;
+	height: 100%;
+	background: #CCC;
+}

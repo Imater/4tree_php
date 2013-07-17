@@ -58,15 +58,18 @@ if(true)
      
      if(note_history)
      	{
-     	$.getJSON("do.php?history="+note_history.substr(10,500),function(d,dd)
+   	jsGetToken().done(function(token){ 
+   		var lnk = "do.php?history="+note_history.substr(10,500)+"&access_token="+token;
+     	$.getJSON(lnk,function(d,dd)
      		{ 
      		$(".webheader").html("Резервные копии заметки сохраняются при синхронизации");
      		myr.redactor("set",d.text);
      		document.title = d.title+" — История изменений";
      	    });
-     	}
      
-onResize();
+	 	onResize();
+	 	});
+	 }
 }
 
 function onResize()
