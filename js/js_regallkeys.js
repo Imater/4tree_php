@@ -33,9 +33,11 @@ function jsHideWelcome() {
 	$("#start_welcome_page").removeClass("active");
 	$("#mypanel").off("scroll.my");
 	$("#welcome_screen").fadeOut(500);
-	var lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&off_welcome";
- 	$.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
- 	});
+    jsGetToken().done(function(token){
+		var lnk = web_site + "do.php?access_token=" + token + "&off_welcome";
+		$.getJSON(lnk, function(data,j,k) { //////////////A J A X/////////////////
+		});
+	});
 
 }
 
@@ -96,11 +98,13 @@ function jsLoadWelcome() {
 		}
 	});
 
-	lnk = web_site + "do.php?phonegap=" + phonegap_user_id + "&load_welcome";
-	$("#welcome_screen").load(lnk, function(){
-		setTimeout(function(){ $("#welcome_screen").fadeIn(500,function(){
-			jsDrawWelcomeLine();
-		}); }, 500);
+    jsGetToken().done(function(token){
+		lnk = web_site + "do.php?access_token=" + token + "&load_welcome";
+		$("#welcome_screen").load(lnk, function(){
+			setTimeout(function(){ $("#welcome_screen").fadeIn(500,function(){
+				jsDrawWelcomeLine();
+			}); }, 500);
+		});
 	});
 }
 

@@ -1733,17 +1733,19 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	  $("#myslidemenu").on("click", "#show_settings", function(){
 			  	  api4panel.jsCloseAllMenu();
 			  	  
+ 	  			jsGetToken().done(function(token){
+
 			  	  var loginform = '<b>Разрешить вход через соц.сервисы:</b>'+
 			  	  				  '<script src="//ulogin.ru/js/ulogin.js"></script>'+
-			  	  				  '<div id="uLogin" data-ulogin="display=panel;'+
+			  	  				  '<div id="uLogin" data-ulogin="display=small;'+
 			  	  				  'fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;'+
 								  'providers=vkontakte,odnoklassniki,google,mailru,facebook,yandex,twitter;'+
-			  	  				  'hidden=other;redirect_uri=http://localhost/fpk/4tree/login.php?set_to_current_account"'+
-			  	  				  '></div>';
-			  	  
+			  	  				  'hidden=other;redirect_uri=http://localhost/fpk/4tree/login.php?set_to_current_account_'+
+			  	  				  token+
+			  	  				  '"></div>';
+			  	  			  	  
 			  	  $("#tree_settings #login_social_form").html(loginform);
 			  	  
- 	  			jsGetToken().done(function(token){
 
 		  	  	  var lnk = web_site + "do.php?access_token=" + token + "&get_settings=true";
 		  	  	  console.info(lnk);

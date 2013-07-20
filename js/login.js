@@ -35,6 +35,46 @@ function jsLoginUser() {
 
 }	 
 
+function jsReg() //регистрация
+{
+var email = $('#email_reg').val().toLowerCase();
+var passw = $('#password_reg').val();
+
+if((email.indexOf('@')>0) && (email.indexOf('.')>0)) email_ok = 1;
+else
+  {
+  $('#reg_page h1').hide().html('проверьте email').fadeIn();
+  $('#email_reg').focus();
+  return false;
+  }
+
+if(passw.length>=3) passw_ok=1;
+else
+ {
+  $('#reg_error').hide().html('проверьте пароль').fadeIn();
+  return false;
+ }
+
+passw = hex_md5(passw);
+
+var mydata = { 
+		  "registrate_me" : true,
+		  "email" : email, 
+		  "passw" : passw
+		 }
+		 
+var md5email = hex_md5(email+'990990');
+
+var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t) { 
+	$('#reg_error').hide().html(t).fadeIn();
+	if (t=='Вы успешно зарегистрировались.<br>Перенаправляю на сайт...') 
+	   {
+	   jsLogin(md5email, passw);
+	   }
+	//alert('Регистрация '+email+' '+passw);
+	} });
+}
+
 
 
 ////////////////////////////////////////////////////////////
@@ -91,6 +131,7 @@ var params_get = 'grant_type=refresh_token'+
 	}
 	return dfd.promise();
 }
+
 
 
 function jsGetMyFirstToken() {

@@ -1,46 +1,162 @@
 body,html {
 	margin: 0px;
 	height: 100%;
-	color: #888;
+	color: #222;
 	font-size: 12px;
 	font-family: Tahoma, Arial, sans-serif;
 }
 
 #tree_header {
-	background: #2d2d2d;
-	padding: 3px 0px 0px 0px;
-}
+	position: relative;
+	height:27px;
+	padding: 0px 0px 0px 0px;
+    display:block;
+    z-index: 2;
+ }
 
 .tree_tab_menu {
 	list-style: none;	
 	margin: 0px;
 	font-weight: normal;
-	margin-top: 5px;
+	margin-top: 0px;
 	padding: 0px;
 	white-space: nowrap;
-	height: 20px;
+	height: 27px;
+	font-size: 0px;
+	border-bottom: 1px solid #888;
+	background: rgba(200,200,200,0.88);
 }
 
 .tree_tab_menu li {
 	display: inline-block;
 	list-style: none;
-	height:0px;
-border-left: 20px solid transparent;
-border-bottom: 20px solid #3D3D3D;
-margin-left: -4px;
+	height:27px;
 max-width: 11%;
+border-right: 1px solid #888;
+font-size: 13px;
+-moz-transition: all 0.2s; 
+-webkit-transition: all 0.2s;  
+-ms-transition: all 0.2s;  
+-o-transition: all 0.2s;  
+transition: all 0.2s;  
 }
 
 .tree_tab_menu li:hover {
-	color: #CCC;
+	color: #000;
 }
 
 .tree_tab_menu li.active {
-border-bottom: 20px solid #FFF;
+background: rgba(255,255,255,0.99);
+color: #000;
+padding-bottom: 1px;
 }
 
 .tree_tab_menu li a {
-padding: 3px 10px 3px 10px;
+padding: 5px 15px 3px 15px;
+cursor: pointer;
+max-width: 90%;
+white-space: nowrap;
+text-overflow: ellipsis;
+overflow: hidden;
+position: relative;
+display: inline-block;
+margin-top: 0px;
+height: 12px;
+}
+
+.tree_tab_menu li a i {
+	font-size: 19px;
+}
+
+
+#tree_left_panel {
+	border-right: 1px solid #CCC;
+	width: 235px;
+	background: #FFF;
+	position: absolute;
+	left:0px;
+	bottom:27px;
+	top:27px;
+	font-size: 13px;
+}
+
+#tree_right_panel {
+	border-right: 1px solid #CCC;
+	width: 235px;
+	background: #FFF;
+	position: absolute;
+	right:0px;
+	bottom:27px;
+	top:27px;
+	font-size: 13px;
+}
+
+
+#tree_editor {
+	position: absolute;
+	top:28px;
+	left:235px;
+	right: 235px;
+	bottom: 28px;
+	padding: 15px;
+	padding-top: 0px;
+	overflow: auto;	
+	z-index: 0;
+}
+
+#tree_editor img,#tree_editor_top img {
+	max-width: 100%;
+}
+
+.tree_footer_menu {
+	position: absolute;
+	bottom:0px;
+	left:0px;
+	right: 0px;
+	height: 27px;
+	list-style: none;	
+	margin: 0px;
+	font-weight: normal;
+	margin-top: 0px;
+	padding: 0px;
+	white-space: nowrap;
+	height: 25px;
+	font-size: 0px;
+	border-top: 1px solid #888;
+	background: rgba(200,200,200,0.88);
+	padding-left: 235px;
+}
+
+.tree_footer_menu li:first-child {
+border-left: 1px solid #888;
+}
+
+.tree_footer_menu li {
+	display: inline-block;
+	list-style: none;
+	height:25px;
+max-width: 11%;
+border-right: 1px solid #888;
+font-size: 13px;
+-moz-transition: all 0.2s; 
+-webkit-transition: all 0.2s;  
+-ms-transition: all 0.2s;  
+-o-transition: all 0.2s;  
+transition: all 0.2s;  
+}
+
+.tree_footer_menu li:hover {
+	color: #000;
+}
+
+.tree_footer_menu li.active {
+background: rgba(255,255,255,0.95);
+color: #000;
+border-top: 1px solid #FFF
+}
+
+.tree_footer_menu li a {
+padding: 4px 15px 3px 15px;
 cursor: pointer;
 max-width: 90%;
 white-space: nowrap;
@@ -51,14 +167,66 @@ display: inline-block;
 margin-top: 0px;
 }
 
-
-#tree_fav {
-	background: #FFF;
+.tree_add_do {
+	position: absolute;
+	right: 20px;
+	top:2px;
+	width: 150px;
+	height: 20px;
+	z-index: 3;	
 }
 
-#tree_left_panel {
-	border-right: 1px solid #CCC;
-	width: 200px;
-	height: 100%;
-	background: #CCC;
+.tree_add_do input {
+	width: 100%;
+	background: none;
+	border: 1px solid #888;
+	padding: 2px 5px;
+	outline:none;	
+-moz-transition: all 0.2s; 
+-webkit-transition: all 0.2s;  
+-ms-transition: all 0.2s;  
+-o-transition: all 0.2s;  
+transition: all 0.2s;  
+}
+
+.tree_add_do input:focus {
+	background: #FFF;
+-moz-transition: all 0.2s; 
+-webkit-transition: all 0.2s;  
+-ms-transition: all 0.2s;  
+-o-transition: all 0.2s;  
+transition: all 0.2s;  
+	
+}
+
+.tree_search {
+	position: absolute;
+	left: 20px;
+	bottom:4px;
+	width: 150px;
+	height: 20px;
+	z-index: 3;
+}
+
+
+.tree_search input {
+	width: 100%;
+	background: none;
+	border: 1px solid #888;
+	padding: 2px 5px;
+-moz-transition: all 0.2s; 
+-webkit-transition: all 0.2s;  
+-ms-transition: all 0.2s;  
+-o-transition: all 0.2s;  
+transition: all 0.2s;  
+	
+}
+
+.tree_search input:focus {
+	background: #FFF;
+-moz-transition: all 0.2s; 
+-webkit-transition: all 0.2s;  
+-ms-transition: all 0.2s;  
+-o-transition: all 0.2s;  
+transition: all 0.2s;  
 }

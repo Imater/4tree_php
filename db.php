@@ -46,7 +46,7 @@ function user_exist($user, $db2){
   	    curl_setopt($curl, CURLOPT_POSTFIELDS, "test_it_now=1&".$params_post);
   	    $out = curl_exec($curl);
   	    curl_close($curl);
-  	    echo $params_post."<br>".$out;
+  	    //echo $params_post."<br>".$out;
   	    return $out;
   } else {
 	    return ""; 

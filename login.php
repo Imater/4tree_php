@@ -10,20 +10,42 @@ require_once("db.php");
 $db2 = new PDO('mysql:dbname=h116;host=localhost;charset=utf8', $config["mysql_user"], $config["mysql_password"]);
 $db2 -> exec("set names utf8");
 $db2->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-$db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
+  
 
   if( isset($_POST['token']) ) {
 		$s = file_get_contents('http://ulogin.ru/token.php?token=' . @$_POST['token'] . '&host=' . $_SERVER['HTTP_HOST']);
 		$user = json_decode($s, true);
+
+		////устанавливаем выбранную социальную сеть в текущий аккаунт
+		$key = array_keys($_GET);
+		if( stristr($key[0], "set_to") ) {
+		    $token = str_replace("set_to_current_account_", "", $key[0]);
+		    //echo $token;
+
+			$stmt = $db2->prepare('SELECT * from oauth_access_tokens WHERE access_token = :token');        
+    		$stmt->execute( array( ":token" => $token ) );        
+    		$result = $stmt->fetch();
+    		  
+    		$user_id = $result["user_id"];
+			$answer_id = mySaveToSocial($user_id,$user,null,$db2);
+			//echo $answer_id;
+		}
+
 		if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/http.html?")) {
-			
+			//если пользователь существует, входим
 			$token_text = user_exist($user,$db2);
 			
 			if( $token_text == "") {
 			//create_new_user($user, $db2);
 				if( !isset($_GET['reg_me']) ) {
+				
+				
+				
 					if( isset($_GET['set_to_current_account']) ) {
-						echo "<center style='margin: 63px;position: absolute;width: 300px;left: 50%;margin-left: -150px;color: #CCC;font-size: 10px;'>Связываю соц.сервис с вашим акканутом</center>";							
+						echo "<center style='margin: 63px;position: absolute;width: 300px;left: 50%;margin-left: -150px;color: #CCC;font-size: 10px;'>Связываю соц.сервис с вашим акканутом</center>";	
+																		
+												
 						
 					} else {				
 						echo "<center style='margin: 63px;position: absolute;width: 300px;left: 50%;margin-left: -150px;color: #CCC;font-size: 10px;'>Ваш аккаунт не связан с этим социальным сервисом.<br>Зарегистрируйтесь в 4tree с паролем и свяжите аккаунт с соц.сервисом в меню настройки.</center>";
@@ -384,7 +406,10 @@ $(document).ready(function(){
 	});
 
 	$("#reg_please").on("click",function(e){
-		jsGetMyFirstToken();
+		//jsGetMyFirstToken();
+		jsClearCurrentBase().done(function(){
+			jsReg();
+		});
 		return false;
 	});
 
@@ -484,7 +509,9 @@ function jsClearCurrentBase() { //очищаем существующую баз
    	var d=$.Deferred();
 
    	if( JSON.stringify(db.getSchema().stores).indexOf('tree') != -1 ) //если таблицы tree нет
-       	db.clear().done(function(){ console.info("db cleared"); db.close(); d.resolve(); });
+       	db.clear().done(function(){ console.info("db cleared"); db.close(); d.resolve(); }).error(function(x){
+	       	alert(x);
+       	});
        else
        	d.resolve();
        	

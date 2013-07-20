@@ -522,7 +522,7 @@ class Server implements ResourceControllerInterface,
     public function getClientAssertionType()
     {
         return $this->clientAssertionType;
-    }
+    }        
 
     public function setConfig($name, $value)
     {
