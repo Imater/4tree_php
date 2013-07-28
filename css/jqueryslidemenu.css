@@ -1,13 +1,15 @@
 .jqueryslidemenu{
-font: bold 12px Verdana;
 margin: 0 auto;
 z-index: 50;
 text-shadow: none !important;
-background: rgb(65, 65, 65);
-height: 30px;
-padding-left: 34px;
-border-bottom: 1px solid #DDD;
-box-shadow: inset 2px 0px 5px rgba(20,20,20,1);
+display: block;
+position: absolute;
+left:0px;
+width: auto;
+height: 27px;
+}
+
+.top_level a {
 }
 
 .jqueryslidemenu .iPhoneCheckContainer{
@@ -95,7 +97,8 @@ background: #638cdc; /*tab link background during hover state*/
 
 .jqueryslidemenu ul li.top_level:hover > a{
 /*color: #000 !important;*/
-box-shadow: inset 0px 1px 3px rgba(0,0,0,0.9);
+box-shadow: none;
+background: none !important;
 }
 
 .jqueryslidemenu ul li.active{

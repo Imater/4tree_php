@@ -1620,7 +1620,7 @@ function jsDoAfterLoad() {
 	jsSetDiaryDate(0); //устанавливаю сегодняшнюю дату в дневнике в заголовке
 	
 	//preloader = $('#myloader').krutilka("show"); //глобально регистрирую крутилку
-	preloader = $('#myloader').krutilka({color: "#FFF", petalWidth: "3px", size:"19"}); //глобально 
+	preloader = $('#myloader').krutilka({color: "#777777", petalWidth: "3px", size:"19"}); //глобально 
 				
 	$(window).bind('hashchange', jsSethash ); //при смене хеша, запускать функцию перехода на заметку
 			

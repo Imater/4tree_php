@@ -12,7 +12,7 @@ background-image: url("../img/textures/1.jpg");
 #tree_header {
 	position: relative;
 	height:27px;
-	font-size: 11px;
+	font-size: 10px;
 	padding: 0px 0px 0px 0px;
     display:block;
     z-index: 2;
@@ -89,7 +89,7 @@ transition: all 0.3s;
 
 .tree_tab_menu .icon-cd {
 font-size: 13px;
-color: #FFF;
+color: #777777;
 margin-right: 5px;
 margin-left: 4px;
 -moz-transition: all 0.3s;
@@ -104,7 +104,7 @@ display: inline-block;
 
 .for_sos {
 	float: left;
-	margin: 3px 10px;
+	margin: 2px 10px;
 }
 
 .tree_tab_menu .icon-cd:hover {
@@ -118,23 +118,19 @@ transition: all 0.3s;
 }
 
 .tree_tab_menu .icon-cancel {
-opacity: 0;
-font-size: 12px;
-color: rgba(136,136,136,0.6);
-margin-right: 0px;
+font-size: 11px;
+color: rgba(255,255,255,0.3);
 vertical-align: middle;
-margin-top: 4px;
 cursor: pointer;
-margin-left: 2px;
+right: 20px;
+position: absolute;
+top: 7px;
+z-index: 1;
+color: rgba(0,0,0,1);
+cursor: pointer;
 }
 
 .tree_tab_menu li.active .icon-cancel {
-opacity: 1;
--moz-transition: all 0.3s; 
--webkit-transition: all 0.3s;  
--ms-transition: all 0.3s;  
--o-transition: all 0.3s;  
-transition: all 0.3s;  
 }
 
 .tree_tab_menu li:hover .icon-cancel {
@@ -143,11 +139,16 @@ opacity: 1;
 
 #left_calendar {
 	position: absolute;
-	left: 0px;
+	left: 5px;
 	right: 30px;
 	width: auto;
-	bottom:30px;
+	bottom:50px;
+	height: 175px;
 	font-size: 11px;
+}
+
+.ui-datepicker .ui-datepicker-title {
+	margin-top: -2px !important;
 }
 
 #left_calendar .ui-widget-header, #left_calendar .ui-widget-content, #left_calendar .ui-widget-header a,
@@ -216,6 +217,11 @@ transition: all 0.15s;
 -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');	
 */
+}
+
+#tree_editor .settings_in {
+	border-bottom: 1px solid #EEE;
+	padding: 15px;
 }
 
 #tree_editor.params_open .all_editor_place
@@ -402,9 +408,9 @@ transition: all 0.2s;
 
 .tree_search {
 	position: absolute;
-	left: 20px;
-	bottom:4px;
-	width: 150px;
+	left: 30px;
+	bottom:30px;
+	right: 65px;
 	height: 20px;
 	z-index: 3;
 }
@@ -487,11 +493,12 @@ transition: all 0.2s;
 ul.tabs{
   margin: 0;
   list-style-type : none;
-  line-height : 21px;
+  line-height : 22px;
   max-height: 27px;
   overflow: hidden;
   display: inline-block;
   padding-right: 20px;
+  padding-left: 50px;
 }
 
 ul.tabs > li.active{
@@ -501,7 +508,7 @@ ul.tabs > li.active{
 }
 
 ul.tabs > li.active a{
-  color: #FFF;
+  color: #000;
 }
 
 ul.tabs > li.active:before{
@@ -516,15 +523,14 @@ ul.tabs > li.active:after{
 ul.tabs > li{
   float : left;
   margin : 5px -15px 0;
-  border-top-right-radius: 25px 170px;
-  border-top-left-radius: 25px 170px;
-  padding : 0 30px 0 25px;
+  border-top-right-radius: 25px 160px;
+  border-top-left-radius: 25px 160px;
+  padding : 0 40px 0 26px;
   height: 170px;
   background: #3f3f3f;
   position : relative;
   box-shadow: 0 0px 20px rgba(0,0,0,1);
-  max-width : 200px;
-  cursor: pointer;
+  max-width : 90px;
 }
 
 ul.tabs > li > a{
@@ -534,6 +540,7 @@ ul.tabs > li > a{
   text-overflow: ellipsis;
   text-decoration: none;
   color: #888;
+  cursor: default;
 }
 
 ul.tabs > li:before, ul.tabs > li:after{
@@ -542,22 +549,22 @@ ul.tabs > li:before, ul.tabs > li:after{
   height: 20px;
   width: 20px;
   border-radius: 100%;
-  border-width: 10px;
-  top: -8px;
+  border-width: 5px;
+  top: -2px;
   border-style : solid;
   position : absolute;
 }
 
 ul.tabs > li:before{
   border-color : transparent #3f3f3f transparent transparent;
-  -webkit-transform : rotate(48deg);
-  left: -15px;
+  -webkit-transform : rotate(58deg);
+  left: -10px;
 }
 
 ul.tabs > li:after{
   border-color : transparent transparent transparent #3f3f3f;
-  -webkit-transform : rotate(-48deg);
-  right: -15px;
+  -webkit-transform : rotate(-58deg);
+  right: -10px;
 }
 
 /* Clear Fix took for HTML 5 Boilerlate*/
@@ -566,12 +573,42 @@ ul.tabs > li:after{
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
 
+.tree_footer {
+right: 0px;
+left: 0px;
+height: 20px;
+position: absolute;
+bottom: 0px;
+color: #444;
+font-size: 12px;
+background: #777;
+z-index: 2;
+border-top: 1px solid #888;
+text-shadow: 0px 1px 0px rgba(255,255,255,0.4);
+line-height: 19px;
+vertical-align: middle;
+padding-left: 5px;
+}
+
+.tree_footer i {
+	display: inline-block;
+	cursor: pointer;
+}
+
+.tree_footer .float_right {
+	float: right;	
+}
+
 #tree_footer2 {
 right: 0px;
 width: 24px;
 position: absolute;
-bottom: 0px;
+bottom: 25px;
 color: #FFF;
+}
+
+#tab_find {
+	margin-top: 30px !important;
 }
 
 #tree_footer2 ul {
@@ -598,3 +635,8 @@ color: #FFF;
 }
 
 
+.redactor_toolbar li a {
+	background: none;
+	text-indent: inherit;
+
+}

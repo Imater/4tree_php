@@ -229,8 +229,8 @@ FastClick.prototype.needsClick = function(target) {
     return true;
   }
 
-  if ( $(target).parents("#redactor").length || 
-       $(target).is("#redactor").length || $(target).hasClass("ui-body-b") ) { return true; }
+  if ( $(target).parents(".all_editor_place").length || 
+       $(target).is(".all_editor_place").length || $(target).hasClass("ui-body-b") ) { return true; }
 
   return (/\bneedsclick\b/).test(target.className);
 };

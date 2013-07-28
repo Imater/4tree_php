@@ -366,7 +366,7 @@ if(isset($_GET['test']))
 
 </ul>
 <br style="clear: left" />
-</div>
+</div> <!-- myslidemenu -->
 
 <ul style="display:none">
 <li class="top_level go_to_li_menu">

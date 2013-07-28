@@ -495,6 +495,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	  else var display = "opacity:1;";
 		 	  
 		 	  var img = "<div class='folder_closed"+isFull+"'>"+"<div class='countdiv'>"+datacount+"</div>"+"</div>";
+		 	  img = "<div class='folder_closed"+isFull+"'>"+ "<i class='icon-folder-1'>"+"<div class='countdiv'>"+datacount+"</div>"+"</i></div>";
 		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-play'></i></div>";
 		 	  }
 		 	else 
@@ -1963,7 +1964,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 
 
-	     	  $('#mypanel').on("contextmenu","li", function(e){
+	     	  $('#mypanel11').on("contextmenu","li", function(e){
 	     	  		$(this).find(".tcheckbox").click();
 	     	  		return false;
 	     	  });
@@ -3978,7 +3979,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
   		         	  (save_anyway=="need_sync")) 
   		             {
   		             //если не скроллинг
-  		             if(changed_fields!="s,") $("#node_"+id+" .sync_it_i").removeClass("hideit"); 
+  		             if(changed_fields!="s,") $("#node_"+id+" .sync_it_i:first").removeClass("hideit"); 
   		             record.time = parseInt(jsNow(),10); //ставлю время изменения (для синхронизации)
   		             start_sync_when_idle = true;
   		             }
@@ -6203,7 +6204,6 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		  
 		  //сохраняет текст в DB и выбирает ему иконку
 		  function jsSaveOneTextIfChanged(id, md5text, text) {
-
 //			    api4editor.save_text_dif_snapshot(id, text);
 
 				if(text.indexOf("img")!=-1) { 
@@ -6283,6 +6283,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 					var text = html_from_editor;
 					var md5text = myr.attr("md5");
 			  		var new_md5 = crc32(text);
+//			  		console.info("new_length:",text.length,text);
 					if( (new_md5 != md5text) ) { 
 						jsSaveOneTextIfChanged(id, md5text, text);
 						myr.attr("md5",new_md5); 
@@ -6294,6 +6295,17 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  }
 		  
 		  this.jsMakeWikiKeys = function() {
+		  	  
+		  	  $(".redactor_").on("click","input[type=checkbox]",function(e){
+			  	  if( !$(this).attr("checked") ) {
+				  	  $(this).attr("checked","true");
+			  	  } else {
+				  	  $(this).removeAttr("checked");
+			  	  }
+			  	  myr.redactor("sync");
+			  	  $(".redactor_").blur();
+
+		  	  })
 		  	  
 		  	  //ссылка внутри статьи на wiki определение
 			  $(".redactor_").on("click",".wiki",function() {

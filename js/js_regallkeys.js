@@ -2578,3 +2578,7 @@ pushstream.onstatuschange = _statuschanged;
 
 
 
+function jsRedactorInsert() {
+	var node=$('<input type=checkbox>&nbsp;'); 
+	$('#redactor').redactor('insertNode', node);
+}
