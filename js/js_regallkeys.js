@@ -1674,7 +1674,7 @@ function onResize() //вызывается при каждом ресайзе с
 			$("#bottom_panel").css('top',main_y);
 			
 			
-			var newheight=$('#calendar').parent("div").height()-20;
+			var newheight=$('#calendar').parent("div").height()-30;
 			if( $("#content1").hasClass("v3")  ) newheight += 0;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight);

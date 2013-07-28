@@ -1709,7 +1709,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					 	}, 30000);
 				     	$.each(data.themes,function(i,el){
 				     		if(el.active) {
-					     		$("html").attr("class","theme_"+el.dark).attr("style","background-image:url("+el.img+")");
+					     		//$("html").attr("class","theme_"+el.dark).attr("style","background-image:url("+el.img+")");
 				     		}
 				     	});
 				     }
@@ -1720,6 +1720,24 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //кнопки панели дерева
 		  function jsMakePanelKeys() {
+		  
+		   	  $(".tree_tab_menu").on("click","li",function(){
+		      	$(".tree_tab_menu").find(".active").removeClass("active");
+		      	$(this).addClass("active");
+		      });
+		      
+		      $("#open_params").on("click",function(){
+		      	$("#tree_editor").toggleClass("params_open");
+		      	if($("#tree_editor").hasClass("params_open")) {
+			      	$(this).find("i:last").attr("class", "icon-up-dir");
+		      	} else {
+			      	$(this).find("i:last").attr("class", "icon-down-dir");
+		      	}
+		      });
+
+		      $("#hide_left_panel").on("click",function(){
+		      	$("body").toggleClass("left_panel_hide");
+		      });
 		  
 			  $("#tree_themes").on("click", ".theme_el", function(){
 			  	var img = $(this).attr("style");
@@ -2072,6 +2090,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  function jsMakeDraggable() {
 			$("#test-div").draggable({appendTo: "body"});
 			$(".chat_box").draggable({appendTo: "body", handle: ".chat_header"});
+			$(".one_book").draggable();
 		 }    
 		 
 		 var old_title_of_screensaver;
@@ -2246,6 +2265,39 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //кнопки в меню элемента
 		  this.jsMakeMakedoneKeys = function() {
+		  
+			  $("#left_calendar").datepicker({
+			    	numberOfMonths: 1,
+			    	showButtonPanel: false,
+			    	dateFormat:"dd.mm.yy",
+			    	showWeek:true,
+			    	selectOtherMonths:true,
+			    	showOtherMonths:true,
+			    	beforeShowDay : function(date) {
+			    	  var highlight_class = "ui-has-note";
+			    	  var finddate = api4tree.jsDiaryFindDateDate(date);
+			    	  if( finddate[0] ) highlight_class = 'ui-has-note';
+			    	  else highlight_class = "";
+			    	  
+			    	  return [true, highlight_class, finddate[1]];
+			    	},
+			    	onSelect:function(dateText, inst) {
+    	  				var my_time_id = $(".makedone").attr("myid");
+    	  				
+    	  				var dd = dateText.split('.');
+    	  				
+    	  				var date1 = dd[2]+'-'+dd[1]+'-'+dd[0];
+    				 	var myold_date = $("#makedatetime").datetimeEntry('getDatetime').toMysqlFormat();
+    				 	
+    				 	var my_dd = myold_date.split(" ");
+    				 	
+    				 	var new_date = date1+" "+my_dd[1];
+    					var mydate = Date.createFromMysql(new_date);
+    				    $("#makedatetime").datetimeEntry("setDatetime",mydate);
+			    	}
+			  });			
+
+		  
 		      //дата и время - поле ввода в панели makedone
 			  $("#makedatetime").datetimeEntry({datetimeFormat: "W N Y / H:M",
 			  					 spinnerImage:""}).change(function(){
@@ -2577,10 +2629,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  });
 
 		  	  //клик в табы под календарем
-			  $('#fav_calendar,.favorit_menu').delegate("li","click",function() {
+			  $('#fav_calendar,.favorit_menu,.tree_footer_menu2').delegate("li","click",function() {
 			  	  if($(this).attr("myid")) return true;
-			      $('#fav_calendar .active').removeClass("active");
-			      $(this).addClass("active");
+			  	  var old_selected = $('.tree_footer_menu2 .active').attr("id");
+			  	  var new_selected = $(this).attr("id");
+			      $('.tree_footer_menu2 .active').removeClass("active");
+			      if( (old_selected == new_selected) || !$("#tree_editor").hasClass("bottom_open")) {
+					    $("#tree_editor").toggleClass("bottom_open");  
+			      } 
+			      if( $("#tree_editor").hasClass("bottom_open") ) $(this).addClass("active");
 			      var tab_name = $(this).attr("id");
 
 			      if( tab_name == "tab_calendar" ) {
@@ -6017,6 +6074,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	
 //		  	$(".redactor_toolbar").insertBefore(".redactor_box");
 		  	$(".redactor_box").append('<div class="comment_in"></div>');
+		  	$(".redactor_box").prepend('<div class="settings_in"><h2>Параметры</h2></div>');
 		  	$(".comment_in").append( $("#tree_comments") );
 		  	
 		  	myr_comment = $('.comment_enter_input').redactor({imageUpload: './do.php?access_token=' + token + '&save_file='+main_user_id, lang:'ru', focus:false, fileUpload: 'do.php?access_token=' + token + '&save_file='+main_user_id, autoresize:false, toolbarExternal: "#fav_redactor_btn_comment",

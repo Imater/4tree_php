@@ -1,6 +1,6 @@
 /*
-	Redactor v9.0
-	Updated: May 30, 2013
+	Redactor v9.0.4
+	Updated: Jul 11, 2013
 
 	http://imperavi.com/redactor/
 
@@ -10,12 +10,10 @@
 	Usage: $('#content').redactor();
 */
 
-var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-italic',  deleted:'icon-font', unorderedlist:'icon-list-2', orderedlist:'icon-th-list-3', outdent:'icon-indent-left', indent:'icon-indent-right', image:'icon-picture-1', video:'icon-video-1', file:'icon-attach', table:'icon-th-1', link:'icon-link-1', fontcolor:'icon-palette', backcolor:'icon-tint', alignment:'icon-align-center', horizontalrule:'icon-minus'}; // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
-
-
 (function($)
 {
 	var uuid = 0;
+	var rtePaste = false;
 
 	"use strict";
 
@@ -74,22 +72,25 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 	}
 
 	$.Redactor = Redactor;
+	$.Redactor.VERSION = '9.0.4';
 	$.Redactor.opts = {
 
 			// callbacks
 			initCallback: false,
+			changeCallback: false,
 			focusCallback: false,
 			blurCallback: false,
 			keydownCallback: false,
 			keyupCallback: false,
 			execCommandCallback: false,
+			pasteBeforeCallback: false,
+			pasteAfterCallback: false,
 			autosaveCallback: false,
 			imageUploadCallback: false,
 			imageUploadErrorCallback: false,
 			imageDeleteCallback: false,
 			fileUploadCallback: false,
 			fileUploadErrorCallback: false,
-			undoCallback: false,
 
 			// settings
 			rangy: false,
@@ -106,6 +107,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			wym: false,
 			mobile: true,
 			cleanup: true,
+			removeEmptyTags: true,
 
 			visual: true,
 			focus: false,
@@ -135,6 +137,8 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			modalOverlay: true,
 
+			tabFocus: true,
+
 			air: false,
 			airButtons: ['formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'fontcolor', 'backcolor'],
 
@@ -142,7 +146,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			toolbarFixed: false,
 			toolbarFixedTopOffset: 0, // pixels
 			toolbarFixedBox: false,
-			toolbarExternal: "", // ID selector
+			toolbarExternal: false, // ID selector
 			buttonSource: true,
 
 			buttonSeparator: '<li class="redactor_separator"></li>',
@@ -173,7 +177,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			linebreaks: false,
 			paragraphy: true,
-			convertDivs: false,
+			convertDivs: true,
 			convertLinks: true,
 			formattingPre: false,
 			phpTags: false,
@@ -181,18 +185,22 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			allowedTags: false,
 			deniedTags: ['html', 'head', 'link', 'body', 'meta', 'script', 'style', 'applet'],
 
-			boldTag: 'b',
+			boldTag: 'strong',
 			italicTag: 'em',
 
 			// private
+			indentValue: 20,
 			buffer: [],
 			rebuffer: [],
 			textareamode: false,
-			emptyHtml: '<p>&#x200b;</p>',//'<p>&#x200b;</p>',
+			emptyHtml: '<p>&#x200b;</p>',
 			invisibleSpace: '&#x200b;',
-			alignmentTags: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H30', 'P', 'TD', 'DIV', 'BLOCKQUOTE'],
+			rBlockTest: /^(P|H[1-6]|LI|ADDRESS|SECTION|HEADER|FOOTER|ASIDE|ARTICLE)$/i,
+			alignmentTags: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'DD', 'DL', 'DT', 'DIV', 'TD',
+								'BLOCKQUOTE', 'OUTPUT', 'FIGCAPTION', 'ADDRESS', 'SECTION',
+								'HEADER', 'FOOTER', 'ASIDE', 'ARTICLE'],
 			ownLine: ['area', 'body', 'head', 'hr', 'i?frame', 'link', 'meta', 'noscript', 'style', 'script', 'table', 'tbody', 'thead', 'tfoot'],
-			contOwnLine: ['li', 'dt', 'dt', 'h[1-30]', 'option', 'script'],
+			contOwnLine: ['li', 'dt', 'dt', 'h[1-6]', 'option', 'script'],
 			newLevel: ['blockquote', 'div', 'dl', 'fieldset', 'form', 'frameset', 'map', 'ol', 'p', 'pre', 'select', 'td', 'th', 'tr', 'ul'],
 			blockLevelElements: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'DD', 'DL', 'DT', 'DIV', 'LI',
 								'BLOCKQUOTE', 'OUTPUT', 'FIGCAPTION', 'PRE', 'ADDRESS', 'SECTION',
@@ -206,6 +214,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 					table: 'Table',
 					link: 'Link',
 					link_insert: 'Insert link',
+					link_edit: 'Edit link',
 					unlink: 'Unlink',
 					formatting: 'Formatting',
 					paragraph: 'Normal text',
@@ -302,6 +311,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				options
 			);
 
+			this.start = true;
 			this.dropdowns = [];
 
 			// get sizes
@@ -352,6 +362,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			// Build
 			this.buildStart();
+
 		},
 		initToolbar: function(lang)
 		{
@@ -660,6 +671,29 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			}
 		},
 
+		// API GET
+		getObject: function()
+		{
+			return $.extend({}, this);
+		},
+		getEditor: function()
+		{
+			return this.$editor;
+		},
+		getBox: function()
+		{
+			return this.$box;
+		},
+		getIframe: function()
+		{
+			return (this.opts.iframe) ? this.$frame : false;
+		},
+		getToolbar: function()
+		{
+			return this.$toolbar;
+		},
+
+
 		// CODE GET & SET
 		get: function()
 		{
@@ -682,7 +716,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		setEditor: function(html, strip)
 		{
-			
 			if (strip !== false)
 			{
 				html = this.cleanSavePreCode(html);
@@ -692,11 +725,9 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 				if (this.opts.linebreaks === false) html = this.cleanConverters(html);
 				else html = html.replace(/<p(.*?)>([\w\W]*?)<\/p>/gi, '$2<br>');
-			
-				html = this.cleanEmpty(html);
 			}
 
-			
+			html = this.cleanEmpty(html);
 
 			this.$editor.html(html);
 			this.sync();
@@ -752,21 +783,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			html = html.replace(/<\/li><(ul|ol)>([\w\W]*?)<\/(ul|ol)>/gi, '<$1>$2</$1></li>');
 
 			if ($.trim(html) === '<br>') html = '';
-			//alert(html.length);
-			if (html !== '' && html.length<100000) html = this.cleanHtml(html);
-			else { 
-				if( parseInt(Math.random()*42) == 13 ) html = this.cleanHtml(html);
-			}
+
+			if (html !== '') html = this.cleanHtml(html);
 
 			// before callback
 			html = this.callback('syncBefore', false, html);
-			
-			var html_div = $("<div>"+html+"div");
-			
-			if(html_div && html_div.hasClass("my_pomidors") && !html_div.nextAll("p").length) {
-				html += "<p>...</p>";
-				this.$editor.html(html);
-			}
 
 			this.$source.val(html);
 
@@ -776,9 +797,14 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				$('#' + this.$element[0].id + '_code').html(htmlEncode(html));
 			}
 
-			// after callback
+			// onchange & after callback
 			this.callback('syncAfter', false, html);
-			this.$editor.focus();
+
+			if (this.start === false)
+			{
+				this.callback('change', false, html);
+			}
+
 		},
 		syncClean: function(html)
 		{
@@ -792,9 +818,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			// remove space
 			html = html.replace(/&#x200b;/gi, '');
 			html = html.replace(/&#8203;/gi, '');
-			html = html.replace(/<p><\/p>/gi, '<p>&nbsp;</p>');
-			html = html.replace(/<p><br><\/p>/gi, '<p>&nbsp;</p>');
-//			html = html.replace(/&nbsp;/gi, ' ');
+			html = html.replace(/&nbsp;/gi, ' ');
 
 			// php code fix
 			html = html.replace('<!--?php', '<?php');
@@ -802,15 +826,16 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 
 			// Remove verified attr
-			html = html.replace(/<span(.*?)data-redactor="verified"(.*?)>([\w\W]*?)<\/span>/gi, '<font$1data-redactor="verified"$2>$3</font>');
-			html = html.replace(/<span(.*?)>([\w\W]*?)<\/span>/gi, '$2');
-			html = html.replace(/<font(.*?)data-redactor="verified"(.*?)>([\w\W]*?)<\/font>/gi, '<span$1$2>$3</span>');
+			html = html.replace(/ data-tagblock=""/gi, '');
+			html = html.replace(/<br\s?\/?>\n?<\/(P|H[1-6]|LI|ADDRESS|SECTION|HEADER|FOOTER|ASIDE|ARTICLE)>/gi, '</$1>');
 
-			html = html.replace(/<br\s?\/?>\n?<\/(.*?)>/gi, '</$1>');
-
+			html = html.replace(/<span\s*?>([\w\W]*?)<\/span>/gi, '$1');
+			html = html.replace(/<span(.*?)data-redactor="verified"(.*?)>([\w\W]*?)<\/span>/gi, '<span$1$2>$3</span>');
 			html = html.replace(/<span(.*?)data-redactor-inlineMethods=""(.*?)>([\w\W]*?)<\/span>/gi, '<span$1$2>$3</span>' );
 			html = html.replace(/<span\s*?>([\w\W]*?)<\/span>/gi, '$1');
 			html = html.replace(/<span\s*?id="selection-marker(.*?)"(.*?)>([\w\W]*?)<\/span>/gi, '');
+			html = html.replace(/<span\s*?>([\w\W]*?)<\/span>/gi, '$1');
+			html = html.replace(/<span>([\w\W]*?)<\/span>/gi, '$1');
 
 			html = this.cleanReConvertProtected(html);
 
@@ -856,8 +881,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 					this.buildAfter();
 				}
 			}
-//			this.$box.append('<div class="comment_in"></div>');
-
 		},
 		buildMobile: function()
 		{
@@ -927,6 +950,8 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		buildAfter: function()
 		{
+			this.start = false;
+
 			// load toolbar
 			if (this.opts.toolbar)
 			{
@@ -939,9 +964,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			// plugins
 			this.buildPlugins();
-
-			// paste except opera
-			if (!this.browser('opera')) this.pasteInit();
 
 			// enter, tab, etc.
 			this.buildBindKeyboard();
@@ -980,19 +1002,71 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		buildBindKeyboard: function()
 		{
+			var oldsafari = false;
+			if (this.browser('webkit') && navigator.userAgent.indexOf('Chrome') === -1)
+			{
+				var arr = this.browser('version').split('.');
+				if (arr[0] < 536) oldsafari = true;
+			}
+
+			this.$editor.on('paste.redactor', $.proxy(function(e)
+			{
+				if (oldsafari) return true;
+
+				// paste except opera
+				if (this.browser('opera')) return true;
+
+				if (this.opts.cleanup)
+				{
+					rtePaste = true;
+
+					this.selectionSave();
+
+					if (!this.selectall)
+					{
+						if (this.opts.autoresize === true )
+						{
+							this.$editor.height(this.$editor.height());
+							this.saveScroll = this.document.body.scrollTop;
+						}
+						else
+						{
+							this.saveScroll = this.$editor.scrollTop();
+						}
+					}
+
+					var frag = this.extractContent();
+
+					setTimeout($.proxy(function()
+					{
+						var pastedFrag = this.extractContent();
+						this.$editor.append(frag);
+
+						this.selectionRestore();
+
+						var html = this.getFragmentHtml(pastedFrag);
+						this.pasteClean(html);
+
+						if (this.opts.autoresize === true) this.$editor.css('height', 'auto');
+
+					}, this), 1);
+				}
+
+			}, this));
+
 			this.$editor.on('keydown.redactor', $.proxy(function(e)
 			{
+				if (rtePaste) return false;
+
 				var key = e.which;
 				var ctrl = e.ctrlKey || e.metaKey;
 				var parent = this.getParent();
 				var current = this.getCurrent();
 				var block = this.getBlock();
 				var pre = false;
-				
-				this.selectall = false;
 
 				this.callback('keydown', e);
-				
+
 				// pre & down
 				if ((parent && $(parent).get(0).tagName === 'PRE') || (current && $(current).get(0).tagName === 'PRE'))
 				{
@@ -1014,43 +1088,41 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				if (ctrl && key === 90 && !e.shiftKey && !e.altKey) // z key
 				{
 					e.preventDefault();
-					this.callback('undo');
-					
-					/*
 					if (this.opts.buffer.length) this.bufferUndo();
 					else this.document.execCommand('undo', false, false);
-					*/
 					return;
 				}
-				// redo
+				// undo
 				else if (ctrl && key === 90 && e.shiftKey && !e.altKey)
 				{
 					e.preventDefault();
-					this.callback('redo');
-					/*
 					if (this.opts.rebuffer.length != 0) this.bufferRedo();
 					else this.document.execCommand('redo', false, false);
-					*/
 					return;
 				}
 
 				// select all
-				if (ctrl)
+				if (ctrl && key === 65)
 				{
-					if (key === 65) this.selectall = true;
-				} else if (key != this.keyCode.LEFT_WIN && !ctrl) 
+					this.selectall = true;
+				}
+				else if (key != this.keyCode.LEFT_WIN && !ctrl)
+				{
 					this.selectall = false;
+				}
+
 
 				// enter
 				if (key == this.keyCode.ENTER && !e.shiftKey && !e.ctrlKey && !e.metaKey )
 				{
 					// In ie, opera in the tables are created paragraphs, fix it.
-					if (parent.nodeType == 1 && (this.browser('msie') || this.browser('opera') || this.browser('mozilla'))
-						&& (parent.tagName == 'TD' || parent.tagName == 'TH'))
+					if (parent.nodeType == 1 && (parent.tagName == 'TD' || parent.tagName == 'TH'))
 					{
+						this.bufferSet();
+
 						this.insertNode(document.createElement('br'));
 						e.preventDefault();
-						return;
+						return false;
 					}
 
 					// pre
@@ -1075,8 +1147,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 						if (!this.opts.linebreaks)
 						{
 							// replace div to p
-							if (block && /^(P|H[1-6]|LI|ADDRESS|SECTION|HEADER|FOOTER|ASIDE|ARTICLE)$/i.test(block.tagName))
+							if (block && this.opts.rBlockTest.test(block.tagName))
 							{
+								// hit enter
+								this.bufferSet();
+
 								setTimeout($.proxy(function()
 								{
 									var blockElem = this.getBlock();
@@ -1087,10 +1162,14 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 										this.selectionStart(node);
 									}
 
+
 								}, this), 1);
 							}
 							else if (block === false)
 							{
+								// hit enter
+								this.bufferSet();
+
 								var node = $('<p>' + this.opts.invisibleSpace + '</p>');
 								this.insertNode(node[0]);
 								this.selectionStart(node);
@@ -1102,8 +1181,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 						if (this.opts.linebreaks)
 						{
 							// replace div to br
-							if (block && /^(P|H[1-6]|LI|ADDRESS|SECTION|HEADER|FOOTER|ASIDE|ARTICLE)$/i.test(block.tagName))
+							if (block && this.opts.rBlockTest.test(block.tagName))
 							{
+								// hit enter
+								this.bufferSet();
+
 								setTimeout($.proxy(function()
 								{
 									var blockElem = this.getBlock();
@@ -1116,6 +1198,9 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 							}
 							else
 							{
+								// hit enter
+								this.bufferSet();
+
 								this.insertLineBreak();
 								e.preventDefault();
 								return;
@@ -1126,6 +1211,9 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 						if (block.tagName == 'BLOCKQUOTE'
 							|| block.tagName == 'FIGCAPTION')
 						{
+							// hit enter
+							this.bufferSet();
+
 							this.insertLineBreak();
 							e.preventDefault();
 							return;
@@ -1144,8 +1232,10 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				// tab
 				if (key === this.keyCode.TAB && this.opts.shortcuts )
 				{
-					this.$editor.blur();
-					return false;
+					if (!this.opts.tabFocus) return true;
+					if (this.isEmpty(this.get())) return true;
+
+					e.preventDefault();
 
 					if (pre === true && !e.shiftKey)
 					{
@@ -1166,9 +1256,23 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				// delete zero-width space before the removing
 				if (key === this.keyCode.BACKSPACE)
 				{
-					if (current.nodeType === 3 && current.nodeValue.charCodeAt(0) == 8203)
+					if (typeof current.tagName !== 'undefined' && /^(H[1-6])$/i.test(current.tagName))
 					{
-						//current = current.replace("&#8203;","");
+						var node;
+						if (this.opts.linebreaks === false) node = $('<p>' + this.opts.invisibleSpace + '</p>');
+						else node = $('<br>' + this.opts.invisibleSpace);
+
+						$(current).replaceWith(node);
+						this.selectionStart(node);
+					}
+
+					if (typeof current.nodeValue !== 'undefined' && current.nodeValue !== null)
+					{
+						var value = $.trim(current.nodeValue.replace(/[^\u0000-~]/g, ''));
+						if (current.remove && current.nodeType === 3 && current.nodeValue.charCodeAt(0) == 8203 && value == '')
+						{
+							current.remove();
+						}
 					}
 				}
 
@@ -1176,6 +1280,8 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			this.$editor.on('keyup.redactor', $.proxy(function(e)
 			{
+				if (rtePaste) return false;
+
 				var key = e.which;
 				var parent = this.getParent();
 				var current = this.getCurrent();
@@ -1186,7 +1292,10 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 					var node = $('<p>').append($(current).clone());
 					$(current).replaceWith(node);
 					var next = $(node).next();
-//					if (next[0].tagName == 'BR') next.remove();
+					if (typeof(next[0]) !== 'undefined' && next[0].tagName == 'BR')
+					{
+						next.remove();
+					}
 					this.selectionEnd(node);
 				}
 
@@ -1394,8 +1503,8 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				else if (key === 74) this.shortcutsLoad(e, 'insertunorderedlist'); // Ctrl + j
 				else if (key === 75) this.shortcutsLoad(e, 'insertorderedlist'); // Ctrl + k
 
-				else if (key === 76) this.shortcutsLoad(e, 'superscript'); // Ctrl + l
-				else if (key === 72) this.shortcutsLoad(e, 'subscript'); // Ctrl + h
+				else if (key === 72) this.shortcutsLoad(e, 'superscript'); // Ctrl + h
+				else if (key === 76) this.shortcutsLoad(e, 'subscript'); // Ctrl + l
 			}
 			else
 			{
@@ -1424,7 +1533,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		// FOCUS
 		focus: function()
 		{
-		console.info("FFOOOOOOOOKUS");
 			if (!this.browser('opera')) this.window.setTimeout($.proxy(this.focusSet, this, true), 1);
 			else this.$editor.focus();
 		},
@@ -1632,7 +1740,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			if (this.opts.toolbarFixed)
 			{
 				this.toolbarObserveScroll();
-				$( document ).on('scroll.redactor', $.proxy(this.toolbarObserveScroll, this));
+				$(document).on('scroll.redactor', $.proxy(this.toolbarObserveScroll, this));
 			}
 
 			// buttons response
@@ -1859,13 +1967,13 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				if (btnObject.name === 'separator') $item = $('<a class="redactor_separator_drop">');
 				else
 				{
-					$item = $('<a href="javascript:;" class="' + btnObject.className + '">' + btnObject.title + '</a>');
+					$item = $('<a href="javascript:;" class="' + btnObject.className + ' redactor_dropdown_' + btnName + '">' + btnObject.title + '</a>');
 					$item.on('click', $.proxy(function(e)
 					{
 						if (e.preventDefault) e.preventDefault();
 						if (this.browser('msie')) e.returnValue = false;
 
-						if (btnObject.callback) btnObject.callback.call(this, btnName, $item, btnObject);
+						if (btnObject.callback) btnObject.callback.call(this, btnName, $item, btnObject, e);
 						if (btnObject.exec) this.execCommand(btnObject.exec, btnName);
 						if (btnObject.func) this[btnObject.func](btnName);
 
@@ -1899,25 +2007,15 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 				if (this.opts.air)
 				{
-					$dropdown.css({ position: 'absolute', right: left, top: btnHeight + 'px' }).show();
+					$dropdown.css({ position: 'absolute', left: left, top: btnHeight + 'px' }).show();
 				}
 				else if (this.opts.toolbarFixed && this.toolbarFixed)
 				{
-					$dropdown.css({ position: 'fixed', right: left, top: btnHeight + 'px' }).show();
+					$dropdown.css({ position: 'fixed', left: left, top: btnHeight + 'px' }).show();
 				}
 				else
 				{
-					if(!is_mobile && false){
-					if(key == "formatting") var delta = 6;
-					else if(key == "link" ) var delta = 6;
-					else if(key == "table" ) var delta = 220;
-					else delta = 140;
-
-					$dropdown.css({ position: 'absolute', right: left, top: keyPosition.top + btnHeight + 'px' }).show();
-					} else {
-					var top = this.$toolbar.offset().top + 0;
-					$dropdown.css({ position: 'absolute', left: keyPosition.left + 'px', top: keyPosition.top + 'px' }).show();
-					}
+					$dropdown.css({ position: 'absolute', left: left, top: keyPosition.top + btnHeight + 'px' }).show();
 				}
 			}
 
@@ -1949,11 +2047,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		// BUTTONS
 		buttonBuild: function(btnName, btnObject)
 		{
-			var button_i_class = buttons_i[btnName];
-			if(btnName=="deleted") var crossline_style = "style='text-decoration: line-through'";
-			else var crossline_style="";
-			var $button = $('<a href="javascript:;" title="' + btnObject.title + '" class="redactor_btn redactor_btn_' + btnName + '">'+
-			"<i class='"+button_i_class+"' "+crossline_style+"></i>"+'</a>');
+			var $button = $('<a href="javascript:;" title="' + btnObject.title + '" class="redactor_btn redactor_btn_' + btnName + '"></a>');
 			var $dropdown = $('<div class="redactor_dropdown" style="display: none;">');
 
 			$button.on('click', $.proxy(function(e)
@@ -1961,10 +2055,16 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				if (e.preventDefault) e.preventDefault();
 				if (this.browser('msie')) e.returnValue = false;
 
-				if (!this.opts.visual && btnName !== 'html') return false;
+				if ($button.hasClass('redactor_button_disabled')) return false;
+
+				if (this.isFocused() === false && !btnObject.exec)
+				{
+					this.$editor.focus();
+				}
 
 				if (btnObject.exec)
 				{
+					this.$editor.focus();
 					this.execCommand(btnObject.exec, btnName);
 					this.airBindMousemoveHide();
 
@@ -1977,16 +2077,16 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				}
 				else if (btnObject.callback)
 				{
-					btnObject.callback.call(this, btnName, $button, btnObject);
+					btnObject.callback.call(this, btnName, $button, btnObject, e);
 					this.airBindMousemoveHide();
 
 				}
 				else if (btnName === 'backcolor' || btnName === 'fontcolor' || btnObject.dropdown)
 				{
-					this.dropdownShow( e, $dropdown, btnName );
+					this.dropdownShow(e, $dropdown, btnName);
 				}
 
-				this.buttonActiveObserver();
+				this.buttonActiveObserver(false, btnName);
 
 			}, this));
 
@@ -2006,6 +2106,13 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			if (!this.opts.toolbar) return false;
 			return $(this.$toolbar.find('a.redactor_btn_' + key));
 		},
+		buttonActiveToggle: function(key)
+		{
+			var btn = this.buttonGet(key);
+
+			if (btn.hasClass('redactor_act')) btn.removeClass('redactor_act');
+			else btn.addClass('redactor_act');
+		},
 		buttonActive: function(key)
 		{
 			this.buttonGet(key).addClass('redactor_act');
@@ -2014,11 +2121,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		{
 			this.buttonGet(key).removeClass('redactor_act');
 		},
-		buttonInactiveAll: function()
+		buttonInactiveAll: function(btnName)
 		{
-			$.each(this.opts.activeButtons, $.proxy(function(i, s)
+			$.each(this.opts.toolbar, $.proxy(function(k)
 			{
-				this.buttonInactive(s);
+				if (k != btnName) this.buttonInactive(k);
 
 			}, this));
 		},
@@ -2101,10 +2208,19 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			$btn.parent().removeClass('redactor_btn_right');
 			$btn.remove();
 		},
-		buttonActiveObserver: function()
+		buttonActiveObserver: function(e, btnName)
 		{
 			var parent = this.getParent();
-			this.buttonInactiveAll();
+			this.buttonInactiveAll(btnName);
+
+			if (e === false && btnName !== 'html')
+			{
+				this.buttonActiveToggle(btnName);
+				return;
+			}
+
+			if (parent && parent.tagName === 'A') this.$toolbar.find('a.redactor_dropdown_link').text(this.opts.curLang.link_edit);
+			else this.$toolbar.find('a.redactor_dropdown_link').text(this.opts.curLang.link_insert);
 
 			if (this.opts.activeButtonsAdd)
 			{
@@ -2115,7 +2231,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				}, this));
 
 				$.extend(this.opts.activeButtonsStates, this.opts.activeButtonsAdd);
-
 			}
 
 			$.each(this.opts.activeButtonsStates, $.proxy(function(key, value)
@@ -2184,10 +2299,15 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			}
 
 			// stop formatting pre
-			if (this.currentOrParentIs('PRE') && !this.opts.formattingPre) return false;
+			if (this.currentOrParentIs('PRE') && !this.opts.formattingPre)
+			{
+				return false;
+			}
 
 			if (cmd === 'insertunorderedlist' || cmd === 'insertorderedlist')
 			{
+				this.bufferSet();
+
 				var parent = this.getParent();
 				var $list = $(parent).closest('ol, ul');
 				var remove = false;
@@ -2203,11 +2323,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 					}
 				}
 
+				this.selectionSave();
+
 				// remove lists
 				if (remove)
 				{
-					this.selectionSave();
-
 					var nodes = this.getNodes();
 					var elems = this.getBlocks(nodes);
 
@@ -2244,19 +2364,15 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 					this.$editor.html(html);
 					this.$editor.find(listTag + ':empty').remove();
 
-					this.selectionRestore();
 				}
 
 				// insert lists
 				else
 				{
-					this.selectionSave();
-
 					this.document.execCommand(cmd);
 
 					var parent = this.getParent();
-					var $list = $(parent).closest('ol, ul');
-					if($list.parent(".my_pomidors")) $list="";
+					var $list = $(parent).parents('ol, ul');
 
 					if ($list.length)
 					{
@@ -2274,8 +2390,9 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 					if (this.browser('mozilla')) this.$editor.focus();
 
-					this.selectionRestore();
 				}
+
+				this.selectionRestore();
 
 				this.sync();
 				this.callback('execCommand', cmd, param);
@@ -2284,8 +2401,10 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			if (cmd === 'unlink' )
 			{
+				this.bufferSet();
+
 				var parent = this.getParent();
-				if ($(parent)[0].tagName === 'A')
+				if (parent && $(parent)[0].tagName === 'A')
 				{
 					$(parent).replaceWith($(parent).text());
 
@@ -2314,14 +2433,18 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		indentingStart: function(cmd)
 		{
+			this.bufferSet();
+
 			if (cmd === 'indent')
 			{
 				var block = this.getBlock();
 
+				this.selectionSave();
+
+
 				if (block && block.tagName == 'LI')
 				{
-					this.selectionSave();
-
+					// li
 					var parent = this.getParent();
 
 					var $list = $(parent).closest('ol, ul');
@@ -2345,9 +2468,43 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 							}
 						}
 					});
-
-					this.selectionRestore();
 				}
+				// linebreaks
+				else if (block === false && this.opts.linebreaks === true)
+				{
+					this.exec('formatBlock', 'blockquote');
+					var newblock = this.getBlock();
+					var block = $('<div data-tagblock="">').html($(newblock).html());
+					$(newblock).replaceWith(block);
+
+					var left = this.normalize($(block).css('margin-left')) + this.opts.indentValue;
+					$(block).css('margin-left', left + 'px');
+				}
+				else
+				{
+					// all block tags
+					var elements = this.getBlocks();
+					$.each(elements, $.proxy(function(i, elem)
+					{
+						var $el = false;
+
+						if ($.inArray(elem.tagName, this.opts.alignmentTags) !== -1)
+						{
+							$el = $(elem);
+						}
+						else
+						{
+							$el = $(elem).closest(this.opts.alignmentTags.toString().toLowerCase(), this.$editor[0]);
+						}
+
+						var left = this.normalize($el.css('margin-left')) + this.opts.indentValue;
+						$el.css('margin-left', left + 'px');
+
+					}, this));
+				}
+
+				this.selectionRestore();
+
 			}
 			// outdent
 			else
@@ -2357,11 +2514,52 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				var block = this.getBlock();
 				if (block && block.tagName == 'LI')
 				{
+					// li
 					var elems = this.getBlocks();
 					var index = 0;
 
 					this.insideOutdent(block, index, elems);
 				}
+				else
+				{
+					// all block tags
+					var elements = this.getBlocks();
+					$.each(elements, $.proxy(function(i, elem)
+					{
+						var $el = false;
+
+						if ($.inArray(elem.tagName, this.opts.alignmentTags) !== -1)
+						{
+							$el = $(elem);
+						}
+						else
+						{
+							$el = $(elem).closest(this.opts.alignmentTags.toString().toLowerCase(), this.$editor[0]);
+						}
+
+						var left = this.normalize($el.css('margin-left')) - this.opts.indentValue;
+						if (left <= 0)
+						{
+							// linebreaks
+							if (this.opts.linebreaks === true && typeof($el.data('tagblock')) !== 'undefined')
+							{
+								$el.replaceWith($el.html());
+							}
+							// all block tags
+							else
+							{
+								$el.css('margin-left', '');
+								this.removeEmptyAttr($el, 'style');
+							}
+						}
+						else
+						{
+							$el.css('margin-left', left + 'px');
+						}
+
+					}, this));
+				}
+
 
 				this.selectionRestore();
 			}
@@ -2440,7 +2638,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		cleanRemoveSpaces: function(html, buffer)
 		{
-		return html;
 			if (buffer !== false)
 			{
 				// save code
@@ -2505,9 +2702,16 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			// remove zero width-space
 			html = html.replace(/[\u200B-\u200D\uFEFF]/g, '');
-			
-			//"<p>\\s*</p>", "<p></p>", "<p>&nbsp;</p>",
-			var etags = ["<pre></pre>", "<blockquote>\\s*</blockquote>", "<dd></dd>", "<dt></dt>", "<em>\\s*</em>", "<ul></ul>", "<ol></ol>", "<li></li>", "<table></table>", "<tr></tr>", "<span>\\s*<span>", "<span>&nbsp;<span>", "<b>\\s*</b>", "<b>&nbsp;</b>", "<p>\\s*<br>\\s*</p>", "<div>\\s*</div>", "<div>\\s*<br>\\s*</div>"];
+
+			var etagsInline = ["<b>\\s*</b>", "<b>&nbsp;</b>", "<em>\\s*</em>"]
+			var etags = ["<pre></pre>", "<blockquote>\\s*</blockquote>", "<dd></dd>", "<dt></dt>", "<ul></ul>", "<ol></ol>", "<li></li>", "<table></table>", "<tr></tr>", "<span>\\s*<span>", "<span>&nbsp;<span>", "<p>\\s*</p>", "<p></p>", "<p>&nbsp;</p>",  "<p>\\s*<br>\\s*</p>", "<div>\\s*</div>", "<div>\\s*<br>\\s*</div>"];
+
+			if (this.opts.removeEmptyTags)
+			{
+				etags = etags.concat(etagsInline);
+			}
+			else etags = etagsInline;
+
 			var len = etags.length;
 			for (var i = 0; i < len; ++i)
 			{
@@ -2527,12 +2731,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			var safes = [];
 			var z = 0;
+			var matches = html.match(/<(table|div|pre|object)(.*?)>([\w\W]*?)<\/(table|div|pre|object)>/gi);
 
-			if (html.search(/<(table|div|pre|object)/gi) !== -1)
+			if (matches)
 			{
-				var matched = html.match(/<(table|div|pre|object)(.*?)>([\w\W]*?)<\/(table|div|pre|object)>/gi);
-			if(matched)	
-				$.each(matched, function(i,s)
+				$.each(matches, function(i,s)
 				{
 					z++;
 					safes[z] = s;
@@ -2542,9 +2745,10 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			if (this.opts.phpTags)
 			{
-				if (html.search(/<section(.*?)rel="redactor-php-tag">/gi) !== -1)
+				var phpMatches = html.match(/<section(.*?)rel="redactor-php-tag">([\w\W]*?)<\/section>/gi);
+				if (phpMatches)
 				{
-					$.each(html.match(/<section(.*?)rel="redactor-php-tag">([\w\W]*?)<\/section>/gi), function(i,s)
+					$.each(phpMatches, function(i,s)
 					{
 						z++;
 						safes[z] = s;
@@ -2610,12 +2814,13 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			html = R("\n</p>", 'gi', '</p>');
 
 			html = R('</li><p>', 'gi', '</li>');
-			html = R('</ul><p>(.*?)</li>', 'gi', '</ul></li>');
+			//html = R('</ul><p>(.*?)</li>', 'gi', '</ul></li>');
 			html = R('</ol><p>', 'gi', '</ol>');
 			html = R('<p>\t?\n?<p>', 'gi', '<p>');
 			html = R('</dt><p>', 'gi', '</dt>');
 			html = R('</dd><p>', 'gi', '</dd>');
 			html = R('<br></p></blockquote>', 'gi', '</blockquote>');
+			html = R('<p>    </p>', 'gi', '');
 
 			$.each(safes, function(i,s)
 			{
@@ -2677,14 +2882,12 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		cleanSavePreCode: function(html, encode)
 		{
-//			var pre = html.match(/<(pre|code)(.*?)>([\w\W]*?)<\/(pre|code)>/gi);
-			var pre = html.match(/<(pre)(.*?)>([\w\W]*?)<\/(pre)>/gi);
+			var pre = html.match(/<(pre|code)(.*?)>([\w\W]*?)<\/(pre|code)>/gi);
 			if (pre !== null)
 			{
 				$.each(pre, $.proxy(function(i,s)
 				{
-//					var arr = s.match(/<(pre|code)(.*?)>([\w\W]*?)<\/(pre|code)>/i);
-					var arr = s.match(/<(pre)(.*?)>([\w\W]*?)<\/(pre)>/i);
+					var arr = s.match(/<(pre|code)(.*?)>([\w\W]*?)<\/(pre|code)>/i);
 
 					arr[3] = arr[3].replace(/&nbsp;/g, ' ');
 					if (encode !== false) arr[3] = this.cleanEncodeEntities(arr[3]);
@@ -2703,15 +2906,27 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		cleanUnverified: function()
 		{
-			/* this.$editor.find('span[data-redactor!="verified"]').filter(':not([id*="selection-marker"])').contents().unwrap(); */
 			// label, abbr, mark, meter, code, q, dfn, ins, time, kbd, var
 
-			var $elem = this.$editor.find('img, a, b, strong, sub, sup, i, em, u, small, strike, del, span, cite')
-				.filter('[style*="font-size"][style*="line-height"]')
-				.css('font-size', '')
-				.css('line-height', '');
+			var $elem = this.$editor.find('li, img, a, b, strong, sub, sup, i, em, u, small, strike, del, span, cite');
 
-			this.removeEmptyAttr($elem[0], 'style');
+			$elem.filter('[style*="font-size"][style*="line-height"]')
+			.css('font-size', '')
+			.css('line-height', '');
+
+			$elem.filter('[style*="background-color: transparent;"][style*="line-height"]')
+			.css('background-color', '')
+			.css('line-height', '');
+
+			$elem.filter('[style*="background-color: transparent;"]')
+			.css('background-color', '');
+
+			$elem.css('line-height', '');
+
+			$.each($elem, $.proxy(function(i,s)
+			{
+				this.removeEmptyAttr(s, 'style');
+			}, this));
 
 			// When we paste text in Safari is wrapping inserted div (remove it)
 			this.$editor.find('div[style="text-align: -webkit-auto;"]').contents().unwrap();
@@ -2824,6 +3039,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 					out = this.placeTag(tag, out);
 				}
 			}
+
 			return this.cleanFinish( out );
 		},
 		cleanGetTabs: function()
@@ -2920,34 +3136,53 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			if (this.oldIE())
 			{
-				this.document.execCommand( cmd, false, false );
+				this.document.execCommand(cmd, false, false);
 				return true;
 			}
 
 			this.selectionSave();
 
-			var elements = this.getBlocks();
-
-			$.each(elements, $.proxy(function(i, elem)
+			var block = this.getBlock();
+			if (!block && this.opts.linebreaks)
 			{
-				var $el = false;
+				// one element
+				this.exec('formatBlock', 'blockquote');
+				var newblock = this.getBlock();
+				var block = $('<div data-tagblock="">').html($(newblock).html());
+				$(newblock).replaceWith(block);
 
-				if ($.inArray( elem.tagName, this.opts.alignmentTags) !== -1)
-				{
-					$el = $(elem);
-				}
-				else
-				{
-					$el = $(elem).closest(this.opts.alignmentTags.toString().toLowerCase(), this.$editor[0]);
-				}
+				$(block).css('text-align', type);
+				this.removeEmptyAttr(block, 'style');
 
-				if ($el)
+				if (type == '' && typeof($(block).data('tagblock')) !== 'undefined')
 				{
-					$el.css('text-align', type);
-					this.removeEmptyAttr($el, 'style');
+					$(block).replaceWith($(block).html());
 				}
+			}
+			else
+			{
+				var elements = this.getBlocks();
+				$.each(elements, $.proxy(function(i, elem)
+				{
+					var $el = false;
 
-			}, this));
+					if ($.inArray(elem.tagName, this.opts.alignmentTags) !== -1)
+					{
+						$el = $(elem);
+					}
+					else
+					{
+						$el = $(elem).closest(this.opts.alignmentTags.toString().toLowerCase(), this.$editor[0]);
+					}
+
+					if ($el)
+					{
+						$el.css('text-align', type);
+						this.removeEmptyAttr($el, 'style');
+					}
+
+				}, this));
+			}
 
 			this.selectionRestore();
 
@@ -3219,9 +3454,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		inlineMethods: function(type, attr, value)
 		{
+			this.bufferSet();
 			this.selectionSave();
 
-			var range = this.getRange(), el = this.getElement();
+			var range = this.getRange()
+			var el = this.getElement();
 
 			if (range.collapsed || range.startContainer === range.endContainer && el)
 			{
@@ -3232,11 +3469,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				this.document.execCommand('fontSize', false, 4 );
 
 				var fonts = this.$editor.find('font');
-				$.each( fonts, $.proxy(function(i, s)
+				$.each(fonts, $.proxy(function(i, s)
 				{
 					this.inlineSetMethods(type, s, attr, value);
 
-				}, this ) );
+				}, this));
 			}
 
 			this.selectionRestore();
@@ -3247,11 +3484,10 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		{
 			var parent = $(s).parent(), el;
 
-			if (parent && parent[0].tagName === 'SPAN')
+			if (parent && parent[0].tagName === 'SPAN' && parent[0].attributes.length != 0)
 			{
 				el = parent;
 				$(s).replaceWith($(s).html());
-
 			}
 			else
 			{
@@ -3344,7 +3580,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		// INSERT
 		insertHtml: function (html, sync)
 		{
-			if(html=="") return true;
 			var current = this.getCurrent();
 			var parent = current.parentNode;
 
@@ -3362,17 +3597,16 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			var currBlock = this.getBlock();
 
-			if($html.contents()[0])	{
-				var htmlTagName = $html.contents()[0].tagName;
-			} else {
-				var htmlTagName = "P";
-			}
-
-			// If the inserted and received text tags match
-			if ($html.contents().length == 1 && htmlTagName != 'P' && htmlTagName == currBlock.tagName || htmlTagName == 'PRE')
+			if ($html.contents().length == 1)
 			{
-				html = $html.text();
-				$html = $('<div>').append(html);
+				var htmlTagName = $html.contents()[0].tagName;
+
+				// If the inserted and received text tags match
+				if (htmlTagName != 'P' && htmlTagName == currBlock.tagName || htmlTagName == 'PRE')
+				{
+					html = $html.text();
+					$html = $('<div>').append(html);
+				}
 			}
 
 			// add text in a paragraph
@@ -3453,6 +3687,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		insertNode: function(node)
 		{
+			node = node[0] || node;
 			var sel = this.getSelection();
 			if (sel.getRangeAt && sel.rangeCount)
 			{
@@ -3468,27 +3703,37 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		insertAfterLastElement: function(element)
 		{
-			if (this.isEndOfElement() && this.opts.linebreaks === false)
+			if (this.isEndOfElement())
 			{
 				if (this.$editor.contents().last()[0] !== element) return false;
 
 				this.bufferSet();
 
-				var node = $(this.opts.emptyHtml);
-				$(element).after(node);
-				this.selectionStart(node);
+				if (this.opts.linebreaks === false)
+				{
+					var node = $(this.opts.emptyHtml);
+					$(element).after(node);
+					this.selectionStart(node);
+				}
+				else
+				{
+					var node = $('<span id="selection-marker-1">' + this.opts.invisibleSpace + '</span>', this.document)[0];
+					$(element).after(node);
+					$(node).after(this.opts.invisibleSpace);
+					this.selectionRestore();
+				}
 			}
 		},
 		insertLineBreak: function()
 		{
 			this.selectionSave();
-			this.$editor.find('#selection-marker-1').before('<br>' + ( this.browser('webkit') ? this.opts.invisibleSpace : '') );
+			this.$editor.find('#selection-marker-1').before('<br>' + (this.browser('webkit') ? this.opts.invisibleSpace : ''));
 			this.selectionRestore();
 		},
 		insertDoubleLineBreak: function()
 		{
 			this.selectionSave();
-			this.$editor.find('#selection-marker-1').before('<br><br>' + ( this.browser('webkit') ? this.opts.invisibleSpace : '') );
+			this.$editor.find('#selection-marker-1').before('<br><br>' + (this.browser('webkit') ? this.opts.invisibleSpace : ''));
 			this.selectionRestore();
 		},
 		replaceLineBreak: function(element)
@@ -3500,53 +3745,10 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 
 		// PASTE
-		pasteInit: function ()
-		{
-			if (this.isMobile()) return false;
-
-			this.$editor.on('paste.redactor', $.proxy(function(e)
-			{
-				if( !jsDoPasteClipboard(e) ) return false;
-
-				console.info("paste from redactor");
-				if (!this.opts.cleanup) return true;
-
-				this.selectionSave();
-
-				if (!this.selectall)
-				{
-					if (this.opts.autoresize === true )
-					{
-						this.$editor.height(this.$editor.height());
-						this.saveScroll = this.$box.scrollTop();
-					}
-					else
-					{
-						this.saveScroll = this.$editor.scrollTop();
-					}
-				}
-
-				var frag = this.extractContent();
-
-				setTimeout($.proxy(function()
-				{
-					var pastedFrag = this.extractContent();
-					this.$editor.append(frag);
-
-					this.selectionRestore();
-
-					var html = this.getFragmentHtml(pastedFrag);
-					this.pasteClean(html);
-
-					if (this.opts.autoresize === true) this.$editor.css('height', 'auto');
-
-				}, this), 1);
-
-			}, this));
-		},
 		pasteClean: function(html)
 		{
-			if(html=="") return "";
+			html = this.callback('pasteBefore', false, html);
+
 			// clean up pre
 			if (this.currentOrParentIs('PRE'))
 			{
@@ -3554,6 +3756,10 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				this.pasteInsert(html);
 				return true;
 			}
+
+			// ms word list
+			html = html.replace(/<p(.*?)class="MsoListParagraphCxSpFirst"([\w\W]*?)<\/p>/gi, '<ul><p$2</p>');
+			html = html.replace(/<p(.*?)class="MsoListParagraphCxSpLast"([\w\W]*?)<\/p>/gi, '<p$2</p></ul>');
 
 			// remove comments and php tags
 			html = html.replace(/<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi, '');
@@ -3579,15 +3785,12 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			html = html.replace(/<embed(.*?)>([\w\W]*?)<\/embed>/gi, '[embed$1]$2[/embed]');
 			html = html.replace(/<object(.*?)>([\w\W]*?)<\/object>/gi, '[object$1]$2[/object]');
 			html = html.replace(/<param(.*?)>/gi, '[param$1]');
-			
-			if(false) {
-				html = html.replace(/<img(.*?)(.*?)>/gi, '[img$1$2]');
-			} else {
-				html = html.replace(/<img(.*?)style="(.*?)"(.*?)\>/gi, '[img$1$3]'); //спорный момент
-				html = html.replace(/<img(.*?)(.*?)>/gi, '[img$1$2]');
-			}
+			html = html.replace(/<img(.*?)style="(.*?)"(.*?)>/gi, '[img$1$3]');
 
-			// remove attributes
+			// remove classes
+			html = html.replace(/ class="(.*?)"/gi, '');
+
+			// remove all attributes
 			html = html.replace(/<(\w+)([\w\W]*?)>/gi, '<$1>');
 
 			// remove empty
@@ -3614,6 +3817,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				html = html.replace(/<\/p><\/div>/gi, '</p>');
 			}
 
+
 			html = this.cleanParagraphy(html);
 
 			// remove span
@@ -3621,7 +3825,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			// remove empty
 			html = html.replace(/<img>/gi, '');
-//			html = html.replace(/<[^\/>][^>][^img|param|source]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
+			html = html.replace(/<[^\/>][^>][^img|param|source]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
 
 			html = html.replace(/\n{3,}/gi, '\n');
 
@@ -3629,13 +3833,16 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			html = html.replace(/<p><p>/gi, '<p>');
 			html = html.replace(/<\/p><\/p>/gi, '</p>');
 
+			html = html.replace(/<li>(\s*|\t*|\n*)<p>/gi, '<li>');
+			html = html.replace(/<\/p>(\s*|\t*|\n*)<\/li>/gi, '</li>');
+
 			if (this.opts.linebreaks === true)
 			{
 				html = html.replace(/<p(.*?)>([\w\W]*?)<\/p>/gi, '$2<br>');
 			}
 
 			// remove empty finally
-//			html = html.replace(/<[^\/>][^>][^img|param|source]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
+			html = html.replace(/<[^\/>][^>][^img|param|source]*>(\s*|\t*|\n*|&nbsp;|<br>)<\/[^>]+>/gi, '');
 
 			// FF fix
 			if (this.browser('mozilla'))
@@ -3646,13 +3853,16 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				}
 			}
 
+			// bullets
+			html = html.replace(/<p>•([\w\W]*?)<\/p>/gi, '<li>$1</li>');
+
 			// ie inserts a blank font tags when pasting
 			while (/<font>([\w\W]*?)<\/font>/gi.test(html))
 			{
 				html = html.replace(/<font>([\w\W]*?)<\/font>/gi, '$1');
 			}
-			html = html.replace(/\[img(.*?)&gt;/gi, "<img$1>");
-			html = html.replace(/\[img/gi, "<img");
+
+
 			this.pasteInsert(html);
 
 		},
@@ -3674,11 +3884,14 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				this.$editor.focus();
 			}
 
+			html = this.callback('pasteAfter', false, html);
+
 			this.insertHtml(html);
 
 			this.selectall = false;
+			setTimeout(function() { rtePaste = false; }, 100);
 
-			if (this.opts.autoresize) $(this.$box).scrollTop(this.saveScroll);
+			if (this.opts.autoresize) $(this.document.body).scrollTop(this.saveScroll);
 			else this.$editor.scrollTop(this.saveScroll);
 		},
 
@@ -3690,7 +3903,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			{
 				this.selectionSave();
 				this.opts.buffer.push(this.$editor.html());
-				this.selectionRemoveMarkers(true);
+				this.selectionRemoveMarkers('buffer');
 			}
 		},
 		bufferUndo: function()
@@ -3924,7 +4137,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		// SAVE & RESTORE
 		selectionSave: function()
 		{
-			console.info("sel_save");
 			if (!this.isFocused()) this.$editor.focus();
 
 			if (!this.opts.rangy)
@@ -3941,8 +4153,8 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		{
 			if (!range) return;
 
-			var node1 = $('<span id="selection-marker-1">' + this.opts.invisibleSpace + '</span>', this.document)[0];
-			var node2 = $('<span id="selection-marker-2">' + this.opts.invisibleSpace + '</span>', this.document)[0];
+			var node1 = $('<span id="selection-marker-1" class="redactor-selection-marker">' + this.opts.invisibleSpace + '</span>', this.document)[0];
+			var node2 = $('<span id="selection-marker-2" class="redactor-selection-marker">' + this.opts.invisibleSpace + '</span>', this.document)[0];
 
 			if (range.collapsed === true)
 			{
@@ -3969,7 +4181,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		},
 		selectionRestore: function(replace, remove)
 		{
-			console.info("sel_restore");
 			if (!this.opts.rangy)
 			{
 				if (replace === true && this.savedSel)
@@ -3980,7 +4191,10 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				var node1 = this.$editor.find('span#selection-marker-1');
 				var node2 = this.$editor.find('span#selection-marker-2');
 
-				if (!this.isFocused()) this.$editor.focus();
+				if (!this.isFocused())
+				{
+					this.$editor.focus();
+				}
 
 				if (node1.length != 0 && node2.length != 0)
 				{
@@ -4003,12 +4217,22 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				rangy.restoreSelection(this.savedSel);
 			}
 		},
-		selectionRemoveMarkers: function()
+		selectionRemoveMarkers: function(type)
 		{
 			if (!this.opts.rangy)
 			{
-				this.$editor.find('span#selection-marker-1').remove();
-				this.$editor.find('span#selection-marker-2').remove();
+				$.each(this.$editor.find('span.redactor-selection-marker'), function()
+				{
+					var html = $.trim($(this).html().replace(/[^\u0000-~]/g, ''));
+					if (html == '')
+					{
+						$(this).remove();
+					}
+					else
+					{
+						$(this).removeAttr('class').removeAttr('id');
+					}
+				});
 			}
 			// rangy
 			else
@@ -4337,13 +4561,18 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		{
 			this.bufferSet();
 
+			if (!this.$table) return;
+
 			this.$table.remove();
 			this.$table = false;
 			this.sync();
+
 		},
 		tableDeleteRow: function()
 		{
 			this.bufferSet();
+
+			if (!this.$current_tr) return;
 
 			// Set the focus correctly
 			var $focusTR = this.$current_tr.prev().length ? this.$current_tr.prev() : this.$current_tr.next();
@@ -4506,16 +4735,21 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 				var sel = this.getSelection();
 				var url = '', text = '', target = '';
-				var par = sel.anchorNode.parentNode;
 
 				var elem = this.getParent();
+				var par = $(elem).parent().get(0);
+				if (par && par.tagName === 'A')
+				{
+					elem = par;
+				}
+
 				if (elem && elem.tagName === 'A')
 				{
 					url = elem.href;
 					text = $(elem).text();
 					target = elem.target;
 
-					if (sel.toString() === '') this.insert_link_node = elem;
+					this.insert_link_node = elem;
 				}
 				else text = sel.toString();
 
@@ -5327,6 +5561,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 				this.modalSaveBodyOveflow = $(document.body).css('overflow');
 				$(document.body).css('overflow', 'hidden');
+
 			}
 			else
 			{
@@ -5374,13 +5609,15 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 				redactorModalInner.html('');
 
-				if ( this.opts.modalOverlay)
+				if (this.opts.modalOverlay)
 				{
 					$('#redactor_modal_overlay').hide().off('click', this.modalClose);
 				}
 
 				$(document).unbind('keyup', this.hdlModalClose);
 				this.$editor.unbind('keyup', this.hdlModalClose);
+
+				this.selectionRestore();
 
 			}, this));
 
@@ -5619,7 +5856,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				{
 					$.each(this.opts.uploadFields, $.proxy(function(k, v)
 					{
-						if (v.toString().indexOf('#') === 0) v = $(v).val();
+						if (v != null && v.toString().indexOf('#') === 0) v = $(v).val();
 
 						var hidden = $('<input/>', {
 							'type': "hidden",
@@ -5672,7 +5909,6 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 				{
 					// Remove bizarre <pre> tag wrappers around our json data:
 					var rawString = d.body.innerHTML;
-					console.info("RAW = ",rawString);
 					var jsonString = rawString.match(/\{(.|\n)*\}/)[0];
 
 					jsonString = jsonString.replace(/^\[/, '');
@@ -5766,7 +6002,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			{
 				$.each(this.draguploadOptions.uploadFields, $.proxy(function(k, v)
 				{
-					if (v.toString().indexOf('#') === 0) v = $(v).val();
+					if (v != null && v.toString().indexOf('#') === 0) v = $(v).val();
 					fd.append(k, v);
 
 				}, this));
@@ -5826,6 +6062,11 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		isMobile: function()
 		{
 			return /(iPhone|iPod|BlackBerry|Android)/.test(navigator.userAgent);
+		},
+		normalize: function(str)
+		{
+			if (typeof(str) === 'undefined') return 0;
+			return parseInt(str.replace('px',''), 10);
 		},
 		outerHtml: function(el)
 		{
@@ -5912,7 +6153,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 		{
 			var el, sel = this.getSelection();
 
-			if (sel.rangeCount > 0) el = sel.getRangeAt(0).startContainer;
+			if (sel && sel.rangeCount && sel.rangeCount > 0) el = sel.getRangeAt(0).startContainer;
 			if (!el) return false;
 			if (this.opts.iframe)
 			{

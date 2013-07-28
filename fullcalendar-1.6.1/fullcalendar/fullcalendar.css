@@ -252,9 +252,9 @@ html .fc,
 	border: 1px solid rgba(0,0,0,0.1) !important; /* default BORDER color */
 	background-color: rgba(184, 255, 187, 0.95); /* default BACKGROUND color */
 	color: rgb(9, 117, 0);               /* default TEXT color */
-	font-size: 12px;
+	font-size: 10px;
 	line-height: 1.1em;
-	font-family: "Arial Narrow",Arial, sans-serif;
+	font-family: Verdana, Arial, sans-serif;
 	cursor: default;
 	border-radius: 5px;
     /*box-shadow: inset 0px 1px 5px rgba(0,0,0,1);*/
@@ -283,8 +283,9 @@ a.fc-event,
 	
 .fc-event-time,
 .fc-event-title {
-	margin: 2px 2px;
-	display: block;
+	margin: 0px 2px;
+	display: inline;
+	padding: 0px 2px;
 }
 	
 .fc .ui-resizable-handle {
@@ -502,7 +503,7 @@ table.fc-border-separate {
 /* slot rows */
 	
 .fc-agenda-slots th {
-	border-width: 1px 1px 0;
+	border-width: 0px 0px 0px;
 	}
 	
 .fc-agenda-slots td {

@@ -12,18 +12,84 @@
 <meta name="keywords" content="gtd, 4tree.ru, заметки, задачи, гтд, таймменеджмент, хранение заметок, календарь"/>
 <script src="js/jquery-1.10.1.min.js"></script>
 <script src="js/testdesign.js"></script>
+<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="js/scrollable.js"></script>
+<?
+if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)   
+        $gz='gz';
+ else
+        $gz=null;
+if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) {
+	echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
+	echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
+} else {
+
+	echo '
+    <link rel="stylesheet" type="text/css" href="ui/css/smoothness/jquery-ui-1.8.21.custom.css"/>
+    <link rel="stylesheet" type="text/css" href="css/iphone.css"/>
+    <link rel="stylesheet" type="text/css" href="fontello/css/fontello.css"/>
+    <link rel="stylesheet" type="text/css" href="redactor904/redactor/redactor.css"/>
+    <link rel="stylesheet" type="text/css" href="css/4tree-styles.css"/>
+    <link rel="stylesheet" type="text/css" href="fullcalendar-1.6.1/fullcalendar/fullcalendar.css"/>
+    <link rel="stylesheet" type="text/css" href="css/4tree-foto.css"/>
+    <link rel="stylesheet" type="text/css" href="css/test-design.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jqueryslidemenu.css"/>';
+
+//	<script src="js/less-1.3.3.min.js"></script>
+
+	echo '<script src="jstree/_lib/jquery.cookie.min.js"></script>
+	<script src="js/login.js"></script>
+	<script src="./js/fastclick2.js"></script>
+	<script src="b_menu/jquery.menu.js"></script>
+	<script src="js/jquery.jsPlumb-1.4.1-all.js"></script>
+	<script src="js/handlebars.js"></script>
+	<script src="js/md5.js"></script>
+	<script src="js/jquery.idle-timer.js"></script>
+	<script src="diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>
+	<script src="js/parser.js"></script>
+	<script src="fabric.js-1.1.0/dist/all.js"></script>
+	<script src="js/4tree-foto.js"></script>
+	<script src="js/loader.js"></script>
+	<script src="js/jquery.datetimeentry2.min.js"></script>
+	<script src="js/jquery.datetimeentry-ru.js"></script>
+	<script src="fullcalendar-1.6.1/fullcalendar/fullcalendar.js"></script>
+	<script src="b_menu/jquery.dimensions.min.js"></script>
+	<script src="js/pushstream.js"></script>
+	<script src="js/js_regallkeys.js"></script>
+	<script src="js/api4tree.js"></script>
+	<script src="js/all_new.js"></script>
+	<script src="js/ydn.db-jquery-0.7.5.js"></script>
+	<script src="redactor904/redactor/redactor.js"></script>
+	<script src="redactor904/redactor/ru.js"></script>
+	<script src="js/iphone-style-checkboxes.js"></script>
+	<script src="js/jszip.js"></script>
+	<script src="js/vcdiff.js"></script>
+	<script src="js/rangy-core.js"></script>
+	<script src="js/jqueryslidemenu.js"></script>
+	<script src="js/rangy-selectionsaverestore.js"></script>';
+	
+}
+
+//	<script src="js/!sync_modul.js"></script>
+
+
+if(isset($_GET['test']))
+	{
+	echo '
+	<link rel="stylesheet" href="js/qunit-1.11.0.css" type="text/css" media="screen">
+	<script type="text/javascript" src="js/qunit-1.11.0.js"></script>
+	<script src="js/!test.js"></script>
+	';
+	}
+
+?>
 
 <script>
 
 $(document).ready(function(){
-	jsDoFirst();
-	var tt;
-	$("#tree_editor").on("scroll",function(x){
-		clearTimeout(tt);
-		tt = setTimeout(function(){
-//			$("#tree_editor_top").scrollTop( $("#tree_editor").scrollTop() - 26 );
-		}, 5);
-	});
+	FastClick.attach(document.body);
+	jsLoginUser();
+
 });
 
 </script>
@@ -35,307 +101,286 @@ $(document).ready(function(){
 <link rel="shortcut icon" href="favicon1.png" type="image/x-icon" />
 <link rel="icon" href="favicon1.png" type="image/x-icon" />
 
-<link rel="stylesheet" type="text/css" href="css/test-design.css"/>
 <link rel="stylesheet" type="text/css" href="fontello/css/fontello.css"/>
 
-<script src="js/jquery-1.10.1.min.js"></script>
-<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="js/scrollable.js"></script>
 </head>
 
-<body>
+<body onResize="onResize();">
+
+<div id="welcome_screen"></div>
+<div id="load_screen" class='<? echo $theme_dark; ?>' style="background-image:url('<? echo $theme_img; ?>');top:0px;bottom:-1px;left:0px;right:0px;background-color:white;position:absolute;z-index:999;padding-top:185px;"><center><div id='pload_text'>Загрузка...</div><br><div id="progress_bar" style="width:300px;overflow:hidden;background-color:rgb(151,252,0);height:5px;margin-top:25px;border:1px solid #000;border-radius:3px;"><div id="inside_bar" style="float:left;background-color:rgb(36,150,0);height:10px;margin-left:-3px;display:inline-block;width:10px;"></div></div><a style="color:rgb(65,109,0);margin-top:280px;display:block" href="./4tree.php"><h2>4tree.ru</h2></a>
+<font style="font-size:15px"><? echo $compress_stamp; ?></font>
+</div></center></div>
+
+
 	<div id="tree_wrap">
 		<div class="tree_add_do">
-			<input placeholder="Добавить...">
+			<input x-webkit-speech placeholder="Добавить...">
 		</div>
 		
 		<div id="tree_header">
 			
-			<ul class="tree_tab_menu">
-				<li><a><i class="icon-th-list"></i></a></li>
-				<li><a>Дерево</a></li>
-				<li><a>Дела</a></li>
-				<li><a>Что нужно сделать сегодня</a></li>
-				<li><a>Мысли</a></li>
-				<li class="active"><a>Новый дизайн</a></li>
-				<li><a>Активный текст</a></li>
-				<li><a>Записки дебианщика</a></li>				
+			<ul class="tree_tab_menu tabs clearfix noselectable">
+				<span class="for_sos"><a>
+					<div class="sos" title="Синхронизация / Размер окон"><i class="icon-cd"></i><div id="myloader"></div></div>		
+				</a></span>
+				<li><a>Дерево</a><i class="icon-cancel"></i></li>
+				<li><a>Дела</a><i class="icon-cancel"></i></li>
+				<li><a>Что нужно сделать сегодня</a><i class="icon-cancel"></i></li>
+				<li><a>Мысли</a><i class="icon-cancel"></i></li>
+				<li class="active"><a>Новый дизайн</a><i class="icon-cancel"></i></li>
+				<li><a>Активный текст</a><i class="icon-cancel"></i></li>
+				<li><a>Записки дебианщика</a><i class="icon-cancel"></i></li>				
 			</ul>
 		<div id="tree_fav">
 		</div>
 		
 		</div>
 	  <div id="tree_left_panel">
-			<ul>
-				<li>_НОВОЕ</li>
-				<li>Входящие</li>
-				<li>Календарь</li>
-				<li>Дневник</li>
-				<li>Мысли вслух</li>
-				<li>_НОВОЕ</li>
-				<li>Входящие</li>
-				<li>Календарь</li>
-				<li>Дневник</li>
-				<li>Мысли вслух</li>
-				<li>_НОВОЕ</li>
-				<li>Входящие</li>
-				<li>Календарь</li>
-				<li>Дневник</li>
-				<li>Мысли вслух</li>
-				<li>_НОВОЕ</li>
-				<li>Входящие</li>
-				<li>Календарь</li>
-				<li>Дневник</li>
-				<li>Мысли вслух</li>
+		<div id="top_panel_header">
+			<i class="icon-flow-cascade"></i>
+			<i class="icon-th-4"></i>
+			<i class="icon-th-list"></i>
+			<i class="icon-th-list-3"></i>
+		</div>
+		<div id="top_panel" class="panel_type1">
+			<div id="mypanel" style="">
+			</div>
+		</div>
+		<div id="left_calendar"></div>
+		
+		<div id="tree_footer2">
+			<ul class="tree_footer_menu2">
+				<li id = "tab_calendar"><a><i class="icon-calendar-2"></i></a></li>
+				<li id = "tab_files"><a><i class="icon-attach-1"></i></a></li>
+				<li id = "tab_news"><a><i class="icon-rss"></i></a></li>
+				<li id = "tab_find"><a><i class="icon-search"></i></a></li>
 			</ul>
+		</div>
+		
+		
 	  </div>
 	  
 	  
 	  	  <div id="tree_right_panel">
 			<ul>
-				<li>_НОВОЕ</li>
-				<li>Входящие</li>
-				<li>Календарь</li>
-				<li>Дневник</li>
-				<li>Мысли вслух</li>
-				<li>_НОВОЕ</li>
-				<li>Входящие</li>
-				<li>Календарь</li>
-				<li>Дневник</li>
-				<li>Мысли вслух</li>
-				<li>_НОВОЕ</li>
-				<li>Входящие</li>
-				<li>Календарь</li>
-				<li>Дневник</li>
-				<li>Мысли вслух</li>
-				<li>_НОВОЕ</li>
-				<li>Входящие</li>
-				<li>Календарь</li>
-				<li>Дневник</li>
 				<li>Мысли вслух</li>
 			</ul>
 	  </div>
 
-	  
-	  <div id="tree_editor">
-	  
-	  
-<h1>Темная сторона Луны.&nbsp;<br>
-Или освещение продуктовых подходов в гибкой разработке.</h1>
-<p>
-	<em>“There is no dark side in the moon, really. Matter of fact, it’s all dark.”</em><br>
-	<em>«The Dark Side of the Moon»</em><br>
-	<em>Pink Floyd, 1973</em>
-</p>
-<p>
-	<img src="upload/sheldon.png" align="left" width="280px" style="padding:10px;">
-	Скрам прост. И одна причина его простоты в том, что он описывает процесс только частично, если не сказать однобоко.
-</p>
-<blockquote>
-	<p>
-		- Приходит Владелец Продукта с беклогом – так я начинал свои избитые пересказы Скрам-каркаса, и это воспринималось как данное..
-	</p>
-	<p>
-		- Конечно приходит – вторили мне, – ведь это же его работа – составить беклог. Не наша дело, где он его взял. На сколько он (беклог) хорошо составлен. На сколько вообще идея продукта адекватна реальности. И какой вообще бизнес они пытаются построить… Наше дело спланировать спринт и показать демо. Это и есть Скрам.
-	</p>
-</blockquote>
-<p>
-	Скрам минималистичен и неполон по определению. Именно поэтому так много Владельцев Продуктов не могут найти места в Скраме практикам традиционного менеджмента продуктов, которые они привыкли выполнять в «до-аджальные» времена.
-</p>
-<p>
 
-</p>
-<p>
-	<b>ВОПРОСЫ БЕЗ ОТВЕТОВ</b>
-</p>
-<blockquote>
-	<ul>
-		<li><b>Когда в Скраме выполнять low-fidelity прототипирование?</b></li>
-	</ul>
-	<ul>
-		<li><b>Когда и кто проектирует основы пользовательского интерфейса?</b></li>
-	</ul>
-	<ul>
-		<li><b>Как приоретизировать беклог, если базовые требования настолько мелко побиты, что утеряна цельная картина?</b></li>
-	</ul>
-	<ul>
-		<li><b>Как убедиться до начала разработки, что нужды пользователей в принципе реализуемы?</b></li>
-	</ul>
-	<ul>
-		<li><b>Почему Скрам кажется таким несимметричным – с одной стороны целая команда, а с другой одинокий Владелец Продукта? Неужто один человек и вправду может справиться с этой работой?</b></li>
-	</ul>
-</blockquote>
-<p>
-	Если вы задавались этими вопросами или слышали, как ваш Владелец Продукта мычал их себе под нос, почесывая затылок, – значит эта статья для вас и ваших коллег.
-</p>
-<p>
-	Если же вы НЕ задавались этими вопросами, тогда эта статья&nbsp;<em>тем более</em>&nbsp;для вас, – так как вы не представляете себе, сколько всего упускаете.
-</p>
-<p>
-	Интересно, что введение т.н. «спринта зеро» (типичный совет продвинутых аджалистов) никак не решает перечисленные проблемы, оно лишь дает временную фору «продуктоведам» перед командой разработки. Но это хак – несистемное решение.
-</p>
-<p>
-	Здесь нужен&nbsp;<em>другой</em>&nbsp;процесс, а не перестановки.
-</p>
-<p>
-	<b>ТЕМНАЯ СТОРОНА ЛУНЫ</b>
-</p>
-<p>
-	Известно, что разработка продукта – это два процесса в одном. С одной стороны у нас есть фаза&nbsp;<b>изобретения и определения продукта</b>&nbsp;(Product Discovery), с другой -<b>&nbsp;разработка и выпуск</b>&nbsp;(Product Delivery).
-</p>
-<p>
-	Интересно, что в литературе по гибкой разработке сторона Product Discovery освещается намного реже, чем Delivery. Наверное это связано с тем, что многие года именно разработка была узким местом процесса, и компании, которые умели выпускать работающий софт, обладали по определению конкурентным преимуществом. К слову, Agile и был выкристаллизован из процессов таких успешных компаний.
-</p>
-<p>
-	Помните пресловутое&nbsp;<a href="http://www.agileukraine.org/p/agile.html">working software over comprehensive documentation</a>?&nbsp;Сегодня&nbsp;<em>просто работающего</em>&nbsp;софта уже недостаточно, им уже никого не удивишь. Нужно&nbsp;<a href="http://agilescout.com/agile-manifesto-2-1-moreagile-manifesto/">нечто большее</a>. Для многих команд выпуск продукта – ежедневная рутина (при использовании подхода&nbsp;<a href="http://continuousdelivery.com/">Continuous Delivery</a>). И определение того,&nbsp;<em>что</em>&nbsp;стоит выпускать (и что не стоит) становится острой задачей.
-</p>
-<p>
-	Итак, пора осветить «темную сторону» Скрама и составить полную картину процесса разработки продуктов от&nbsp;<em>самого</em>&nbsp;начала – когда у нас ничего нет кроме непроверенной гипотезы о проблеме – до выпуска&nbsp;<a href="http://en.wikipedia.org/wiki/Minimum_viable_product">MVP</a>&nbsp;и итеративного улучшения решения.
-</p>
-<p>
-</p>
-<p>
-	Для выполнения этой задача нам придется дорисовать недостающее измерение, позаимствовав определения и процессы, которые себя хорошо зарекомендовали в среде<em>продуктоведов</em>&nbsp;и&nbsp;<em>юзабилистов</em>.
-</p>
-<p>
-	И так, встречайте!
-</p>
-<p>
-	<b>ПРОЦЕСС PRODUCT DISCOVERY</b>
-</p>
-<p>
-	Что же происходит&nbsp;<em>там -</em>&nbsp;за занавесом, где усердно трудятся Владелец Продукта и его команда?
-</p>
-<p>
-	Если речь идет о разработке и выпуске на рынок нового продукта, то скорее всего<b>Продуктовая Команда</b>&nbsp;(о составе этой команды читайте ниже) занята чем-то, что похоже на процесс, проиллюстрированный ниже:
-</p>
-<p>
-</p>
-<p>
-	Это модель&nbsp;<a href="http://en.wikipedia.org/wiki/Design_thinking">Design Thinking</a>&nbsp;- наверное,&nbsp;один из самых известных подходов поиска и проектирования продуктовых решений.
-</p>
-<p>
-	Пять шагов этого процесса можно описать следующим образом:
-</p>
-<ol>
-	<li><b>Empathize</b>&nbsp;(по-русски: сопереживание)<br>
-	Фаза, когда мы исследуем проблемы и нужды наших будущих пользователей посредством наблюдения и общения с ними.
-	<blockquote>
-		<p>
-			Пример: мы наблюдаем, какие проблемы испытывают клиенты ресторанов при использовании многочисленных дисконтных и клубных карт.&nbsp;<em>Мы интервьюируем клиентов и выясняем, что в среднем каждый третий носит с собой в портмоне более пяти карт. Иногда встречаются люди, которые носят отдельное портмоне для пятнадцати и более карт. Они не всегда могут найти нужную карту. И часто не знают, есть ли у них карта конкретной сети.</em>
-		</p>
-	</blockquote>
-	</li>
-	<li><b>Define</b>&nbsp;(иногда называется&nbsp;<b>Focus</b>)Фаза, когда мы осмысливаем и обобщаем свои наблюдения с целью определения ключевых проблем, которые будет решать наш продукт.
-	<blockquote>
-		<p>
-			Пример: мы решаем создать продукт, который бы лишил клиентов проблем ношения, поиска и потери дисконтных карт.
-		</p>
-	</blockquote>
-	</li>
-	<li><b>Ideate</b><br>
-	Генерация различных вариантов решения выбранных проблем.
-	<blockquote>
-		<p>
-			Пример: разработка одной из следующих систем должна решить проблемы:<br>
-			а) мобильное приложение, которое бы хранило фотографии и коды карт<br>
-			б) сервис, который бы позволил магазинам создавать и принимать виртуальные дисконтные карты вместо физических<br>
-			в) создание одной физической супер-карты, которая бы заменяла все другие
-		</p>
-	</blockquote>
-	</li>
-	<li><b>Prototype</b><br>
-	Визуализация выбранных решений для создания быстрых моделей.
-	<blockquote>
-		<p>
-			Пример: мы тестируем использование стандартного iOS приложение для хранения фото-изображений карт. После удачного теста в четырех ресторанах из пяти мы решаем ограничиться несколькими видами дисконтных карт и разработать специализированное мобильное приложение для их хранения.
-		</p>
-	</blockquote>
-	</li>
-	<li><b>Test</b>&nbsp;(иногда называется&nbsp;<b>Feedback</b>)<br>
-	Общение с пользователями для получения обратной связи и улучшение решений.
-	<blockquote>
-		<p>
-			Пример: мы договариваемся с несколькими ресторанами о пиар-кампании виртуальных дисконтных карт и замеряем количество клиентов, которые<br>
-			1) заведут наши виртуальные карты;<br>
-			2) станут использовать наше приложение вместо физических карт;<br>
-			3) перестанут носить физические карты.
-		</p>
-		<p>
-			Оказалось, что клиенты не перестают носить с собой пластик, даже используя наше приложение. Иметь с собой коллекцию дисконтных карт – престижно. А при использовании приложения никто не видит сколько у тебя карт.
-		</p>
-		<p>
-			Это похоже на новую проблему, требующую переосмысления и повтора всего цикла…
-		</p>
-	</blockquote>
-	</li>
-</ol>
-<p>
-	Процесс Design Thinking обычно изображается линейным, хотя на самом деле он цикличен, как и любой креативный процесс. Вряд ли мы с первого раза угадаем проблему и найдем лучшее решение.
-</p>
-<p>
-	Это очень похоже на цикл lean startup, не так ли?
-</p>
-<p>
-	<b>LEAN STARTUP И BML</b>
-</p>
-<p>
-</p>
-<p>
-	Модель, предложенная Эриком Ризом (<a href="http://theleanstartup.com/">Lean Startup</a>), циклична по своей природе. Ее задача научить нас как можно быстрей (и дешевле) проходить циклы Build-Measure-Learn. Почему важно это делать быстро и дешево? Потому что в стартапе (в широком смысле значение “стартап” – любой проект поиска нового продукта или сервиса) нет лишних средств и времени на дорогую разработку.
-</p>
-<p>
-	Цель процесса Build-Measure-Learn – помочь нам отбросить все ложные предположения и нащупать истинную проблему + хорошее решение.
-</p>
-<p>
-	Немного нелогично, но первой фазой цикла Build-Measure-Learn является фаза&nbsp;<em>Learn</em>. Почему так? Потому что мы начинаем с того, что определяем то, что нам неизвестно и в чем хотим поскорее разобраться – мы ставим эксперимент. Здесь мы придумываем метрики, которые покажут нам, насколько правдивы наши гипотезы о проблемах пользователей, на сколько полезно придуманное решение.
-</p>
-<p>
-	Затем мы очень быстро производим и выпускаем решение (фаза Build). При чем&nbsp;лучше, если при этом мы не пишем ни строчки кода. Сделать это – освоить искусство возможного. Как не открывая кафе, узнать, насколько оно будет популярно? Что если, просто повесить вывеску со звонком на пустую стену и замерять количество&nbsp;<em>попыток войти</em>? Звучит глупо. Но намного глупее&nbsp;<em>дорого делать то, что никому не нужно</em>.
-</p>
-<p>
-	Далее мы проверяем наше тестовое решение, собирая метрики (Measure).
-</p>
-<p>
-	И на основании метрик делаем выводы (Learn), входя в очередной цикл BML… Cook until done.
-</p>
-<p>
-	Теории намного больше, но по сути – это все. Чуть ниже мы наложим цикл Build-Measure-Learn на наш процесс Discovery+Delivery.
-</p>
-<p>
-	<b>ОТ DISCOVERY К DELIVERY И ОБРАТНО</b>
-</p>
-<p>
-	<em>Во второй части статьи мы склеим процессы Product Discovery (Design Thinking и цикл Build-Measure-Learn) и Product Delivery (Scrum и Release Process) в один цельный процесс. И тем самым постараемся расставить точки над “i” в вопросах совмещения продуктовых техник и итеративно-инкрементальной разработки.</em>
-</p>
-<p>
-	<em>Буду рад комментариям, конструктивной критике и вопросам.</em>
-</p>	  
+  		  <div id="params_header">
+  		  	<div class="top_btn first" id="hide_left_panel"><i class="icon-left-1"></i></div>
+  		  	<div class="top_btn second" id="open_params"><i class="icon-cog-2"></i><i class="icon-down-dir"></i></div>
+
+			<div id="path_tree" class="path_line noselectable">
+				<ul></ul>
+			</div>
+
+  		  	<div class="top_btn" id="hide_right_panel"><i class="icon-right-1"></i></div>
+  		  	<div class="top_btn"><i class="icon-star-empty"></i></div>
+  		  	<div class="top_btn"><i class="icon-ok"></i></div>		  		  
+  		  	<div class="top_btn"><i class="icon-trash"></i></div>
+  		  </div>
+
+
 	  
-	  </div>
+	  <div id="tree_editor" class="bottom_open_no">
+		  		  <div id="params_panel">
+		  		  Панель параметров
+		  		  </div>
+	  		  
+	  		  
+	  		  <div class="all_editor_place" class="needsclick">
+			  <div class="noselectable" id="fav_redactor_btn"></div>
+	  			<textarea id="redactor">
+	  			</textarea>	  
+	  		  </div>
+	  	  
+	  	<div class="calendar_and_others">
+				
+				
+				<div class="search_panel_result panel_type3">
+	  				<div id="news_header">
+		  				<span style="margin: 7px 15px;display: inline-block;">Поиск</span>
+		  			</div>
+					<ul>
+					  <li>Введите фразу для поиска или <br>выражение для калькулятора: <i>2+(2^2)*(1+1)*10/2</i></li>
+					</ul>
+				</div>
+	  			<div class="search_arrow"></div>
+
+	  			<div id="tree_news">
+	  				<div id="news_header">
+		  				<li class="active">Новые комментарии</li>
+		  			</div>
+            <div id="tree_news_content">
+            </div>
+		  		</div>
+
+	  			<div id="tree_files_panel">
+	  				<div id="files_header">
+	  					<ul>
+	  						<li mytype="images" class="active">фотографии</li>
+	  						<li mytype="all">документы</li>
+	  					</ul>
+		  			</div>
+		  			<div id="tree_files_content">
+		  			</div>
+		  		</div>
+
+	  			<div id="tree_agenda">
+		  		</div>
+
+				
+			  <div id="calendar" class="noselectable1">
+			  </div>	
+
+    			<div class="favorit_menu noselectable" style="bottom:10px;">
+    				<ul>
+    				</ul>
+    			</div>
+
+	  		</div> <!-- calendar_and_others -->
+	  
 	  
 	  
 	  	  
-	  
-	</div>
-
-</body>
+	</div> <!-- tree_editor -->
+	
 
 
+		<div id="tree_shelf">
 
-		<div id="tree_footer">
-			<ul class="tree_footer_menu">
-				<li><a>Календарь</a></li>
-				<li><a>Поиск</a></li>
-				<li><a>Файлы</a></li>
-				<li><a>Новости</a></li>
-				<li><a>Контакты</a></li>
-			</ul>
+			<div class="shelf"><!-- shelf wrapper begin -->
+			  <div class="row" style="border-top:8px solid #444;"><!-- row begin -->
+			    <div class="border">
+			      <div class="inner">&nbsp;</div><!-- content here -->
+			    </div>
+			  </div><!-- row end -->
+			  <div class="row">
+			    <div class="border">
+			      <div class="inner">&nbsp;</div>
+			    </div>
+			  </div>
+			  <div class="row">
+			    <div class="border">
+			      <div class="inner">&nbsp;</div>
+			    </div>
+			  </div>
+			  <div class="row">
+			    <div class="border">
+			      <div class="inner">&nbsp;</div>
+			    </div>
+			  </div>
+			  <div class="row">
+			    <div class="border">
+			      <div class="inner">&nbsp;</div>
+			    </div>
+			  </div>
+			</div><!-- shelf wrapper end -->
+
+			<div class="one_book" style="background:#ffe1b5">Статья про Пежо 208</div>
+			<div class="one_book" style="background:#fff">Когда-нибудь</div>
+			<div class="one_book" style="background:#d0ffb0">Изначальная папка</div>
+			<div class="one_book" style="background:#9effb5">По автомобилям</div>
+			<div class="one_book" style="background:#b2b3ff">Про личную эффективность</div>
+			<div class="one_book" style="background:#ffb9f7">GTD лучший мир</div>
+			<div class="one_book" style="background:#ffadad">Создание ZIP архива</div>
 		</div>
+
+
 		
 		<div class="tree_search">
 			<input placeholder="Искать...">
 		</div>
 
+  <div id="pomidor" title="Таймер">
+     <div id="pomidor_scale">&nbsp;</div>
+     <div id="pomidor_bottom">&nbsp;</div>
+
+		 <div id="pomidoro_icon" time="0">
+		 <i id="pomidor1" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+		 <i id="pomidor2" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
+		 <i id="pomidor3" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+		 <i id="pomidor4" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
+		 <i id="pomidor5" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+		 <i id="pomidor6" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
+		 <i id="pomidor7" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+		 <i id="pomidor8" time="-15" class="icon-glass" title="Отдых 15 минут" text="Далее отдых 15 минут."></i>
+		 </div>
+  </div>
+
+					<!-- Шаблоны -->
+				<div id="comment_template" style="display:none">
+					<div class="comment_box" id="comment_{{id}}">
+						<div class="comment_text_box">
+
+							<div class="comment_header">
+								<div class="comment_foto">
+								    <img src="image_remote.php?width=15&height=15&cropratio=1:1&image={{foto}}" height="15px" width="15px" class="comment_foto_img">
+								</div>
+								<div class="comment_name">{{name}}</div>
+								<div class="comment_like">{{likes}}<i class="icon-heart"></i></div>
+								<div class="comment_time" time="{{add_time}}">
+									{{add_time_txt}} {{{tree_title}}}
+								</div>
+								<div class="comment_del" title="удалить комментарий"><i class="icon-cancel"></i></div>
+								<div class="comment_edit" title="редактировать комментарий"><i class="icon-pencil-1"></i></div>
+							</div>
+
+							<div class="comment_text">{{{text}}}</div>
+							
+							<div class="comment_reply">ответить</div>
+							
+						</div>
+					</div>
+				</div>
+
+				<div id="chat_template" style="display:none">
+					<div class="chat_inner_box" id="comment_{{id}}">
+							<div class="chat-bubble">
+							    <div class="chat-bubble-glare"></div>
+							    <div class="chat_text">{{{text}}}</div>
+							    <div class="chat-bubble-arrow-border"></div>
+							    <div class="chat-bubble-arrow"></div>
+							 </div>					
+						    <div class="chat_time">{{add_time_txt}}</div>
+					</div>
+				</div>
+
+
+				
+<div class="chat_box" user_id="template">
+	<div class="chat_header">
+		<div class="chat_user_img"></div><div class="chat_user_name" title="Минимизировать беседу"></div>
+		<div class="chat_fullscreen"><i class="icon-resize-full"></i></div>
+		<div class="chat_close"><i class="icon-cancel"></i></div>
+	</div>
+	<div class="chat_inner">
+		<div class="chat_content">
+		</div>
+		<div class="chat_editor">
+			<div class="chat_editor_input"></div>
+			<div class="chat_send_button" title="Отправить сообщение (ctrl+enter)"><i class='icon-chat-1'></i></div>
+		</div>
+		
+	</div>
+</div>
+
+			<div id="tree_comments">
+				<div id="tree_comments_container">
+				</div>
+				<div id="comment_enter_place">
+					<div id="comment_enter">
+						<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>					
+						<div class="comment_enter_input"></div>
+						<div class="comment_send_button" title="alt+enter">отправить <span style='color:#CCC'>(alt+enter)</span></div>
+					</div>
+				</div>
+				
+			</div>
 
 		
+		
+</body>

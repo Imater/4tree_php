@@ -1,5 +1,5 @@
 //v1.01
-var myjsPlumb,isMindmap = false, isTree = false;
+var myjsPlumb,isMindmap = false, isTree = true;
 var note_saved=true,myr,t1,t2,my_all_comments,my_all_share,
 	my_all_frends,remember_old_panel="top_panel";
 var main_x = 50; //ширина левой панели в процентах
@@ -666,8 +666,9 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 		});
 		 		$("#path_tree ul").html( new_path );
-		 		var top_panel_width_proc = $("#top_panel").width() / $("body").width() * 100;
-		 		var width = parseInt( top_panel_width_proc / (mypath.path.length-1) )-1;
+		 		var top_panel_width_proc = ($(".path_line").width()-95*2) / ($(".path_line").width()) * 100;
+			
+		 		var width = parseInt( top_panel_width_proc / (mypath.path.length) )-1;
 		 		$("#path_tree li").css("max-width",width+"%");
 		 }
 
@@ -1526,8 +1527,8 @@ function jsDoFirst() { //функция, которая выполняется �
 		
         $.datepicker.regional['ru'] = {
                 closeText: 'Закрыть',
-                prevText: '&#x3c;Пред',
-                nextText: 'След&#x3e;',
+                prevText: '&#x3c;Назад',
+                nextText: 'Вперёд&#x3e;',
                 currentText: 'Сегодня',
                 monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь',
                 'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
@@ -1535,8 +1536,8 @@ function jsDoFirst() { //функция, которая выполняется �
                 'Июл','Авг','Сен','Окт','Ноя','Дек'],
                 dayNames: ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],
                 dayNamesShort: ['вск','пнд','втр','срд','чтв','птн','сбт'],
-                dayNamesMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
-                weekHeader: 'Не',
+                dayNamesMin: ['вс','пн','вт','ср','чт','пт','сб'],
+                weekHeader: '',
                 dateFormat: 'dd.mm.yy',
                 firstDay: 1,
                 isRTL: false,
@@ -1619,7 +1620,7 @@ function jsDoAfterLoad() {
 	jsSetDiaryDate(0); //устанавливаю сегодняшнюю дату в дневнике в заголовке
 	
 	//preloader = $('#myloader').krutilka("show"); //глобально регистрирую крутилку
-	preloader = $('#myloader').krutilka({color: "#333", petalWidth: "2px", size:"20"}); //глобально 
+	preloader = $('#myloader').krutilka({color: "#FFF", petalWidth: "3px", size:"19"}); //глобально 
 				
 	$(window).bind('hashchange', jsSethash ); //при смене хеша, запускать функцию перехода на заметку
 			

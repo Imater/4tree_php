@@ -75,6 +75,10 @@ $db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 <style>
 
+#login_page,#reg_page {
+height: 100%;
+width: 100%;
+}
 
 #login_form {
 	margin: 0 auto;

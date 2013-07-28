@@ -535,7 +535,7 @@ if(isset($_GET['test']))
 
 				
 			  <div id="calendar" class="noselectable1">
-				</div>	
+			  </div>	
 
 				<div class="favorit_tabs noselectable" id="fav_calendar">
     				<ul>
