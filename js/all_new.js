@@ -44,8 +44,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				  $(".send_mail_form").slideUp(300);
 //				  $(".search_panel_result,.search_arrow").slideUp(200);
 				  $("#minicalendar").remove();
-				  $(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
-				  $.Menu.closeAll();
+//				  $(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
+				  //$.Menu.closeAll();
 		 }
 		 
 		 //клик по Названию дела. ntitle = $(".ntitle"). Нужно для определения двойного клика.
@@ -677,8 +677,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 
 		 //открыть заметку с номером, если она на экране (make .selected)
 		 this.jsOpenNode = function(id,nohash,iamfrom) {
-			      $(".makedone,.makedone_arrow,.makedone_arrow2").hide();
-			      $.Menu.closeAll();
+//			      $(".makedone,.makedone_arrow,.makedone_arrow2").hide();
+//			      $.Menu.closeAll();
 
 			this_db.jsPathTitle(id);
 
