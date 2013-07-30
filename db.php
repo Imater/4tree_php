@@ -1623,14 +1623,14 @@ if (!($tt = $server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
 
 
 
-   $token = $_GET['token'];
+   @$token = $_GET['token'];
 	
   // echo $token."<br>";
    
 //   @$email = $_COOKIE['4tree_email_md'];
 //   @$passw = $_COOKIE['4tree_passw'];
    
-   $social = $_COOKIE['4tree_social_md5'];
+   @$social = $_COOKIE['4tree_social_md5'];
    
       
    if($social) {

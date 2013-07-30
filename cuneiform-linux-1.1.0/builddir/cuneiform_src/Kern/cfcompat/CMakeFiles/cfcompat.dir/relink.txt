@@ -1,1 +1,0 @@
-/usr/bin/gcc  -fPIC  -Wl,-Bsymbolic -shared -Wl,-soname,libcfcompat.so.0 -o CMakeFiles/CMakeRelink.dir/libcfcompat.so.1.1.0 CMakeFiles/cfcompat.dir/cfcompat.c.o -ldl 

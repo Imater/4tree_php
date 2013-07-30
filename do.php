@@ -296,7 +296,7 @@ echo '		</div>';
 if (isset($_POST['phone'])) 
 {
 $fpk_id = 11;
-require_once("config.php");
+//require_once("config.php");
 $jstree = new json_tree();
 
 setcookie('fpk_id',11,time()+60*60*24*60);
@@ -332,7 +332,7 @@ fclose($fp);
 exit;
 }
 
-  require_once("config.php");
+//  require_once("config.php");
 
 
 if (isset($HTTP_POST_VARS['reremember'])) 
@@ -2774,7 +2774,7 @@ return $answer;
 
 function make_tree_path($path)
 {
-require_once("config.php");
+//require_once("config.php");
 
 $jstree = new json_tree();
 
@@ -3236,7 +3236,7 @@ exit;
 //http://localhost/fpk/990990/do.php?createdo=test&start=Thu%2C%2009%20Aug%202012%2007%3A00%3A00%20GMT&end=Thu%2C%2009%20Aug%202012%2009%3A30%3A00%20GMT&allday=false&manager=null
 if (isset($_GET['createdo'])) 
 {
-require_once("config.php");
+//require_once("config.php");
 
   $start = explode("GMT",$HTTP_GET_VARS['start']);
   $end = explode("GMT",$HTTP_GET_VARS['end']);

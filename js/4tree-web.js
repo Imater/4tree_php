@@ -56,7 +56,7 @@ if(true)
 		});		
      
      
-     if(note_history)
+     if( !(!note_history) )
      	{
    	jsGetToken().done(function(token){ 
    		var lnk = "do.php?history="+note_history.substr(10,500)+"&access_token="+token;

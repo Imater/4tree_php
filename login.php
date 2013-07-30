@@ -513,11 +513,12 @@ function jsClearCurrentBase() { //очищаем существующую баз
    	var d=$.Deferred();
 
    	if( JSON.stringify(db.getSchema().stores).indexOf('tree') != -1 ) //если таблицы tree нет
-       	db.clear().done(function(){ console.info("db cleared"); db.close(); d.resolve(); }).error(function(x){
-	       	alert(x);
+       	db.clear().done(function(){ console.info("db cleared"); d.resolve(); }).fail(function(x){
+	       	alert(1);
        	});
-       else
-       	d.resolve();
+       else {
+ 	    console.info("db cleared"); d.resolve();
+       }
        	
     $.cookie("4tree_passw",null);
     $.cookie("4tree_email",null);

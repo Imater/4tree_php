@@ -1,1 +1,0 @@
-/usr/bin/gcc  -fPIC  -Wl,-Bsymbolic -shared -Wl,-soname,libdif32.so.0 -o libdif32.so.1.1.0 CMakeFiles/dif32.dir/src/dif.c.o CMakeFiles/dif32.dir/src/diffr.c.o CMakeFiles/dif32.dir/src/diffrb.c.o CMakeFiles/dif32.dir/src/sticchar.c.o CMakeFiles/dif32.dir/src/sticdif.c.o CMakeFiles/dif32.dir/src/stictool.c.o 

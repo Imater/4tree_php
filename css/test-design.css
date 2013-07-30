@@ -151,8 +151,8 @@ opacity: 1;
 	margin-top: -2px !important;
 }
 
-#left_calendar .ui-widget-header, #left_calendar .ui-widget-content, #left_calendar .ui-widget-header a,
-#left_calendar .ui-state-default, #left_calendar .ui-widget-content .ui-state-default, #left_calendar .ui-widget-header .ui-state-default {
+body .ui-widget-header, body .ui-widget-content, body .ui-widget-header a,
+body .ui-state-default, body .ui-widget-content .ui-state-default, body .ui-widget-header .ui-state-default {
 border: none;
 background: none;
 color: #000;
@@ -161,9 +161,9 @@ margin: 0 auto;
 text-align: center;
 }
 
-#left_calendar .ui-datepicker th, #left_calendar .ui-datepicker-week-col {
+body .ui-datepicker th, body .ui-datepicker-week-col {
 	font-weight: normal;
-	color:#777;
+	color:#bbbbbb;
 }
 
 
@@ -192,7 +192,7 @@ text-align: center;
 
 #tree_editor {
 	position: absolute;
-	max-width: 1024px;
+	max-width: 1200px;
 	top:55px;
 	left:280px;
 	right: 0px;
@@ -201,6 +201,7 @@ text-align: center;
 	padding-top: 0px;
 /*	overflow: auto;	*/
 	z-index: 0;
+	border-left: 1px solid #888;	
 	
 -moz-transition: all 0.15s; 
 -webkit-transition: all 0.15s;  
@@ -220,8 +221,8 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 }
 
 #tree_editor .settings_in {
-	border-bottom: 1px solid #EEE;
-	padding: 15px;
+	border-bottom: 1px solid #CCC;
+	margin: 0px 15px 15px 15px;
 }
 
 #tree_editor.params_open .all_editor_place
@@ -237,7 +238,11 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 
 
 body.left_panel_hide #tree_editor {
-	left: 0px;
+	left: 0px !important;
+}
+
+body.left_panel_hide .on_resize{
+	display: none;
 }
 
 body.left_panel_hide #top_panel {
@@ -262,7 +267,7 @@ body.left_panel_hide #top_panel {
 }
 
 
-#fav_redactor_btn {
+#fav_redactor_btn,#fav_redactor_btn_comment {
 color: #222;
 border-top: 1px solid #FFF;	
 }
@@ -275,6 +280,7 @@ border-top: 1px solid #FFF;
 	white-space: nowrap;
 	overflow: hidden;
  	box-shadow: 0px 2px 10px #000;
+ 	text-shadow: 0px 1px 0px #999;
 }
 
 #params_header .top_btn {
@@ -413,6 +419,7 @@ transition: all 0.2s;
 	right: 65px;
 	height: 20px;
 	z-index: 3;
+	text-align: center;
 }
 
 
@@ -427,6 +434,7 @@ transition: all 0.2s;
 -o-transition: all 0.2s;  
 transition: all 0.2s;  
 outline: none;
+max-width: 18em;
 	
 }
 
@@ -639,4 +647,93 @@ color: #FFF;
 	background: none;
 	text-indent: inherit;
 
+}
+
+.makedone_header {
+	height: 23px;
+}
+
+.makedone_header ul {
+   list-style: none;
+   margin: 5px 0px;
+   text-align: center;
+   padding: 0px;
+}
+
+.makedone_header li {
+   display: inline-block;
+   margin: 0px 20px;
+   color: #777777;
+   cursor: pointer;
+}
+
+.makedone_header li.active {
+	font-weight: bold;
+}
+
+.makedone_pages {
+}
+
+.makedone_pages .page {
+	display: none;
+}
+
+.makedone_pages .page {
+	padding-bottom: 5px;
+	padding-top: 5px;
+	text-align: center;
+}
+
+#ui-datepicker-div {
+	background: white;
+	padding: 10px;
+	z-index: 5 !important;
+	border: 1px solid #CCC;
+    -webkit-box-shadow:2px 2px 10px #000;
+       -moz-box-shadow:2px 2px 10px #000;
+            box-shadow:2px 2px 10px #000;
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+	
+}
+
+#makedone_date1 {
+	z-index: 5;
+}
+
+#makedone_date1, #makedone_date2, #makedone_time1, #makedone_time2 {
+	padding: 5px 5px;
+	width: 7em;
+	text-align: center;
+	font-size: 1em;
+	margin-right: 5px;
+}
+
+#makedone_time1, #makedone_time2 {
+	width: 5em;
+}
+
+.mini_label {
+	width: 5em;
+	display: inline-block;
+	color: #2f207d;
+	cursor:pointer;
+}
+
+.makedone_h1 {
+font-size: 22px;
+text-align: center;
+margin-top: 5px;
+margin-bottom: 7px;
+}
+
+#icons_and_colors {
+	line-height: 40px;
+}
+
+#icons_and_colors i {
+	font-size: 22px;
+	margin: 0px;
+	padding: 10px;
+	cursor: pointer;
 }

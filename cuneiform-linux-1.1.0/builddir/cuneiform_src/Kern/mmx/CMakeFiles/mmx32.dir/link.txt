@@ -1,1 +1,0 @@
-/usr/bin/gcc  -fPIC  -Wl,-Bsymbolic -shared -Wl,-soname,libmmx32.so.0 -o libmmx32.so.1.1.0 CMakeFiles/mmx32.dir/src/mmx_gra.c.o CMakeFiles/mmx32.dir/src/mmx_ind.c.o CMakeFiles/mmx32.dir/src/mmx_net.c.o CMakeFiles/mmx32.dir/src/mmx_r35.c.o CMakeFiles/mmx32.dir/src/mmxmain.c.o 

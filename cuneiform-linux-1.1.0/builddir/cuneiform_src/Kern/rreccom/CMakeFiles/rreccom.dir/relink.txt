@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC  -Wl,-Bsymbolic -shared -Wl,-soname,librreccom.so.0 -o CMakeFiles/CMakeRelink.dir/librreccom.so.1.1.0 CMakeFiles/rreccom.dir/src/cpp/alphabet.cpp.o CMakeFiles/rreccom.dir/src/cpp/recog.cpp.o CMakeFiles/rreccom.dir/src/cpp/rreccom.cpp.o ../ccom/libccom.so.1.1.0 ../evn32/libevn32.so.1.1.0 ../cfcompat/libcfcompat.so.1.1.0 -ldl ../dif/libdif32.so.1.1.0 

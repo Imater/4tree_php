@@ -1,1 +1,0 @@
-/usr/bin/gcc  -fPIC  -Wl,-Bsymbolic -shared -Wl,-soname,libmsk32.so.0 -o libmsk32.so.1.1.0 CMakeFiles/msk32.dir/src/msk.c.o ../mmx/libmmx32.so.1.1.0 ../cfcompat/libcfcompat.so.1.1.0 -ldl -Wl,-rpath,/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/builddir/cuneiform_src/Kern/mmx:/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/builddir/cuneiform_src/Kern/cfcompat 

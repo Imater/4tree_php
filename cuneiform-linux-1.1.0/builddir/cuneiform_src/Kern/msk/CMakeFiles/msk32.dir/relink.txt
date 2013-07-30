@@ -1,1 +1,0 @@
-/usr/bin/gcc  -fPIC  -Wl,-Bsymbolic -shared -Wl,-soname,libmsk32.so.0 -o CMakeFiles/CMakeRelink.dir/libmsk32.so.1.1.0 CMakeFiles/msk32.dir/src/msk.c.o ../mmx/libmmx32.so.1.1.0 ../cfcompat/libcfcompat.so.1.1.0 -ldl 

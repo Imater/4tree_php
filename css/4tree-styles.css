@@ -288,16 +288,14 @@ box-shadow: inset 0px 0px 8px rgba(0,0,0,1);
 
 .f_text
 {
-max-width: 50%;
-display: inline-block;
 white-space: nowrap;
-padding-top: 10px;
-padding-left: 5px;
-font-size: 0.8em;
-font-weight: bold;
-margin-left: 190px;
+font-size: 1em;
 text-align: center;
-/*text-shadow: -1px 1px 2px white;*/
+position: absolute;
+left: 20px;
+right: 20px;
+top:0px;
+color: #000;
 }
 
 #add_do_panel
@@ -424,7 +422,7 @@ margin-right: 0px;
 overflow-y: auto;
 overflow-x: hidden;
 -webkit-overflow-scrolling: touch;
-max-width: 400px;
+max-width: 1300px;
 }
 
 #slot_scroll {
@@ -676,7 +674,6 @@ bottom: 0px;
 position: absolute;
 left: 0px;
 right: 0px;
-bottom: 21px;
 top: 0px;
 width: auto;
 height: auto;	
@@ -689,6 +686,10 @@ z-index: 2;
 	-o-transition: all 0.15s;  
 	transition: all 0.15s;  
 
+}
+
+#tree_editor.bottom_open_no .all_editor_place {
+	bottom: 21px !important;
 }
 
 .v2 .all_editor_place {
@@ -773,17 +774,30 @@ right: 0px;
 .resize_me
 {
 position: absolute;
-top:0px;
-left: 49%;
-margin-left: 10px;
-height: 96%;
-margin-top: 5px;
-width: 10px;
+top: 0px;
+left: 279px;
+height: auto;
+margin-top: 55px;
+width: 5px;
 text-align: center;
-/* background: red; */
 cursor: col-resize;
-z-index: 2;
+z-index: 6;
+bottom: 0px;
 }
+
+#resize_me2
+{
+position: absolute;
+top: 0px;
+left: 0px;
+right:0px;
+height: 4px;
+text-align: center;
+cursor: row-resize;
+z-index: 6;
+bottom: 0px;
+}
+
 
 .sos
 {
@@ -1028,7 +1042,7 @@ font-size: 0.75em;
 */	
 	
 	overflow: hidden !important;
-	height: 30px !important;
+	height: 20px !important;
 	border-top: 1px solid #CCC;
 
 }
@@ -1036,14 +1050,14 @@ font-size: 0.75em;
 .fc-header
 {
 /*text shadow*/
-	text-shadow: none;
+	text-shadow: 0px 1px 0px #888;
 }
 
 .fc-header-left
 {
 position: absolute;
-top:5px;
-left: 10px;
+top:0px;
+left: 15px;
 }
 .fc-header-center
 {
@@ -1053,14 +1067,14 @@ right: 125px;
 text-align: center;
 text-overflow: ellipsis;
 overflow: hidden;
-top:8px;
+top:3px;
 }
 .fc-header-right
 {
 position: absolute;
 right: 5px;
 width: auto !important;
-top:5px;
+top:0px;
 }
 
 #calendar thead th
@@ -1899,7 +1913,7 @@ ul.menu,
 li.menu-separator.active{
 	background-color: transparent;
 }
-li.active {
+.panel li.active {
 	background-color: #084a9e;
 	color: white;
 }
@@ -2186,7 +2200,7 @@ padding-left: 0px;
 top: 0px;
 }
 
-#fav_redactor_btn {
+#fav_redactor_btn, #fav_redactor_btn_comment {
 position: absolute;
 top: 0px;
 right:0px;
@@ -2199,10 +2213,6 @@ background: #FFF;
 
 #fav_redactor_btn_comment {
 display: none;
-position: absolute;
-top: 30px;
-right:43px;
-padding-left: 0px;	
 }
 
 #fav_calendar li,#fav_mypanel li
@@ -2247,11 +2257,12 @@ box-shadow: none;
 
 #fav_redactor_btn li i, #fav_redactor_btn_comment li i {
 color: inherit;
-font-size: 13px;
+font-size: 12px;
 margin: 0px !important;
 display: inline-block;
 padding-top: 4px;
 padding-left: 6px;
+color: #222;
 }
 #fav_redactor_btn li a, #fav_redactor_btn_comment li a{
 	color: inherit;
@@ -2514,7 +2525,7 @@ color: white;
 display: none;
 width: auto;
 height: auto;
-margin-top: 30px;
+margin-top: 21px;
 color: #000;
 background: #FFF;
 padding-left: 10px;
@@ -3090,22 +3101,8 @@ margin-bottom: 5px;
 
 .makedone
 {
-min-width:383px;
-font-size: 13px;
-position: absolute;
-float: right;
-background: white;
-padding: 10px 10px 2px 10px;
-border: 1px solid #888;
--moz-box-shadow: 2px 2px 8px #444;
--webkit-box-shadow: 2px 2px 8px #444;
-box-shadow: 2px 2px 8px #444;
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
-z-index: 7;
-border-radius: 5px;
-top:200px;
-left:300px;
+font-size: 12px;
+z-index: 2;
 }
 
 #makedone_menu
@@ -3196,17 +3193,10 @@ z-index: 7;
 {
 font-size: 0.8em;
 overflow-x:auto;
-width: 361px;
 }
 
 #makedate
 {
-background: #ECECEC;
-border: 1px outset #C4C4C4;
-border-radius: 10px;
-padding: 10px;
-padding-top: 2px;
-padding-bottom: 0px;
 }
 
 
@@ -3219,8 +3209,6 @@ display: inline-block;
 
 .makelabel
 {
-color: #444;
-width: 168px;
 display: inline-block;
 text-align: right;
 height: 27px;
@@ -3247,7 +3235,7 @@ color: black;
 margin: 0 auto;
 font-size: 1em;
 padding: 4px;
-width: 327px;
+width: 220px;
 text-align: center;
 font-weight: bold;
 margin-top: 10px;
@@ -3273,36 +3261,6 @@ margin-bottom: 5px;
 display: block;
 }
 
-.basket_panel_menu ul,.makedone ul
-{
-display: inline-block;
-list-style: none;
-margin:0px;
-padding: 3px;
-margin-top: -2px;
-vertical-align: top;
-width: 360px;
-}
-
-.basket_panel_menu li,.makedone li
-{
-padding: 4px;
-padding-right: 0px;
-cursor: pointer;
-}
-
-.basket_panel_menu b,.makedone b
-{
-padding: 2px;
-padding-right: 5px;
-font-weight: normal;
-}
-
-.basket_panel_menu b:hover,.makedone b:hover
-{
-background-color: #09358c;
-color:white;
-}
 
 .makedoneall
 {
@@ -3310,15 +3268,6 @@ padding: 2px;
 margin-top: -2px;
 position: absolute;
 left: 200px;
-}
-
-.makedone:before
-{
-top:-20px !important;
-}
-.makedone:after
-{
-top:-19px !important;
 }
 
 .makedoneall:hover
@@ -4596,7 +4545,9 @@ overflow-y: auto;
 }
 
 .comment_in {
-	border-top: 1px solid #EEE;
+	border-top: 1px solid #CCC;
+	margin: 15px 15px;
+	position: relative;
 }
 
 .comment_box
@@ -4973,7 +4924,7 @@ color:black;
 display: none;
 width: auto;
 height: auto;
-margin-top: 30px;
+margin-top: 21px;
 background: #FFF;
 padding-left: 10px;
 overflow-y: auto;
@@ -4988,7 +4939,7 @@ position: absolute;
 top:0px;
 left: 0px;
 right: 0px;
-height: 29px;
+height: 20px;
 vertical-align: middle;
 background: #777777;
 border-top: 1px solid #CCC;
@@ -5044,16 +4995,16 @@ padding: 2px;
 #files_header ul
 {
 margin: 0px;
-padding: 3px 0px;
+padding: 1px 0px;
 }
 
 #files_header li 
 {
 border-radius: 2px;
-font-size: 11px;
+font-size: 10px;
 cursor: pointer;
 display: inline-block;
-padding: 4px 10px 4px 10px;
+padding: 1px 10px 4px 15px;
 }
 
 #files_header li.active
@@ -5138,7 +5089,7 @@ transition: all 0.05s ease-in 0s;
 display: none;
 width: auto;
 height: auto;
-margin-top: 30px;
+margin-top: 21px;
 background: #FFF;
 color: #000;
 overflow-y: auto;
@@ -5156,10 +5107,10 @@ padding: 0px;
 #tree_news li 
 {
 border-radius: 2px;
-font-size: 12px;
+font-size: 10px;
 cursor: pointer;
 display: inline-block;
-padding: 7px 10px 4px 10px;
+padding: 4px 10px 4px 15px;
 }
 
 #tree_news li:hover
@@ -5817,7 +5768,6 @@ display: inline-block;
 }
 
 #remind_time {
-	text-decoration: underline;
 	color:#2f207d;
 	cursor: pointer;
 }

@@ -1,6 +1,0 @@
-<Limit GET POST>
-	require valid-user
-</Limit>
-AuthType Basic
-AuthName ""webstat""
-AuthUserFile /var/www/imater/data/etc/4tree.net.stat.passwd

@@ -1468,13 +1468,13 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 //return true;
 		$("body").unbind("mousemove");
 		$("body").unbind("mouseup");
-		
+
 	$("#mypanel li").not("ui-draggable").draggable({
 				zIndex: 999,
 				delay:100,
 				revert: false,      // will cause the event to go back to its
 				helper:"clone",
-				appendTo: "#content1",
+				appendTo: "body",
 				start: function(event, ui) {
 					console.info("start-drag");
 					$("#mypanel").addClass("li_compact");
@@ -1570,130 +1570,25 @@ function onResize() //вызывается при каждом ресайзе с
 	if($(".ui-resizable-resizing").length) return true;
 	
 			var w = $(document).width();
-			var y = $(document).height();
-			
-			//если мышка подошла близко к краю, то скрываю одну панель
-			if(main_x<28) 
-				{
-				if( !$("html").hasClass("v4") ) {
-					$(".bottom_left").hide();
-					$("#bottom_panel").css("left",20);
-				}
-				main_x = -1;
-				
-				if( $("#content1").hasClass("v2") ) $(".place_of_top").hide();
-				
-				}
-			else
-				{
-				$(".bottom_left").show();
-				$("#bottom_panel").css("left",0);
-				if( $("#content1").hasClass("v2") ) $(".place_of_top").show();
-				}
-
-			if( main_x>72 ) 
-				{
-				$(".bottom_right").hide();
-				$("#bottom_panel").css("right",20);
-
-				$(".bottom_left").css('width','auto');
-				$(".bottom_left").css('right',-15);
-				main_x = 96.5;
-				}
-			else
-				{
-				$(".bottom_left").css('width','100%');
-				$(".bottom_left").css('right','0px');
-				$("#bottom_panel").css("right",0);
-				$(".bottom_right").show();
-				}
-				
-				
-			if(main_y<50)
-			  {
-			  main_y=0;
-			  $(".place_of_top").children("div").hide();
-			  }
-			else
-			  {
-			  $(".place_of_top").children("div").show();
-			  }
-			 
-			  
-			if(main_y>y-150)
-			  {
-			  main_y=y-90;
-			  $(".bottom_left").hide();
-			  if( !$("#content1").hasClass("v2") ) $(".bottom_right").hide();
-			  }
-			else
-			  {
-			if( (main_x>15) && (main_x<85) )
-			  $(".bottom_left,.bottom_right").show();
-			  }
-
-			
+			var y = $(document).height();							
+							
 			//ресайзим ширину главных панелей
-			if(main_x!=97.5) $(".bottom_left").css("width",(main_x)+'%');
-			$(".bottom_right").css("left",main_x+'%');
+			$("#tree_editor").css("left",main_x+'px');
+			if(main_x) $("#tree_left_panel").css("width",(main_x)+'px');
 			
-//			if(main_x==101)	$(".resize_me").css("margin-left","-25px");
-//			else $(".resize_me").css("margin-left","18px");
 			
-			center = main_x;
-			$(".resize_me").css("left",center+'%');
-			$(".sos").css("left",center+'%');
+			$(".resize_me").css("left",main_x+"px");
 
-			y = $(".resize_me").width();
-			
-//			left = -3*(19-y);
-//			$(".resize_me i").css("left",left);
-
-			if( $("#content1").hasClass("v2") ) 
-			  {
-			  $(".place_of_top").css("width",main_x+'%');
-			  }
-			else
-			  $(".place_of_top").css("width",'auto');
-
-			//ресайзим высоту главных панелей
-			if( $("#content1").hasClass("v2") ) 
-			  {
-				$(".place_of_top").height(main_y+5);
-			  }
-			else
-			  {
-				$(".place_of_top").height(main_y);
-			  }
-			  
-			if( $("html").hasClass("v4") ) 
-			  {
-			  $("#wrap").css("min-height",main_y+510); //510 - высота bottom
-			  }
-			  
-			$("#bottom_panel").css('top',main_y);
+			$("#tree_editor .all_editor_place").css('bottom',main_y);
+			$("#tree_editor .calendar_and_others").css('height',main_y);
 			
 			
 			var newheight=$('#calendar').parent("div").height()-30;
 			if( $("#content1").hasClass("v3")  ) newheight += 0;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
-			$(".search_panel_result").height(newheight);
-			$("#tree_news").height(newheight);
-			$("#tree_files_panel").height(newheight);
-			
-//			$("#tree_comments").height(newheight);
-			
-			if( $("#comment_enter").parents(".comment_box").length ) 
-				{
-				var reply_height = 0;
-				}
-			else 
-				{
-				var reply_height = parseInt( $("#comment_enter").height(),10 );
-				}
-			
-//			$("#tree_comments_container").height( newheight - reply_height );
-
+			$(".search_panel_result").height(newheight-21+9);
+			$("#tree_news").height(newheight-21+9);
+			$("#tree_files_panel").height(newheight-21+9);			
 
 			jsSetTimeNow(); //обновляю указатель текущего времени
 			
@@ -2092,11 +1987,11 @@ var t2;
 function jsTitle(title,tim) //вывод подсказок в левый нижний угол
 {
 var mytim = tim;
-if (!tim) mytim = 5000;
+if (!tim) mytim = 15000;
 
  $('.f_text').html(title).fadeIn('slow');
  clearTimeout(t2);
- if(mytim<60000) t2 = setTimeout(function() { $('.f_text').fadeOut('slow').html('');} ,mytim);
+ if(mytim<60000) t2 = setTimeout(function() { $('.f_text').fadeOut('slow',function(){ $('.f_text').html(''); });} ,mytim);
 
 }
 

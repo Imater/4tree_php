@@ -1,1 +1,0 @@
-/usr/bin/c++  -fPIC  -Wl,-Bsymbolic -shared -Wl,-soname,libcstr.so.0 -o libcstr.so.1.1.0 CMakeFiles/cstr.dir/src/cgraph.cpp.o CMakeFiles/cstr.dir/src/cstr.c.o ../ccom/libccom.so.1.1.0 -Wl,-rpath,/var/www/imater/data/www/4tree.ru/cuneiform-linux-1.1.0/builddir/cuneiform_src/Kern/ccom 

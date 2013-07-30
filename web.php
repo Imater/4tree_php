@@ -113,11 +113,11 @@ echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
     
     
     
-	<link rel="stylesheet" type="text/css" href="redactor900/redactor/redactor.css">
+	<link rel="stylesheet" type="text/css" href="redactor904/redactor/redactor.css">
 	<link rel="stylesheet" type="text/css" href="css/4tree-styles.css">
 
-	<script src="redactor900/redactor/redactor.js"></script>
-	<script src="redactor900/redactor/ru.js"></script>
+	<script src="redactor904/redactor/redactor.js"></script>
+	<script src="redactor904/redactor/ru.js"></script>
 	<script src="js/4tree-web.js"></script>
 
 <script type="text/javascript">
