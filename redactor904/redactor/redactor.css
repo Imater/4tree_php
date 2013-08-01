@@ -72,7 +72,7 @@ body .redactor_box_fullscreen {
 
 .redactor_editor,
 .redactor_editor:focus,
-.redactor_editor div,
+.redactor_editor div:not(.divider_count):not(.divider_red):not(.mailfrom),
 .redactor_editor p,
 .redactor_editor ul,
 .redactor_editor ol,
@@ -81,7 +81,7 @@ body .redactor_box_fullscreen {
 .redactor_editor blockquote,
 .redactor_editor pre {
 	font-size: 15px !important;
-	line-height: 1.5em;
+	line-height: 1.3em;
 }
 
 .redactor_editor,
@@ -120,7 +120,7 @@ body .redactor_box_fullscreen {
 	height: auto;
 }
 
-.redactor_editor div,
+.redactor_editor div:not(.divider_count),
 .redactor_editor p,
 .redactor_editor ul,
 .redactor_editor ol,
@@ -131,7 +131,7 @@ body .redactor_box_fullscreen {
 	margin: 0;
 	margin-bottom: 10px !important;
 	border: none;
-	background: none !important;
+	background: none;
 	box-shadow: none !important;
 }
 .redactor_editor iframe,

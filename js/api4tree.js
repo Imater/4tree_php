@@ -2644,10 +2644,20 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 			  $('.makedone_header').delegate("li","click",function() {
 			  	var page_id = $(this).attr("myid");
-			  	$(".makedone_header .active").removeClass("active");
-			  	$(this).addClass("active");
-			  	$('.makedone_pages .page').hide();
-			  	$("."+page_id).show();
+			  	if( $(this).hasClass("active") ) {
+					$('.makedone_pages .page').slideUp(100);  	
+				  	$(this).removeClass("active");
+			  	} else {
+				  	var is_visible = $('.makedone_pages .page:visible').length;
+				  	$('.makedone_pages .page').hide();
+				  	if(!is_visible)	{ 
+				  		$("."+page_id).slideDown(100);
+				  	} else {
+					  	$("."+page_id).show();
+				  	}
+				  	$(".makedone_header .active").removeClass("active");
+				  	$(this).addClass("active");
+			  	}
 			  	return false;
 			  });
 			  
@@ -6069,15 +6079,15 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  }
 		  
 		  function save_all_text_in_a_while(e, html) {
-		  			  
+
 	  		  		  if(",39,37,40,38,".indexOf(","+e.keyCode+",")!=-1) return true;
-  					  note_saved=false;
+  					  note_saved=true;
   					  //console.info("start_change_timer");
   					  clearTimeout(my_autosave);
   					  my_autosave = setTimeout( function() { 
   					      api4editor.jsSaveAllText(1); 
-  					    //  console.info("SAVING");
-  					  }, 1000 );
+  					      console.info("SAVING");
+  					  }, 500 );
 		  }			  
 		  
 		  function refresh_file_panel() {
@@ -6264,7 +6274,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 	   		}, 1000)
 	   		
 //	   		$(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(300);
-	   		$.Menu.closeAll();
+//	   		$.Menu.closeAll();
 		  }
 		  		  
 		  //сохраняет текст в DB и выбирает ему иконку
@@ -6335,7 +6345,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			  		var text = $("<div>"+html_from_editor+"</div>").find(".divider_red[myid='"+ id +"']").
 			  					next(".edit_text:first").html();
 			  		var md5text = $(el).attr('md5');
-			  		if(md5text=="-1651830642") md5text = "312119037";
+			  		if(md5text=="-1651830642") md5text = "1213863317";
 			  		var new_md5 = crc32(text);
 					if( new_md5 != md5text ) { 
 						jsSaveOneTextIfChanged(id, md5text, text); 
@@ -6348,6 +6358,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 					var text = html_from_editor;
 					var md5text = myr.attr("md5");
 			  		var new_md5 = crc32(text);
+			  		if(md5text=="-1651830642") md5text = "1213863317";
 //			  		console.info("new_length:",text.length,text);
 					if( (new_md5 != md5text) ) { 
 						jsSaveOneTextIfChanged(id, md5text, text);

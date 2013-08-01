@@ -6,6 +6,8 @@
 
 <meta charset="utf-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <head>
 <title>4tree.ru — мои дела</title>
 <meta name="description" content="Сайт для ведения дел, заметок, календаря и так далее. Инструмент таймменеджмента, где всё нужное собранно в одном месте."/>
@@ -361,7 +363,9 @@ $(document).ready(function(){
 			<div id="mypanel" style="">
 			</div>
 		</div>
-		<div id="left_calendar" class="clean_calendar"></div>
+		<div id="left_calendar" class="clean_calendar">
+			<div class="gradient_line"></div>
+		</div>
 		
 		<div id="tree_footer2">
 			<ul class="tree_footer_menu2">
@@ -616,13 +620,14 @@ font-weight: bold;">Поиск</span>
 </div>
 
 			<div id="tree_comments">
+				<div class="gradient_line"></div>
 				<div id="tree_comments_container">
 				</div>
 				<div id="comment_enter_place">
 					<div id="comment_enter">
-						<div class="fullscreen_button icon-resize-full" title="На весь экран"></div>					
+						<!-- <div class="fullscreen_button icon-resize-full" title="На весь экран"></div> -->
 						<div class="comment_enter_input"></div>
-						<div class="comment_send_button" title="alt+enter">отправить <span style='color:#CCC'>(alt+enter)</span></div>
+						<div class="comment_send_button" title="alt+enter">отправить<span style='color:#DFDFDF'>(alt+enter)</span></div>
 					</div>
 				</div>
 				
@@ -630,16 +635,15 @@ font-weight: bold;">Поиск</span>
 
 
 <div class="makedone">
-	   <div class="makedone_h1" contenteditable="true">Записки дебианщика</div>
 	   <div class="makedone_header noselectable">
 	   		<ul>
-	   			<li class="active" myid="makedone_page_1">даты</li>
-	   			<li myid="makedone_page_2">поделиться</li>
-	   			<li myid="makedone_page_3">оформление</li>
-	   			<li myid="makedone_page_4">управление</li>
+	   			<li myid="makedone_page_1"><i class="icon-calendar"></i></li>
+	   			<li myid="makedone_page_2"><i class="icon-export-1"></i></li>
+	   			<li myid="makedone_page_3"><i class="icon-heart"></i></li>
+	   			<li myid="makedone_page_4"><i class="icon-tools"></i></li>
 	   		</ul>
 	   </div>
-	   
+	   	   
 	   <div class="makedone_pages">
 
 		   <div class="makedone_page_1 page">
@@ -672,9 +676,15 @@ font-weight: bold;">Поиск</span>
 		    <div class="makedone_page_3 page">
 		    	<div id="icons_and_colors"></div>
 		    </div> <!-- page2 -->
+
+		    <div class="makedone_page_4 page">
+		    	Распечатать
+		    </div> <!-- page2 -->
 		    
 			
-		</div>
+		</div> <!-- pages -->
+	    <div class="makedone_h1" contenteditable="true">Записки дебианщика</div>
+
 <!--	<div class="makedel" title="Удалить элемент"><i class="icon-trash-1" style="color:#999"></i></div> -->
 </div>
 

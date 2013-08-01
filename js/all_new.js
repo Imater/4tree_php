@@ -1633,6 +1633,8 @@ function jsDoAfterLoad() {
 		
 	if(!main_x) main_x = parseFloat(50);
 	if(!main_y) main_y = parseFloat(250);
+
+	if(main_x<200) main_x = 250;
 		
     current_tab = 1;
 	

@@ -139,12 +139,24 @@ opacity: 1;
 
 #left_calendar {
 	position: absolute;
-	left: 5px;
-	right: 30px;
+	left: 10px;
+	right: 10px;
 	width: auto;
-	bottom:50px;
-	height: 175px;
+	bottom:45px;
+	height: 185px;
 	font-size: 11px;
+}
+
+.gradient_line {
+  background:-moz-linear-gradient(left, rgba(237, 237, 237, 0.4) 0%,#CCC 50%,rgba(237, 237, 237, 0.4) 100%); 
+  background:-webkit-linear-gradient(left, rgba(237, 237, 237, 0.4) 0%,#CCC 50%,rgba(237, 237, 237, 0.4) 100%); 
+  background:linear-gradient(left, rgba(237, 237, 237, 0.4) 0%,#CCC 50%,rgba(237, 237, 237, 0.4) 100%);
+  width: 100%;
+  height: 1px;
+}
+
+.ui-datepicker-inline {
+	padding-top: 10px;
 }
 
 .ui-datepicker .ui-datepicker-title {
@@ -163,7 +175,8 @@ text-align: center;
 
 body .ui-datepicker th, body .ui-datepicker-week-col {
 	font-weight: normal;
-	color:#bbbbbb;
+	color:#CCC;
+	padding: 1px 0px !important;
 }
 
 
@@ -221,8 +234,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 }
 
 #tree_editor .settings_in {
-	border-bottom: 1px solid #CCC;
-	margin: 0px 15px 15px 15px;
+	margin: 0px 15px 35px 15px;
 }
 
 #tree_editor.params_open .all_editor_place
@@ -566,12 +578,14 @@ ul.tabs > li:before, ul.tabs > li:after{
 ul.tabs > li:before{
   border-color : transparent #3f3f3f transparent transparent;
   -webkit-transform : rotate(58deg);
+  -moz-transform : rotate(58deg);
   left: -10px;
 }
 
 ul.tabs > li:after{
   border-color : transparent transparent transparent #3f3f3f;
   -webkit-transform : rotate(-58deg);
+  -moz-transform : rotate(-58deg);
   right: -10px;
 }
 
@@ -616,7 +630,6 @@ color: #FFF;
 }
 
 #tab_find {
-	margin-top: 30px !important;
 }
 
 #tree_footer2 ul {
@@ -627,10 +640,10 @@ color: #FFF;
 
 #tree_footer2 ul li{
 	padding: 5px 5px;	
-	background: rgba(119, 119, 119, 0.5);
+	background: #888;
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
-	margin-top: 1px;	
+	margin-top: 2px;	
 	cursor: pointer;
 }
 
@@ -638,8 +651,6 @@ color: #FFF;
 	background: #FFF;
 	color: #000;
 	box-shadow: 0px 0px 8px #000;
-	margin-left: -2px;
-	width: 18px;	
 }
 
 
@@ -649,29 +660,62 @@ color: #FFF;
 
 }
 
+.align_left {
+	float: left;
+}
+
+.align_right {
+	float: right;
+}
+
 .makedone_header {
-	height: 23px;
+margin-top: -5px;
+position: absolute;
+left: 0px;
+right: 0px;
+top:-5px;
 }
 
 .makedone_header ul {
    list-style: none;
-   margin: 5px 0px;
+   margin: 1px 0px;
    text-align: center;
    padding: 0px;
+   font-size: 0px;
 }
 
 .makedone_header li {
+   font-size: 14px;
    display: inline-block;
-   margin: 0px 20px;
-   color: #777777;
+   padding: 0px;
+   background: #888;
+   border-bottom-left-radius: 5px;
+   border-bottom-right-radius: 5px;
+   margin-top: 0px;
    cursor: pointer;
+   color: #FFF;
+   text-shadow: 0px 1px 0px #000;
+   height: 33px;
+   width: 30px;
+   margin-right: 2px;
+}
+
+.makedone_header li i{
+	display: block;
+	margin-top: 14px;
+	margin-left: 3px;
 }
 
 .makedone_header li.active {
-	font-weight: bold;
+	color: #000;
+	background: #FFF;
+	box-shadow: 0px 1px 7px rgba(80,80,80,1);
+    text-shadow: none;
 }
 
 .makedone_pages {
+	margin-top: -30px;
+	min-height: 25px;
 }
 
 .makedone_pages .page {
@@ -679,9 +723,14 @@ color: #FFF;
 }
 
 .makedone_pages .page {
-	padding-bottom: 5px;
-	padding-top: 5px;
 	text-align: center;
+	padding: 45px 5px 20px 5px !important;
+	box-shadow: inset 0px 0px 3px rgba(180,180,180,1);
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+	border: 1px solid #CCC;
+	border-top: none;
+	background: #ededed;
 }
 
 #ui-datepicker-div {
@@ -723,16 +772,16 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 .makedone_h1 {
 font-size: 22px;
 text-align: center;
-margin-top: 5px;
+margin-top: 12px;
 margin-bottom: 7px;
 }
 
 #icons_and_colors {
-	line-height: 40px;
+	line-height: 30px;
 }
 
 #icons_and_colors i {
-	font-size: 22px;
+	font-size: 18px;
 	margin: 0px;
 	padding: 10px;
 	cursor: pointer;

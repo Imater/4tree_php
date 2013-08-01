@@ -1829,51 +1829,10 @@ function jsSetTimeNow() //устанавливаю красную полоску
 
 function jsMakeLeftRightPanelResizable() //настраиваю ресайзы и джойстик
 {
-  $('.resize_me,.sos').bind("touchstart", function(e)
-     { 
-			  e.preventDefault();
-			  
-			  if( e.pageY > ($(".sos").offset().top+21) ) may_vertical = false;
-			  else may_vertical = true; //в каких направлениях ресайзить
-			  
-
-			  $('.bottom_left,.resize_me i').addClass('noselectable');
-
-
-		$('body').bind("touchmove",function(e){
-			  var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-			  
-			  e.pageX = touch.pageX;
-			  e.pageY = touch.pageY;
-			  
-			  w = $(document).width();
-			  neww = e.pageX-25;			  
-			  if(may_vertical) //меняю только горизонтальный размер
-				{
-				newy = e.pageY-$("#header").height()-15;
-				main_y = newy;//высота верхней панели в пикселях
-				}
-			   procent = parseInt( 100*(parseFloat(neww)/parseFloat(w)*100),10 )/100;
-			   main_x = procent;
-			   onResize();	
-		       });
-
-
-     });
-
-  $("body").bind("touchend", function()
-     { 
-		$("body").unbind("touchmove");
-	    $('.bottom_left,.resize_me i').removeClass('noselectable');
-
-		$.cookie('main_x',main_x,{ expires: 300 });			
-		$.cookie('main_y',main_y,{ expires: 300 });			
-
-     });
 
 
 
-if(true)
+if(false)
   $("body").on('mousedown.presize','.presize', function(e)
      { 
 			  e.preventDefault();

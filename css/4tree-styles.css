@@ -1562,14 +1562,16 @@ margin: 0px !important;
 .countdiv
 {
 display: inline-block;
-font-size: 0.45em;
+font-size: 0.4em;
 color: #e2edf7;
 vertical-align: middle;
-color: #FFF;
+color: #CCC;
+font-style: normal;
 position: absolute;
 left: 0px;
+right:0px;
 bottom: 0.5em;
-right: 1px;
+font-weight: bold;
 text-align: center;
 }
 
@@ -2018,9 +2020,9 @@ right: 0px;
 }
 .panel_type1 .node_img
 {
-background-size: 1em 1em;
-width: 1em;
-height: 1em;
+background-size: 1.2em 1.08em;
+width: 1.3em;
+height: 1.08em;
 }
 /*
 .panel_type1 .panel ul li:first-child
@@ -3101,6 +3103,8 @@ margin-bottom: 5px;
 
 .makedone
 {
+position: relative;
+top:30px;
 font-size: 12px;
 z-index: 2;
 }
@@ -4545,7 +4549,6 @@ overflow-y: auto;
 }
 
 .comment_in {
-	border-top: 1px solid #CCC;
 	margin: 15px 15px;
 	position: relative;
 }
@@ -4678,11 +4681,11 @@ cursor: pointer;
 {
 width: 100%;
 position: absolute;
-background: rgb(240,240,240);
-border: 1px solid #d3d6e0;
-height: 100px;
+/*background: rgb(240,240,240);
 border-radius: 5px;
 border-top-left-radius: 0px;
+border: 1px solid #d3d6e0;*/
+height: 100px;
 }
 
 .comment_enter_img
@@ -4794,7 +4797,7 @@ padding: 2px 5px 2px 5px;
 #comment_enter .redactor_editor dl,
 #comment_enter .redactor_editor blockquote
 	 {
-	font-size: 13px !important;
+/*	font-size: 13px !important; */
 	line-height: 1.1em !important;
 	right:0px;
 }
