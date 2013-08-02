@@ -10,7 +10,7 @@
 	Usage: $('#content').redactor();
 */
 
-var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-italic',  deleted:'icon-font', unorderedlist:'icon-list-1', orderedlist:'icon-list-numbered', outdent:'icon-indent-left', indent:'icon-indent-right', image:'icon-picture-1', video:'icon-video-1', file:'icon-attach', table:'icon-th-1', link:'icon-link-1', fontcolor:'icon-palette', backcolor:'icon-tint', alignment:'icon-align-center', horizontalrule:'icon-minus'}; // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-italic',  deleted:'icon-font', unorderedlist:'icon-list-1', orderedlist:'icon-list-numbered', outdent:'icon-indent-left', indent:'icon-indent-right', image:'icon-picture-1', video:'icon-video-1', file:'icon-attach', table:'icon-th-1', link:'icon-link-1', fontcolor:'icon-palette', backcolor:'icon-tint', alignment:'icon-align-center', horizontalrule:'icon-minus',html:'icon-terminal'}; // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 //4TREE
 
 (function($)
@@ -156,7 +156,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 
 			buttonsCustom: {},
 			buttonsAdd: [],
-			buttons: ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', 'outdent', 'indent', '|', 'image', 'video', 'file', 'table', 'link', '|', 'fontcolor', 'backcolor', '|', 'alignment', '|', 'horizontalrule'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
+			buttons: ['bold', 'italic', 'deleted', '|', 'unorderedlist', 'orderedlist', '|', 'image', 'file', 'table', 'link', 'video', '|', 'fontcolor', 'backcolor', '|', 'alignment', 'outdent', 'indent', '|', 'horizontalrule','html','formatting'], // 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'
 			colors: ['#ffffff', '#000000', '#eeece1', '#1f497d', '#4f81bd', '#c0504d', '#9bbb59', '#8064a2', '#4bacc6', '#f79646', '#ffff00', '#f2f2f2', '#7f7f7f', '#ddd9c3', '#c6d9f0', '#dbe5f1', '#f2dcdb', '#ebf1dd', '#e5e0ec', '#dbeef3', '#fdeada', '#fff2ca', '#d8d8d8', '#595959', '#c4bd97', '#8db3e2', '#b8cce4', '#e5b9b7', '#d7e3bc', '#ccc1d9', '#b7dde8', '#fbd5b5', '#ffe694', '#bfbfbf', '#3f3f3f', '#938953', '#548dd4', '#95b3d7', '#d99694', '#c3d69b', '#b2a2c7', '#b7dde8', '#fac08f', '#f2c314', '#a5a5a5', '#262626', '#494429', '#17365d', '#366092', '#953734', '#76923c', '#5f497a', '#92cddc', '#e36c09', '#c09100', '#7f7f7f', '#0c0c0c', '#1d1b10', '#0f243e', '#244061', '#632423', '#4f6128', '#3f3151', '#31859b', '#974806', '#7f6000'],
 
 			activeButtons: ['deleted', 'italic', 'bold', 'underline', 'unorderedlist', 'orderedlist', 'alignleft', 'aligncenter', 'alignright', 'justify', 'table'],
@@ -188,7 +188,7 @@ var 			buttons_i = {html:'icon-terminal', formatting: 'icon-wrench', bold:'icon-
 			allowedTags: false,
 			deniedTags: ['html', 'head', 'link', 'body', 'meta', 'script', 'style', 'applet'],
 
-			boldTag: 'strong',
+			boldTag: 'b',
 			italicTag: 'em',
 
 			// private

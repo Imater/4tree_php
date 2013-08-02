@@ -861,6 +861,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	clearTimeout(open_redactor_timer);
 		 	open_redactor_timer = setTimeout(function()
 		 		{
+		 		api4tree.jsSetSettings(id);
 		 	 	api4editor.jsRedactorOpen([id],iamfrom); 
 		 	 	jsCalendarNode(id);
 		 	 	jsAddFavRed("",id);
@@ -1101,7 +1102,7 @@ var API_4OTHERS = function() {
 	
 	      if ((!resttime) || (resttime<0)) { //если время уже давно вышло, сбрасываю
 	      	$("#pomidoro_icon i").removeClass("pomidor_now");
-	      	$("#pomidoro_icon").hide();
+	      	$("#left_panel").removeClass("show_pomidors");
 	
 	      	localStorage.setItem("pomidor_id","0"); 
 	        localStorage.setItem("pomidor_endtime","0");
@@ -1217,6 +1218,11 @@ var API_4OTHERS = function() {
 		
 		 //регистрация иконок работы с помидорро
 		this.jsMakePomidorKeys = function() {
+		
+			$("#show_pomidors_panel").on("click", function() {
+			   $("#tree_left_panel").toggleClass("show_pomidors");
+			   return false;
+			});
 
 			$("#myslidemenu").on("click",".timer_button", timer_button_click);
 	        $('#pomidoro_icon').on("click","i", timer_button_click);
@@ -1234,7 +1240,7 @@ var API_4OTHERS = function() {
 	           
 	           var new_x = parseInt(my_min*513/80,10);
 	           $("#pomidor_scale").stop().animate({"margin-left":new_x-5},500).animate({"margin-left":new_x},100);
-	           setTimeout(function(){ $("#pomidoro_icon").show(); },1200); //отображаю панель с помидорками
+	           setTimeout(function(){ $("#left_panel").addClass("show_pomidors"); },10); //отображаю панель с помидорками
 	       	   api4others.goPomidor();
 	       	   return false;
 	        };
@@ -1579,6 +1585,7 @@ function jsDoFirst() { //функция, которая выполняется �
 			//jsLoadWelcome();
 			jsProgressStep(); $("#load_screen").hide();  
 			check_hash_add_do();
+			$("li[myid=makedone_page_1]").click();
 			if(false)
 			setTimeout(function(){
 				alert("Шоу начинается!")

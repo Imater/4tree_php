@@ -60,11 +60,6 @@ z-index: 50;
 display: none;
 }
 
-#pomidor:hover
-{
-opacity: 1;
-filter: alpha(opacity=100);
-}
 
 #redactor
 {
@@ -76,6 +71,10 @@ padding: 10px;
 background: rgb(246, 253, 237) !important;
 padding: 10px 10px 5px 10px;
 border: 1px solid rgb(142, 185, 96) !important;
+}
+
+.show_pomidors .my_pomidors {
+	display: block;
 }
 
 .my_pomidors li b
@@ -101,14 +100,17 @@ margin-bottom: 0px !important;
 font-size: 10px !important;
 }
 
+
+
 #pomidor
 {
-border-left: 2px solid #111;
-border-right: 2px solid #111;
+border-left: 1px solid rgba(0,0,0,0.3);
+border-right: 1px solid rgba(0,0,0,0.3);
 border-top: 1px solid rgba(0,0,0,0.3);
 border-bottom: 1px solid rgba(0,0,0,0.3);
 opacity: 1;
 margin-top: 0px;
+/*
 background: black;
 background-image: linear-gradient(right , #1F1F1F 0%, #6B6B6B 46%, #666666 54%, #242424 100%);
 background-image: -o-linear-gradient(right , #1F1F1F 0%, #6B6B6B 46%, #666666 54%, #242424 100%);
@@ -125,13 +127,20 @@ background-image: -webkit-gradient(
 	color-stop(0.54, #666666),
 	color-stop(1, #242424)
 );
+*/
 border-radius: 0px;
 position: absolute;
-height: 19px;
-right: 14px;
-bottom: 2px;
+height: 13px;
+left: 50%;
+margin-left: -43px;
+bottom:3px;
 overflow: hidden;
+z-index: 5;
+width: 85px;
 }
+
+
+
 #pomidor_scale
 {
   background-image:url(../img/pomidor-top.png);
@@ -142,10 +151,15 @@ overflow: hidden;
 }
 #pomidor_bottom
 {
-  background-image:url(../img/pomidor-bottom.png);
-  background-repeat: no-repeat;
-  height: 5px;
-  width: 85px;
+position: absolute;
+left:50%;
+width: 1px;
+height: 16px;
+background: rgba(255,255,255,0.8);
+bottom: 0px;
+margin-left: -1px;
+cursor: col-resize;
+box-shadow: 1px 0px 1px rgba(0,0,0,0.8);
 }
 
 
@@ -627,6 +641,10 @@ margin-right: 0px;
 width: auto;	        
 }
 
+.show_pomidors #top_panel {
+	bottom: 245px;
+}
+
 #bottom_panel #top_panel /* Верхняя панель */
 {
 position: absolute;
@@ -955,7 +973,11 @@ color: white !important;
 .redactor_editor blockquote,
 .redactor_editor pre {
 	font-size: 12px !important;
-	line-height: 1.3em;
+	line-height: 1.2em;
+}
+
+.redactor_editor div:not(.divider_count), .redactor_editor p, .redactor_editor ul, .redactor_editor ol, .redactor_editor table, .redactor_editor dl, .redactor_editor blockquote, .redactor_editor pre {
+margin-bottom: 5px !important;
 }
 
 .redactor_editor table {
@@ -1115,6 +1137,7 @@ width: 3px;
 top:4px;
 border: none !important;
 background: none !important;
+text-align: center;
 }
 
 
@@ -2238,18 +2261,22 @@ width: 25px;
 }
 
 #fav_redactor_btn li,#fav_redactor_btn_comment li {
+float: none !important;
+display: inline-block;
 height: 20px;
 padding: 0px;
-width: 24px;
+width: 21px;
 border-top-right-radius: 0px;
 border-bottom-right-radius: 0px;
 border-top-left-radius: 0px;
 border-bottom-left-radius: 0px;
-text-align: left;
+text-align: center;
 }
 
 #fav_redactor_btn .redactor_separator:hover,#fav_redactor_btn_comment .redactor_separator:hover {
 box-shadow: none;
+float: none !important;
+
 }
 
 #fav_redactor_btn .redactor_separator,#fav_redactor_btn_comment .redactor_separator {
@@ -2263,7 +2290,7 @@ font-size: 12px;
 margin: 0px !important;
 display: inline-block;
 padding-top: 4px;
-padding-left: 6px;
+padding-left: 3px;
 color: #222;
 }
 #fav_redactor_btn li a, #fav_redactor_btn_comment li a{
@@ -2888,37 +2915,50 @@ cursor: col-resize;
 
 }
 
+#show_pomidors_panel {
+	padding: 4px 2px;
+	cursor: pointer;
+}
 
-
-#pomidoro_icon i
-{
-color: white;
+#show_pomidors_panel:hover {
+	color: #000;
 }
 
 #pomidoro_icon
 {
-display: none;
-position: fixed;
-right: 14px;
-bottom: 23px;
+display: none; 
+position: absolute;
+left: 0px;
+right: 0px;
+text-align: center;
+bottom: 18px;
 vertical-align: top;
 cursor: pointer;
-background: rgba(0,0,0,0.95);
-padding: 5px;
+background: #777;
+padding: 1px;
 padding-left: 10px;
 padding-right: 10px;
-border-radius: 20px;
 font-size: 12px;
-border: 2px solid rgba(0,0,0,1);;
 z-index: 5;
-border-bottom-right-radius: 0px;
+height: 20px;
+line-height: 18px;
+white-space: nowrap;
 }
 
+.show_pomidors #pomidoro_icon {
+	display: block;
+}
+
+#pomidoro_icon i
+{
+color: #000;
+margin-top: 0px;
+line-height: 12px;
+}
 
 #pomidoro_icon .icon-hourglass
 {
-font-size: 12px;
-line-height: 20px;
+font-size: 13px;
 }
 
 #pomidoro_icon i::before
@@ -2927,13 +2967,14 @@ margin-right: 5px !important;
 }
 #pomidoro_icon .icon-record
 {
-font-size: 12px;
+font-size: 15px;
 }
 
 .pomidor_now
 {
-color: #a9ff8e !important;
+color: #FFF !important;
 opacity: 1 !important;
+text-shadow: none !important;
 }
 
 #root-menu-div .pomidor_now
@@ -2952,12 +2993,6 @@ text-align: center;
 {
 display: inline-block;
 text-align: center;
-}
-
-#pomidor:hover #pomidoro_icon,#pomidoro_icon:hover
-{
-display: block !important;
-z-index: 999999;
 }
 
 .fc-cell-overlay
@@ -3750,9 +3785,9 @@ background: #0808A7 !important;
 
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active 
 {
-/*border: 1px solid #000;*/
-color: white;
-/*background: #092279 !important;*/
+color: white !important;
+background: #000 !important;
+border-radius: 50px;
 }
 
 .ui-has-note a::after
@@ -6188,4 +6223,9 @@ color:inherit !important;
 
 .ui-datepicker-week-col {
 /*	display: none; */
+}
+
+.fc-event-content {
+	text-align: center;
+	vertical-align: middle;
 }

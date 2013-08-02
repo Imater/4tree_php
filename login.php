@@ -322,7 +322,7 @@ h1:hover {
 </style>
 
 <script src="./js/jquery-1.8.2.js"></script>
-<script src="jstree/_lib/jquery.cookie.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
 <script src="js/ydn.db-jquery-0.7.5.js"></script>
 <script src="js/md5.js"/></script>
 <script src="js/login.js"/></script>

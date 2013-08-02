@@ -970,6 +970,7 @@ Date.createFromMysql = function(mysql_string)
 
 
 
+
 function jsMakeDate(mydate)
 {
 	today = new Date;

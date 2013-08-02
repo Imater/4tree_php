@@ -128,6 +128,7 @@ top: 7px;
 z-index: 1;
 color: rgba(0,0,0,1);
 cursor: pointer;
+z-index: 3;
 }
 
 .tree_tab_menu li.active .icon-cancel {
@@ -145,6 +146,10 @@ opacity: 1;
 	bottom:45px;
 	height: 185px;
 	font-size: 11px;
+}
+
+.show_pomidors #left_calendar {
+	height: 200px;
 }
 
 .gradient_line {
@@ -234,7 +239,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 }
 
 #tree_editor .settings_in {
-	margin: 0px 15px 35px 15px;
+	margin: 0px 15px 50px 15px;
 }
 
 #tree_editor.params_open .all_editor_place
@@ -392,6 +397,7 @@ margin-top: 0px;
 }
 
 .tree_add_do {
+	display: none;
 	position: absolute;
 	right: 15px;
 	top:2px;
@@ -426,12 +432,16 @@ transition: all 0.2s;
 
 .tree_search {
 	position: absolute;
-	left: 30px;
-	bottom:30px;
-	right: 65px;
+	left: 45px;
+	bottom:36px;
+	right: 60px;
 	height: 20px;
 	z-index: 3;
 	text-align: center;
+}
+
+.show_pomidors .tree_search {
+	bottom: 50px;
 }
 
 
@@ -516,8 +526,7 @@ ul.tabs{
   line-height : 22px;
   max-height: 27px;
   overflow: hidden;
-  display: inline-block;
-  padding-right: 20px;
+  padding-right: 50px;
   padding-left: 50px;
 }
 
@@ -528,7 +537,7 @@ ul.tabs > li.active{
 }
 
 ul.tabs > li.active a{
-  color: #000;
+  color: #FFF;
 }
 
 ul.tabs > li.active:before{
@@ -550,8 +559,10 @@ ul.tabs > li{
   background: #3f3f3f;
   position : relative;
   box-shadow: 0 0px 20px rgba(0,0,0,1);
-  max-width : 90px;
+  max-width : 130px;
 }
+
+
 
 ul.tabs > li > a{
   display: inline-block;
@@ -559,9 +570,14 @@ ul.tabs > li > a{
   overflow: hidden;
   text-overflow: ellipsis;
   text-decoration: none;
-  color: #888;
+  color: #BBB;
   cursor: default;
 }
+
+ul.tabs > li.temp a{
+	font-style: italic;
+}
+
 
 ul.tabs > li:before, ul.tabs > li:after{
   content : '';
@@ -610,6 +626,7 @@ text-shadow: 0px 1px 0px rgba(255,255,255,0.4);
 line-height: 19px;
 vertical-align: middle;
 padding-left: 5px;
+z-index: 5;
 }
 
 .tree_footer i {
@@ -625,8 +642,13 @@ padding-left: 5px;
 right: 0px;
 width: 24px;
 position: absolute;
-bottom: 25px;
+bottom: 32px;
 color: #FFF;
+z-index: 6;
+}
+
+.show_pomidors #tree_footer2 {
+	bottom: 46px;
 }
 
 #tab_find {
@@ -639,10 +661,13 @@ color: #FFF;
 }
 
 #tree_footer2 ul li{
-	padding: 5px 5px;	
-	background: #888;
+	padding: 5px 5px 7px 5px;	
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
+	border: 1px solid #BBB;
+	border-right: none;
+	color: #BBB;
+	font-size: 12px;
 	margin-top: 2px;	
 	cursor: pointer;
 }
@@ -650,7 +675,7 @@ color: #FFF;
 #tree_footer2 ul li.active{
 	background: #FFF;
 	color: #000;
-	box-shadow: 0px 0px 8px #000;
+	box-shadow: 0px 0px 1px #000;
 }
 
 
@@ -679,38 +704,40 @@ top:-5px;
 .makedone_header ul {
    list-style: none;
    margin: 1px 0px;
-   text-align: center;
+   text-align: right;
    padding: 0px;
    font-size: 0px;
 }
 
 .makedone_header li {
-   font-size: 14px;
+   font-size: 12px;
+   text-align: center;
+
    display: inline-block;
-   padding: 0px;
-   background: #888;
+/*   padding: 5px 5px 7px 5px; */
    border-bottom-left-radius: 5px;
    border-bottom-right-radius: 5px;
+   border: 1px solid #BBB;
+   border-top: none;
    margin-top: 0px;
    cursor: pointer;
-   color: #FFF;
-   text-shadow: 0px 1px 0px #000;
+   color: #BBB;
+   text-shadow: 0px 1px 0px #FFF;
    height: 33px;
    width: 30px;
-   margin-right: 2px;
+   margin-left: 2px;
 }
 
 .makedone_header li i{
 	display: block;
-	margin-top: 14px;
+	margin-top: 15px;
 	margin-left: 3px;
 }
 
 .makedone_header li.active {
 	color: #000;
 	background: #FFF;
-	box-shadow: 0px 1px 7px rgba(80,80,80,1);
-    text-shadow: none;
+	box-shadow: -1px 0px 3px rgba(80,80,80,0.5);
 }
 
 .makedone_pages {
@@ -774,6 +801,7 @@ font-size: 22px;
 text-align: center;
 margin-top: 12px;
 margin-bottom: 7px;
+font-weight: bold;
 }
 
 #icons_and_colors {
@@ -785,4 +813,27 @@ margin-bottom: 7px;
 	margin: 0px;
 	padding: 10px;
 	cursor: pointer;
+}
+
+.add_tab {
+background: #3f3f3f;
+height: 14px;
+width: 35px;
+display: inline-block;
+text-align: center;
+margin-left: 5px;
+padding-top: 2px;
+margin-top: 8px;
+border-bottom-left-radius: 17px 21px;
+border-top-right-radius: 17px 23px;
+font-size: 14px;
+padding-left: 1px;
+z-index: 5;
+position: absolute;
+cursor: pointer;
+}
+
+.add_tab:hover {
+background: #777777;
+	
 }

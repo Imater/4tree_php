@@ -337,13 +337,8 @@ $(document).ready(function(){
 
 			
 			<ul class="tree_tab_menu tabs clearfix noselectable">
-				<li><a>Дерево</a><i class="icon-cancel"></i></li>
-				<li><a>Дела</a><i class="icon-cancel"></i></li>
-				<li><a>Что нужно сделать сегодня</a><i class="icon-cancel"></i></li>
-				<li><a>Мысли</a><i class="icon-cancel"></i></li>
-				<li class="active"><a>Новый дизайн</a><i class="icon-cancel"></i></li>
-				<li><a>Активный текст</a><i class="icon-cancel"></i></li>
-				<li><a>Записки дебианщика</a><i class="icon-cancel"></i></li>				
+			<!--	<li><a>Дерево</a><i class="icon-cancel"></i></li> -->
+				<span class="add_tab" title="Добавить запись"><i class="icon-plus"></i></span>
 			</ul>
 		<div id="tree_fav">
 		</div>
@@ -352,7 +347,7 @@ $(document).ready(function(){
 		
 	  <div class="resize_me"></div>
 		
-	  <div id="tree_left_panel">
+	  <div id="tree_left_panel" class="">
 		<div id="top_panel_header">
 			<i class="icon-flow-cascade"></i>
 			<i class="icon-th-4"></i>
@@ -380,7 +375,26 @@ $(document).ready(function(){
 			<input id="search_filter" placeholder="Искать...">
 		</div>
 
-	    <div class="tree_footer"></div>
+	    <div class="tree_footer">
+
+		      <div id="pomidoro_icon" class="noselectable" time="0">
+				      <i id="pomidor1" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+				      <i id="pomidor2" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
+				      <i id="pomidor3" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+				      <i id="pomidor4" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
+				      <i id="pomidor5" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+				      <i id="pomidor6" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
+				      <i id="pomidor7" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
+				      <i id="pomidor8" time="-15" class="icon-glass" title="Отдых 15 минут" text="Далее отдых 15 минут."></i>
+		      </div>
+
+		      <div id="pomidor" title="Таймер">
+				  <div id="pomidor_scale">&nbsp;</div>
+				  <div id="pomidor_bottom">&nbsp;</div>
+			 </div>
+			 <i title="Панель таймеров Pomodorro" id="show_pomidors_panel" class="icon-hourglass"></i>
+
+	    </div>
 
 	  </div> <!-- tree_left_panel -->
 	  
@@ -546,21 +560,6 @@ font-weight: bold;">Поиск</span>
 
 		
 
-  <div id="pomidor" title="Таймер">
-     <div id="pomidor_scale">&nbsp;</div>
-     <div id="pomidor_bottom">&nbsp;</div>
-
-		 <div id="pomidoro_icon" time="0">
-		 <i id="pomidor1" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
-		 <i id="pomidor2" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
-		 <i id="pomidor3" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
-		 <i id="pomidor4" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
-		 <i id="pomidor5" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
-		 <i id="pomidor6" time="-5" class="icon-hourglass" title="Отдых 5 минут" text="Далее отдых 5 минут."></i>
-		 <i id="pomidor7" time="-25" class="icon-record" title="Работа 25 минут" text="Далее 25 минут работы."></i>
-		 <i id="pomidor8" time="-15" class="icon-glass" title="Отдых 15 минут" text="Далее отдых 15 минут."></i>
-		 </div>
-  </div>
 
 					<!-- Шаблоны -->
 				<div id="comment_template" style="display:none">

@@ -796,40 +796,41 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  
     	  	this_db.jsCalcTabs();  //раcсчитываю ширину табов и перекидываю лишние в всплывающий список
     	  }
-		      
+    	  
+    	  this.jsOpenTab = function(id) {
+
+	    	  var tab_exist = $("#tree_header li[myid="+id+"]");
+	    	  var element = api4tree.jsFind(id);
+	    	  var title = element.title;
+	    	  
+	    	  if(tab_exist.length) {
+		    	  $("#tree_header li.active").removeClass("active");
+		    	  tab_exist.addClass("active");
+	    	  } else {
+	    	  	  var temp_li = $(".tree_tab_menu li.temp");
+	    	  	  if( temp_li.length ) {
+			    	  $("#tree_header li.active").removeClass("active");
+		    	  	  temp_li.attr("myid",id).addClass("active").find("a").html(title);
+	    	  	  } else {
+			      	  var new_tab = '<li><a>'+ title +'</a><i class="icon-cancel"></i></li>';
+				      $(".tree_tab_menu .add_tab").before(new_tab);
+			      	  $(".tree_tab_menu").find(".active").removeClass("active");
+				      $(".tree_tab_menu li:last").addClass("active").addClass("temp").attr("myid",id);		    	  	  
+	    	  	  }
+		    	  
+	    	  }
+	    	  api4tree.jsCalcTabs();
+    	  }
+    	  		      
 		  this.jsCalcTabs = function() {//устанавливает ширину табов у дневника и у избранных
-    	  	  return true;
 	    	  clearTimeout(calctabs_timer);
 	    	  calctabs_timer = setTimeout(function()
 	    	  	{
-	    	  	$(".favorit_tabs").quickEach(function()
-	    	  		{
-	    	  				var this_tabs = $(this);
-	    	  				
-	    	  				var panel_width = this_tabs.parent('div').outerWidth();
-	    	  				
-	    	  				var all_w = 0;
-	    	  			
-	    	  				this_tabs.find("li").show();
-	    	  				this_tabs.next(".favorit_menu:first").find('ul').html('');
-	    	  				this_tabs.next(".favorit_menu:first").hide();
-	    	  				
-	    	  				this_tabs.find("li").quickEach(function(){
-	    	  					var current_w = $(this).outerWidth();
-	    	  					all_w = all_w + current_w;
-	    	  					
-	    	  					if(all_w>panel_width-25) 
-	    	  					  {
-	    	  					  this_tabs.next(".favorit_menu:first").show();
-	    	  					  ul = this_tabs.next(".favorit_menu:first").find('ul');
-	    	  					  $(this).hide().clone().appendTo(ul).show();
-	    	  					  }
-	    	  					
-	    	  					});
-	    	  		});
-	    	  		
-	    	  	},50);
-    	  
+	    	  	var tabs_count = $("#tree_header li").length;
+	    	  	var w = $(".tree_tab_menu").width();
+	    	  	new_width = parseInt( (w/(tabs_count)) -40 )+"px";
+	    	  	$("#tree_header li").animate({"width":new_width},100);
+				});
     	  
     	  }
 		      
@@ -1207,28 +1208,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 		  }
 
-		  //перемещает меню makedone в нужное место
-		  this.jsPlaceMakedone = function(id) { //размещаю makedone там, где галочка tcheckbox
-		  	var tcheckbox = $("#mypanel #node_"+id).find(".tcheckbox");
-		  	var left = tcheckbox.offset().left-23;
-		  	var mytop = tcheckbox.offset().top+25;
-		  	var wrap_width = $("#wrap").width();
-		  	var make_done_width = $(".makedone").width();
-		    var box_left=left;  
-		    
-		    if(left>wrap_width-70) {
-	    	   left = left - make_done_width+15; 
-	    	   box_left = wrap_width-80;
-    	    } 
-		    	   
-		    if(left<0) { left = 10; box_left=30; }
-		    
-		    if( (left+make_done_width) > wrap_width-50 ) left = wrap_width-make_done_width-50;
-		    $(".makedone").css({ left: left, top: mytop  }).show().attr("myid",id);
-		    $(".makedone_arrow").css({ left: box_left+20, top: mytop-9 }).show();
-		    $(".makedone_arrow2").css({ left: box_left+20, top: mytop-10 }).show();
-		    return left;
-		  }
 		  
 		  //удаление из базы определённого id и удаление его же в LocalStorage
 		  function jsDelId(id) {
@@ -1331,7 +1310,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	   		jsRefreshTree();
 		  	   }
 		  	   $('#calendar').fullCalendar( 'refetchEvents' );
-		  	   api4tree.jsPlaceMakedone(id);
 		  }
 		  
 
@@ -1350,7 +1328,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	  		   $("#node_"+id+" .n_title").removeClass("do_did");
 		  	   jsRefreshTree();
 		  	   $('#calendar').fullCalendar( 'refetchEvents' );
-		  	   api4tree.jsPlaceMakedone(id);
 		  }
 		  
 		  //парсер даты (позвонить послезавтра)
@@ -1719,13 +1696,113 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 		  }
 		  
+		  function jsConvertMySqlDate(the_date) {
+  			        var split_date = the_date.split("-");
+			        var split_time = split_date[2].split(" ");
+			        var mydate = split_time[0] + "." + split_date[1] + "." + split_date[0];
+			        var spl_time = split_time[1].split(":");
+					return {date:mydate, time: (spl_time[0]+":"+spl_time[1]) };
+		  }
+		  
+		  this.jsSetSettings = function(id) {
+			    	   
+			    api4tree.jsOpenTab(id);	   
+			    
+			    api4tree.jsStartShare(id); //приводит к постоянным запросам в сеть
+			    	   			    		   
+			    var element = api4tree.jsFind(id);
+			    $(".makedone_h1").html(element.title);
+			    
+			    var remind_time = localStorage.getItem("remind_time");
+			    
+			    if(remind_time) {
+				   $("#remind_time").html(remind_time+" мин.")
+			    }
+			    
+			    if(element.date1=="") { //устанавливаю дату в makedone
+					$("#makedone_date1").val("");
+					$("#makedone_time1").val("");
+	    	    } else {
+	    	    	mydate = jsConvertMySqlDate(element.date1);
+			        $("#makedone_date1").val(mydate.date);
+			        $("#makedone_time1").val(mydate.time);
+			    }
+
+			    if(element.date2=="") { //устанавливаю дату в makedone
+					$("#makedone_date2").val("");
+					$("#makedone_time2").val("");
+	    	    } else {
+	    	    	mydate = jsConvertMySqlDate(element.date2);
+			        $("#makedone_date2").val(mydate.date);
+			        $("#makedone_time2").val(mydate.time);
+			    }
+
+			  
+			    if(element.did=="") { //устанавливаю переключатель выполнения дела
+			       if($("#on_off_did").prop("checked")==true) {
+			       		$("#on_off_did").prop("checked",false).iphoneStyle("refresh");
+			       	}
+			    } else {
+			       if($("#on_off_did").prop("checked")==false) {
+		     		   $("#on_off_did").prop("checked",true).iphoneStyle("refresh");
+			       }
+			    }
+			  
+	       		if(element.remind>0) $("#remind_time").html(element.remind+" мин.");
+	       		
+			    if(parseInt(element.remind,10)==0) { //устанавливаю переключатель SMS напоминалки
+			       if($("#on_off_sms").prop("checked")==true) {
+			       		$("#on_off_sms").prop("checked",false).iphoneStyle("refresh");
+		       	   }
+			    } else {
+			       if($("#on_off_sms").prop("checked")==false) {
+		     		    $("#on_off_sms").prop("checked",true).iphoneStyle("refresh");
+			       }
+			    }
+			     
+			    is_rendering_now = false;	   
+		        return false;
+			 }; //jsSetSettings
+
+		  
 		  //кнопки панели дерева
 		  function jsMakePanelKeys() {
 		  
 		   	  $(".tree_tab_menu").on("click","li",function(){
+		   	  	var id = $(this).attr("myid");
 		      	$(".tree_tab_menu").find(".active").removeClass("active");
 		      	$(this).addClass("active");
+				api4panel.jsOpenNode(id);
+				api4panel.jsSelectNode(id);
+		      	return false;
 		      });
+		      
+		      $(".tree_tab_menu").on("click", ".add_tab", function() {
+		      	var new_tab = '<li><a>Новая заметка</a><i class="icon-cancel"></i></li>';
+			    $(".tree_tab_menu .add_tab").before(new_tab);
+		      	$(".tree_tab_menu").find(".active").removeClass("active");
+			    $(".tree_tab_menu li:last").addClass("active");
+			    api4tree.jsCalcTabs();
+		      })
+
+		   	  $(".tree_tab_menu").on("click",".icon-cancel",function(){
+		   	  	var next_li;
+		   	  	var parent_li = $(this).parents("li:first");
+		   	  	if(parent_li.hasClass("active")) {
+			   	  	if(parent_li.next("li").length) {
+			   	  		var next_li = parent_li.next("li");
+			   	  	} else {
+			   	  		var next_li = parent_li.prev("li");
+			   	  	}
+		   	  	}
+		      	parent_li.animate({width:'toggle'},200,function(){
+					$(this).remove();
+					if(next_li) next_li.addClass("active");
+					api4tree.jsCalcTabs();
+		      	});
+		      	return false;
+		      });
+
 		      
 		      $("#open_params").on("click",function(){
 		      	$("#tree_editor").toggleClass("params_open");
@@ -1973,20 +2050,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			
 			
 			  }); //mousedown
-			  
-
-	     	  $("#mypanel").scroll(function() { //позицианирую makedone
-     	      	if($(".makedone").is(":visible")) {
- 	    	  		api4tree.jsPlaceMakedone( $(".makedone").attr("myid") );
- 	    	  	}
- 	    	  });
- 	    	  
-	     	  $(".panel").scroll(function() {
-     	      	if($(".makedone").is(":visible")) {
-     	      		api4tree.jsPlaceMakedone( $(".makedone").attr("myid") );
-     	      	}
- 	    	  });
-
+			   	    	  
 
 
 	     	  $('#mypanel11').on("contextmenu","li", function(e){
@@ -1996,71 +2060,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			  //нажатие на кнопку вызова меню настройки элемента
 			  $('#mypanel').delegate(".tcheckbox","click", function(e) {
-		    	e.preventDefault();
-			    is_rendering_now = true;	   
-		    	var this_li = $(this).parents("li");
-			    var id = api4tree.node_to_id( this_li.attr("id") );
-			    	   
-			    api4tree.jsStartShare(id);
-			    	   
-			    if(!this_li.hasClass("selected")) {
-			    	 api4panel.jsTitleClick($(this).nextAll(".n_title"));
-			    }
-			    		   
-			    if( $(this).parents("#mypanel").length || 
-			    	$(this).parents(".search_panel_result").length ) {
-			    	api4tree.jsPlaceMakedone(id);
-			        }
-			     
-			    var element = api4tree.jsFind(id);
-			    
-			    var remind_time = localStorage.getItem("remind_time");
-			    
-			    if(remind_time) {
-				   $("#remind_time").html(remind_time+" мин.")
-			    }
-			    
-			    if(element.date1=="") { //устанавливаю дату в makedone
-		    	    $("#makedate").hide();
-			    	var mydate = new Date((new Date()).getTime()+60*60000); //новые дела - через час
-			        if($("#on_off_date").prop("checked")==true) {
-			     		  $("#on_off_date").prop("checked",false).iphoneStyle("refresh");
-		     		}
-	    	    } else {
-			        var mydate = Date.createFromMysql(element.date1);
-			        if($("#on_off_date").prop("checked")==false) {
-			     		  $("#on_off_date").prop("checked",true).iphoneStyle("refresh");
-		     		}
-	   			    $('.makedonecalendar').datepicker("setDate", Date.createFromMysql(element.date1));
-			    	$("#makedate").show();
-			    }
-			    $("#makedatetime").datetimeEntry("setDatetime",mydate);
+			  });
 			  
-			    if(element.did=="") { //устанавливаю переключатель выполнения дела
-			       if($("#on_off_did").prop("checked")==true) {
-			       		$("#on_off_did").prop("checked",false).iphoneStyle("refresh");
-			       	}
-			    } else {
-			       if($("#on_off_did").prop("checked")==false) {
-		     		   $("#on_off_did").prop("checked",true).iphoneStyle("refresh");
-			       }
-			    }
-			  
-	       		if(element.remind>0) $("#remind_time").html(element.remind+" мин.");
-	       		
-			    if(parseInt(element.remind,10)==0) { //устанавливаю переключатель SMS напоминалки
-			       if($("#on_off_sms").prop("checked")==true) {
-			       		$("#on_off_sms").prop("checked",false).iphoneStyle("refresh");
-		       	   }
-			    } else {
-			       if($("#on_off_sms").prop("checked")==false) {
-		     		    $("#on_off_sms").prop("checked",true).iphoneStyle("refresh");
-			       }
-			    }
-			     
-			    is_rendering_now = false;	   
-		        return false;
-			 }); //tcheckbox.click
 			  
 			  //при случайном нажатии в разделитель между title в панели
 			  $("#mypanel").delegate(".divider","click",function() {
@@ -2099,7 +2100,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  		$(".header_text").html("").attr("title","");
 			      }
 //			      $(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
-			      $.Menu.closeAll();
 			      jsTitle("");
 			      return true;
 			  } );  	
@@ -2332,52 +2332,62 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	  return [true, highlight_class, finddate[1]];
 			    	},
 			    	onSelect:function(dateText, inst) {
-    	  				var my_time_id = $(".makedone").attr("myid");
-    	  				
-    	  				var dd = dateText.split('.');
-    	  				
-    	  				var date1 = dd[2]+'-'+dd[1]+'-'+dd[0];
-    				 	var myold_date = $("#makedatetime").datetimeEntry('getDatetime').toMysqlFormat();
-    				 	
-    				 	var my_dd = myold_date.split(" ");
-    				 	
-    				 	var new_date = date1+" "+my_dd[1];
-    					var mydate = Date.createFromMysql(new_date);
-    				    $("#makedatetime").datetimeEntry("setDatetime",mydate);
+			    		alert(dateText);
 			    	}
-			  });			
-
-		  
-		      //дата и время - поле ввода в панели makedone
-			  $("#makedatetime").datetimeEntry({datetimeFormat: "W N Y / H:M",
-			  					 spinnerImage:""}).change(function(){
-	   			  clearTimeout(maketimer);
-	   			  if(!$("#makedate").is(":visible") ) return true;
-	   			  maketimer = setTimeout(function() {
-		      	  	  	var my_time_id = $(".makedone").attr("myid");
-		      		   	var mydate = $("#makedatetime").datetimeEntry('getDatetime');
-		   			    if($('.makedonecalendar').datepicker("getDate")!=mydate) {
-		   			    	$('.makedonecalendar').datepicker("setDate", mydate);
-		   			    }
-		      		   	var my_current_date = mydate;
-		      		   	date1 = mydate.toMysqlFormat();
-		      		   	if(date1!=api4tree.jsFind(my_time_id).date1){
-		      	  	  			api4tree.jsFind(my_time_id,{ date1:date1 });
-		      		  			jsTitle("Дата и время сохранены",5000);
-		      	  	  			jsRefreshTree();
-		      	  	  			api4tree.jsPlaceMakedone(my_time_id);
-		      	  	  			jsCalendarNode(my_time_id);
-		      	  	  	}
-	      	  	  },200);
-	      	 });
-
+			  });					  
 
 		  	  //календарик для makedone
 		  	  //this_db.jsGetAllMyNotes();
 		  	  
+		  	  
+		  	  function jsGetTime(field_num) {
+			  	  var date1 = $("#makedone_date"+field_num).val();
+			  	  var time1 = $("#makedone_time"+field_num).val();
+			  	  var delta_minutes = 30;
+			  	  			  	  
+			  	  if(date1) {
+			  	  	  var now_time = (new Date());
+					  if(field_num == 2) {
+						  delta_minutes = 60;
+						  time_field1 = $("#makedone_time1").val();
+						  if(time_field1) { 
+						  	var tf = time_field1.split(":");
+						  	now_time = new Date();
+						  	now_time.setHours(tf[0]);
+						  	now_time.setMinutes(tf[1]);
+						  }
+					  }
+			  	  	  var now_time = new Date(now_time.getTime() + delta_minutes*60000);
+				  	  if(!time1) {
+				  	  	time1 = twoDigits(now_time.getHours())+":"+twoDigits(now_time.getMinutes());
+				  	  	$("#makedone_time"+field_num).val(time1);
+				  	  }
+				  	  if( (field_num == 1) && ($("#makedone_date2").val()=="") ) { //если первая дата есть, а второй нет
+					  	$("#makedone_date2").val(date1);
+				  	  }
+				  	  return { date:date1, time:time1 };
+				  } else {
+					  return { date:"", time:"" };
+				  }
+				  
+
+		  	  }
+		  	  
+		  	  		  	  
+		  	  
+		  	  function jsSaveSettings() {
+				  	  
+				  	  var d1 = jsGetTime(1);
+				  	  var d2 = jsGetTime(2);
+				  	  if(d1.date>d2.date) {
+					  	  alert(1);
+				  	  }
+				  	  
+		  	  }
+		  	  
 			  $("#makedone_date1,#makedone_date2").datepicker({
 			    	numberOfMonths: 1,
-			    	showButtonPanel: false,
+			    	showButtonPanel: true,
 			    	dateFormat:"dd.mm.yy",
 			    	showWeek:true,
 			    	
@@ -2390,18 +2400,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	  return [true, highlight_class, finddate[1]];
 			    	},
 			    	onSelect:function(dateText, inst) {
-    	  				var my_time_id = $(".makedone").attr("myid");
-    	  				
-    	  				var dd = dateText.split('.');
-    	  				
-    	  				var date1 = dd[2]+'-'+dd[1]+'-'+dd[0];
-    				 	var myold_date = $("#makedatetime").datetimeEntry('getDatetime').toMysqlFormat();
-    				 	
-    				 	var my_dd = myold_date.split(" ");
-    				 	
-    				 	var new_date = date1+" "+my_dd[1];
-    					var mydate = Date.createFromMysql(new_date);
-    				    $("#makedatetime").datetimeEntry("setDatetime",mydate);
+						if( $(inst).attr("id")=="makedone_date1") {
+							jsSaveSettings();
+						}
 			    	}
 			  });			
 
@@ -3332,13 +3333,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	   if(value) {
 				  	   		$("#makedate").slideDown(200);
 				    	    setTimeout(function(){ 
-				    	    	$("#makedatetime").change(); jsRefreshTree(); api4tree.jsPlaceMakedone(id); 
+				    	    	$("#makedatetime").change(); jsRefreshTree();
 				    	    },300);
 				    		$('#calendar').fullCalendar( 'refetchEvents' ); 
 				  	   } else {
 				  	   		$("#makedate").slideUp(200);
 				    	    this_db.jsFind(id, { date1:"", date2:"", remind:0 });
-				    	    setTimeout(function(){ jsRefreshTree(); api4tree.jsPlaceMakedone(id); },300);
+				    	    setTimeout(function(){ jsRefreshTree(); },300);
 				    		$('#calendar').fullCalendar( 'refetchEvents' ); 
 				  	   }
 				  	}
@@ -3348,10 +3349,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	   		var remind_time = parseInt( $("#remind_time").html() );
 				  	   		if(!remind_time) remind_time = 15;
 				       		this_db.jsFind(id,{ remind: remind_time });
-				    	    setTimeout(function(){ jsRefreshTree(); api4tree.jsPlaceMakedone(id); },300);
+				    	    setTimeout(function(){ jsRefreshTree(); },300);
 				  	   } else {
 				       		this_db.jsFind(id,{ remind: 0 });
-				    	    setTimeout(function(){ jsRefreshTree(); api4tree.jsPlaceMakedone(id); },300);
+				    	    setTimeout(function(){ jsRefreshTree(); },300);
 				  	   		}
 				  	   }
 				  	   
@@ -3369,7 +3370,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	   }
 				  	}
 				  	   
-				    api4tree.jsPlaceMakedone(id);
 				  	} //onchange iphoneStyle
 				  	
 				  	
@@ -3594,30 +3594,59 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	   $(".fullscreen_editor").click();
 			  	   return false;
 			  	 }
-			     key_help.push({key:"1",title:"вид №1"});
+			     key_help.push({key:"1",title:"вкладка №1"});
 			  	 if( (e.altKey==true) && (e.keyCode==49) ) {
 			       e.preventDefault();
 				   jsHide_help();
-			  	   $("#v1").click();
+			  	   $("#tree_header li:eq(0)").click();
 			  	 }
-			     key_help.push({key:"2",title:"вид №2"});
+			     key_help.push({key:"2",title:"вкладка №2"});
 			  	 if( (e.altKey==true) && (e.keyCode==50) ) {
 			       e.preventDefault();
 				   jsHide_help();
-			  	   $("#v2").click();
+			  	   $("#tree_header li:eq(1)").click();
 			  	 }
-			     key_help.push({key:"3",title:"вид №3"});
+			     key_help.push({key:"3",title:"вкладка №3"});
 			  	 if( (e.altKey==true) && (e.keyCode==51) ) {
 			       e.preventDefault();
 				   jsHide_help();
-			  	   $("#v3").click();
+			  	   $("#tree_header li:eq(2)").click();
 			  	 }
-			     key_help.push({key:"4",title:"вид №4"});
-			     key_help.push({key:"",title:""});
+			     key_help.push({key:"3",title:"вкладка №4"});
 			  	 if( (e.altKey==true) && (e.keyCode==52) ) {
 			       e.preventDefault();
 				   jsHide_help();
-			  	   $("#v4").click();
+			  	   $("#tree_header li:eq(3)").click();
+			  	 }
+			     key_help.push({key:"3",title:"вкладка №5"});
+			  	 if( (e.altKey==true) && (e.keyCode==53) ) {
+			       e.preventDefault();
+				   jsHide_help();
+			  	   $("#tree_header li:eq(4)").click();
+			  	 }
+			     key_help.push({key:"3",title:"вкладка №6"});
+			  	 if( (e.altKey==true) && (e.keyCode==54) ) {
+			       e.preventDefault();
+				   jsHide_help();
+			  	   $("#tree_header li:eq(5)").click();
+			  	 }
+			     key_help.push({key:"3",title:"вкладка №7"});
+			  	 if( (e.altKey==true) && (e.keyCode==55) ) {
+			       e.preventDefault();
+				   jsHide_help();
+			  	   $("#tree_header li:eq(6)").click();
+			  	 }
+			     key_help.push({key:"3",title:"вкладка №8"});
+			  	 if( (e.altKey==true) && (e.keyCode==56) ) {
+			       e.preventDefault();
+				   jsHide_help();
+			  	   $("#tree_header li:eq(7)").click();
+			  	 }
+			     key_help.push({key:"4",title:"вкладка №9"});
+			  	 if( (e.altKey==true) && (e.keyCode==57) ) {
+			       e.preventDefault();
+				   jsHide_help();
+			  	   $("#tree_header li:eq(8)").click();
 			  	 }
 			  	   
 			     key_help.push({key:"+",title:"увеличить шрифт"});
@@ -6111,6 +6140,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		  buttonsAdd: ['|', 'button1','checkbox'],
 		  		  toolbar:true,
 		  		  toolbarExternal: "#fav_redactor_btn", // ID selector 
+		  		  focusCallback: function() { $("#tree_header li.active.temp").removeClass("temp"); },
 		  		  keydownCallback: save_all_text_in_a_while,
 		  		  keyupCallback: save_all_text_in_a_while,
 		  		  changeCallback: save_all_text_in_a_while,
