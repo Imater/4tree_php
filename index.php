@@ -64,6 +64,7 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 	  	  <script src="js/vcdiff.js"></script>
 	  	  <script src="js/rangy-core.js"></script>
 	  	  <script src="js/jqueryslidemenu.js"></script>
+	  	  <script src="js/mjs.js"></script>	  	  
 	  	  <script src="js/rangy-selectionsaverestore.js"></script>';
 	
 }
@@ -349,13 +350,13 @@ $(document).ready(function(){
 		
 	  <div id="tree_left_panel" class="">
 		<div id="top_panel_header">
-			<i class="icon-flow-cascade"></i>
-			<i class="icon-th-4"></i>
-			<i class="icon-th-list"></i>
-			<i class="icon-th-list-3"></i>
+			<i data-view="panel_type1"  class="icon-flow-cascade"></i>
+			<i data-view="panel_type2"  class="icon-th-4"></i>
+			<i data-view="panel_type3"  class="icon-th-list"></i>
+			<i data-view="panel_type4"  class="icon-th-list-3"></i>
 		</div>
-		<div id="top_panel" class="panel_type1">
-			<div id="mypanel" style="">
+		<div class="top_panel panel_type1">
+			<div class="mypanel tree_active" style="" id="tree_1">
 			</div>
 		</div>
 		<div id="left_calendar" class="clean_calendar">
@@ -426,7 +427,13 @@ $(document).ready(function(){
 		  		  <div id="params_panel">
 		  		  Панель параметров
 		  		  </div>
-	  		  
+
+		  	  <div id="tree_center">
+			  	  <div class="top_panel2 panel_type3">
+			  	      <div class="mypanel" style="" id="tree_2">
+			  	      </div>
+			  	  </div>
+		  	  </div>
 	  		  
 	  		  <div class="all_editor_place" class="needsclick">
 	  		  
@@ -437,7 +444,7 @@ $(document).ready(function(){
 font-size: 22px;
 display: inline-block;
 top: 5px;
-left: 10px;"></i>&nbsp;</a>
+left: 12px;"></i>&nbsp;</a>
 		  			  	<ul>
 		  			  	
 		  			  	<li><a href="javascript:" onclick="$('.redactor_btn_html:first').trigger('click');">HTML код</a></li>

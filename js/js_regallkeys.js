@@ -31,7 +31,7 @@ function renameKey (this_obj, oldName, newName) {
 function jsHideWelcome() {
 	myjsPlumb2.detachEveryConnection();
 	$("#start_welcome_page").removeClass("active");
-	$("#mypanel").off("scroll.my");
+	$(".mypanel").off("scroll.my");
 	$("#welcome_screen").fadeOut(500);
     jsGetToken().done(function(token){
 		var lnk = web_site + "do.php?access_token=" + token + "&off_welcome";
@@ -83,7 +83,7 @@ function jsLoadWelcome() {
 		return false;
 	});
 	var tm;
-	$("#mypanel").on("scroll.my",function(){
+	$(".mypanel").on("scroll.my",function(){
 		clearTimeout(tm);
 		tm = setTimeout(function(){
 			myjsPlumb2.setSuspendDrawing(false,true);
@@ -136,7 +136,7 @@ function jsDrawWelcomeLine(){
     			
     	}
     }
-   	jsPlumb.Defaults.Container = $("#mypanel");
+   	jsPlumb.Defaults.Container = $(".mypanel");
 
 }
 
@@ -162,7 +162,7 @@ function jsHighlightText(remove)
 			$(".search_panel_result").removeHighlight();
 			$(".comment_text").removeHighlight();
 			$(".redactor_").removeHighlight();
-			$("#mypanel .n_title").removeHighlight();
+			$(".mypanel .n_title").removeHighlight();
 			return true; 
 			}
 //		$(".highlight").contents().unwrap();
@@ -181,7 +181,7 @@ function jsHighlightText(remove)
 
 		}
 		$(".comment_text").highlight(searchstring,"highlight"); 
-		$("#mypanel .n_title").highlight(searchstring,"highlight"); 
+		$(".mypanel .n_title").highlight(searchstring,"highlight"); 
 }
 
 
@@ -418,8 +418,8 @@ if(isMindmap) {
 	if(arrow=='down')
 		{
 		lastclick = new Date();
-		current = $("#mypanel .selected");
-		if(current.length==0) current = $("#mypanel li:first").addClass("selected");
+		current = $(".mypanel.tree_active .selected");
+		if(current.length==0) current = $(".mypanel.tree_active li:first").addClass("selected");
 		prev = current.nextAll("li:first");
 		if(prev.length==1) 
 			{
@@ -440,8 +440,8 @@ if(isMindmap) {
 	if(arrow=='up')
 		{
 		lastclick = new Date();
-		current = $("#mypanel .selected");
-		if(current.length==0) current = $("#mypanel li:first").addClass("selected");
+		current = $(".mypanel.tree_active .selected");
+		if(current.length==0) current = $(".mypanel.tree_active li:first").addClass("selected");
 		prev = current.prevAll("li:first");
 		if(prev.length==1) 
 			{
@@ -461,7 +461,7 @@ if(isMindmap) {
 
 if(arrow=='right')
 	{
-	current = $("#mypanel .selected");
+	current = $(".mypanel.tree_active .selected");
 	
 	if(isTree)
 		{
@@ -491,7 +491,7 @@ if(arrow=='right')
 
 if(arrow=="left")
 	{
-	current = $("#mypanel .selected");
+	current = $(".mypanel.tree_active .selected");
 	
 	if(isTree)
 		{
@@ -517,9 +517,11 @@ if(arrow=="left")
 	}
 
 if(isMindmap || isTree) {
-				var offset_top = $("#mypanel").height()/2;
-				var offset_left = $("#mypanel").width()/2;// - $(".selected").parent("ul:first").width()*1.5;
-				$("#mypanel").stop().scrollTo($(".selected"),600,{offset:{ top: -offset_top, left: -offset_left}});
+				var offset_top = $(".mypanel.tree_active").height()/2;
+				var offset_left = $(".mypanel.tree_active").width()/2;// - $(".selected").parent("ul:first").width()*1.5;
+				if($(".tree_active .selected").length) {
+					$(".mypanel.tree_active").stop().scrollTo($(".selected"),600,{offset:{ top: -offset_top, left: -offset_left}});
+				}
 			}
 return true;
 }
@@ -528,8 +530,8 @@ return true;
 if(arrow=='up')
 	{
 	lastclick = new Date();
-	current = $("#mypanel .selected");
-	if(current.length==0) current = $("#mypanel li:first").addClass("selected");
+	current = $(".mypanel.tree_active .selected");
+	if(current.length==0) current = $(".mypanel.tree_active li:first").addClass("selected");
 	prev = current.prev("div").prev("li:visible").find("ul:first").find("li:visible:last");
 	
 	if(prev.length==0)
@@ -561,8 +563,8 @@ if(arrow=='up')
 if(arrow=='down')
 	{
 	lastclick = new Date();
-	current = $("#mypanel .selected");
-	if(current.length==0) current = $("#mypanel li:first").addClass("selected");
+	current = $(".mypanel.tree_active .selected");
+	if(current.length==0) current = $(".mypanel.tree_active li:first").addClass("selected");
 	prev = current.find("li:visible:first");
 	if(prev.length==0)
 	  {
@@ -596,7 +598,7 @@ if(arrow=='down')
 
 if(arrow=='right')
 	{
-	current = $("#mypanel .selected");
+	current = $(".mypanel.tree_active .selected");
 	
 	if(isTree)
 		{
@@ -623,7 +625,7 @@ if(arrow=='right')
 	}
 if(arrow=="left")
 	{
-	current = $("#mypanel .selected");
+	current = $(".mypanel.tree_active .selected");
 	
 	if(isTree)
 		{
@@ -741,7 +743,7 @@ function jsMakeView(view_type)
     	if( $(".place_of_top #calendar").length == 1 )
     		{
 	    	$("#calendar").fullCalendar("destroy");
-			$(".calendar_and_others").swapWith($("#top_panel"));
+			$(".calendar_and_others").swapWith($(".top_panel"));
 			jsShowCalendar();
 			}
 		$("html").removeClass("v4");
@@ -754,7 +756,7 @@ function jsMakeView(view_type)
     	if( $(".place_of_top #calendar").length == 0 )
     		{
 	    	$("#calendar").fullCalendar("destroy");
-			$(".calendar_and_others").swapWith($("#top_panel"));
+			$(".calendar_and_others").swapWith($(".top_panel"));
 			jsShowCalendar();
 			}
 		$("html").removeClass("v4");
@@ -767,7 +769,7 @@ function jsMakeView(view_type)
     	if( $(".place_of_top #calendar").length == 1 )
     		{
 	    	$("#calendar").fullCalendar("destroy");
-			$(".calendar_and_others").swapWith($("#top_panel"));
+			$(".calendar_and_others").swapWith($(".top_panel"));
 			jsShowCalendar();
 			}
 		$(".bottom_right").appendTo($("#content1"));
@@ -783,7 +785,7 @@ function jsMakeView(view_type)
     	if( $(".place_of_top #calendar").length == 0 )
     		{
 	    	$("#calendar").fullCalendar("destroy");
-			$(".calendar_and_others").swapWith($("#top_panel"));
+			$(".calendar_and_others").swapWith($(".top_panel"));
 			jsShowCalendar();
 			}
 		$(".all_editor_place").appendTo($("#below_footer"));
@@ -807,7 +809,7 @@ function jsFixScroll(type,only_selected_panel)
 	
 	if(only_selected_panel) var add_id = ".old_selected,"
 	else var add_id = "";
-	$("#mypanel .panel").quickEach(function()
+	$(".mypanel.tree_active .panel").quickEach(function()
 		{ 
 		if(type==2) var add = ".selected";
 		else var add = "";
@@ -894,7 +896,7 @@ if(ul.length)
   }
 else
   {
-  jsShowTreeNode(id,true); $(".ul_childrens[myid="+id+"]").show();
+  jsShowTreeNode("tree_1",id,true); $(".ul_childrens[myid="+id+"]").show();
   }
 }
 
@@ -1343,26 +1345,12 @@ function strip_tags( str ){	// Strip HTML and PHP tags from a string
 }
 
 
-function jsPresize() //удаляю и добавляю узкие полоски для регулировки ширины панелей
-{
-	$("#mypanel .panel").quickEach(function() 
-		{ 
-		if( this.next(".presize").length==0 )
-			$("<div class='presize'></div>").insertAfter($(this)); 
-		else
-			{
-			this.next(".presize").next(".presize").remove();
-			this.next(".presize").next(".presize").remove();
-			}
-		});
-}
-
 
 function jsAddToTree(id_node)
 {
 	if($("#node_"+id_node).length) return true; //если элемент уже есть, то добавлять не нужно
 
-//	var isTree = $("#top_panel").hasClass("panel_type1");
+//	var isTree = $(".top_panel").hasClass("panel_type1");
 	console.info("ADD TO TREE = ",id_node);
 	var element = api4tree.jsFind(id_node);
 	
@@ -1441,7 +1429,7 @@ function jsSnapShotApply(snapshot)
 
 function jsRefreshOneFolder(panel_id)
 {
-	elements = $("#mypanel li").clone();
+	elements = $(".mypanel li").clone();
 	var len=elements.length;
 	for(var i=0;i<len;i++)
 		{
@@ -1453,7 +1441,7 @@ function jsRefreshOneFolder(panel_id)
 			{
 			var isFolderOpen = $(elements[i]).hasClass("tree-open");
 			api4panel.jsRefreshOneElement(id);
-			if(isFolderOpen) $("#mypanel #node_"+id).addClass("tree-open");
+			if(isFolderOpen) $(".mypanel #node_"+id).addClass("tree-open");
 			console.info("Обновляю один элемент - "+id);
 			}
 		
@@ -1470,7 +1458,7 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 		$("body").unbind("mousemove");
 		$("body").unbind("mouseup");
 
-	$("#mypanel li").not("ui-draggable").draggable({
+	$(".mypanel li").not("ui-draggable").draggable({
 				zIndex: 999,
 				delay:100,
 				revert: false,      // will cause the event to go back to its
@@ -1478,16 +1466,16 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 				appendTo: "body",
 				start: function(event, ui) {
 					console.info("start-drag");
-					$("#mypanel").addClass("li_compact");
+					$(".mypanel").addClass("li_compact");
 				},
 				stop: function(event, ui) {
 					console.info("stop-drag");
-					$("#mypanel").removeClass("li_compact");
+					$(".mypanel").removeClass("li_compact");
 				}
 //				revertDuration: 500  //  original position after the drag
 			});
 			
-	$( "#mypanel .big_n_title,.divider_li" ).not("ui-droppable").droppable({
+	$( ".mypanel .big_n_title,.divider_li" ).not("ui-droppable").droppable({
 			accept: "li",
 			activeClass: "ui-can-recieve",
 			tolerance: "pointer",
@@ -1844,7 +1832,7 @@ if(false)
 
 		$("body").on("mousemove.presize",function(e){
 			  neww = oldwidth - oldleft+e.pageX-25;			  
-			  if(mymetaKey) $("#mypanel .panel").width(neww);
+			  if(mymetaKey) $(".mypanel .panel").width(neww);
 			  else
 			  	if(widthpanel) widthpanel.prev(".panel").width(neww);
 			  
@@ -1860,7 +1848,7 @@ if(false)
 			$.cookie('pwidth',widthpanel.prev(".panel").width(),{ expires: 300 });			
 			pwidth = widthpanel.prev(".panel").width();
 			if(pwidth<130) {
-				$("#mypanel .panel").width("auto");
+				$(".mypanel .panel").width("auto");
 				jsTitle("Включена автоматическая ширина панелей");
 			}
 		}
@@ -2039,7 +2027,6 @@ if (!Array.prototype.filter)
  * @version 1.4.3.1
  */
 (function($){var h=$.scrollTo=function(a,b,c){
-
 setTimeout(function(){ if(scrolltimer) clearTimeout(scrolltimer); },800);
 
 $(window).scrollTo(a,b,c)};h.defaults={axis:'xy',duration:parseFloat($.fn.jquery)>=1.3?0:1,limit:true};h.window=function(a){return $(window)._scrollable()};$.fn._scrollable=function(){return this.map(function(){var a=this,isWin=!a.nodeName||$.inArray(a.nodeName.toLowerCase(),['iframe','#document','html','body'])!=-1;if(!isWin)return a;var b=(a.contentWindow||a).document||a.ownerDocument||a;return/webkit/i.test(navigator.userAgent)||b.compatMode=='BackCompat'?b.body:b.documentElement})};$.fn.scrollTo=function(e,f,g){if(typeof f=='object'){g=f;f=0}if(typeof g=='function')g={onAfter:g};if(e=='max')e=9e9;g=$.extend({},h.defaults,g);f=f||g.duration;g.queue=g.queue&&g.axis.length>1;if(g.queue)f/=2;g.offset=both(g.offset);g.over=both(g.over);return this._scrollable().each(function(){if(e==null)return;var d=this,$elem=$(d),targ=e,toff,attr={},win=$elem.is('html,body');switch(typeof targ){case'number':case'string':if(/^([+-]=)?\d+(\.\d+)?(px|%)?$/.test(targ)){targ=both(targ);break}targ=$(targ,this);if(!targ.length)return;case'object':if(targ.is||targ.style)toff=(targ=$(targ)).offset()}$.each(g.axis.split(''),function(i,a){var b=a=='x'?'Left':'Top',pos=b.toLowerCase(),key='scroll'+b,old=d[key],max=h.max(d,a);if(toff){attr[key]=toff[pos]+(win?0:old-$elem.offset()[pos]);if(g.margin){attr[key]-=parseInt(targ.css('margin'+b))||0;attr[key]-=parseInt(targ.css('border'+b+'Width'))||0}attr[key]+=g.offset[pos]||0;if(g.over[pos])attr[key]+=targ[a=='x'?'width':'height']()*g.over[pos]}else{var c=targ[pos];attr[key]=c.slice&&c.slice(-1)=='%'?parseFloat(c)/100*max:c}if(g.limit&&/^\d+$/.test(attr[key]))attr[key]=attr[key]<=0?0:Math.min(attr[key],max);if(!i&&g.queue){if(old!=attr[key])animate(g.onAfterFirst);delete attr[key]}});animate(g.onAfter);function animate(a){$elem.animate(attr,f,g.easing,a&&function(){a.call(this,e,g)})}}).end()};h.max=function(a,b){var c=b=='x'?'Width':'Height',scroll='scroll'+c;if(!$(a).is('html,body'))return a[scroll]-$(a)[c.toLowerCase()]();var d='client'+c,html=a.ownerDocument.documentElement,body=a.ownerDocument.body;return Math.max(html[scroll],body[scroll])-Math.min(html[d],body[d])};function both(a){return typeof a=='object'?a:{top:a,left:a}}})(jQuery);
@@ -2388,7 +2375,7 @@ function _manageEvent(eventMessage) {
 	        			 setTimeout(function()
 	        			 	{ 
 		        			last_message_sync_time = jsNow();
-	        			 	if($("#mypanel .n_title[contenteditable=true]").length == 0) api4tree.jsSync(); 
+	        			 	if($(".mypanel .n_title[contenteditable=true]").length == 0) api4tree.jsSync(); 
 	        			 	},300); 
 	        			 jsTitle("Ваши данные изменились на другом комьютере. Обновляю.",5000); 
 	        			}

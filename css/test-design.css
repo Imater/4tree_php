@@ -2,7 +2,7 @@ body,html {
 	margin: 0px;
 	height: 100%;
 	color: #000;
-	font-size: 12px;
+	font-size: 13px;
 	font-family: Tahoma, Arial, Verdana;
 
 background-image: url("../img/textures/1.jpg");
@@ -12,7 +12,7 @@ background-image: url("../img/textures/1.jpg");
 #tree_header {
 	position: relative;
 	height:27px;
-	font-size: 10px;
+	font-size: 11px;
 	padding: 0px 0px 0px 0px;
     display:block;
     z-index: 2;
@@ -244,7 +244,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 
 #tree_editor.params_open .all_editor_place
 {
-	top: 180px;
+	top: 250px;
 }
 
 #tree_editor.bottom_open .all_editor_place
@@ -252,6 +252,16 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 	bottom: 300px;
 }
 
+#tree_center {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	height: 249px;
+	top:0px;
+	background: #ededed; 
+	border-bottom: 1px solid #888;
+	z-index: 1;
+}
 
 
 body.left_panel_hide #tree_editor {
@@ -262,7 +272,7 @@ body.left_panel_hide .on_resize{
 	display: none;
 }
 
-body.left_panel_hide #top_panel {
+body.left_panel_hide .top_panel {
 }
 
 #params_panel {
@@ -559,7 +569,7 @@ ul.tabs > li{
   background: #3f3f3f;
   position : relative;
   box-shadow: 0 0px 20px rgba(0,0,0,1);
-  max-width : 130px;
+  max-width : 170px;
 }
 
 
@@ -575,7 +585,13 @@ ul.tabs > li > a{
 }
 
 ul.tabs > li.temp a{
-	font-style: italic;
+   color: #e7ffe0;
+   font-style: italic;
+   padding-right: 5px;
+}
+
+ul.tabs > li:hover a{
+	color:#FFF;
 }
 
 
@@ -672,6 +688,17 @@ z-index: 6;
 	cursor: pointer;
 }
 
+#tree_footer2 ul li:hover {
+   color: #000;
+   -moz-transition: all 0.2s; 
+   -webkit-transition: all 0.2s;  
+   -ms-transition: all 0.2s;  
+   -o-transition: all 0.2s;  
+   transition: all 0.2s;  
+   
+}
+
+
 #tree_footer2 ul li.active{
 	background: #FFF;
 	color: #000;
@@ -726,6 +753,16 @@ top:-5px;
    height: 33px;
    width: 30px;
    margin-left: 2px;
+}
+
+.makedone_header li:hover {
+   color: #000;
+   -moz-transition: all 0.2s; 
+   -webkit-transition: all 0.2s;  
+   -ms-transition: all 0.2s;  
+   -o-transition: all 0.2s;  
+   transition: all 0.2s;  
+   
 }
 
 .makedone_header li i{
@@ -836,4 +873,8 @@ cursor: pointer;
 .add_tab:hover {
 background: #777777;
 	
+}
+
+.tree_active {
+	background: #f5f5f5;
 }
