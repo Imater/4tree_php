@@ -1674,9 +1674,12 @@ $result = mysql_query($sqlnews);
 $endTime = microtime();
 $howLong = ($endTime-$startTime)*1000;
 
-   $sqlnews="INSERT INTO `1_log` (`id`, `date1`, `manager`, `brand`, `text`, `client`, `important`,`sqlnews`) 
-             VALUES ('', NOW(), '$fpk_id', '$fpk_brand', '$howLong', '', '$important','".$sqlnews."');";
+//   $sqlnews="INSERT INTO `1_log` (`id`, `date1`, `manager`, `brand`, `text`, `client`, `important`,`sqlnews`) 
+//             VALUES ('', NOW(), '$fpk_id', '$fpk_brand', '$howLong', '', '$important','".$sqlnews."');";
 //   @$result2 = mysql_query($sqlnews); 
+//echo "<hr><b>".$howLong."</b><br>";
+
+//if($howLong>100) { echo $sqlnews; }
 
 return $result; 
 }

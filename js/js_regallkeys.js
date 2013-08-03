@@ -1372,10 +1372,10 @@ function jsAddToTree(id_node)
 
 }
 
-function jsSnapShotMake()
+function jsSnapShotMake(tree_id)
 {
 	var snapshot={};
-	var tree_open = $(".tree-open");
+	var tree_open = $("#"+tree_id+" .tree-open");
 	
 	snapshot.tree_open = []; //открытые папки
 	var len = tree_open.length;
@@ -1384,10 +1384,10 @@ function jsSnapShotMake()
 	   if(tree_open[i]) snapshot.tree_open.push( $(tree_open[i]).attr("id") );
 	   }
 
-	snapshot.tree_selected = $(".selected").attr("id");	  //выбранные
+	snapshot.tree_selected = $("#"+tree_id+" .selected").attr("id");	  //выбранные
 
 	snapshot.tree_old_selected = []; //ранее выбранные папки
-	var tree_old_selected = $(".old_selected");
+	var tree_old_selected = $("#"+tree_id+" .old_selected");
 	var len = tree_old_selected.length;
 	for(var i=0;i<=len;i++)
 	   {
@@ -1395,7 +1395,7 @@ function jsSnapShotMake()
 	   }
 
 	snapshot.tree_scroll = {};
-	var tree_panel = $(".panel");
+	var tree_panel = $("#"+tree_id+" .panel");
 	var len = tree_panel.length;
 	for(var i=0;i<=len;i++)
 	   {
@@ -1406,22 +1406,27 @@ function jsSnapShotMake()
 	
 }
 
-function jsSnapShotApply(snapshot)
+function jsSnapShotApply(tree_id, snapshot)
 {
-	$(".selected").removeClass(".selected");
-	$(".old_selected").removeClass(".old_selected");
-	$(".tree_open").removeClass("tree_open");
+	api4panel.jsShowTreeNode("tree_1",1,false);
 
+//	$("#"+tree_id+" .selected").removeClass(".selected");
+//	$("#"+tree_id+" .old_selected").removeClass(".old_selected");
+//	$("#"+tree_id+".tree_open").removeClass("tree_open");
+
+	if(snapshot.tree_open)
 	$.each(snapshot.tree_open, function(i,el){
-		$("#"+el).click();
+		$("#"+tree_id+" #"+el).click();
 	})
 	
+	if(snapshot.tree_old_selected)
 	$.each(snapshot.tree_old_selected, function(i,el){
-		$("#"+el).addClass("old_selected");
+		$("#"+tree_id+" #"+el).addClass("old_selected");
 	})
 
+	if(snapshot.tree_scroll)
 	$.each(snapshot.tree_scroll, function(i,el){
-		$("."+i).scrollTop(el);
+		$("#"+tree_id+" #"+i).scrollTop(el);
 	})
 	
 	

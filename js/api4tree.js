@@ -37,7 +37,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  this.jsAddDoLeftRight = function(arrow, myparent, mytitle, 
 		  								   date1, date2, icon) {
 		   var panel,iii;
-		   $.Menu.closeAll();
 		   if(icon) {
 			  var pre_icon = "<i class='"+icon+"'></i> "; 
 		   } else {
@@ -2513,7 +2512,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			        }
 			      }
 //			     $(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
-			     $.Menu.closeAll();
 			     return false;
 			     });
 
@@ -3452,7 +3450,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  });
 			    		
 			  $("#myslidemenu").on("click", ".m_refresh_all", function () {
-			    $.Menu.closeAll();
 			    progress_load=0;
 			  	$("#load_screen").show();
 			  	jsProgressStep();

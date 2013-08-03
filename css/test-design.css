@@ -663,6 +663,27 @@ color: #FFF;
 z-index: 6;
 }
 
+.left_panel_hide #tree_footer2 {
+	right: auto;
+	left: 0px;
+	width: 10px;
+}
+
+.left_panel_hide #tree_footer2 li {
+padding: 7px 2px;
+border-top-right-radius: 5px;
+border-bottom-right-radius: 5px;
+border-top-left-radius: 0px;
+border-bottom-left-radius: 0px;
+border: 1px solid #BBB;
+border-left: none;
+color: #888;
+font-size: 11px;
+margin-top: 2px;
+cursor: pointer;
+width: 10px;
+}
+
 .show_pomidors #tree_footer2 {
 	bottom: 46px;
 }

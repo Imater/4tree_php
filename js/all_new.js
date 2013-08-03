@@ -82,6 +82,182 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 		}
 		 
 		 }
+
+
+		 //выбрать заметку и загрузить в редакторе
+		 this.jsSelectNode = function(id,nohash,iamfrom) { //открыть заметку в календаре и в редакторе
+		 //	i_am_from - кто вызвал: redactor, calendar, tree, diary
+//		 	mypanel.find("#node_"+id).addClass("selected");
+//			if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
+		 	clearTimeout(open_redactor_timer);
+		 	open_redactor_timer = setTimeout(function()
+		 		{
+			 	this_db.jsPathTitle(id); //устанавливаем путь в шапку
+		 		api4tree.jsSetSettings(id);
+		 	 	api4editor.jsRedactorOpen([id],iamfrom); 
+		 	 	jsCalendarNode(id);
+		 	 	jsAddFavRed("",id);
+		 	 	$(".redactor_").blur();
+		 	 	},50 );
+		 
+		 }
+
+		 
+		 
+		 var set_title_timer,repaint_timer;
+		 
+		 //открыть заметку с номером, если она на экране (make .selected)
+		 this.jsOpenNode = function(id,nohash,iamfrom) {
+		 	var isTree = false;
+			isTree = $(".tree_active").parent("div").hasClass("panel_type1");
+		 	var element = api4tree.jsFind(id);
+		 	
+	 		$(".tree_active.mypanel .selected").addClass("old_selected").removeClass("selected");
+
+	 		var myli = $(".tree_active #node_"+id+":last");
+
+	 		var mypanel = myli.parents(".panel");
+	 		
+	 		var panels_right_count = mypanel.nextAll(".panel").length;
+
+	 		if( myli.length ) {
+
+	 				var left_offset = $("#node_"+id).offset().left;
+	 				if(left_offset==0) left_offset = -1;
+
+	 		}
+
+	 		mypanel.nextAll(".panel").remove(); ////REMOVE_PANEL////
+
+	 		if(element) $(".tree_active #panel_"+element.parent_id+" li").removeClass("old_selected"); //в текущей панели убираем
+
+	 		myli.addClass("selected"); //ставим selected на выбранный элемент
+
+	 		if(!isTree) myli.removeClass('tree-closed').addClass('tree-open'); //устанавливаем значёк открытой папки
+	 		
+	 		if(isTree) $(".tree_active .old_selected").removeClass("old_selected"); //у дерева удаляем старый статус
+	 		
+		 	$("#wiki_back_button").hide();
+		 	clearTimeout(hash_timer);
+
+		 	if(!nohash)	{ //если есть хэш - то устанавливаем его в адресную строку
+		 		var num_id;
+		 		if(!parseInt(id,10)) num_id=id;
+		 		else num_id = parseInt(id,10);
+		 		
+		 		hash_timer = setTimeout(function()
+		 			{ 
+		 			ignorehashchange = true; //делаю так, чтобы изменение хэша не привело к переходу на заметку
+		 			setTimeout( function() { ignorehashchange=false; }, 200 );
+		 			if(window.location.hash.indexOf("edit")==-1) if(num_id) {
+		 					jsSetHashAndPath(num_id);  
+		 					//window.location.hash = num_id.toString(36); 
+		 				}
+		 			},100);
+		 	}
+		 			 		    	
+	 		if(!isTree) {
+	 			$(".tree_active .panel li").removeClass("tree-open").addClass("tree-closed");
+	 			$(".tree_active .selected,.tree_active .old_selected").removeClass("tree-closed").addClass("tree-open");
+	 			} else {
+		 			//$(".selected,.old_selected").removeClass("tree-closed").addClass("tree-open");
+	 			}
+	 		
+	 		var title = element.title; //название для шапки сайта
+	 		if (!title)	title = "4tree.ru";
+	 			
+	 		clearTimeout(set_title_timer);
+	 		set_title_timer = setTimeout(function(){
+	 			this_db.jsSetTitle(id);
+	 		}, 100);
+	 			
+	 		var mytitle = myli.find(".n_title").html();
+	 
+	 		if(mytitle && !nohash) {
+	     		document.title = "4tree.ru: "+api4tree.jsShortText( strip_tags(mytitle), 150 );
+	 		}
+	 
+	 		if( myli.find('.countdiv').length==1 ) {//если это папка, создаю панель
+		 		tree_id = $(".tree_active").attr("id");
+	     		this_db.jsShowTreeNode( tree_id, id, isTree );
+
+	     	} else {
+	     		if( ($("#content1").hasClass("v1")) || ($("#content1").hasClass("v4")) || ($("#content1").hasClass("v2")) ) {
+	 		  		if(!pwidth) pwidth = 285;
+
+ 		  			if(pwidth>130) {
+     		  			var pw = pwidth+"px";
+     		  		} else {
+     		  			var pw = "auto";
+     		  		}
+
+	 		  		if(!isMindmap && !isTree) {
+	     				$(".tree_active.mypanel").append("<div id='panel_"+element.id+"' class='panel' style='width:"+pw+"'><ul>"+top_of_panel+"</ul></div>"); 
+	     			}
+	 		  		jsPresize();
+	     		}
+	     	}
+
+
+		    		if(left_offset && !isMindmap && !isTree) {
+
+		    			need_width = 0;
+		    			//need_width += mypanel.nextAll(".panel:not(.width_panel):last").width()+2;
+
+		    			var new_left_offset = $("#node_"+id).offset().left;
+		    			//console.info("old_offset = ",left_offset, "new_offset = ", new_left_offset);
+		    			var dif = left_offset - new_left_offset;
+
+		    			need_width = -dif + $(".tree_active.mypanel").width() - $(".presize:last").offset().left + 50;
+		     			if(dif!=0) $(".tree_active.mypanel").append("<div class='panel width_panel' style='width:"+need_width+"px;max-width:"+need_width+"px;'></div>");
+
+		    			$(".tree_active.mypanel").stop().scrollLeft( $(".tree_active.mypanel").scrollLeft() - dif );
+
+		    			var dif_left = $(".tree_active .selected").offset().left - $(".tree_active.mypanel").offset().left;
+
+							var old_left = $(".tree_active.mypanel").scrollLeft();
+
+		    			if(dif_left < 0) {		    				
+		    				$(".tree_active.mypanel").stop().animate({"scrollLeft":old_left+dif_left - 60 },500, "swing");	
+		    			}
+
+		    			var next_panel_div = $(".tree_active .selected").parents(".panel").nextAll(".panel:not(width_panel):first").find("li");
+							var next_panel = next_panel_div.width()+60;
+
+
+							
+		    			var dif_right = ($(".tree_active .selected").offset().left + $(".tree_active .selected").width()) - ($(".tree_active.mypanel").offset().left + $(".tree_active.mypanel").width()) + next_panel;
+		    			//console.info("dif_right = ",dif_right);
+
+		    			if(dif_right > 0) {
+
+		    				$(".tree_active.mypanel").stop().animate({"scrollLeft":old_left+dif_right },500);		
+		    			}
+
+
+
+		     		} else {
+
+		 	  			var w=0; 
+		 			  	$(".tree_active.mypanel .panel").quickEach(function(){w+=$(this).width()});
+		 	  			//console.info("OH END");
+					 		var thisWidth = w;
+						 	if(!$(".makedone").is(":visible"))
+						 		if(!isTree && !isMindmap) {
+							 		//if($('.mypanel').scrollLeft()!=thisWidth) $(".mypanel").stop().animate({"scrollLeft":thisWidth},500);		 		
+						 		}
+
+					 	} //if(need_width)
+
+
+//	     if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
+//		 console.info("rep-open_node_1");
+	     
+	     clearTimeout(repaint_timer);
+	     if(isMindmap) repaint_timer = setTimeout(function(){myjsPlumb.setSuspendDrawing(false,true);},5);
+
+		 } //jsOpenNode
+		 
 		 
 		 
 		 //регистрация всех кнопок и обработки событий связанных с деревом
@@ -100,6 +276,9 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				return false;
 			});
 			 
+			this.jsOpenFolder = function(tree_id, id) {
+				alert(1);
+			} 
 			 
 		    //Клик в LI открывает детей этого объекта LILILI
     	    $('.mypanel').delegate("li","click", function () {
@@ -687,159 +866,6 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 }
 
 
-		 var set_title_timer,repaint_timer;
-		 
-		 //открыть заметку с номером, если она на экране (make .selected)
-		 this.jsOpenNode = function(id,nohash,iamfrom) {
-		 	var isTree = false;
-			isTree = $(".tree_active").parent("div").hasClass("panel_type1");
-		 	var element = api4tree.jsFind(id);
-		 	
-	 		$(".tree_active.mypanel .selected").addClass("old_selected").removeClass("selected");
-
-	 		var myli = $(".tree_active #node_"+id+":last");
-
-	 		var mypanel = myli.parents(".panel");
-	 		
-	 		var panels_right_count = mypanel.nextAll(".panel").length;
-
-	 		if( myli.length ) {
-
-	 				var left_offset = $("#node_"+id).offset().left;
-	 				if(left_offset==0) left_offset = -1;
-
-	 		}
-
-	 		mypanel.nextAll(".panel").remove(); ////REMOVE_PANEL////
-
-	 		if(element) $(".tree_active #panel_"+element.parent_id+" li").removeClass("old_selected"); //в текущей панели убираем
-
-	 		myli.addClass("selected"); //ставим selected на выбранный элемент
-
-	 		if(!isTree) myli.removeClass('tree-closed').addClass('tree-open'); //устанавливаем значёк открытой папки
-	 		
-	 		if(isTree) $(".tree_active .old_selected").removeClass("old_selected"); //у дерева удаляем старый статус
-	 		
-		 	$("#wiki_back_button").hide();
-		 	clearTimeout(hash_timer);
-
-		 	if(!nohash)	{ //если есть хэш - то устанавливаем его в адресную строку
-		 		var num_id;
-		 		if(!parseInt(id,10)) num_id=id;
-		 		else num_id = parseInt(id,10);
-		 		
-		 		hash_timer = setTimeout(function()
-		 			{ 
-		 			ignorehashchange = true; //делаю так, чтобы изменение хэша не привело к переходу на заметку
-		 			setTimeout( function() { ignorehashchange=false; }, 200 );
-		 			if(window.location.hash.indexOf("edit")==-1) if(num_id) {
-		 					jsSetHashAndPath(num_id);  
-		 					//window.location.hash = num_id.toString(36); 
-		 				}
-		 			},100);
-		 	}
-		 			 		    	
-	 		if(!isTree) {
-	 			$(".tree_active .panel li").removeClass("tree-open").addClass("tree-closed");
-	 			$(".tree_active .selected,.tree_active .old_selected").removeClass("tree-closed").addClass("tree-open");
-	 			} else {
-		 			//$(".selected,.old_selected").removeClass("tree-closed").addClass("tree-open");
-	 			}
-	 		
-	 		var title = element.title; //название для шапки сайта
-	 		if (!title)	title = "4tree.ru";
-	 			
-	 		clearTimeout(set_title_timer);
-	 		set_title_timer = setTimeout(function(){
-	 			this_db.jsSetTitle(id);
-	 		}, 100);
-	 			
-	 		var mytitle = myli.find(".n_title").html();
-	 
-	 		if(mytitle && !nohash) {
-	     		document.title = "4tree.ru: "+api4tree.jsShortText( strip_tags(mytitle), 150 );
-	 		}
-	 
-	 		if( myli.find('.countdiv').length==1 ) {//если это папка, создаю панель
-		 		tree_id = $(".tree_active").attr("id");
-	     		this_db.jsShowTreeNode( tree_id, id, isTree );
-
-	     	} else {
-	     		if( ($("#content1").hasClass("v1")) || ($("#content1").hasClass("v4")) || ($("#content1").hasClass("v2")) ) {
-	 		  		if(!pwidth) pwidth = 285;
-
- 		  			if(pwidth>130) {
-     		  			var pw = pwidth+"px";
-     		  		} else {
-     		  			var pw = "auto";
-     		  		}
-
-	 		  		if(!isMindmap && !isTree) {
-	     				$(".tree_active.mypanel").append("<div id='panel_"+element.id+"' class='panel' style='width:"+pw+"'><ul>"+top_of_panel+"</ul></div>"); 
-	     			}
-	 		  		jsPresize();
-	     		}
-	     	}
-
-
-		    		if(left_offset && !isMindmap && !isTree) {
-
-		    			need_width = 0;
-		    			//need_width += mypanel.nextAll(".panel:not(.width_panel):last").width()+2;
-
-		    			var new_left_offset = $("#node_"+id).offset().left;
-		    			//console.info("old_offset = ",left_offset, "new_offset = ", new_left_offset);
-		    			var dif = left_offset - new_left_offset;
-
-		    			need_width = -dif + $(".tree_active.mypanel").width() - $(".presize:last").offset().left + 50;
-		     			if(dif!=0) $(".tree_active.mypanel").append("<div class='panel width_panel' style='width:"+need_width+"px;max-width:"+need_width+"px;'></div>");
-
-		    			$(".tree_active.mypanel").stop().scrollLeft( $(".tree_active.mypanel").scrollLeft() - dif );
-
-		    			var dif_left = $(".tree_active .selected").offset().left - $(".tree_active.mypanel").offset().left;
-
-							var old_left = $(".tree_active.mypanel").scrollLeft();
-
-		    			if(dif_left < 0) {		    				
-		    				$(".tree_active.mypanel").stop().animate({"scrollLeft":old_left+dif_left - 60 },500, "swing");	
-		    			}
-
-		    			var next_panel_div = $(".tree_active .selected").parents(".panel").nextAll(".panel:not(width_panel):first").find("li");
-							var next_panel = next_panel_div.width()+60;
-
-
-							
-		    			var dif_right = ($(".tree_active .selected").offset().left + $(".tree_active .selected").width()) - ($(".tree_active.mypanel").offset().left + $(".tree_active.mypanel").width()) + next_panel;
-		    			//console.info("dif_right = ",dif_right);
-
-		    			if(dif_right > 0) {
-
-		    				$(".tree_active.mypanel").stop().animate({"scrollLeft":old_left+dif_right },500);		
-		    			}
-
-
-
-		     		} else {
-
-		 	  			var w=0; 
-		 			  	$(".tree_active.mypanel .panel").quickEach(function(){w+=$(this).width()});
-		 	  			//console.info("OH END");
-					 		var thisWidth = w;
-						 	if(!$(".makedone").is(":visible"))
-						 		if(!isTree && !isMindmap) {
-							 		//if($('.mypanel').scrollLeft()!=thisWidth) $(".mypanel").stop().animate({"scrollLeft":thisWidth},500);		 		
-						 		}
-
-					 	} //if(need_width)
-
-
-//	     if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
-//		 console.info("rep-open_node_1");
-	     
-	     clearTimeout(repaint_timer);
-	     if(isMindmap) repaint_timer = setTimeout(function(){myjsPlumb.setSuspendDrawing(false,true);},5);
-
-		 } //jsOpenNode
 		 
 		 this.jsSetTitle = function(id) {
 		 		return false;
@@ -860,23 +886,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 }
 
-		 //выбрать заметку и загрузить в редакторе
-		 this.jsSelectNode = function(id,nohash,iamfrom) { //открыть заметку в календаре и в редакторе
-		 //	i_am_from - кто вызвал: redactor, calendar, tree, diary
-//		 	mypanel.find("#node_"+id).addClass("selected");
-//			if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
-		 	clearTimeout(open_redactor_timer);
-		 	open_redactor_timer = setTimeout(function()
-		 		{
-			 	this_db.jsPathTitle(id); //устанавливаем путь в шапку
-		 		api4tree.jsSetSettings(id);
-		 	 	api4editor.jsRedactorOpen([id],iamfrom); 
-		 	 	jsCalendarNode(id);
-		 	 	jsAddFavRed("",id);
-		 	 	$(".redactor_").blur();
-		 	 	},50 );
-		 
-		 }
+
+
 
 	  } //arguments.callee.instance
 	 } //if typeof

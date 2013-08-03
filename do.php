@@ -926,6 +926,7 @@ if (isset($HTTP_GET_VARS['sync_new']))
 {
 $t1 = now();
 
+
 $disp_time = false;
 
 $now = now();
@@ -960,6 +961,8 @@ $changes_comments =  json_decode( $ch_comments , true );
 
 if(count($changes)>0 || count($changes_comments)>0)
 push(array("am"),array('type' => "sync_cnt", 'from' => $fpk_id, 'txt' => "Клиент прислал ".count($changes)." изменений + ".count($changes_comments)." комментариев. Версия: ".$version));
+
+
 
 if($disp_time) echo "<hr>Prepare_ended = ".(now() - $t1)."<hr>"; $t1=now();
 
@@ -1386,7 +1389,6 @@ if($disp_time) echo "<hr>ALL loaded = ".(now() - $t1)."<hr>"; $t1=now();
 
 
 echo json_encode($confirm_saved_id);
-
 
 exit;
 }
@@ -2157,40 +2159,53 @@ exit;
 
 function get_all_frends($user_id)
 {
-$sqlnews = "SELECT * FROM tree_users WHERE id=".$user_id." OR frends LIKE '%".$user_id."%' ORDER by fio";
+  	$memcache_obj = new Memcache;
+  	$memcache_obj->connect('localhost', 11211);
+  	$var_key = $memcache_obj->get('frends_'.$user_id);
+  	  	
+  	if(!empty($var_key)) {
+  		$answer = json_decode($var_key);
+  	} else {
 
-  $result = mysql_query_my($sqlnews);   
-  $i=0;
-  while (@$sql = mysql_fetch_array($result))
-  	{
-  	$answer["frends"][$i]["user_id"] = $sql["id"];
-  	$answer["frends"][$i]["fio"] = $sql["fio"];
-  	$answer["frends"][$i]["email"] = $sql["email"];
-  	$answer["frends"][$i]["female"] = $sql["female"];
-  	$answer["frends"][$i]["lastvisit"] = $sql["lastvisit"];
-  	
-  	if(!$sql["foto"]) $foto = "img/nofoto.png";
-  	else $foto = $sql["foto"];
-  	
-  	$answer["frends"][$i]["foto"] = $foto;
-  	$i++;
+	  	$sqlnews = "SELECT * FROM tree_users WHERE id=".$user_id." OR frends LIKE '%".$user_id."%' ORDER by fio";
+
+	  	$result = mysql_query_my($sqlnews);   
+	  	$i=0;
+	  	while (@$sql = mysql_fetch_array($result))
+	  		{
+	  		$answer["frends"][$i]["user_id"] = $sql["id"];
+	  		$answer["frends"][$i]["fio"] = $sql["fio"];
+	  		$answer["frends"][$i]["email"] = $sql["email"];
+	  		$answer["frends"][$i]["female"] = $sql["female"];
+	  		$answer["frends"][$i]["lastvisit"] = $sql["lastvisit"];
+	  		
+	  		if(!$sql["foto"]) $foto = "img/nofoto.png";
+	  		else $foto = $sql["foto"];
+	  		
+	  		$answer["frends"][$i]["foto"] = $foto;
+	  		$i++;
+	  		}
+	  		
+	  	$sqlnews = "SELECT * FROM tree_share WHERE host_user=".$user_id." OR delegate_user=".$user_id."";
+	  	
+	  	$result = mysql_query_my($sqlnews);   
+	  	$i=0;
+	  	while (@$sql = mysql_fetch_array($result))
+	  		{
+	  		$answer["share"][$i]["tree_id"]=$sql["tree_id"];
+	  		$answer["share"][$i]["host_user"]=$sql["host_user"];
+	  		$answer["share"][$i]["delegate_user"]=$sql["delegate_user"];
+	  		$answer["share"][$i]["readed"]=$sql["readed"];
+	  		$answer["share"][$i]["parent_id_user"]=$sql["parent_id_user"];
+	  		$answer["share"][$i]["changetime"]=$sql["changetime"];
+	  		$answer["share"][$i]["block"]=$sql["block"];
+	  		$i++;
+	  		}
+
+	  	$memcache_obj->set('frends_'.$user_id, json_encode($answer), false, 30*60);	  	
+	  	
   	}
-  	
-  $sqlnews = "SELECT * FROM tree_share WHERE host_user=".$user_id." OR delegate_user=".$user_id."";
-  
-  $result = mysql_query_my($sqlnews);   
-  $i=0;
-  while (@$sql = mysql_fetch_array($result))
-  	{
-  	$answer["share"][$i]["tree_id"]=$sql["tree_id"];
-  	$answer["share"][$i]["host_user"]=$sql["host_user"];
-  	$answer["share"][$i]["delegate_user"]=$sql["delegate_user"];
-  	$answer["share"][$i]["readed"]=$sql["readed"];
-  	$answer["share"][$i]["parent_id_user"]=$sql["parent_id_user"];
-  	$answer["share"][$i]["changetime"]=$sql["changetime"];
-  	$answer["share"][$i]["block"]=$sql["block"];
-  	$i++;
-  	}
+
   	
   	
 	return $answer;  
@@ -2231,7 +2246,20 @@ if(true)
 
 function get_all_share_children($user_id)
 {
-return set_all_share_children($user_id);
+
+  	$memcache_obj = new Memcache;
+  	$memcache_obj->connect('localhost', 11211);
+  	$var_key = $memcache_obj->get('share_children_'.$user_id);
+  	  	
+  	if(!empty($var_key)) {
+  		$answer = json_decode($var_key);
+  	} else {
+	  	$answer = set_all_share_children($user_id);
+	  	$memcache_obj->set('share_children_', $answer, false, 10*60);	  	
+	}
+	
+	return $answer;
+
   $sqlnews = "SELECT cookie FROM tree_users WHERE id=".$user_id;
   $result = mysql_query_my($sqlnews); 
   @$sql = mysql_fetch_array($result);
