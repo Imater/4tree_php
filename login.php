@@ -284,6 +284,7 @@ h1 {
 	font-family: Verdana;
 text-shadow: 0px -1px 1px rgba(0,0,0,0.9);
 	cursor: pointer;
+	word-wrap: break-word;
 }
 
 h1:hover {

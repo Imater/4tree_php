@@ -511,7 +511,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	  else var display = "opacity:1;";
 		 	  
 		 	  var img = "<div class='folder_closed"+isFull+"'>"+"<div class='countdiv'>"+datacount+"</div>"+"</div>";
-		 	  img = "<div class='folder_closed"+isFull+"'>"+ "<i class='icon-folder-1'>"+"<div class='countdiv'>"+datacount+"</div>"+"</i></div>";
+		 	  img = "<div class='folder_closed"+isFull+"'>"+ "<i class='icon-folder-1 fav_color_"+data.fav+"'>"+"<div class='countdiv'>"+datacount+"</div>"+"</i></div>";
 		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-right-dir'></i></div>";
 		 	  }
 		 	else 
@@ -827,11 +827,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  
     	  	this_db.jsCalcTabs();  //раcсчитываю ширину табов и перекидываю лишние в всплывающий список
     	  }
-    	  
     	  this.jsOpenTab = function(id) {
 
 	    	  var tab_exist = $("#tree_header li[myid="+id+"]");
 	    	  var element = api4tree.jsFind(id);
+	    	  if(!element) return false;
 	    	  var title = element.title;
 	    	  
 	    	  if(tab_exist.length) {
@@ -847,6 +847,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				      $(".tree_tab_menu .add_tab").before(new_tab);
 			      	  $(".tree_tab_menu").find(".active").removeClass("active");
 				      $(".tree_tab_menu li:last").addClass("active").addClass("temp").attr("myid",id);		    	  	  
+					  api4tree.jsCurrentOpenPanelsAndTabsSave();
 	    	  	  }
 		    	  
 	    	  }
@@ -1879,6 +1880,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		      })
 
+			  $("#close_all_tabs_except_current").on("click", function() {
+				  $(".tree_tab_menu li:not(.active)").remove();
+				  api4tree.jsCurrentOpenPanelsAndTabsSave();
+			  });
+
 		   	  $(".tree_tab_menu").on("click",".icon-cancel",function(){
 		   	  	var next_li;
 		   	  	var parent_li = $(this).parents("li:first");
@@ -1893,6 +1899,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					$(this).remove();
 					if(next_li) next_li.addClass("active");
 					api4tree.jsCalcTabs();
+					api4tree.jsCurrentOpenPanelsAndTabsSave();
 		      	});
 		      	return false;
 		      });
@@ -1905,10 +1912,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	} else {
 			      	$(this).find("i:last").attr("class", "icon-down-dir");
 		      	}
+				api4tree.jsCurrentOpenPanelsAndTabsSave();
+				return false;		      	
 		      });
 
 		      $("#hide_left_panel").on("click",function(){
 		      	$("body").toggleClass("left_panel_hide");
+				api4tree.jsCurrentOpenPanelsAndTabsSave();		      	
 		      });
 		  
 			  $("#tree_themes").on("click", ".theme_el", function(){
@@ -2251,6 +2261,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  },30000);
 
 			$.idleTimer(5*1000);
+			
+			window.onblur = function(){
+				$("#hotkeyhelper").hide();			
+			};
+
+			
 			$(document).bind("active.idleTimer", function(){
 				jsSetTimeNow();
 				clearTimeout(screensaver_tm);
@@ -2604,23 +2620,36 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	}
 			  });			
 
-
+			  
+			  $(".makedone_page_3").on("click","#clear_all_icons",function(){
+			      var id = $(".makedone").attr("myid");
+			      var title = api4tree.jsFind(id).title;
+			      title = strip_tags(title).trim();
+			      if(id) { 
+			      	api4tree.jsFind(id, {title:title}); jsRefreshTree(); 
+			      	$(".tree_tab_menu li[myid='"+id+"'] a").html(title);
+				  	api4panel.jsPathTitle(id); //устанавливаем путь в шапку
+			      }			  	
+			  });
 		  	  //иконки для заголовка элемента
-			  $("#root-menu-div").on("click",".fav_icon",function(){
-			      var fav = $(this).find("i").attr("class");
+			  $("#icons_and_colors").on("click","i",function(){
+			      var fav = $(this).attr("class");
 			      var id = $(".makedone").attr("myid");
 			      var title = api4tree.jsFind(id).title;
 			      title = strip_tags(title).trim();
 			      title = "<i class='"+fav+"'></i> "+title;
 			      if(id && fav) { 
-			      	api4tree.jsFind(id, {title:title}); api4panel.jsRefreshOneElement(id); 
+			      	api4tree.jsFind(id, {title:title}); jsRefreshTree(); 
+			      	$(".tree_tab_menu li[myid='"+id+"'] a").html(title);
+				  	api4panel.jsPathTitle(id); //устанавливаем путь в шапку
+			      	
 			      }
 			      console.info("icon=",fav,id);
 			      return false;
 			  });
 			  
 			  //цвет правого квадратика рядом с делом
-			  $("#root-menu-div").on("click",".fav_color",function(){
+			  $(".makedone_page_3").on("click",".fav_color",function(){
 				 	var fav = $(this).attr("fav");
 				 	var id = $(".makedone").attr("myid");
 				 	if(id) { api4tree.jsFind(id, {fav:fav}); jsRefreshTree(); }
@@ -2837,6 +2866,60 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  }
 		  
+		  var save_panels_timer;
+		  this.jsCurrentOpenPanelsAndTabsSave = function() {
+		  	  clearTimeout(save_panels_timer);
+		  	  save_panels_timer = setTimeout(function(){
+		  	  var to_save = {};
+			  to_save.makedone = (v=$(".makedone_header li.active").attr("myid"))?v:false;
+			  to_save.calendar_buttons = (v=$(".tree_footer_menu2 li.active").attr("id"))?v:false;
+
+			  to_save.is_left_open = !( $("body").hasClass("left_panel_hide") );
+			  to_save.is_show_pomidors = $("#tree_left_panel").hasClass("show_pomidors");
+			  to_save.is_show_top_tree = $("#tree_editor").hasClass("params_open");
+
+			  to_save.top_tabs = [];
+			  $("#tree_header .tree_tab_menu li").each(function(i,el) {
+				  to_save.top_tabs.push( {myid: $(this).attr("myid"), title: $(this).html(), active: $(this).hasClass("active") });
+			  });
+			  var answer = JSON.stringify(to_save);
+			  localStorage.setItem("users_opened_panels", answer);
+			  setTimeout(function(){ onResize(); }, 500);
+//			  console.info( answer );
+			  }, 1500);
+		  }
+
+		  this.jsCurrentOpenPanelsAndTabsRestore = function() {
+			  var to_load = localStorage.getItem("users_opened_panels");
+			  if(to_load) {
+				  to_load = JSON.parse(to_load);
+				  console.info(to_load);
+				  if(to_load.makedone) {
+				  		$(".makedone_header li[myid='"+to_load.makedone+"']").click();
+				  }
+				  if(to_load.calendar_buttons) {
+				  		$(".tree_footer_menu2 li#"+to_load.calendar_buttons).click();
+				  }
+				  if(!to_load.is_left_open) {
+				  		$("body").addClass("left_panel_hide");
+				  }
+				  if(to_load.is_show_pomidors) {
+				  		$("#tree_left_panel").addClass("show_pomidors");
+				  }
+				  if(to_load.is_show_top_tree) {
+				  		$("#tree_editor").addClass("params_open");
+				  }
+				  
+				  $.each(to_load.top_tabs, function(i, el){
+					  api4tree.jsOpenTab(el.myid );
+					  $("#tree_header .temp").removeClass("temp");
+					  console.info(el.myid);
+				  });
+				  
+			  }
+			  
+		  }
+		  
 		  //кнопки табов под редактором и календарём
 		  function jsMakeFavTabsKeys() {
 		  
@@ -2859,7 +2942,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    		api4tree.jsStartShare( $(".makedone").attr("myid") ); //приводит к постоянным запросам в сеть
 			    	}
 			    }
-
+				api4tree.jsCurrentOpenPanelsAndTabsSave();
 			  	return false;
 			  });
 			  
@@ -2949,6 +3032,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      } else {
 			      	$("#tree_news").hide();
 			      }
+				  api4tree.jsCurrentOpenPanelsAndTabsSave();
 			      return false;
 			 });
 			  
@@ -3732,7 +3816,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	 if((e.altKey==true) && (e.keyCode==18)) { //нажатый альт вызывает помощь по горячим клавишам
 				  	if(alt_show_timer_started == false)  {
 				  	 	alt_show_timer_started = true;
-				  	 	show_help_timer = setTimeout(function(){ $("#hotkeyhelper").show(); },700);
+				  	 	show_help_timer = setTimeout(function(){ $("#hotkeyhelper").show(); },1700);
 //				  	 	console.info("STARTING...");
 			  	 	}
 		  	 	 }
@@ -3741,7 +3825,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	 if( (e.altKey==true) && (e.keyCode==68) )  { //D - открыть дневник
 			    	   e.preventDefault();					   
 			    	   jsHide_help();
-			      	   $(".todaydate").click();
+			      	   var id = this_db.jsDiaryPath( jsNow() );
+			      	   api4panel.jsOpenPath(id);
 		         }
 			  
 			     key_help.push({key:"A",title:"добавить дело"});
@@ -3818,37 +3903,37 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				   jsHide_help();
 			  	   $("#tree_header li:eq(2)").click();
 			  	 }
-			     key_help.push({key:"3",title:"вкладка №4"});
+			     key_help.push({key:"4",title:"вкладка №4"});
 			  	 if( (e.altKey==true) && (e.keyCode==52) ) {
 			       e.preventDefault();
 				   jsHide_help();
 			  	   $("#tree_header li:eq(3)").click();
 			  	 }
-			     key_help.push({key:"3",title:"вкладка №5"});
+			     key_help.push({key:"5",title:"вкладка №5"});
 			  	 if( (e.altKey==true) && (e.keyCode==53) ) {
 			       e.preventDefault();
 				   jsHide_help();
 			  	   $("#tree_header li:eq(4)").click();
 			  	 }
-			     key_help.push({key:"3",title:"вкладка №6"});
+			     key_help.push({key:"6",title:"вкладка №6"});
 			  	 if( (e.altKey==true) && (e.keyCode==54) ) {
 			       e.preventDefault();
 				   jsHide_help();
 			  	   $("#tree_header li:eq(5)").click();
 			  	 }
-			     key_help.push({key:"3",title:"вкладка №7"});
+			     key_help.push({key:"7",title:"вкладка №7"});
 			  	 if( (e.altKey==true) && (e.keyCode==55) ) {
 			       e.preventDefault();
 				   jsHide_help();
 			  	   $("#tree_header li:eq(6)").click();
 			  	 }
-			     key_help.push({key:"3",title:"вкладка №8"});
+			     key_help.push({key:"8",title:"вкладка №8"});
 			  	 if( (e.altKey==true) && (e.keyCode==56) ) {
 			       e.preventDefault();
 				   jsHide_help();
 			  	   $("#tree_header li:eq(7)").click();
 			  	 }
-			     key_help.push({key:"4",title:"вкладка №9"});
+			     key_help.push({key:"9",title:"вкладка №9"});
 			  	 if( (e.altKey==true) && (e.keyCode==57) ) {
 			       e.preventDefault();
 				   jsHide_help();
@@ -6345,6 +6430,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  function save_all_text_in_a_while_2(e,html) { //чтобы не сохранять только-что открытый текст
 		  	  if((jsNow() - last_open_redactor_time)>800) {
 			  	save_all_text_in_a_while(e, html);
+			  } else {
+				  console.info("Не сохраняю");
 			  }
 		  }
 

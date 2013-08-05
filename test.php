@@ -22,6 +22,10 @@ $(document).ready(function(){
 </script>
 
 <?
+
+$url = "grant_type=password&username=8ab96bed02fc697de66ac528bcd4814f&password=b800d2f5131c9512e5644925479673eb&client_id=4tree_web&client_secret=4tree_passw&secret=888";
+
+
 	if(class_exists('Memcache')){
   // Memcache is enabled.
   	echo "HELLO!!!";

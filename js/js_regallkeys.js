@@ -1608,7 +1608,7 @@ function onResize() //вызывается при каждом ресайзе с
 			$("#tree_editor .calendar_and_others").css('height',main_y);
 			
 			
-			var newheight=$('#calendar').parent("div").height()-30;
+			var newheight=$('#calendar').parent("div").height()-30-10;
 			if( $("#content1").hasClass("v3")  ) newheight += 0;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight-21+9);
@@ -1808,7 +1808,7 @@ function jsShowCalendar() //отображаю календарь
 
 function jsSetTimeNow() //устанавливаю красную полоску - показывающую текущую дату
 {
-		if(typeof is_mobile != "undefined") return true;
+//		if(typeof is_mobile != "undefined") return true;
 		var cur_view = calend.fullCalendar('getView').name;
 		var myl,myleft,mywidth;
 		
@@ -1824,17 +1824,11 @@ function jsSetTimeNow() //устанавливаю красную полоску
 		           else { myl=0; $('.fc-mynow').remove(); }
 		           
 		           
-				   if($.cookie('swap_calendar')==0)
-		           var swap = 1;
-		           else
-		           var swap = $('#left_top').width()+1;
+		           var swap = parseInt( $('#tree_editor').css("left").replace("px","") );
 		           
-				   myleft=myl-$('.fc-agenda-axis').width()-swap+18-20;
-				   				   
-				   if($('#top').hasClass('fullscreen')) myleft=myl-2;
-				   if($('#left_bottom2').hasClass('fullscreen')) myleft=myl-swap-3;
-				   				   
-				   mywidth=$('.fc-today').width()+1; //ширина указателя текущего времени
+				   myleft=myl-$('.fc-agenda-axis').width()-swap+29;
+				   				   				   				   
+				   mywidth=$('.fc-today').width()+2; //ширина указателя текущего времени
 				   
 				   }
 		if (cur_view=='agendaDay')

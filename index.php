@@ -316,19 +316,14 @@ $(document).ready(function(){
 
 
 		<div id="tree_header">
-		
-		
-		
-
-			
 			<ul class="tree_tab_menu tabs clearfix noselectable">
 			<!--	<li><a>Дерево</a><i class="icon-cancel"></i></li> -->
 				<span class="add_tab" title="Добавить запись в папку _НОВОЕ"><i class="icon-plus"></i></span>
 			</ul>
 		<div id="tree_fav">
 		</div>
-		
 		</div>
+		<div id="close_all_tabs_except_current"><i class="icon-cancel-circle"></i></div>
 		
 	  <div class="resize_me"></div>
 		
@@ -387,11 +382,11 @@ $(document).ready(function(){
 	  </div>
 
 
-  		  <div id="params_header">
+  		  <div id="params_header" class="noselectable">
   		  	<div class="top_btn first" id="hide_left_panel"><i class="icon-left-1"></i></div>
   		  	<div class="top_btn second" id="open_params">второе дерево<i class="icon-down-dir"></i></div>
 
-			<div id="path_tree" class="path_line noselectable">
+			<div id="path_tree" class="path_line">
 				<ul></ul>
 			</div>
 
@@ -655,6 +650,19 @@ font-weight: bold;">Поиск</span>
 
 		    <div class="makedone_page_3 page">
 		    	<div id="icons_and_colors"></div>
+		    	<div id="clear_all_icons"><i class="icon-cancel-circle"></i>без иконки</div>
+		    	<div id="select_color_of_folder">
+						<ul>
+							<li><a class="fav_color fav_red" fav="1"><i class="icon-folder-1"></i></a></li>
+							<li><a class="fav_color fav_yellow" fav="2"><i class="icon-folder-1"></i></a></li>
+							<li><a class="fav_color fav_green" fav="3"><i class="icon-folder-1"></i></a></li>
+							<li><a class="fav_color fav_cyan" fav="4"><i class="icon-folder-1"></i></a></li>
+							<li><a class="fav_color fav_blue" fav="5"><i class="icon-folder-1"></i></a></li>
+							<li><a class="fav_color fav_orange" fav="6"><i class="icon-folder-1"></i></a></li>
+							<li><a class="fav_color fav_magenta" fav="7"><i class="icon-folder-1"></i></a></li><br><br>
+							<li><a class="fav_color fav_no" fav="0"><i class="icon-folder-1"></i></a></li>
+						</ul>
+				</div>
 		    </div> <!-- page2 -->
 
 		    <div class="makedone_page_4 page">
@@ -676,6 +684,12 @@ font-weight: bold;">Поиск</span>
 	<input id="title_enter" value="Плагин для нахождения разницы между двумя текстами"><br>
 	<div id="send_mail" class="s_button"><i class='icon-mail-2'></i> отправить заметку по email</div>
 </div>
+
+<div id="hotkeyhelper">
+	<h4>Горячие клавиши</h4>
+	<ul></ul>
+</div>
+
 
 
 <div id="tree_settings" style="display:none">

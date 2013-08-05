@@ -505,7 +505,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	myli = "<div "+isVisible+" class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'>"+"</div>"; //разделитель
 		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='"+info.isFolder+"'>";
 		 	myli += "<div class='big_n_title'>";
-		 	myli += "<div class='tcheckbox fav_color_"+data.fav+"' title='"+data.id+":"+position+"'>"+info.comment_count+"</div>" + info.icon_share;
+		 	myli += "<div class='tcheckbox' title='"+data.id+":"+position+"'>"+info.comment_count+"</div>" + info.icon_share;
 		 	myli += "<div class='date1' myid='"+(data.tmp_next_id?data.tmp_next_id:"")+"' childdate='"+(data.tmp_nextdate?data.tmp_nextdate:"")+"' title='"+data.date1+""+(data.tmp_next_title?data.tmp_next_title:"")+"'></div>";
 		 	myli += info.remind + info.triangle + info.countdiv + info.img + info.needsync;
 		 	myli += "<div class='n_title"+info.crossline+"' myid='"+data.id+"'>";
@@ -522,16 +522,16 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 //обновляет элемент на экране
 		 this.jsRefreshOneElement = function(myid) {
-		    var el = $(".mypanel #node_"+myid);
+		    var el = $(".tree_active.mypanel #node_"+myid);
 		    var make_class="";
 		    if (el.hasClass("selected")) make_class = "selected";
 		    if (el.hasClass("old_selected")) make_class = "old_selected";
 		    el.prev(".divider_li").remove();
 		    var myul = el.find("ul:first").clone(); //сохраняю вложенный список
 		    el.replaceWith( api4panel.jsRenderOneElement( api4tree.jsFind(myid) ) );
-		    $(myul).appendTo("#node_"+myid); //вставляю вложенный список обратно
+		    $(myul).appendTo(".tree_active #node_"+myid); //вставляю вложенный список обратно
 		    if(make_class!="") {
-		 	    $("#node_"+myid).addClass(make_class);
+		 	    $(".tree_active #node_"+myid).addClass(make_class);
     		}
 		    this_db.jsPrepareDate();
 		    jsMakeDrop();
@@ -1281,6 +1281,7 @@ var API_4OTHERS = function() {
 		
 			$("#show_pomidors_panel").on("click", function() {
 			   $("#tree_left_panel").toggleClass("show_pomidors");
+			   api4tree.jsCurrentOpenPanelsAndTabsSave();
 			   return false;
 			});
 
@@ -1638,8 +1639,7 @@ function jsDoFirst() { //функция, которая выполняется �
 		progress_load=200;
 		jsProgressStep();
 		api4tree.jsMakeMakedoneKeys(); //кнопки меню элемента (где дата и поделиться)
-		var view_type = localStorage.getItem("view_type");
-		if(view_type) jsMakeView(view_type);
+		api4tree.jsCurrentOpenPanelsAndTabsRestore(); //восстанавливаем все открытые пользователем панели и вкладки
 		setTimeout(function() { 
 			//jsFotoDoFirst(); //инициализируем фото-редактор
 			//jsLoadWelcome();

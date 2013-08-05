@@ -1224,10 +1224,9 @@ background-color: #d2ffdf !important;*/
 
 .event-selected
 {
-border-color:rgba(0,20,230,0.9) !important;
-box-shadow: 0px 0px 10px rgba(0,20,230,0.9);
-color:rgba(0, 5, 121, 1) !important;
-font-weight: bold;
+/*border-color:rgba(0,20,230,0.9) !important;*/
+box-shadow:0px 0px 6px rgba(0, 11, 126, 0.9);
+/*color:rgba(0, 5, 121, 1) !important;*/
 }
 
 
@@ -5188,52 +5187,48 @@ background: #f5f4f8;
 .fav_color
 {
 display: inline-block;
-height: 10px;
-width: 10px;
+height: 20px;
+width: 20px;
 margin: 2px;
-border-radius: 3px;
+font-size: 20px;
 }
 
-.fav_color b
+.fav_color i
 {
-font-weight: normal;
-margin-left: 30px;
-position: absolute;
-bottom: 5px;
-display: block;
+text-shadow: -1px 0 #888, 0 1px #888, 1px 0 #888, 0 -1px #888;
 }
 
 .fav_red, .fav_color_1
 {
-border:2px solid red;
+color: #ffa7a7 !important;
 }
 .fav_yellow, .fav_color_2
 {
-border:2px solid #fcf400;
+color: #fffb81  !important;
 }
 .fav_green, .fav_color_3
 {
-border:2px solid green;
+color: #9be39b !important;
 }
 .fav_blue, .fav_color_5
 {
-border:2px solid blue;
+color: #b0b0ff  !important;
 }
 .fav_magenta, .fav_color_7
 {
-border:2px solid magenta;
+color: #ffb3ff  !important;
 }
 .fav_orange, .fav_color_6
 {
-border:2px solid #ffc800;
+color: #ffffff  !important;
 }
 .fav_cyan, .fav_color_4
 {
-border:2px solid #00eaff;
+color: #aaf8ff  !important;
 }
 .fav_no
 {
-background: #eeeeee;
+color: #fbdf8c  !important;
 }
 .fav_color_0
 {
@@ -5976,7 +5971,7 @@ color: #777 !important;
 }
 
 ._jsPlumb_connector {
-	display: none;
+/*	display: none; */
 }
 
 .tree-open ._jsPlumb_connector {

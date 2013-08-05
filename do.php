@@ -389,16 +389,19 @@ exit;
 
 
 
-if (isset($HTTP_POST_VARS['registrate_me'])) 
+if (isset($HTTP_GET_VARS['registrate_me'])) 
 {
-$email = strtolower( trim($HTTP_POST_VARS['email']) );
-$passw = $HTTP_POST_VARS['passw'];
+$email = strtolower( trim($HTTP_GET_VARS['email']) );
+$passw = $HTTP_GET_VARS['passw'];
 
 $sqlnews="SELECT count(*) cnt FROM `tree_users` WHERE email LIKE '%".mysql_real_escape_string($email)."%' LIMIT 1";
+
+//echo $sqlnews;
+
 $result = mysql_query_my($sqlnews); 
 @$sql = mysql_fetch_object ($result);
 
-if($sql->cnt>0 AND false) { echo $email.' уже зарегистрирован'; exit; }
+if($sql->cnt>0) { echo $email.' уже зарегистрирован'; exit; }
 else
  {
  	$hash = '4tree_'.substr(md5($email),5,10);
@@ -421,12 +424,13 @@ else
 						   
 	$result = mysql_query($sqlnews); 
 
-  push(array("am"),array('type' => "new_user", 'from' => $fpk_id, 'txt' => "Новый пользователь <b title='".addslashes($sqlnews)."'>".$email."</b>"));
-	
     $sqlnews2 = "SELECT LAST_INSERT_ID() id";
 	$result = mysql_query($sqlnews2); 
 	@$sql = mysql_fetch_array ($result);	
     $new_user = $sql["id"];
+
+  push(array("am"),array('type' => "new_user", 'from' => $fpk_id, 'txt' => "Новый пользователь ".$new_user." <b title='".addslashes($sqlnews)."'>".$email."</b>"));
+	
 	
 	$sql="";
 	$sql["id"] = 6570;
@@ -2255,7 +2259,7 @@ function get_all_share_children($user_id)
   		$answer = json_decode($var_key);
   	} else {
 	  	$answer = set_all_share_children($user_id);
-	  	$memcache_obj->set('share_children_', $answer, false, 10*60);	  	
+	  	$memcache_obj->set('share_children_'.$user_id, $answer, false, 10*60);	  	
 	}
 	
 	return $answer;
@@ -2367,7 +2371,10 @@ $time_dif = $now - $now_time;
 //все дочерние элементы, которые есть в таблице tree_share
 $share_ids_answer = get_all_share_children($GLOBALS['user_id']); 
 
+//echo $share_ids_answer. " : " ;
+
 $share_ids = $share_ids_answer[0];
+if($share_ids == "") $share_ids = "'sex'";
 $share_ids_readonly = $share_ids_answer[1];
 
 $sync_id = $HTTP_GET_VARS['sync_id'];
@@ -2429,6 +2436,8 @@ VALUES ";
   }
 
   $sqlnews = "SELECT * FROM tree WHERE (user_id=".$GLOBALS['user_id']." OR id IN ( ".$share_ids.") )  AND del=0 ORDER by id";
+
+//  echo $sqlnews;
 
   $result = mysql_query_my($sqlnews); 
   $i=0;

@@ -581,7 +581,7 @@ ul.tabs > li > a{
   overflow: hidden;
   text-overflow: ellipsis;
   text-decoration: none;
-  color: #BBB;
+  color: #AAA;
   cursor: default;
 }
 
@@ -681,7 +681,7 @@ border-top-left-radius: 0px;
 border-bottom-left-radius: 0px;
 border: 1px solid #BBB;
 border-left: none;
-color: #888;
+color: #555;
 font-size: 11px;
 margin-top: 2px;
 cursor: pointer;
@@ -707,7 +707,7 @@ width: 10px;
 	border-bottom-left-radius: 5px;
 	border: 1px solid #BBB;
 	border-right: none;
-	color: #BBB;
+	color: #555;
 	font-size: 12px;
 	margin-top: 2px;	
 	cursor: pointer;
@@ -773,7 +773,7 @@ top:-5px;
    border-top: none;
    margin-top: 0px;
    cursor: pointer;
-   color: #BBB;
+   color: #555;
    text-shadow: 0px 1px 0px #FFF;
    height: 33px;
    width: 30px;
@@ -866,7 +866,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 }
 
 .makedone_h1 {
-font-size: 19px;
+font-size: 18px;
 text-align: center;
 margin-top: 12px;
 margin-bottom: 7px;
@@ -930,4 +930,34 @@ box-shadow: 0px 1px 3px #000;
 
 .left_panel_hide #hide_left_panel i:before {
 	content: '\e866';
+}
+
+#clear_all_icons {
+	margin-top: 10px;
+	margin-bottom: 20px;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#select_color_of_folder ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+#select_color_of_folder li {
+	display: inline-block;
+}
+
+#close_all_tabs_except_current {
+position: absolute;
+right: 8px;
+top: 8px;
+color: #222 !important;
+z-index: 2;
+cursor: pointer;
+}
+
+#close_all_tabs_except_current:hover {
+color:#FFF;
 }

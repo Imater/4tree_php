@@ -65,8 +65,8 @@ var mydata = {
 		 
 var md5email = hex_md5(email+'990990');
 
-var $txt = $.ajax({type: "POST",url: "do.php", data: mydata, success: function(t) { 
-	$('#reg_error').hide().html(t).fadeIn();
+var $txt = $.ajax({type: "GET",url: "do.php", data: mydata, success: function(t) { 
+	$('#reg_page h1').hide().html(t).fadeIn();
 	if (t=='Вы успешно зарегистрировались.<br>Перенаправляю на сайт...') 
 	   {
 	   jsLogin(md5email, passw);
