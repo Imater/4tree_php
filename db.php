@@ -42,13 +42,13 @@ function user_exist($user, $db2){
   	    								  '&client_secret=4tree_passw'.
   	    								  '&secret=888';
   	    								  
-  		echo $params_post;
+//  		echo $params_post;
   	  
   	    curl_setopt($curl, CURLOPT_POSTFIELDS, "test_it_now=1&".$params_post);
   	    $out = curl_exec($curl);
   	    curl_close($curl);
   	    //echo $params_post."<br>".$out;
-  		echo $out;
+//  		echo $out;
   	    return $out;
   } else {
 	    return ""; 
