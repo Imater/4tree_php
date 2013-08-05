@@ -6,7 +6,7 @@
 
 <?
 require_once("db.php");
-
+//qragowhget
 $db2 = new PDO('mysql:dbname=h116;host=localhost;charset=utf8', $config["mysql_user"], $config["mysql_password"]);
 $db2 -> exec("set names utf8");
 $db2->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
