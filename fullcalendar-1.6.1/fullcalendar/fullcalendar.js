@@ -1892,10 +1892,10 @@ function smartProperty(obj, name) { // get a camel-cased/namespaced property of 
 
 function htmlEscape(s) {
 	return s.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
+//		.replace(/</g, '&lt;') //4TREE
+//		.replace(/>/g, '&gt;')
 		.replace(/'/g, '&#039;')
-		.replace(/"/g, '&quot;')
+//		.replace(/"/g, '&quot;')
 		.replace(/\n/g, '<br />');
 }
 
@@ -4096,8 +4096,8 @@ function AgendaEventRenderer() {
 			"</div>" +
 			"<div class='fc-event-bg'></div>";*/
 		var time_start = event.start?(sqltime(event.start)):"";
-		html +=
-			" class='" + classes.join(' ') + "'" + "title = '(В "+time_start+") "+event.title+"'" + "myid = '"+event.id+"'" +
+		html += //4TREE
+			" class='" + classes.join(' ') + "'" + "title = '(В "+time_start+") "+strip_tags(event.title)+"'" + "myid = '"+event.id+"'" +
 			" style='position:absolute;z-index:8;top:" + seg.top + "px;left:" + seg.left + "px;" + skinCss + "'" +
 			">" +
 			"<div class='fc-event-inner fc-event-skin'" + skinCssAttr + ">" +
@@ -4850,8 +4850,8 @@ function DayEventRenderer() {
 				">" +
 				"<div class='fc-event-inner'>"; */
 
-			html +=
-				" class='" + classes.join(' ') + "'" + "title = '"+event.title+"'" + "myid = '"+event.id+"'" +
+			html += //4TREE
+				" class='" + classes.join(' ') + "'" + "title = '"+strip_tags(event.title)+"'" + "myid = '"+event.id+"'" +
 				" style='position:absolute;z-index:8;left:"+left+"px;" + skinCss + "'" +
 				">" +
 				"<div" +

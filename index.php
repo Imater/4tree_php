@@ -114,7 +114,6 @@ $(document).ready(function(){
 
 	<div id="tree_wrap">
 
-		<div class="header_text" style="display:none;"></div>
 		<div class="tree_add_do">
 			<input x-webkit-speech placeholder="Добавить...">
 		</div>
@@ -197,21 +196,6 @@ $(document).ready(function(){
   <ul>
       <li dont_close="true"><input type="checkbox" class="on_off" id="on_off_hide_did"></input><a class="show_hidden_do" style="margin-right:90px;">Показывать выполненные дела</a></li>
       <li class="blank"></li> <!-- separator -->  
-	  <li><a href="#">Расположение панелей</a>
-            <ul>  
-                <li dont_close="true"><span class="m_key">alt + 1</span><a id="v1">Вид №1</a></li>  
-                <li dont_close="true"><span class="m_key">alt + 2</span><a id="v2">Вид №2</a></li>  
-                <li dont_close="true"><span class="m_key">alt + 3</span><a id="v3">Вид №3</a></li>  
-                <li dont_close="true"><span class="m_key">alt + 4</span><a id="v4">Вид №4</a></li>  
-            </ul>  
-	  </li>
-	  <li style="display:none"><a href="#">Отображение дерева</a>
-	  		<ul>
-	  		    <li><a href="#">Панели</a></li>
-	  		    <li><a href="#">Дерево</a></li>
-	  		    <li><a href="#">Карта ума</a></li>
-	  		</ul>
-	  </li>
 	  <li><a href="#">Масштаб дерева</a>
 	  		<ul>
 		  		<li dont_close="true"><span class="m_key">alt <i class="icon-plus-circle"></i></span><a class="m_zoom_in">Увеличить масштаб дерева</a></li>  
@@ -339,7 +323,7 @@ $(document).ready(function(){
 			
 			<ul class="tree_tab_menu tabs clearfix noselectable">
 			<!--	<li><a>Дерево</a><i class="icon-cancel"></i></li> -->
-				<span class="add_tab" title="Добавить запись"><i class="icon-plus"></i></span>
+				<span class="add_tab" title="Добавить запись в папку _НОВОЕ"><i class="icon-plus"></i></span>
 			</ul>
 		<div id="tree_fav">
 		</div>
@@ -350,10 +334,6 @@ $(document).ready(function(){
 		
 	  <div id="tree_left_panel" class="">
 		<div id="top_panel_header">
-			<i data-view="panel_type1"  class="icon-flow-cascade"></i>
-			<i data-view="panel_type2"  class="icon-th-4"></i>
-			<i data-view="panel_type3"  class="icon-th-list"></i>
-			<i data-view="panel_type4"  class="icon-th-list-3"></i>
 		</div>
 		<div class="top_panel panel_type1">
 			<div class="mypanel tree_active" style="" id="tree_1">
@@ -409,16 +389,13 @@ $(document).ready(function(){
 
   		  <div id="params_header">
   		  	<div class="top_btn first" id="hide_left_panel"><i class="icon-left-1"></i></div>
-  		  	<div class="top_btn second" id="open_params"><i class="icon-cog-2"></i><i class="icon-down-dir"></i></div>
+  		  	<div class="top_btn second" id="open_params">второе дерево<i class="icon-down-dir"></i></div>
 
 			<div id="path_tree" class="path_line noselectable">
 				<ul></ul>
 			</div>
 
-  		  	<div class="top_btn" id="hide_right_panel"><i class="icon-right-1"></i></div>
-  		  	<div class="top_btn"><i class="icon-star-empty"></i></div>
-  		  	<div class="top_btn"><i class="icon-ok"></i></div>		  		  
-  		  	<div class="top_btn"><i class="icon-trash"></i></div>
+  		  	<div class="top_btn makedel"><i class="icon-trash"></i></div>
   		  </div>
 
 
@@ -446,10 +423,8 @@ display: inline-block;
 top: 5px;
 left: 12px;"></i>&nbsp;</a>
 		  			  	<ul>
-		  			  	
-		  			  	<li><a href="javascript:" onclick="$('.redactor_btn_html:first').trigger('click');">HTML код</a></li>
-		  			  	<li><a href="#" onclick="jsRedactorInsert()">Вставить галочку</a></li>
-		  			  	<li><a href="#">Отправить по почте</a></li>
+		  			  	<li><a onclick="jsRedactorInsert('checkbox')">Вставить галочку (alt + c)</a></li>
+		  			  	<li><a onclick="jsRedactorInsert('datetime')">Вставить дату (alt + v)</a></li>
 		  			  	</ul>
 		  		  </li>
 		  		  </ul>
@@ -653,10 +628,10 @@ font-weight: bold;">Поиск</span>
 	   <div class="makedone_pages">
 
 		   <div class="makedone_page_1 page">
-			    <div class="mini_label">без дат</div>
+			    <div class="mini_label" id="clear_dates">без дат</div>
 				<input id="makedone_date1" value="27.07.2013"><input id="makedone_time1" value="22:30">&nbsp;—&nbsp; 
 				<input id="makedone_time2" value="23:30"><input id="makedone_date2" value="27.07.2013">
-				<div class="mini_label">весь день</div>
+				<div class="mini_label" id="clear_times">весь день</div>
 				<br>
 
 			   <div id="makedate">
@@ -669,14 +644,13 @@ font-weight: bold;">Поиск</span>
 		    <div class="makedone_page_2 page">
 			   <div class="makelabel">поделиться <i class="icon-export-1"></i>:</div><div id="makedatebutton"> <input type="checkbox" class="on_off" id="on_off_share"></div><br>
 				<div class="makesharediv">
-					<input id="makeshare" readonly="true" value="4tree.ru/gh3">
+					<input id="makeshare" value="4tree.ru/gh3">
 					<div id="makesharestat_count" title="Кол-во просмотров внешней ссылки. Кликните, чтобы увидеть статистику."><b><i class="icon-eye"></i><span>0</span></b></div>
 					<div id="makesharestat">
 					</div>
 				</div>
 
 			   <div class="makelabel"> выполнено <i class="icon-ok-1"></i>:</div><div id="makedatebutton"> <input type="checkbox" class="on_off" id="on_off_did"></div><br>
-			   <div class="makelabel">дата <i class="icon-calendar"></i>:</div><div id="makedatebutton"> <input  checked type="checkbox" class="on_off" id="on_off_date"></div>
 		    </div> <!-- page2 -->
 
 		    <div class="makedone_page_3 page">
@@ -684,15 +658,70 @@ font-weight: bold;">Поиск</span>
 		    </div> <!-- page2 -->
 
 		    <div class="makedone_page_4 page">
-		    	Распечатать
+		    	<a onclick="javascript:api4tree.jsCallPrint('.redactor_');"><i class="icon-print-1"></i> Распечатать заметку</a>
 		    </div> <!-- page2 -->
 		    
 			
 		</div> <!-- pages -->
-	    <div class="makedone_h1" contenteditable="true">Записки дебианщика</div>
+	    <div class="makedone_h1" contenteditable="true"></div>
+		<div class="header_text" style=""></div>
 
 <!--	<div class="makedel" title="Удалить элемент"><i class="icon-trash-1" style="color:#999"></i></div> -->
 </div>
+
+<div class="send_mail_form">
+	<b>email получателя:</b>
+	<input id="email_enter" value="box.valentina@gmail.com"><br>
+	<b>тема электронного письма:</b>
+	<input id="title_enter" value="Плагин для нахождения разницы между двумя текстами"><br>
+	<div id="send_mail" class="s_button"><i class='icon-mail-2'></i> отправить заметку по email</div>
+</div>
+
+
+<div id="tree_settings" style="display:none">
+	<h2>Настройки</h2>
+	<form id="tree_settings_form">
+	<div class="set_center">
+	<div class="left_label">Фамилия Имя:</div>
+	<div class="right_set"><input tabindex=1 name='fio' value='Вецель Евгений' placeholder="Петров Иван"></input></div>
+	<br><br>
+	<div class="left_label">Email №1:</div>
+	<div class="right_set"><input tabindex=2 name='email1' value='' placeholder="4tree@4tree.ru" ></input></div>
+	<div class="left_label">Email №2:</div>
+	<div class="right_set"><input tabindex=3 name='email2' value='' placeholder="4tree@4tree.ru" ></input></div>
+	<div class="left_label">Email №3:</div>
+	<div class="right_set"><input tabindex=4 name='email3' value='' placeholder="4tree@4tree.ru" ></input></div>
+	<div class="left_label">Email №4:</div>
+	<div class="right_set"><input tabindex=5 name='email4' value='' placeholder="4tree@4tree.ru" ></input></div><br>
+	<div class="description">Письма отправленные с этих адресов на 4tree@4tree.ru, будут складываться в папку "_НОВОЕ"</div>
+	<br><br>
+	<div class="left_label">Номер телефона для SMS:</div>
+	<div class="right_set"><input tabindex=6 name='mobilephone' value='' placeholder="79221234567"></input></div><br>
+	<br>
+	<div class="left_label">Ваша фотография:</div>
+	<div class="right_set"><input tabindex=7 name='foto' value='' placeholder="http://4tree.ru/upload/1.jpg"></input></div><br>
+	<br>
+	<div class="is_female">
+		<input type="radio" class="radio" name="gender" value="male" id="male" checked="true"/>
+		<label for="male">Мужчина</label>
+		<input type="radio" class="radio" name="gender" value="female" id="femail" />
+		<label for="female">Женщина</label>
+	</div>
+    <br>
+    <div id="login_social_form">. . .</div>
+    	<div class="left_label"></div>
+    <br>
+	<div class="right_set" style="text-align:center;width:100%;">
+	<div id='send_settings' class='button_send' style="margin-left:10px;">Сохранить</div>
+	<div id='close_settings' class='button_send' style="margin-left:10px">Закрыть</div>
+	</div>
+	
+	</form>
+	
+	<div class="set_center">
+</div>
+
+
 
 
 

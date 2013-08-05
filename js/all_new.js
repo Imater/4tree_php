@@ -47,19 +47,22 @@ var API_4PANEL = function(global_panel_id,need_log) {
 //				  $(".makedone,.makedone_arrow,.makedone_arrow2").slideUp(100);
 				  //$.Menu.closeAll();
 		 }
-		 
+		 		 
 		 //клик по Названию дела. ntitle = $(".ntitle"). Нужно для определения двойного клика.
 		 this.jsTitleClick = function(ntitle,from_n_title) {
-		 	if (ntitle.attr("contenteditable")==true) return true;
+ 			var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
+
+		 	if (ntitle.attr("contenteditable")==true) return true; 
 		 	
 		 	var nowtime = new Date();
 		 	if(((nowtime-lastclick)<800) && (lastclickelement == ntitle.attr("myid"))) needtoedit = true;
 		 	else 
 		 		{
 		 		var needtoedit = false;
-		 		if(!from_n_title) ntitle.parents("li:first").click(); //противный клик
+		 		//if(!from_n_title) 
+//		 		ntitle.parents("li:first").click(); //противный клик
 		 		var id = ntitle.attr("myid");
-		 		this_db.jsOpenNode( id ); //открываю панель
+		 		if(!isTree) this_db.jsOpenNode( id ); //открываю панель
 		 		this_db.jsSelectNode( id ,'tree');
 		 		}
 		 	
@@ -85,104 +88,100 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 
 		 //выбрать заметку и загрузить в редакторе
-		 this.jsSelectNode = function(id,nohash,iamfrom) { //открыть заметку в календаре и в редакторе
+		 this.jsSelectNode = function(id,iamfrom) { //открыть заметку в календаре и в редакторе
 		 //	i_am_from - кто вызвал: redactor, calendar, tree, diary
-//		 	mypanel.find("#node_"+id).addClass("selected");
+		    $(".tree_active .selected").removeClass("selected");
+		 	$(".tree_active #node_"+id).addClass("selected");
 //			if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
 		 	clearTimeout(open_redactor_timer);
 		 	open_redactor_timer = setTimeout(function()
 		 		{
+
+			 	$("#wiki_back_button").hide();
+			 	clearTimeout(hash_timer);
+			 	
+			 	if(true)	{ //если есть хэш - то устанавливаем его в адресную строку
+			 	    var num_id;
+			 	    if(!parseInt(id,10)) num_id=id;
+			 	    else num_id = parseInt(id,10);
+
+			 		var element = api4tree.jsFind(id);
+			 		var title = element.title; //название для шапки сайта
+			 		if (!title)	title = "4tree.ru";
+			 		    
+			 		clearTimeout(set_title_timer);
+			 		set_title_timer = setTimeout(function(){
+			 		    this_db.jsSetTitle(id);
+			 		}, 100);
+			 		    
+			 		if(title) {
+			 		    document.title = "4tree.ru: "+api4tree.jsShortText( strip_tags(title), 150 );
+			 		}
+			 	    
+			 	    hash_timer = setTimeout(function()
+			 	    	{ 
+			 	    	ignorehashchange = true; //делаю так, чтобы изменение хэша не привело к переходу на заметку
+			 	    	setTimeout( function() { ignorehashchange=false; }, 200 );
+			 	    	if(window.location.hash.indexOf("edit")==-1) if(num_id) {
+			 	    			jsSetHashAndPath(num_id);  
+			 	    			//window.location.hash = num_id.toString(36); 
+			 	    		}
+			 	    	},100);
+			 	}
+
 			 	this_db.jsPathTitle(id); //устанавливаем путь в шапку
 		 		api4tree.jsSetSettings(id);
 		 	 	api4editor.jsRedactorOpen([id],iamfrom); 
 		 	 	jsCalendarNode(id);
-		 	 	jsAddFavRed("",id);
+//		 	 	jsAddFavRed("",id);
 		 	 	$(".redactor_").blur();
 		 	 	},50 );
 		 
 		 }
 
+		 this.isTree = {}; //обозначаем элементы - дерево ли это
+		 this.isTree["tree_1"] = $("#tree_1").parent("div").hasClass("panel_type1");
+		 this.isTree["tree_2"] = $("#tree_2").parent("div").hasClass("panel_type1");
+		 
 		 
 		 
 		 var set_title_timer,repaint_timer;
 		 
 		 //открыть заметку с номером, если она на экране (make .selected)
 		 this.jsOpenNode = function(id,nohash,iamfrom) {
-		 	var isTree = false;
-			isTree = $(".tree_active").parent("div").hasClass("panel_type1");
+			var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
 		 	var element = api4tree.jsFind(id);
-		 	
-	 		$(".tree_active.mypanel .selected").addClass("old_selected").removeClass("selected");
-
 	 		var myli = $(".tree_active #node_"+id+":last");
-
 	 		var mypanel = myli.parents(".panel");
 	 		
-	 		var panels_right_count = mypanel.nextAll(".panel").length;
-
 	 		if( myli.length ) {
-
-	 				var left_offset = $("#node_"+id).offset().left;
+	 				var left_offset = $(".tree_active #node_"+id).offset().left;
 	 				if(left_offset==0) left_offset = -1;
-
 	 		}
 
-	 		mypanel.nextAll(".panel").remove(); ////REMOVE_PANEL////
+	 		if(isTree) {
+		 		$(".tree_active.mypanel .selected").removeClass("selected");
+	 		} else {
+		 		mypanel.nextAll(".panel").remove(); ////REMOVE_PANEL////
 
-	 		if(element) $(".tree_active #panel_"+element.parent_id+" li").removeClass("old_selected"); //в текущей панели убираем
+		 		$(".tree_active.mypanel .selected").addClass("old_selected").removeClass("selected");
+		 		//в текущей панели убираем
+		 		mypanel.find("li").removeClass("old_selected").removeClass("tree-open"); 
+		 		
+		 		myli.addClass('tree-open'); //устанавливаем значёк открытой папки
+
+//	 			$(".tree_active .selected,.tree_active .old_selected").removeClass("tree-closed").addClass("tree-open");
+
+	 		}
 
 	 		myli.addClass("selected"); //ставим selected на выбранный элемент
-
-	 		if(!isTree) myli.removeClass('tree-closed').addClass('tree-open'); //устанавливаем значёк открытой папки
 	 		
-	 		if(isTree) $(".tree_active .old_selected").removeClass("old_selected"); //у дерева удаляем старый статус
-	 		
-		 	$("#wiki_back_button").hide();
-		 	clearTimeout(hash_timer);
-
-		 	if(!nohash)	{ //если есть хэш - то устанавливаем его в адресную строку
-		 		var num_id;
-		 		if(!parseInt(id,10)) num_id=id;
-		 		else num_id = parseInt(id,10);
-		 		
-		 		hash_timer = setTimeout(function()
-		 			{ 
-		 			ignorehashchange = true; //делаю так, чтобы изменение хэша не привело к переходу на заметку
-		 			setTimeout( function() { ignorehashchange=false; }, 200 );
-		 			if(window.location.hash.indexOf("edit")==-1) if(num_id) {
-		 					jsSetHashAndPath(num_id);  
-		 					//window.location.hash = num_id.toString(36); 
-		 				}
-		 			},100);
-		 	}
-		 			 		    	
-	 		if(!isTree) {
-	 			$(".tree_active .panel li").removeClass("tree-open").addClass("tree-closed");
-	 			$(".tree_active .selected,.tree_active .old_selected").removeClass("tree-closed").addClass("tree-open");
-	 			} else {
-		 			//$(".selected,.old_selected").removeClass("tree-closed").addClass("tree-open");
-	 			}
-	 		
-	 		var title = element.title; //название для шапки сайта
-	 		if (!title)	title = "4tree.ru";
-	 			
-	 		clearTimeout(set_title_timer);
-	 		set_title_timer = setTimeout(function(){
-	 			this_db.jsSetTitle(id);
-	 		}, 100);
-	 			
-	 		var mytitle = myli.find(".n_title").html();
 	 
-	 		if(mytitle && !nohash) {
-	     		document.title = "4tree.ru: "+api4tree.jsShortText( strip_tags(mytitle), 150 );
-	 		}
-	 
-	 		if( myli.find('.countdiv').length==1 ) {//если это папка, создаю панель
+	 		if( element.tmp_childrens>0 ) {//если это папка, создаю панель
 		 		tree_id = $(".tree_active").attr("id");
-	     		this_db.jsShowTreeNode( tree_id, id, isTree );
-
+	     		this_db.jsShowTreeNode( tree_id, id, isTree ); //вывожу детей этого элемента
 	     	} else {
-	     		if( ($("#content1").hasClass("v1")) || ($("#content1").hasClass("v4")) || ($("#content1").hasClass("v2")) ) {
+	     		if( !isTree ) {
 	 		  		if(!pwidth) pwidth = 285;
 
  		  			if(pwidth>130) {
@@ -204,11 +203,11 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		    			need_width = 0;
 		    			//need_width += mypanel.nextAll(".panel:not(.width_panel):last").width()+2;
 
-		    			var new_left_offset = $("#node_"+id).offset().left;
+		    			var new_left_offset = $(".tree_active #node_"+id).offset().left;
 		    			//console.info("old_offset = ",left_offset, "new_offset = ", new_left_offset);
 		    			var dif = left_offset - new_left_offset;
 
-		    			need_width = -dif + $(".tree_active.mypanel").width() - $(".presize:last").offset().left + 50;
+		    			need_width = -dif + $(".tree_active.mypanel").width() - $(".tree_active .presize:last").offset().left + 50 + parseInt( $("#tree_editor").css("left").replace("px","") );
 		     			if(dif!=0) $(".tree_active.mypanel").append("<div class='panel width_panel' style='width:"+need_width+"px;max-width:"+need_width+"px;'></div>");
 
 		    			$(".tree_active.mypanel").stop().scrollLeft( $(".tree_active.mypanel").scrollLeft() - dif );
@@ -284,6 +283,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	    $('.mypanel').delegate("li","click", function () {
     	    	$(".tree_active").removeClass("tree_active");
     	    	var tree_id = $(this).parents(".mypanel").addClass("tree_active").attr("id");
+				var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
     	    	
     	        if( $(this).find(".ntitle").attr("contenteditable") ) return true; //если редактируется
     	        var dif_between_click = jsNow() - lastclick;
@@ -301,20 +301,19 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	        
     	        	var id = api4tree.node_to_id( $(this).attr("id") );
 
-    	        if( $(this).hasClass('tree-closed') ) { //если ветка свёрнута
+    	        if( !$(this).hasClass('tree-open') ) { //если ветка свёрнута
     	        	api4panel.jsOpenNode( id ); //открываю панель
     	        	api4panel.jsSelectNode( id ,'tree');
     	    
-    	        	if( isTree && ($(this).find(".folder_closed").length!=0) ) { //если дерево и нужно открыть ветку
-    	        		$(this).find(".date1").hide();
-    	        		var timelong = parseInt($(this).find(".countdiv").html(),10)*15; 
+    	        	if( isTree && (!$(this).hasClass("tree-open")) ) { //если дерево и нужно открыть ветку
+//    	        		$(this).find(".date1").hide();
+    	        		var timelong = element.tmp_childrens*15; 
     	        		if(timelong>1000) timelong=500; //большие ветки дольше
     	        		if(timelong<300) timelong=100;   //маленькие ветки открываются быстрее
     	        		var cache_this = $(this);
     	        		$(this).find("ul:first").slideDown(timelong,function(){ 
-    	        			$(this).find(".mypanel .date1[title!='']").show(); 
 							if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
-							cache_this.removeClass("tree-closed").addClass("tree-open");
+							cache_this.addClass("tree-open");
 							
 							console.info("repaint: Ветка отсутствует, открываю");
 							
@@ -324,28 +323,69 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	        	}
     	        } else { //если ветка уже открыта, закрываю её
     	        	if(isTree) {
-						$(this).removeClass("tree-open").addClass("tree-closed");
+						$(this).removeClass("tree-open");
     	        		$(this).find("ul:first").slideUp(50,function(){
 	    	        		if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
 							console.info("repaint: Ветка просто свёрнута, открываю");
     	        		});
     	        	} else {
-    	        		$(this).removeClass("tree-open").addClass("tree-closed");
+    	        		$(this).removeClass("tree-open");
     	        		var id = api4tree.node_to_id( $(this).attr("id") );
     	        		api4panel.jsOpenNode( id ); //открываю панель
     	        		api4panel.jsSelectNode( id ,'tree');
-    	        		$(this).removeClass("tree-closed").addClass("tree-open");
+    	        		$(this).addClass("tree-open");
     	        	}
     	        }
     	    
 				jsHighlightText("remove");
     	        return false;
     	    }); //lili
+    	    
 
 			$(".mypanel").delegate(".n_title","blur", function () {
 				if($(this).attr("contenteditable")) { //сохраняю заметку
 					api4tree.jsSaveTitle( $(this), 1 ); 
 				} 
+				return true;
+			});
+
+			$("#tree_editor").delegate(".makedone_h1","blur", function () {
+				api4tree.jsSaveTitle( $(this), 1 ); 
+				$(".redactor_").focus();
+				return true;
+			});
+
+			$("#tree_editor").delegate(".makedone_h1","focus", function () {
+				$(this).attr("old_title",$(this).html()); 
+				return true;
+			});
+
+			$("#tree_editor").delegate(".makedone_h1","keydown", function (e) {
+				if(e.keyCode==13) {
+					  e.preventDefault();
+					  $(this).blur(); //enter - увожу фокус, при этом сохраняется заметка
+					  return false;
+				}
+				if(e.keyCode==27) {
+				  e.preventDefault();
+				  api4tree.jsSaveTitle( $(this), -1 );
+				  $(this).blur(); //enter - увожу фокус, при этом сохраняется заметка
+				  return false;
+				  }
+
+				  //////////////// analyse parse date ///////////////
+
+			     if(",39,37,40,38,".indexOf(","+event.keyCode+",")!=-1) return true;
+			     var this_n_title = $(this);
+			     clearTimeout(timer_add_do);
+			     timer_add_do = setTimeout(function(){
+			     var mynewdate = api4tree.jsParseDate( this_n_title.html() );
+			     if( mynewdate.date == "") { $(".header_text").html(""); return true; }
+			     $(".header_text").html( mynewdate.date.jsDateTitleFull()+mynewdate.sms );
+			     $(".header_text").attr( "title", mynewdate.date.jsDateTitleFull() );
+			     jsTitle(mynewdate.title,15000);
+			     },200);
+
 				return true;
 			});
 			
@@ -421,7 +461,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
    			   	  api4panel.jsOpenNode(toopen,'nohash');
    			   }
    			   var findli = $('.tree_active #node_'+toopen);
-   			   findli.removeClass("tree-closed").addClass("tree-open");
+   			   findli.addClass("tree-open");
    			   findli.find('ul:first').show();
    			}
 		 
@@ -431,7 +471,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	if(iamfrom!="divider_click") api4panel.jsSelectNode( id , false,iamfrom);
 		   
 		 	findli = $('.tree_active #node_'+id);
-		 	findli.removeClass("tree-closed").addClass("tree-open");
+		 	findli.addClass("tree-open");
 		 	findli.find('ul:first').show();
 		 
 		 	jsFixScroll(2); //делаю так, чтобы видно было все selected и old_selected
@@ -463,7 +503,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	else isVisible = "";
 		 	
 		 	myli = "<div "+isVisible+" class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'>"+"</div>"; //разделитель
-		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='tree-closed "+info.isFolder+"'>";
+		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='"+info.isFolder+"'>";
 		 	myli += "<div class='big_n_title'>";
 		 	myli += "<div class='tcheckbox fav_color_"+data.fav+"' title='"+data.id+":"+position+"'>"+info.comment_count+"</div>" + info.icon_share;
 		 	myli += "<div class='date1' myid='"+(data.tmp_next_id?data.tmp_next_id:"")+"' childdate='"+(data.tmp_nextdate?data.tmp_nextdate:"")+"' title='"+data.date1+""+(data.tmp_next_title?data.tmp_next_title:"")+"'></div>";
@@ -755,7 +795,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		  			$("#"+tree_id+" #node_"+parent_node).
 			 		  				append("<ul class='ul_childrens' myid="+parent_node+"></ul>");
 			 		  		} else {
-			 		  			return false;
+//			 		  			alert(1);
+			 		  			//return false;
 			 		  		}
 			 		  	} else {
 			 		  		var parent_node_panel = $("#"+tree_id+" #panel_"+parent_node);
@@ -795,7 +836,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 
 		 	if(!where_to_add) {
-		 		  if(isTree) where_to_add = $("ul[myid="+parent_node+"]");
+		 		  if(isTree) where_to_add = $("#"+tree_id+" ul[myid="+parent_node+"]");
 		 			else where_to_add = $("#"+tree_id+" #panel_"+parent_node+" ul");
 		 	}
 		 	
@@ -880,7 +921,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		ul_text += "</li>";
 			 	});
 			 	
-			 	$(".header_text").next("ul").html(ul_text);
+//			 	$(".header_text").next("ul").html(ul_text);
 			 	$("#myslidemenu ul,#myslidemenu li").removeAttr("style");
 			 	jqueryslidemenu.buildmenu("myslidemenu", arrowimages);
 
@@ -1604,8 +1645,8 @@ function jsDoFirst() { //функция, которая выполняется �
 			//jsLoadWelcome();
 			jsProgressStep(); $("#load_screen").hide();  
 			check_hash_add_do();
-			$("li[myid=makedone_page_1]").click();
-			$("#open_params").click();
+//			$("li[myid=makedone_page_1]").click();
+//			$("#open_params").click();
 			if(false)
 			setTimeout(function(){
 				alert("Шоу начинается!")
@@ -1760,6 +1801,7 @@ function jsAddFavRed(mytitle,id) {
 
 function jsRefreshTreeFast(element,arrow,date1)
 {
+var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
 //var element = jsFind(myid);
 if(element)
 	{
@@ -1768,10 +1810,10 @@ if(element)
 		if(arrow == "right" || date1) //если я добавляю к родителю
 			{
 				if(isTree) {
-					var where_to_add = $("ul[myid="+element.parent_id+"]");
-					$("#node_"+element.parent_id).removeClass("tree-closed").addClass("tree-open");
+					var where_to_add = $(".tree_active ul[myid="+element.parent_id+"]").show();
+					$(".tree_active #node_"+element.parent_id).addClass("tree-open");
 				} else {
-					var where_to_add = $("#panel_"+element.parent_id).find("ul");
+					var where_to_add = $(".tree_active #panel_"+element.parent_id).find("ul");
 				}
 //				var iii = $("#panel_"+element.parent_id+" li").length;
 				var iii = element.position;
@@ -1779,7 +1821,7 @@ if(element)
 //				var divider = "<div class='divider_li' pos='"+(iii+0.2)+"' myid='"+element.parent_id+"'></div>";
 				var myrender = api4panel.jsRenderOneElement(element,iii);
 				where_to_add.append( myrender );
-				$("#panel_"+element.parent_id).find(".add_do_panel_top").appendTo($("#panel_"+element.parent_id+" ul"));
+				$(".tree_active #panel_"+element.parent_id).find(".add_do_panel_top").appendTo($(".tree_active #panel_"+element.parent_id+" ul"));
 			}
 		else
 			{
@@ -1808,44 +1850,44 @@ var last_refresh;
 var need_to_re_refresh;
 //обновление дерева
 function jsRefreshTree() {
+	console.info("RefreshTree");
 
-var myselected,myold_selected,old_scroll;
-last_refresh = jsNow();
+	var myselected,myold_selected,old_scroll;
+	last_refresh = jsNow();
 
-//если открыто редактирование дерева, то запрет на обновление и повтор через 5 секунд
-if ( ($(".mypanel .n_title[contenteditable=true]").length > 0) || ($(".mypanel #minicalendar").length > 0) ) 
-	{
-	clearTimeout(myrefreshtimer);
-	console.info("Пользователь редактирует, попробую обновить дерево через 3 секунды");
-	myrefreshtimer = setTimeout(function(){ jsRefreshTree(); },3000);
-	return false;
+	//если открыто редактирование дерева, то запрет на обновление и повтор через 5 секунд
+	if ( $(".mypanel .n_title[contenteditable=true]").length > 0 ) {
+		clearTimeout(myrefreshtimer);
+		console.info("Пользователь редактирует, попробую обновить дерево через 3 секунды");
+		myrefreshtimer = setTimeout(function(){ jsRefreshTree(); },3000);
+		return false;
 	}
 
-var scrollleft = $(".mypanel").scrollLeft();
+	jsSnapShotApply("tree_1", jsSnapShotMake("tree_1") ); //обновляем правое дерево
 
-if(isTree) {
-	scrollleft=0;
-	jsRefreshOneFolder(1);
-} else {
-
-		$(".panel").quickEach( function() 
-			{ 
-			if( $(this).attr('id') )
-				{
-				myselected = api4tree.node_to_id( $(this).find(".selected").attr('id') ); 
-				myold_selected = api4tree.node_to_id( $(this).find(".old_selected").attr('id') ); 
-				old_scroll = $(this).scrollTop();
-				api4panel.jsShowTreeNode( "tree_1", $(this).attr("id").replace("panel_","") ); 
-				$(this).scrollTop(old_scroll);
-				$("#node_"+myselected).addClass("selected").removeClass("tree-closed").addClass("tree-open"); 
-				$("#node_"+myold_selected).addClass("old_selected").removeClass("tree-closed").addClass("tree-open"); 
-				
-				}
-			});
-  }
-$('#calendar').fullCalendar( 'refetchEvents' ); 
-$(".mypanel").stop().scrollLeft(scrollleft);
-jsFixScroll(2);
+	var scrollleft = $("#tree_2.mypanel").scrollLeft();
+	
+	$("#tree_2 .panel").quickEach( function() {
+    	var id = $(this).attr('id');
+    	if(id) {
+	    	var panel_id = id.replace("panel_","");
+	    	if( api4tree.jsFindByParent( panel_id ).length >0 ) {
+	    		myselected = api4tree.node_to_id( $(this).find(".selected").attr('id') ); 
+	    		myold_selected = api4tree.node_to_id( $(this).find(".old_selected").attr('id') ); 
+	    		old_scroll = $(this).scrollTop();
+	    		api4panel.jsShowTreeNode( "tree_2", panel_id ); 
+	    		$(this).scrollTop(old_scroll);
+	    		$("#tree_2 #node_"+myselected).addClass("selected").addClass("tree-open"); 
+	    		$("#tree_2 #node_"+myold_selected).addClass("old_selected").addClass("tree-open"); 
+    		} else {
+	    		$(this).remove();
+    		}
+    	}
+    });
+		
+	$('#calendar').fullCalendar( 'refetchEvents' ); 
+	$("#tree_2.mypanel").stop().scrollLeft(scrollleft);
+	jsFixScroll(2);
 
 }
 

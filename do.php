@@ -4544,7 +4544,7 @@ if (isset($HTTP_GET_VARS['onLink']))  //нужно добавить отбор �
   
   
  
-  echo json_encode(0);
+  echo json_encode($is_on);
  
 exit; 
 }

@@ -20,7 +20,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	  member_old_id = false, //для запоминания id выбранной заметки на время пользования дневником
 		  	  sync_now = false, //true - если идёт синхронизация
 		  	  sync_now_timer, maketimer, timer_add_do, search_timer, show_help_timer,last_sos_click,
-		      is_rendering_now = false,	//чтобы чекбоксы календаря не срабатывали во время смены значений
 		  	  allmynotes, allmydates, //заметки и даты для календариков
 		      db, //объект соединения с базой
 		      last_log_time=jsNow(), //время последнего вывода лога
@@ -31,11 +30,28 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      LENGTH_OF_LONG_TEXT = 200; //длина, после которой текст считается длинным и переносится в другую базу
 		      
 
+		  this.jsCallPrint = function(element)
+			  {
+			   var prtContent = $(element);
+			   var prtCSS = '<link rel="stylesheet" href="/templates/css/template.css" type="text/css" />';
+			   var WinPrint = window.open('','','left=50,top=50,width=800,height=640,toolbar=0,scrollbars=1,status=0');
+			   WinPrint.document.write('<div id="print" class="contentpane">');
+			   WinPrint.document.write(prtCSS);
+			   WinPrint.document.write(prtContent.html());
+			   WinPrint.document.write('</div>');
+			   WinPrint.document.close();
+			   WinPrint.focus();
+			   WinPrint.print();
+			   WinPrint.close();
+			   prtContent.innerHTML=strOldOne;
+			  }
 
 
 		  /* !Добавление нового дела */
 		  this.jsAddDoLeftRight = function(arrow, myparent, mytitle, 
 		  								   date1, date2, icon) {
+		   var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
+
 		   var panel,iii;
 		   if(icon) {
 			  var pre_icon = "<i class='"+icon+"'></i> "; 
@@ -92,9 +108,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    if(!newposition) newposition = count+0.9;
 		    
 		    if(arrow=="right") { 
-		    	newposition = $("#panel_"+panel).find("li:last").prev(".divider_li").attr("pos")+10;
+		    	newposition = $(".tree_active #panel_"+panel).find("li:last").prev(".divider_li").attr("pos")+10;
 		    	if(!newposition) newposition = 10;
-		    	sender.addClass("old_selected"); 
+		    	if(!isTree) sender.addClass("old_selected"); 
         	 	parent = panel;
 		    } else {
 			    var pos1 = parseFloat( $(".tree_active .selected").prev(".divider_li").attr("pos") );
@@ -113,6 +129,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    console.info("SAVED-POSITION:",new_element.position);
 		    var new_id = new_element.id;
 		    jsRefreshTreeFast(new_element,arrow,date1);	
+		    api4tree.jsSetSettings(new_id);
 //		    jsRefreshTree();
 		    if(isTree) jsAddToTree(new_id);
 		    $('#calendar').fullCalendar( 'refetchEvents' ); 	
@@ -429,9 +446,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	  {
 		 	  var ans = data.path;
 		 	  var add_text = '<br><span class="search_path">'+ans+'</span>';
-		 	  var search_panel_width = $(".bottom_left").width();
+		 	  var search_panel_width = $("#tree_editor").width();
 		 	  
-		 	  var length = search_panel_width?(search_panel_width/4.5):100;
+		 	  var length = search_panel_width?(search_panel_width/3):100;
 		 	  var findtext = $('#search_filter').val();
 		 	  var founded_text = jsFindText(data.text,findtext,length);
 		 	  
@@ -454,7 +471,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	else
 		 	    hideit = "";
 		 
-		 	needsync = "<div class='syncit'><i class='icon-arrows-cw sync_it_i"+hideit+"'></i></div>";
+		 	needsync = "<div class='syncit'><i class='icon-dot sync_it_i"+hideit+"'></i></div>";
 		 //////
 		 	if(data.did!="") crossline = " do_did";
 		 	else crossline = "";
@@ -495,7 +512,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	  
 		 	  var img = "<div class='folder_closed"+isFull+"'>"+"<div class='countdiv'>"+datacount+"</div>"+"</div>";
 		 	  img = "<div class='folder_closed"+isFull+"'>"+ "<i class='icon-folder-1'>"+"<div class='countdiv'>"+datacount+"</div>"+"</i></div>";
-		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-play'></i></div>";
+		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-right-dir'></i></div>";
 		 	  }
 		 	else 
 		 	  { 
@@ -504,7 +521,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	  if(data.parent_id==1) { var display = "opacity:0;";
 		 	  } else { var display = "opacity:0;"; }
 		 	  
-		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-play'></i></div>";
+		 	  var triangle = "<div class='icon-play-div' style='"+display+"'><i class='icon-right-dir'></i></div>";
 		 	  }
 		 /////////////////////////////////////////////////
 		 	var icon_share = "";
@@ -664,7 +681,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    	  		
 		    	  		if(d.date1<datenow) isdid = isdid+" pasted";
 		    	  		
-		    	  		answer1.push({title:safe_title(d.title), start:d.date1, end:d.date2, 
+		    	  		var sms = "";
+		    	  		if(d.remind>0) sms = '<i class="icon-bell-1 sms_remind"></i>';
+		    	  		
+		    	  		answer1.push({title:safe_title(d.title)+sms, start:d.date1, end:d.date2, 
 		    	  					  allDay:allday, id:d.id,className: isdid });	
 			  		}
 	    	  	});
@@ -692,8 +712,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		  //сохраняет название заметки
     	  this.jsSaveTitle = function( sender, needsave ) {
-    	  
-    	  	sender.removeAttr("contenteditable");
+    	  	var from_makedone = sender.hasClass("makedone_h1");
+
+    	  	if(!from_makedone) sender.removeAttr("contenteditable");
     	  	//.scrollTop(0);
     	  	console.info(sender.html(),"?");
     	  	if(needsave==1 && strip_tags(sender.html()) != "")
@@ -708,17 +729,28 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 	  	var setdate = newdate.date?newdate.date:"";
 
     	 	  		sender.attr("old_title",sender.html());
-    	 	  		var id = api4tree.node_to_id( sender.parents("li").attr('id') );
+    	 	  		
+    	 	  		if(!from_makedone) {
+    	 	  			var id = api4tree.node_to_id( sender.parents("li").attr('id') );
+    	 	  		} else {
+    	 	  			var id = $(".makedone").attr("myid");
+    	 	  			$("#node_"+id+" .n_title").html(title);
+    	 	  		}
     	 	  		
     	 	  		var fav = $("<div>"+sender.html()+"</div>").find("i").attr("class");
     	 	  		var title=sender.html();
     	 	  		title = strip_tags(title).trim().replace("<br>","");
+    	 	  		$(".makedone_h1").html(title);
+    	 	  		$(".tree_tab_menu li[myid="+id+"] a").html(title);
+
     	 	  		window.title = "4tree.ru: "+title;
     	 	  		if(fav) title = "<i class='"+fav+"'></i> "+title;
     	 	    	 	  		
     	 	  		api4tree.jsFind(id,{ title : title });
+				 	api4panel.jsPathTitle(id); //устанавливаем путь в шапку
     	 	  		if(setdate) {
-    	 	  			var myel = api4tree.jsFind(id,{ date1 : setdate.toMysqlFormat() });
+    	 	  			var myel = api4tree.jsFind(id,{ date1 : setdate.toMysqlFormat(), date2 : "" });
+				 		api4tree.jsSetSettings(id);
 		 	  			jsRefreshTree();
     	 	  		}
     	 	  		//api4panel.jsRefreshOneElement(id);
@@ -1136,11 +1168,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	  
 		  }
 		  
+		  
 		  //загружает ссылку для расшаривания
 		  this.jsStartShare = function(id,need_to_off) { 
 			if (navigator.onLine == false) { //если интернета нет
 				if($("#on_off_share").prop("checked")==true) {
+					is_rendering_now = true;
 					$("#on_off_share").prop("checked",false).iphoneStyle("refresh");
+					is_rendering_now = false;
 				}
 				jsTitle("Интернет отсутствует, кнопка поделиться пока не работает", 10000);
 				return false;
@@ -1155,11 +1190,20 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 						   $("#makeshare").val().split("/")[1];
 				
 				$.getJSON(lnk,function(data){
-						$("#makesharestat_count").hide();
-						$("#makesharestat").html("").hide();
-						if($("#on_off_share").prop("checked")==true) {
-							$("#on_off_share").prop("checked",false).iphoneStyle("refresh");
-							$(".makesharediv").hide();
+						if(data == "1") {
+							$("#makesharestat_count").hide();
+							$("#makesharestat").html("").hide();
+							    is_rendering_now = true;
+								$("#on_off_share").prop("checked",true).iphoneStyle("refresh");
+								is_rendering_now = false;
+								$(".makesharediv").show();
+						} else {
+							$("#makesharestat_count").hide();
+							$("#makesharestat").html("").hide();
+							    is_rendering_now = true;
+								$("#on_off_share").prop("checked",false).iphoneStyle("refresh");
+								is_rendering_now = false;
+								$(".makesharediv").hide();
 						}
 				});
 			}); //jsGetToken
@@ -1177,13 +1221,17 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					$("#makesharestat_count").hide();
 					$("#makesharestat").html("").hide();
 					if($("#on_off_share").prop("checked")==true) {
+						is_rendering_now = true;
 						$("#on_off_share").prop("checked",false); $("#on_off_share").iphoneStyle("refresh");
+						is_rendering_now = false;
 						$(".makesharediv").hide();
 					}
 					
 				} else {
 					if($("#on_off_share").prop("checked")==false) {
+						is_rendering_now = true;
 						$("#on_off_share").prop("checked",true); $("#on_off_share").iphoneStyle("refresh");
+						is_rendering_now = false;
 						$(".makesharediv").show();
 					}
 				}
@@ -1678,12 +1726,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					     	var name = data.fio.split(" ");
 					     	data.fio = name[name.length-1];
 				     	}
-					 	$(".header_text").html(data.fio+", "+jsJoke2());
+				     	
+				     	jsTitle(data.fio+", "+jsJoke2(), 30000);
+				     	
+					 	/*$(".header_text").html(data.fio+", "+jsJoke2());
 					 	setTimeout(function(){
 						 	if($(".header_text").html().indexOf(", ")!=-1) $(".header_text").fadeOut(500,function(){
 							 	$(this).html("").show();
 						 	});
-					 	}, 30000);
+					 	}, 30000); */
 				     	$.each(data.themes,function(i,el){
 				     		if(el.active) {
 					     		//$("html").attr("class","theme_"+el.dark).attr("style","background-image:url("+el.img+")");
@@ -1705,12 +1756,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  this.jsSetSettings = function(id) {
 			    	   
+			    $(".makedone").attr("myid",id);
+			    	   
 			    api4tree.jsOpenTab(id);	   
 			    
-			    api4tree.jsStartShare(id); //приводит к постоянным запросам в сеть
+			    if( $(".makedone_page_2").is(":visible") ) {
+			    	api4tree.jsStartShare(id); //приводит к постоянным запросам в сеть
+			    }
 			    	   			    		   
 			    var element = api4tree.jsFind(id);
-			    $(".makedone_h1").html(element.title);
+			    $(".makedone_h1").html(element.title).attr("old_title",element.title);
 			    
 			    var remind_time = localStorage.getItem("remind_time");
 			    
@@ -1739,11 +1794,17 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 			    if(element.did=="") { //устанавливаю переключатель выполнения дела
 			       if($("#on_off_did").prop("checked")==true) {
+						is_rendering_now = true;			       
 			       		$("#on_off_did").prop("checked",false).iphoneStyle("refresh");
+				   		is_rendering_now = false;
+			       		
 			       	}
 			    } else {
 			       if($("#on_off_did").prop("checked")==false) {
+						is_rendering_now = true;
 		     		   $("#on_off_did").prop("checked",true).iphoneStyle("refresh");
+			 		   is_rendering_now = false;
+		     		   
 			       }
 			    }
 			  
@@ -1751,15 +1812,19 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	       		
 			    if(parseInt(element.remind,10)==0) { //устанавливаю переключатель SMS напоминалки
 			       if($("#on_off_sms").prop("checked")==true) {
+						is_rendering_now = true;
 			       		$("#on_off_sms").prop("checked",false).iphoneStyle("refresh");
+				   		is_rendering_now = false;
 		       	   }
 			    } else {
 			       if($("#on_off_sms").prop("checked")==false) {
+						is_rendering_now = true;
 		     		    $("#on_off_sms").prop("checked",true).iphoneStyle("refresh");
+			 			is_rendering_now = false;
+		     		    
 			       }
 			    }
 			     
-			    is_rendering_now = false;	   
 		        return false;
 			 }; //jsSetSettings
 
@@ -1767,6 +1832,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //кнопки панели дерева
 		  function jsMakePanelKeys() {
 		  
+/*
 		   	  $("#top_panel_header").on("click","i",function(){
 		   	    var view_type = $(this).attr("data-view");
 		   	    $(".top_panel").attr("class", view_type);
@@ -1781,7 +1847,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		   	    
 		   	  	return false;
 		   	  });
-		  
+*/		  
 		  
 		   	  $(".tree_tab_menu").on("click","li",function(){
 		   	  	var id = $(this).attr("myid");
@@ -1793,11 +1859,24 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      });
 		      
 		      $(".tree_tab_menu").on("click", ".add_tab", function() {
-		      	var new_tab = '<li><a>Новая заметка</a><i class="icon-cancel"></i></li>';
+
+				var text_of_do = "Новая заметка";
+				var new_id = api4tree.jsAddDo( "to_new_folder", text_of_do, undefined, undefined, "last" ); 
+		      	var new_tab = '<li myid="'+new_id.id+'"><a>Новая заметка</a><i class="icon-cancel"></i></li>';
 			    $(".tree_tab_menu .add_tab").before(new_tab);
 		      	$(".tree_tab_menu").find(".active").removeClass("active");
 			    $(".tree_tab_menu li:last").addClass("active");
 			    api4tree.jsCalcTabs();
+
+				api4panel.jsOpenPath(new_id.id);
+
+
+			    $(".makedone_h1").focus();
+			    setTimeout(function(){
+	    		  	document.execCommand('selectAll',false,null);				    
+			    }, 100);
+
+
 		      })
 
 		   	  $(".tree_tab_menu").on("click",".icon-cancel",function(){
@@ -2075,6 +2154,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			  //нажатие на кнопку вызова меню настройки элемента
 			  $('.mypanel').delegate(".tcheckbox","click", function(e) {
+			  	 
 			  });
 			  
 			  
@@ -2134,19 +2214,31 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 //			$(".one_book").draggable();
 		 }    
 		 
-		 var old_title_of_screensaver;
-		 this.jsScreenSaver = function(is_on) {
+		 
+		 
+		 var old_title_of_screensaver, time_timer;
+		 this.jsScreenSaver = function(is_on) {		 	 
 			 if(is_on) {
-				$(".mypanel .n_title,.calendar_and_others .tree-closed").addClass("blur");
-				$("#calendar .fc-event").addClass("blur");
-				$(".redactor_").addClass("blur");
+			 	function jsSetTheTime() {
+					var now_time = (new Date());
+			  	  	var time1 = twoDigits(now_time.getHours())+":"+twoDigits(now_time.getMinutes());
+					$(".screen_saver_icon").html(time1);					 	
+			 	}
+				$("#tree_left_panel").addClass("blur");
+				$("#tree_editor").addClass("blur");
+				$("body").append('<div class="screen_saver_icon"></div>');
+				jsSetTheTime();
+				time_timer = setInterval(function(){
+					jsSetTheTime();
+				},30000);
 				old_title_of_screensaver = window.document.title;
 				window.document.title = "4tree.ru - Screensaver...";
 				api4tree.js_Compare_md5_local_vs_server();
 			 } else {
-				$(".mypanel .n_title,.calendar_and_others .tree-closed").removeClass("blur");
-				$("#calendar .fc-event").removeClass("blur");
-				$(".redactor_").removeClass("blur");
+				$("#tree_left_panel").removeClass("blur");
+				$("#tree_editor").removeClass("blur");
+				$(".screen_saver_icon").remove();
+				clearInterval(time_timer);
 				if(old_title_of_screensaver) window.document.title = old_title_of_screensaver;
 			 }
 		 }
@@ -2168,7 +2260,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				jsSetTimeNow();
 				screensaver_tm = setTimeout(function(){
 					this_db.jsScreenSaver(true);
-				}, 15*60*1000);
+				}, 20*60*1000);
 			    if(start_sync_when_idle) { this_db.jsSync(only_save); only_save=false; }
 			});
 		  }
@@ -2366,7 +2458,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					  if(field_num == 2) {
 						  delta_minutes = 60;
 						  time_field1 = $("#makedone_time1").val();
-						  if(time_field1) { 
+						  if(time_field1 && time_field1!="00:00") { 
 						  	var tf = time_field1.split(":");
 						  	now_time = new Date();
 						  	now_time.setHours(tf[0]);
@@ -2374,7 +2466,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 						  }
 					  }
 			  	  	  var now_time = new Date(now_time.getTime() + delta_minutes*60000);
-				  	  if(!time1) {
+			  	  	  alert(time1);
+				  	  if(!time1 && time1!="00:00") {
 				  	  	time1 = twoDigits(now_time.getHours())+":"+twoDigits(now_time.getMinutes());
 				  	  	$("#makedone_time"+field_num).val(time1);
 				  	  }
@@ -2389,17 +2482,103 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		  	  }
 		  	  
-		  	  		  	  
+		  	  this_db.js_add_dif = function(d1,dif) {
+		  	  	d1_split = d1.split(".");
+		  	  	
+			  	date1 = new Date();
+			  	date1.setDate (parseInt(d1_split[0]));
+			  	date1.setMonth(parseInt(d1_split[1])-1);
+			  	date1.setYear (parseInt(d1_split[2]));
+			  	
+			  	var date2 = date1.getTime() + dif;
+			  			  	
+			  	date2 = new Date(date2);		  	
+			  			  	
+			  	return twoDigits(date2.getDate())+"."+twoDigits(date2.getMonth()+1)+"."+date2.getFullYear();		  	  	
+			  }
+			  
+		  	  this_db.js_days_between = function(d1,d2) {
+			  	if(!d1 || !d2) return 0;
+				var date1 = Date.createFromMysql(d1);			  	
+				var date2 = Date.createFromMysql(d2);			  	
+			  	var dif = date2.getTime() - date1.getTime();
+			  	
+			  	if(!dif || dif<0) dif=0;
+			  	
+			  	return dif;
+
+		  	  }	  	  
+		  	  	
+		  	  function jsNeedDate(d1, t1) {
+		  	  	if(!d1) return "";
+		  	  	if(!t1) t1 = "00:00";
 		  	  
-		  	  function jsSaveSettings() {
+		  	  	d1_split = d1.match(/(\d+)/g);
+		  	  	t1_split = t1.match(/(\d+)/g);
+		  	  	
+		  	  	if(d1_split.length<3) return "";
+		  	  	if(t1_split.length<2) t1_split = ["00","00"];
+		  	  	
+			  	date1 = new Date();
+			  	date1.setDate (parseInt(d1_split[0]));
+			  	date1.setMonth(parseInt(d1_split[1])-1);
+			  	date1.setYear (parseInt(d1_split[2]));
+
+			  	date1.setHours  (parseInt(t1_split[0]));
+			  	date1.setMinutes(parseInt(t1_split[1]));
+			  	date1.setSeconds(0);
+			  	
+			  	return sqldate(date1.getTime());
+			  	  
+		  	  }	  	  
+		  	  
+		  	  function jsSaveSettings(date_id) {
 				  	  
-				  	  var d1 = jsGetTime(1);
-				  	  var d2 = jsGetTime(2);
-				  	  if(d1.date>d2.date) {
-					  	  alert(1);
-				  	  }
+			  	  var d1 = $("#makedone_date1").val();
+			  	  var t1 = $("#makedone_time1").val();
+			  	  var d2 = $("#makedone_date2").val();
+			  	  var t2 = $("#makedone_time2").val();
+			  	  
+			  	  var id = $(".makedone").attr("myid");
+
+				  var element = api4tree.jsFind( id );
+			  	  
+			  	  var date_dif = api4tree.js_days_between(element.date1, element.date2);
+			  	  //alert(date_dif + " : " + api4tree.js_add_dif(d1, date_dif) );
+			  	  
+			  	  if(d2 && date_id==1) {
+			  	  	  var new_date2 = api4tree.js_add_dif(d1, date_dif);
+				  	  $("#makedone_date2").val( new_date2 );
+				  	  d2 = new_date2;
+			  	  }
+				  
+				  var date_sql1 = jsNeedDate(d1, t1);
+				  var date_sql2 = jsNeedDate(d2, t2);
+				  
+				  console.info(id, {date1: date_sql1, date2: date_sql2});
+				  api4tree.jsFind(id, {date1: date_sql1, date2: date_sql2});
+				  jsRefreshTree();
 				  	  
 		  	  }
+		  	  
+		  	  $("#makedone_time1").on("change",function(){
+			  	 jsSaveSettings(1); 
+		  	  });
+
+		  	  $("#makedone_time2").on("change",function(){
+			  	 jsSaveSettings(2); 
+		  	  });
+		  	  
+		  	  $("#clear_dates").on("click", function() {
+			  	 $("#makedone_date1,#makedone_date2,#makedone_time1,#makedone_time2").val("");
+			  	 jsSaveSettings(1);
+		  	  });
+
+		  	  $("#clear_times").on("click", function() {
+			  	 if( $("#makedone_date1").val() ) $("#makedone_time1").val("00:00");
+			  	 if( $("#makedone_date2").val() ) $("#makedone_time2").val("00:00");
+			  	 jsSaveSettings(1);
+		  	  });
 		  	  
 			  $("#makedone_date1,#makedone_date2").datepicker({
 			    	numberOfMonths: 1,
@@ -2416,8 +2595,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	  return [true, highlight_class, finddate[1]];
 			    	},
 			    	onSelect:function(dateText, inst) {
-						if( $(inst).attr("id")=="makedone_date1") {
-							jsSaveSettings();
+						if( ($(inst).attr("id")=="makedone_date1") )  {
+							jsSaveSettings(1);
+						}
+						if( ($(inst).attr("id")=="makedone_date2") )  {
+							jsSaveSettings(2);
 						}
 			    	}
 			  });			
@@ -2492,10 +2674,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  });
 
 			  //удаление элемента
-			  $(".makedone").delegate(".makedel","click", function () {
+			  $("#params_header").delegate(".makedel","click", function () {
 			  	   var id = $(".makedone").attr("myid");
 			       var title = api4tree.jsFind(id).title;
-			       var id_element = $(".tree_active .mypanel #node_"+id);
+			       var id_element = $(".tree_active.mypanel #node_"+id);
 			       
 			       var childrens = api4tree.jsFindByParent(id,true).length;
 			       if(childrens > 0) {
@@ -2673,7 +2855,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	}
 				  	$(".makedone_header .active").removeClass("active");
 				  	$(this).addClass("active");
-			  	}
+  				    if( $(".makedone_page_2").is(":visible") ) {
+			    		api4tree.jsStartShare( $(".makedone").attr("myid") ); //приводит к постоянным запросам в сеть
+			    	}
+			    }
+
 			  	return false;
 			  });
 			  
@@ -3048,7 +3234,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 						   			    	
 						   			    	
 						if( (searchstring!='') && element_founded ) { 			   
-						    $("#tab_find").click();
+						    if(!$(".search_panel_result").is(":visible")) $("#tab_find").click();
 						    $("#search_empty").fadeIn(200); 
 						}
 					}); //when dfdArray
@@ -3068,15 +3254,17 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 			     });
 			  
-			      
+		  $("body").on("click",function(){ api4panel.jsCloseAllMenu() });
 			  
 		  } //jsMakeAddDoAndSearchKeys
+		  
+		  
 		  
 		  //кнопки связанные с календарём
 		  function jsMakeCalenarKeys() {
 			  //открываю всю неделю в редакторе
 			  $('body').delegate(".ui-datepicker-week-col","click", function () {
-			      var year = $(this).parents(".ui-datepicker-group").find(".ui-datepicker-year").html();
+			      var year = $(this).parents(".ui-datepicker").find(".ui-datepicker-year").html();
 			      var week = $(this).html();
 			      
 			      var dd = [];
@@ -3445,7 +3633,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		      //
 			  $('body').delegate(".show_hidden_do","click", function() {
+		   		is_rendering_now = true;
 			    $("#on_off_hide_did").prop("checked",true).iphoneStyle("refresh");
+		   		is_rendering_now = false;
 			    return false;
 			  });
 			    		
@@ -3686,6 +3876,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				   jsHide_help();
 			  	   $(".m_zoom_default")[0].click();
 			  	 }
+
+			  	 if( (e.altKey==true) && (e.keyCode==67) ) {
+			       e.preventDefault();
+			       jsRedactorInsert('checkbox');
+			  	 }
+			  	 if( (e.altKey==true) && (e.keyCode==88) ) {
+			       e.preventDefault();
+			       jsRedactorInsert('datetime');
+			  	 }
+
 			  	   
 			     key_help.push({key:"<i class='icon-down-bold'></i>",title:"добавить дело вниз"});
 			  	 if( (e.altKey==true ) && (e.keyCode==40) ) { //alt + вниз
@@ -3716,6 +3916,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	  (!($(".redactor_editor:last").is(":focus"))) && 
 			  	  (!($("#redactor").is(":focus"))) && 
 			  	  ($(".n_title[contenteditable='true']").length==0) && 
+			  	  (!$(".makedone_h1").is(":focus")) && 
 			  	  (!$(".comment_enter_input").is(":focus")) ) { //если мы не в редакторе
 
 
@@ -4722,7 +4923,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 	this_db.jsShowComments(comments,tree_id, 0); //комменты добавляются в myhtml_for_comments
 			 	
 			 	if(comments_count==0 || !comments_count) comments_count = "";
-			 	$("#node_"+tree_id).find(".tcheckbox:first").html(comments_count);
+			 	$("#tree_1 #node_"+tree_id+" .tcheckbox:first").html(comments_count);
+			 	$("#tree_2 #node_"+tree_id+" .tcheckbox:first").html(comments_count);
 			 	myhtml_for_comments += "";
 			 	$("#tree_comments_container").html(myhtml_for_comments); //выводим на экран
 			 	onResize();
@@ -5497,8 +5699,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	   	    $(".makedone[myid="+old_id+"]").attr("myid",new_id); //заменяю индексы makedone
 	   	    $("#node_"+old_id).attr("id", "node_"+new_id).find(".tcheckbox").attr("title", new_id);
 	   	    $("#node_"+new_id).find(".n_title").attr("myid",new_id);
+	   		$(".tree_tab_menu li[myid="+old_id+"]").attr("myid", new_id);
 	   	    $("#node_"+new_id).attr("myid",new_id);
-	   		if($('#calendar').length) $('#calendar').fullCalendar( 'refetchEvents' ); 
+	   		if($('#calendar').length) $('#calendar').fullCalendar( 'refetchEvents' );
 	   	    
 	   		var id = parseInt(window.location.hash.replace("#",""),36); //меняем хэш в адресной строке
 	   		if(id==old_id) {
@@ -6125,15 +6328,36 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		    }
 		  }
 		  
+
+		  $(".all_editor_place").on("click", ".redactor_editor", function(){
+			  jsSaveCurrentCursor();
+		  });
+
+		  function jsSaveCurrentCursor(){
+		  	   var cursor = $('#redactor').redactor('getCurrent');
+		  	   if(cursor) {
+		  		   var offset = $('#redactor').redactor('getCaretOffset', cursor);
+		  		   last_cursor = cursor;
+		  		   last_cursor_offset = offset;
+	  		   }
+		  }
+		  
+		  function save_all_text_in_a_while_2(e,html) { //чтобы не сохранять только-что открытый текст
+		  	  if((jsNow() - last_open_redactor_time)>800) {
+			  	save_all_text_in_a_while(e, html);
+			  }
+		  }
+
 		  function save_all_text_in_a_while(e, html) {
+			  		   
 
 	  		  		  if(",39,37,40,38,".indexOf(","+e.keyCode+",")!=-1) return true;
   					  note_saved=true;
   					  //console.info("start_change_timer");
   					  clearTimeout(my_autosave);
   					  my_autosave = setTimeout( function() { 
+	  					  jsSaveCurrentCursor();
   					      api4editor.jsSaveAllText(1); 
-  					      console.info("SAVING");
   					  }, 500 );
 		  }			  
 		  
@@ -6156,12 +6380,14 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  			   $("#fav_redactor_btn_comment").hide();
 		  			},
 		  		  buttonsAdd: ['|', 'button1','checkbox'],
+		  		  blurCallback:function(){
+		  		  },
 		  		  toolbar:true,
 		  		  toolbarExternal: "#fav_redactor_btn", // ID selector 
 		  		  focusCallback: function() { $("#tree_header li.active.temp").removeClass("temp"); },
 		  		  keydownCallback: save_all_text_in_a_while,
 		  		  keyupCallback: save_all_text_in_a_while,
-		  		  changeCallback: save_all_text_in_a_while,
+		  		  changeCallback: save_all_text_in_a_while_2,
 		  		  execCommandCallback: save_all_text_in_a_while,
 		  		  imageUploadCallback: refresh_file_panel,
 		  		  fileUploadCallback: refresh_file_panel,
@@ -6215,6 +6441,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  
 		  //открывает заметки в редакторе [12,4556,4433]
 		  this.jsRedactorOpen = function(some_ids,iamfrom,dont_save) {
+		  	last_open_redactor_time = jsNow();
 			if(!note_saved && !dont_save) {
 				this_db.jsSaveAllText(); //сохраняю старый текст
 			}
@@ -6329,7 +6556,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  function jsSaveOneTextIfChanged(id, md5text, text) {
 //			    api4editor.save_text_dif_snapshot(id, text);
 
-				if(text.indexOf("img")!=-1) { 
+				if(/img/ig.test(text)) { 
 					var blob_text1 = $("<div>"+text+"</div>");								
 					var first_image = blob_text1.find("img:first").attr("src");				
 					api4tree.jsThumbnail(first_image, id).done(function(new_icon){
@@ -6339,6 +6566,9 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 								jsRefreshTree();
 							}				
 						});
+				} else if( (api4tree.jsFind(id).icon!="") && ($(".divider_red").length==0) ) {
+					api4tree.jsFind(id, {icon:""});
+					jsRefreshTree();
 				}
 
 		  		api4tree.jsFindLongText(id, text);

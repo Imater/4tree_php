@@ -1250,6 +1250,9 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 				// tab
 				if (key === this.keyCode.TAB && this.opts.shortcuts )
 				{
+					this.$editor.blur();
+					return false;
+				
 					if (!this.opts.tabFocus) return true;
 					if (this.isEmpty(this.get())) return true;
 

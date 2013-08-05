@@ -80,7 +80,7 @@ if($q)
 		
 
 ?>
-<html lang="ru">
+<html lang="ru" style="height:auto">
 <head>
     <title><? echo $title; ?></title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
@@ -96,6 +96,8 @@ if($q)
     
     
 <?
+if(false)
+{
 require_once('compress_timestamp.php');         //load timestamp created by compress.php module sets field $compress_stamp=unix_timestamp 
 
 //<meta name="viewport" content="width=device-width">
@@ -107,7 +109,7 @@ if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)
 echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
 echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 //echo '<script src="min/all1_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
-
+}
 ?>
 
     
@@ -153,5 +155,6 @@ if($h)
 	</div>
 </div>
 
-<div class="webfooter"><a href="http://4tree.ru/" target="_blank">4tree.ru — мои дела</a></div>
+<div class="webfooter">
+<a href="http://4tree.ru/" target="_blank">4tree.ru — мои дела</a></div>
 </body>

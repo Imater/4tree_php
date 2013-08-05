@@ -2,7 +2,7 @@ body,html {
 	margin: 0px;
 	height: 100%;
 	color: #000;
-	font-size: 13px;
+	font-size: 12px;
 	font-family: Tahoma, Arial, Verdana;
 
 background-image: url("../img/textures/1.jpg");
@@ -181,7 +181,7 @@ text-align: center;
 body .ui-datepicker th, body .ui-datepicker-week-col {
 	font-weight: normal;
 	color:#CCC;
-	padding: 1px 0px !important;
+	padding: 1px 5px !important;
 }
 
 
@@ -260,6 +260,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 	top:0px;
 	background: #ededed; 
 	border-bottom: 1px solid #888;
+	font-size: 14px;
 	z-index: 1;
 }
 
@@ -330,7 +331,7 @@ border-top: 1px solid #FFF;
 }
 
 #params_header .top_btn.second {
-	width:50px;
+	width:100px;
 	float: left;
 	padding-left: 10px;
 	padding-right: 2px;
@@ -585,9 +586,12 @@ ul.tabs > li > a{
 }
 
 ul.tabs > li.temp a{
-   color: #e7ffe0;
-   font-style: italic;
+   color: #FFF;
    padding-right: 5px;
+}
+
+ul.tabs > li.temp a:before {
+	content:"* ";
 }
 
 ul.tabs > li:hover a{
@@ -828,7 +832,14 @@ top:-5px;
             box-shadow:2px 2px 10px #000;
 -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
 filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
+	width: auto !important;
+	max-width: none !important;
 	
+}
+
+#ui-datepicker-div.ui-datepicker-multi .ui-datepicker-group table {
+	margin-right: 10px !important;
+	margin-left: 10px !important;
 }
 
 #makedone_date1 {
@@ -855,7 +866,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 }
 
 .makedone_h1 {
-font-size: 22px;
+font-size: 19px;
 text-align: center;
 margin-top: 12px;
 margin-bottom: 7px;
@@ -897,5 +908,26 @@ background: #777777;
 }
 
 .tree_active {
-	background: #f5f5f5;
+/*	background: #f5f5f5; */
+}
+
+
+.screen_saver_icon {
+position: absolute;
+top: 0px;
+left: 0px;
+text-align: center;
+z-index: 9999999;
+font-size: 150px;
+text-shadow: 3px 3px 10px #888;
+margin-top: 0px;
+right: 0px;
+font-family: Terminal;
+background: rgba(150,150,150,0.9);
+box-shadow: 0px 1px 3px #000;
+}
+
+
+.left_panel_hide #hide_left_panel i:before {
+	content: '\e866';
 }

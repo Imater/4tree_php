@@ -12,6 +12,7 @@ function jsDoFirst()
 
 	  myr = $('#redactor_content').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php', lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php', autoresize:false, 
   			buttonsAdd: ['|', 'button1'], 
+  		    autoresize:true, 
             buttonsCustom: {
                 button1: {
                     title: 'Спойлер (скрытый текст)', 
@@ -24,7 +25,7 @@ function jsDoFirst()
             }
      });
 
-if(true)
+if(false)
 	  myr2 = $('#redactor_comment').redactor({ imageUpload: './redactor/demo/scripts/image_upload.php', lang:'ru', focus:false, 		fileUpload: './redactor/demo/scripts/file_upload.php', autoresize:false, 
   			buttonsAdd: ['|', 'button1'], 
             buttonsCustom: {
