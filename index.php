@@ -19,6 +19,8 @@ if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.
 <script src="js/testdesign.js"></script>
 <script src="js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="js/scrollable.js"></script>
+<script src="js/rangy-core.js"></script>
+<script src="js/rangy-selectionsaverestore.js"></script>
 <?
 if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)   
         $gz='gz';
