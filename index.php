@@ -321,7 +321,7 @@ $(document).ready(function(){
 		<div id="tree_header">
 			<ul class="tree_tab_menu tabs clearfix noselectable">
 			<!--	<li><a>Дерево</a><i class="icon-cancel"></i></li> -->
-				<span class="add_tab" title="Добавить запись в папку _НОВОЕ"><i class="icon-plus"></i></span>
+				<li class="add_tab" title="Добавить запись в папку _НОВОЕ"><i class="icon-plus"></i></li>
 			</ul>
 		<div id="tree_fav">
 		</div>

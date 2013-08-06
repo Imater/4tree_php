@@ -541,26 +541,26 @@ ul.tabs{
   padding-left: 50px;
 }
 
-ul.tabs > li.active{
+ul.tabs > li.active:not(.add_tab){
   z-index: 2;
   background: #777777;
   color: #FFF;
 }
 
-ul.tabs > li.active a{
+ul.tabs > li.active:not(.add_tab) a{
   color: #FFF;
 }
 
-ul.tabs > li.active:before{
+ul.tabs > li.active:not(.add_tab):before{
   border-color : transparent #777777 transparent transparent;
 }
 
 
-ul.tabs > li.active:after{
+ul.tabs > li.active:not(.add_tab):after{
   border-color : transparent transparent transparent #777777;
 }
 
-ul.tabs > li{
+ul.tabs > li:not(.add_tab){
   float : left;
   margin : 5px -15px 0;
   border-top-right-radius: 25px 160px;
@@ -575,7 +575,7 @@ ul.tabs > li{
 
 
 
-ul.tabs > li > a{
+ul.tabs > li:not(.add_tab) > a{
   display: inline-block;
   max-width:100%;
   overflow: hidden;
@@ -594,12 +594,12 @@ ul.tabs > li.temp a:before {
 	content:"* ";
 }
 
-ul.tabs > li:hover a{
+ul.tabs > li:not(.add_tab):hover a{
 	color:#FFF;
 }
 
 
-ul.tabs > li:before, ul.tabs > li:after{
+ul.tabs > li:not(.add_tab):before, ul.tabs > li:not(.add_tab):after{
   content : '';
   background : transparent;
   height: 20px;
@@ -611,14 +611,14 @@ ul.tabs > li:before, ul.tabs > li:after{
   position : absolute;
 }
 
-ul.tabs > li:before{
+ul.tabs > li:not(.add_tab):before{
   border-color : transparent #3f3f3f transparent transparent;
   -webkit-transform : rotate(58deg);
   -moz-transform : rotate(58deg);
   left: -10px;
 }
 
-ul.tabs > li:after{
+ul.tabs > li:not(.add_tab):after{
   border-color : transparent transparent transparent #3f3f3f;
   -webkit-transform : rotate(-58deg);
   -moz-transform : rotate(-58deg);
@@ -898,8 +898,8 @@ border-top-right-radius: 17px 23px;
 font-size: 14px;
 padding-left: 1px;
 z-index: 5;
-position: absolute;
 cursor: pointer;
+float: none;
 }
 
 .add_tab:hover {

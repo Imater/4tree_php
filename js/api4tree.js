@@ -846,7 +846,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      	  var new_tab = '<li><a>'+ title +'</a><i class="icon-cancel"></i></li>';
 				      $(".tree_tab_menu .add_tab").before(new_tab);
 			      	  $(".tree_tab_menu").find(".active").removeClass("active");
-				      $(".tree_tab_menu li:last").addClass("active").addClass("temp").attr("myid",id);		    	  	  
+				      $(".tree_tab_menu li:not(.add_tab):last").addClass("active").addClass("temp").attr("myid",id);		    	  	  
 					  api4tree.jsCurrentOpenPanelsAndTabsSave();
 	    	  	  }
 		    	  
@@ -858,10 +858,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	    	  clearTimeout(calctabs_timer);
 	    	  calctabs_timer = setTimeout(function()
 	    	  	{
-	    	  	var tabs_count = $("#tree_header li").length;
+	    	  	var tabs_count = $("#tree_header li:not(.add_tab)").length;
 	    	  	var w = $(".tree_tab_menu").width();
 	    	  	new_width = parseInt( (w/(tabs_count)) -40 )+"px";
-	    	  	$("#tree_header li").animate({"width":new_width},100);
+	    	  	$("#tree_header li:not(.add_tab)").animate({"width":new_width},100);
 				});
     	  
     	  }
@@ -1881,7 +1881,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      })
 
 			  $("#close_all_tabs_except_current").on("click", function() {
-				  $(".tree_tab_menu li:not(.active)").remove();
+				  $(".tree_tab_menu li:not(.active):not(.add_tab)").remove();
 				  api4tree.jsCurrentOpenPanelsAndTabsSave();
 			  });
 

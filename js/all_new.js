@@ -1699,8 +1699,8 @@ function jsDoAfterLoad() {
 	main_x = parseFloat( localStorage.getItem('main_x') ); //ширина левой панели в процентах
 	main_y = parseFloat( localStorage.getItem('main_y') );//высота верхней панели в пикселях
 		
-	if(!main_x) main_x = parseFloat(50);
-	if(!main_y) main_y = parseFloat(250);
+	if(!main_x) main_x = parseFloat(250);
+	if(!main_y || main_y < 100) main_y = parseFloat(250);
 
 	if(main_x<200) main_x = 250;
 		
