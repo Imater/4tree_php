@@ -465,6 +465,7 @@ max-width: 1300px;
 max-width: 400px;
 }
 
+
 .panel ul
 {
 list-style: none;
@@ -473,6 +474,11 @@ padding-left: 0px;
 padding-top: 0px;
 padding-bottom: 0px;
 }
+
+.panel > ul {
+	padding-top: 2px;
+}
+
 
 .panel > ul {
 margin-top:0px;
@@ -520,10 +526,21 @@ height: 0px;
 
 .ui-can-recieve.divider_li
 {
-height: 7px;
+height: 6px;
 }
 
-.ui-can-recieve.divider_li:first-child
+#tree_1 .ui-can-recieve.divider_li
+{
+height: 6px;
+}
+
+#tree_1 > #panel_1 > ul > div > .ui-can-recieve.divider_li:first-child
+{
+height: 3px;
+}
+
+
+#tree_2 .ui-can-recieve.divider_li:first-child
 {
 height: 3px;
 }
@@ -941,7 +958,7 @@ color: white !important;
     bottom: 0px;
     left: 0px;
     right: 0px;
-    padding: 10px 15px !important;
+    padding: 0px 15px !important;
 }
 
 .redactor_ {
@@ -2734,28 +2751,32 @@ float: right;
 background: green;
 color: white;
 font-size: 0.6em;
-height: 1.2em;
-border-radius: 10px;
+height: 1.15em;
+border-radius: 5px;
 vertical-align: middle;
 padding: 3px;
 padding-left: 5px;
-padding-right: 0px;
-width: 4.4em;
+padding-right: 2px;
+width: 4em;
 text-align: center;
-margin-right: 2px;
+margin-right: 3px;
+box-shadow: inset 1px 1px 3px rgba(0,0,0,0.8);
 }
 
 li .shortdate {
+text-shadow: 1px 1px 1px #000;
 background:#da5700;
 }
 li .shortdatelong {
+text-shadow: 1px 1px 1px #000;
 background:#516f8f;
 }
 li .shortdatepast {
+text-shadow: 1px 1px 1px #000;
 background-image:-webkit-gradient(linear, right top, left top, color-stop(0, #990000), color-stop(0.8, #da5700));
--webkit-box-shadow: #FFF 0px 1px 0px;
 }
 li .shortdatepastlong {
+text-shadow: 1px 1px 1px #000;
 background:#990000; 
 }
 
@@ -2764,11 +2785,12 @@ li .fromchildren
 background: none;
 color: gray;
 font-weight: bold;
-font-size: 0.7em;
+font-size: 0.6em;
 -webkit-box-shadow: none;
+text-shadow: none;
 }
 
-.selected .fromchildren
+.selected > .big_n_title .fromchildren
 {
 color: white !important;
 }
@@ -3014,7 +3036,7 @@ background: white;
 display: inline-block;
 opacity: 1;
 float: right;
-margin-top: 0.24em;
+margin-top: 0.4em;
 margin-right: 2px;
 clear: right;
 border-radius: 2px;

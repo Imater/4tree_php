@@ -239,7 +239,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 }
 
 #tree_editor .settings_in {
-	margin: 0px 15px 50px 15px;
+	margin: 0px 15px 42px 15px;
 }
 
 #tree_editor.params_open .all_editor_place
@@ -868,8 +868,8 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 .makedone_h1 {
 font-size: 18px;
 text-align: center;
-margin-top: 12px;
-margin-bottom: 7px;
+margin-top: 10px;
+margin-bottom: 12px;
 font-weight: bold;
 }
 

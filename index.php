@@ -421,10 +421,10 @@ $(document).ready(function(){
 font-size: 22px;
 display: inline-block;
 top: 5px;
-left: 12px;"></i>&nbsp;</a>
+left: 20px;"></i>&nbsp;</a>
 		  			  	<ul>
 		  			  	<li><a onclick="jsRedactorInsert('checkbox')">Вставить галочку (alt + c)</a></li>
-		  			  	<li><a onclick="jsRedactorInsert('datetime')">Вставить дату (alt + v)</a></li>
+		  			  	<li><a onclick="jsRedactorInsert('datetime')">Вставить дату (alt + x)</a></li>
 		  			  	</ul>
 		  		  </li>
 		  		  </ul>
@@ -679,6 +679,7 @@ font-weight: bold;">Поиск</span>
  	    <div id="makedatebutton" title="Установить/снять статус: выполнено"> <input type="checkbox" class="on_off_" id="on_off_did"></div>
 	    <div class="makedone_h1" contenteditable="true"></div>
 		<div class="header_text" style=""></div>
+		<div class="gradient_line"></div>
 
 <!--	<div class="makedel" title="Удалить элемент"><i class="icon-trash-1" style="color:#999"></i></div> -->
 </div>
