@@ -2258,10 +2258,10 @@ function get_all_share_children($user_id)
   	$var_key = $memcache_obj->get('share_children_'.$user_id);
   	  	
   	if(!empty($var_key)) {
-  		$answer = json_decode($var_key);
+  		$answer = $var_key;
   	} else {
 	  	$answer = set_all_share_children($user_id);
-	  	$memcache_obj->set('share_children_'.$user_id, $answer, false, 10*60);	  	
+	  	$memcache_obj->set('share_children_'.$user_id, $answer, false, 5*60);	  	
 	}
 	
 	return $answer;
