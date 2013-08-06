@@ -80,7 +80,7 @@ if($q)
 		
 
 ?>
-<html lang="ru" style="height:auto">
+<html lang="ru" style="height:auto; position: inherit;">
 <head>
     <title><? echo $title; ?></title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">

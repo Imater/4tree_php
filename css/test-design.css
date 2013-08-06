@@ -961,3 +961,7 @@ cursor: pointer;
 #close_all_tabs_except_current:hover {
 color:#FFF;
 }
+
+.show_all_history_redactor {
+	cursor: pointer;
+}

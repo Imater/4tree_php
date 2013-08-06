@@ -671,7 +671,8 @@ font-weight: bold;">Поиск</span>
 		    </div> <!-- page2 -->
 
 		    <div class="makedone_page_4 page">
-		    	<a onclick="javascript:api4tree.jsCallPrint('.redactor_');"><i class="icon-print-1"></i> Распечатать заметку</a>
+		    	<a onclick="javascript:api4tree.jsCallPrint('.redactor_');"><i class="icon-print-1"></i> Распечатать заметку</a><br><br>
+		    	<span class="show_all_history_redactor"><i class="icon-layers"></i> Резервные копии заметки</span>
 		    </div> <!-- page2 -->
 		    
 			
