@@ -100,6 +100,18 @@ if (isset($_GET['curl'])) {
  exit;
 }
 
+if (isset($_GET['user_by_id'])) 
+{
+  		$sqlnews1 = "SELECT * FROM `tree_users` WHERE `id` = '".$_GET['user_by_id']."'";
+	  	$result1 = mysql_query($sqlnews1); 
+	  	@$sql1 = mysql_fetch_array($result1);
+	  	
+	  	if($sql1["foto"]) $foto = "<img style='vertical-align:middle;' height='30px' src='".$sql1["foto"]."'>";
+
+	  	echo $sql1["fio"]." [".$sql1["email"]."] ".$foto;
+}
+
+
 
 if (isset($_GET['remind_me_password'])) 
   {
@@ -230,16 +242,6 @@ if (isset($_GET['backups-of-user2']))
   	
   }
 
-if (isset($_GET['user_by_id'])) 
-{
-  		$sqlnews1 = "SELECT * FROM `tree_users` WHERE `id` = '".$_GET['user_by_id']."'";
-	  	$result1 = mysql_query($sqlnews1); 
-	  	@$sql1 = mysql_fetch_array($result1);
-	  	
-	  	if($sql1["foto"]) $foto = "<img style='vertical-align:middle;' height='30px' src='".$sql1["foto"]."'>";
-
-	  	echo $sql1["fio"]." [".$sql1["email"]."] ".$foto;
-}
 
 if (isset($_GET['sovet'])) 
 {
