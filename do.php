@@ -109,6 +109,7 @@ if (isset($_GET['user_by_id']))
 	  	if($sql1["foto"]) $foto = "<img style='vertical-align:middle;' height='30px' src='".$sql1["foto"]."'>";
 
 	  	echo $sql1["fio"]." [".$sql1["email"]."] ".$foto;
+	  	exit;
 }
 
 
