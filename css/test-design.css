@@ -965,3 +965,28 @@ color:#FFF;
 .show_all_history_redactor {
 	cursor: pointer;
 }
+
+
+
+.fc-button-month {
+	margin-left: 10px;
+}
+
+.fc-button-month:before {
+font-family: "fontello";
+content: '\2630';
+font-style: normal;
+font-weight: normal;
+speak: none;
+display: inline-block;
+text-decoration: inherit;
+width: 1em;
+margin-right: .2em;
+text-align: center;
+opacity: .8;
+font-variant: normal;
+text-transform: none;
+line-height: 1.4em;
+margin-left: 0em;
+font-size: 150%;
+}

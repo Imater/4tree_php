@@ -2164,7 +2164,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			  //нажатие на кнопку вызова меню настройки элемента
 			  $('.mypanel').delegate(".tcheckbox","click", function(e) {
-			  	 
+			      var id = api4tree.node_to_id( $(this).parents("li:first").attr("id") );
+			      api4panel.jsSelectNode(id);
+			      setTimeout(function(){
+				      api4editor.jsRedactorOpenRecursive(id); //открываем все заметки
+			      }, 500);
+			      return false;			  	 
 			  });
 			  
 			  
@@ -3431,9 +3436,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      });
 			  //при клике в папку, открывает всех детей и внуков в редакторе
 			  $(".mypanel").on("click",".folder_closed",function(e){
-			      var id = api4tree.node_to_id( $(this).parents("li:first").attr("id") );
-			      api4editor.jsRedactorOpenRecursive(id);
-			      return false;
 			  });
 
 			  //клик по кнопке "текущая неделя"
@@ -3739,7 +3741,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    return false;
 			  });
 
-			  $('.on_off').iphoneStyle({ checkedLabel: 'да', uncheckedLabel: 'нет',         
+			  $('.on_off').iphoneStyle({ checkedLabel: 'да&nbsp;&nbsp;', uncheckedLabel: 'нет',         
+				  onChange: api4tree.jsChangeMakedoneCheckbox
+				});
+
+				
+			  $('#on_off_did').iphoneStyle({ checkedLabel: '<i class="icon-progress-3"></i>', uncheckedLabel: '<i class="icon-progress-1"></i>',         
 				  onChange: api4tree.jsChangeMakedoneCheckbox
 				});
 			     

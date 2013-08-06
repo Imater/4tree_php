@@ -1656,7 +1656,7 @@ function jsShowCalendar() //отображаю календарь
 			axisFormat: 'H:mm',
 			contentHeight:361,
 			weekends:true,
-			defaultView:'agendaWeek',
+			defaultView:'basicWeek', //agendaWeek
 			droppable:true,
 			eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
         
@@ -1723,7 +1723,7 @@ function jsShowCalendar() //отображаю календарь
 			header: {
 				left: 'prev,next today',
 				center: 'title',
-				right: 'month,agendaWeek,agendaDay'
+				right: 'agendaWeek,agendaDay,month,basicWeek,basicDay'
 			},
 			firstDay: 1,
 

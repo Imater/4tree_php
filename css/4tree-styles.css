@@ -24,6 +24,7 @@ right: 0px;
 left: 0px;
 bottom: 0px;
 z-index: 1;
+background: #FFF;
 }
 
 .v4 .calendar_and_others {
@@ -624,7 +625,7 @@ padding-left: 7px;
 {
 position: absolute;
 top:30px;
-left: 0px;
+left: -10px;
 right: 0px;
 height: auto; 
 bottom: 230px;
@@ -921,6 +922,7 @@ color: white !important;
     left: 0px;
     right: 0px;
     overflow: auto;
+    overflow-y: scroll;
 -webkit-overflow-scrolling: touch;
 }
 
@@ -1082,7 +1084,7 @@ left: 15px;
 {
 position: absolute;
 left: 95px;
-right: 125px;
+right: 223px;
 text-align: center;
 text-overflow: ellipsis;
 overflow: hidden;
@@ -3241,21 +3243,39 @@ overflow-x:auto;
 {
 }
 
+#makedatebutton2
+{
+display: inline-block;
+padding-bottom: 3px;
+vertical-align: middle;
+margin-left: 5px;
+}
+
 
 #makedatebutton
 {
-position: relative;
-width: 30px;
+position: absolute;
+top:7px;
+left: 8px;
 display: inline-block;
+}
+
+
+#makedatebutton label.iPhoneCheckLabelOn {
+	padding-top: 3px;
+	padding-left: 5px;
+}
+#makedatebutton label.iPhoneCheckLabelOff {
+	padding-top: 3px;
+	padding-right: 2px;
 }
 
 .makelabel
 {
 display: inline-block;
-text-align: right;
-height: 27px;
+text-align: center;
+height: 20px;
 vertical-align: middle;
-margin-right: 10px;
 }
 
 .makedel:hover
@@ -3284,7 +3304,6 @@ display: block;
 .makesharediv
 {
 display: none;
-padding-bottom: 30px;
 }
 
 #makeshare

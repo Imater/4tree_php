@@ -636,13 +636,13 @@ font-weight: bold;">Поиск</span>
 
 			   <div id="makedate">
 			   <br>
-			   <div class="makelabel" style="margin-left:-11px">SMS за <span id="remind_time">15 мин.</span> <i class="icon-bell-1"></i>:</div><div id="makedatebutton"> <input type="checkbox" class="on_off" id="on_off_sms"></div>
+			   <div class="makelabel" style="margin-left:-11px">SMS за <span id="remind_time">15 мин.</span> <i class="icon-bell-1"></i>:</div><div id="makedatebutton2"> <input type="checkbox" class="on_off" id="on_off_sms"></div>
 			<!--   <div class="makelabel" style="margin-left:-11px">Повторять:</div><div class="makerepeat"> каждый год</div> -->
 			   </div>
 			</div> <!-- page1 -->
 			
 		    <div class="makedone_page_2 page">
-			   <div class="makelabel">поделиться <i class="icon-export-1"></i>:</div><div id="makedatebutton"> <input type="checkbox" class="on_off" id="on_off_share"></div><br>
+			   <div class="makelabel">поделиться короткой ссылкой:</div><div id="makedatebutton2"> <input type="checkbox" class="on_off" id="on_off_share"></div><br>
 				<div class="makesharediv">
 					<input id="makeshare" value="4tree.ru/gh3">
 					<div id="makesharestat_count" title="Кол-во просмотров внешней ссылки. Кликните, чтобы увидеть статистику."><b><i class="icon-eye"></i><span>0</span></b></div>
@@ -650,7 +650,6 @@ font-weight: bold;">Поиск</span>
 					</div>
 				</div>
 
-			   <div class="makelabel"> выполнено <i class="icon-ok-1"></i>:</div><div id="makedatebutton"> <input type="checkbox" class="on_off" id="on_off_did"></div><br>
 		    </div> <!-- page2 -->
 
 		    <div class="makedone_page_3 page">
@@ -677,6 +676,7 @@ font-weight: bold;">Поиск</span>
 		    
 			
 		</div> <!-- pages -->
+ 	    <div id="makedatebutton" title="Установить/снять статус: выполнено"> <input type="checkbox" class="on_off_" id="on_off_did"></div>
 	    <div class="makedone_h1" contenteditable="true"></div>
 		<div class="header_text" style=""></div>
 
