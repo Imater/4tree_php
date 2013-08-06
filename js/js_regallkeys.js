@@ -1741,7 +1741,7 @@ function jsShowCalendar() //отображаю календарь
 			eventClick: function(event) {
 				console.info(event);
 				api4panel.jsOpenPath( event.id );
-				if(!$(".makedone_page_1").is(":visible")) $("li[myid=makedone_page_1]").click();
+				if(!$(".makedone_page_1").is(":visible")) $("li[myid=makedone_page_1]").click(); 
 				//(,"calendar");
 			},
 			eventDrop: function(event, delta, minutedelta, allday) {

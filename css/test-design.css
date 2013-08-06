@@ -239,7 +239,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 }
 
 #tree_editor .settings_in {
-	margin: 0px 15px 42px 15px;
+	margin: 0px 15px 42px 15px; 
 }
 
 #tree_editor.params_open .all_editor_place

@@ -2169,7 +2169,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      setTimeout(function(){
 				      api4editor.jsRedactorOpenRecursive(id); //открываем все заметки
 			      }, 500);
-			      return false;			  	 
+			      return false;			   	 
 			  });
 			  
 			  

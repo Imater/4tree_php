@@ -12,7 +12,7 @@
 
 	// locals
 	var usedOverlays = [];
-	var unusedOverlays = [];
+	var unusedOverlays = []; 
 
  
 (function($, undefined) {
