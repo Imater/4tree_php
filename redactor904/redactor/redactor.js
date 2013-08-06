@@ -1045,7 +1045,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 						if (this.opts.autoresize === true )
 						{
 							this.$editor.height(this.$editor.height());
-							this.saveScroll = this.document.body.scrollTop;
+							this.saveScroll = this.$box.scrollTop(); //4TREE
 						}
 						else
 						{
@@ -3925,7 +3925,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 			this.selectall = false;
 			setTimeout(function() { rtePaste = false; }, 100);
 
-			if (this.opts.autoresize) $(this.document.body).scrollTop(this.saveScroll);
+			if (this.opts.autoresize) $(this.$box).scrollTop(this.saveScroll); //4TREE
 			else this.$editor.scrollTop(this.saveScroll);
 		},
 
