@@ -3051,10 +3051,9 @@ padding-top: 1px;
 min-width: 1em;
 }
 
-.tcheckbox.chdid
+.do_did .tcheckbox
 {
 background: black;
-opacity: 1;
 }
 
 .textlength

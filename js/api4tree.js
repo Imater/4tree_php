@@ -740,24 +740,24 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	 	  		var fav = $("<div>"+sender.html()+"</div>").find("i").attr("class");
     	 	  		var title=sender.html();
     	 	  		title = strip_tags(title).trim().replace("<br>","");
-    	 	  		$(".makedone_h1").html(title);
     	 	  		$(".tree_tab_menu li[myid="+id+"] a").html(title);
 
     	 	  		window.title = "4tree.ru: "+title;
     	 	  		if(fav) title = "<i class='"+fav+"'></i> "+title;
+    	 	  		$(".makedone_h1").html(title);
     	 	    	 	  		
     	 	  		api4tree.jsFind(id,{ title : title });
 				 	api4panel.jsPathTitle(id); //устанавливаем путь в шапку
     	 	  		if(setdate) {
     	 	  			var myel = api4tree.jsFind(id,{ date1 : setdate.toMysqlFormat(), date2 : "" });
-				 		api4tree.jsSetSettings(id);
-		 	  			jsRefreshTree();
     	 	  		}
     	 	  		//api4panel.jsRefreshOneElement(id);
     	  			api4others.jsSetTitleBack();
     	  			api4tree.jsMakeTabs();	
     	  //			if(id<0) jsStartSync("soon","IF NEW ELEMENT");
     	  			sender.removeAttr("old_title");
+			 		api4tree.jsSetSettings(id);
+	 	  			jsRefreshTree();
     	  			}
     	  	  }
     	  	else
@@ -1339,21 +1339,21 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	   var elements = api4tree.jsRecursive(id);
 		  	   $.each(elements,function(i,el){
 		  		   this_db.jsFind(el.id,{ did:did_time });
-		  		   $("#node_"+el.id+" .n_title").addClass("do_did");
+		  		   $("#node_"+el.id).addClass("do_did");
 		  	   });
 
 		  	   this_db.jsFind(id,{ did:mydatenow.toMysqlFormat() });
-	  		   $("#node_"+id+" .n_title").addClass("do_did");
+	  		   $("#node_"+id).addClass("do_did");
 
 		  	   var li = $(".mypanel.tree_active  #node_"+id);	  	   
 		  	   clearTimeout(did_timeout);
 		  	   if(!settings.show_did) {
 		  	   		did_timeout = setTimeout(function() {
-		  				$(".do_did").parents("li").slideUp(300,function(){ 
+		  				$(".do_did").slideUp(300,function(){ 
 		  					jsRefreshTree(); 
 		  				});	   			
-	  	   			},3000);
-		  	   		jsTitle("Выполненные дела будут скрыты через 3 секунды",3000);
+	  	   			},20000);
+		  	   		jsTitle("Выполненные дела будут скрыты через 20 секунд",20000);
 		  	   } else {
 		  	   		jsRefreshTree();
 		  	   }
@@ -1366,14 +1366,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	   var elements = api4tree.jsRecursive(id);
 		  	   $.each(elements,function(i,el){
 		  		   this_db.jsFind(el.id,{ did:"" });
-		  		   $("#node_"+el.id+" .n_title").removeClass("do_did");
+		  		   $("#node_"+el.id).removeClass("do_did");
 		  	   });
 
 		  	   this_db.jsFind(id,{ did:"" });
 		  	   
 		  	   
 		  	   
-	  		   $("#node_"+id+" .n_title").removeClass("do_did");
+	  		   $("#node_"+id).removeClass("do_did");
 		  	   jsRefreshTree();
 		  	   $('#calendar').fullCalendar( 'refetchEvents' );
 		  }
@@ -2105,7 +2105,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 
 			 //джойстик управляет размером 3х окон и запускает синхронизацию
-			 $('.resize_me,.sos').mousedown( function(e) {
+			 $('.resize_me').mousedown( function(e) {
 			       e.preventDefault();
 			       last_sos_click = jsNow();
 			       
@@ -2161,10 +2161,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  //нажатие на кнопку вызова меню настройки элемента
 			  $('.mypanel').delegate(".tcheckbox","click", function(e) {
 			      var id = api4tree.node_to_id( $(this).parents("li:first").attr("id") );
-			      api4panel.jsSelectNode(id);
+			      var did = api4tree.jsFind(id).did;
+
+			  	  if(!did) {
+				  		api4tree.jsMakeDid(id);
+				    } else {
+				    	api4tree.jsMakeUnDid(id);
+				    }
+
+/*			      api4panel.jsSelectNode(id);
 			      setTimeout(function(){
 				      api4editor.jsRedactorOpenRecursive(id); //открываем все заметки
-			      }, 500);
+			      }, 500);*/
 			      return false;			   	 
 			  });
 			  
@@ -2424,12 +2432,15 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  icons[6] = ["users-1","eye","inbox","brush","moon","college","fast-food","coffee","top-list","bag"];
 			  icons[7] = ["chart-area","info","home-1","hourglass","attention","scissors","tint","guidedog","archive","flow-line"];
 			  icons[8] = ["emo-grin","emo-happy","emo-wink","emo-sunglasses","emo-thumbsup","emo-sleep","emo-unhappy","emo-devil","emo-surprised","emo-tongue"];
+			  icons[9] = ["plus","minus","keyboard","fast-fw","to-end","to-start","cancel-circle","check","flash","feather"];
+			  icons[10] = ["plus-circle","pencil-alt","target-1","chart-pie","adjust","user-add","volume","install","flow-cascade","sitemap"];
+			  icons[11] = ["minus-circle","clock-1","light-down","light-up","lamp","upload","picture-2","dollar","gift","link-1"];
 
 			  $.each(icons, function(j, icons_row ) {
 				  $.each(icons_row, function(i, icon) {
 					  html += "<i class='icon-"+icon+"'></i>";
 				  });
-				  html += "<br>";
+				  html += "<div class='gradient_line'></div>";
 			  });
   		  	  $("#icons_and_colors").html(html);
   		  	 
@@ -2643,7 +2654,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			      	api4tree.jsFind(id, {title:title}); jsRefreshTree(); 
 			      	$(".tree_tab_menu li[myid='"+id+"'] a").html(title);
 				  	api4panel.jsPathTitle(id); //устанавливаем путь в шапку
-			      	
+			 		api4tree.jsSetSettings(id);
 			      }
 			      console.info("icon=",fav,id);
 			      return false;
@@ -3604,7 +3615,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					   } else {
 						   settings.show_did = false;
 						   localStorage.setItem('show_did',settings.show_did);
-						   hide_timer = setTimeout(function(){ $(".do_did").parents("li:first").hide(); },1000);
+						   hide_timer = setTimeout(function(){ $(".do_did").hide(); },1000);
 						   api4tree.jsUpdateChildrenCnt();
 						   jsRefreshTree(); //обновляю дерево
 						   setTimeout(function(){ jsTitle("Выполненные дела скрыты",10000); }, 500);
@@ -4416,7 +4427,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	  		         (typeof fields.date2 != "undefined") ||
 	  		         (typeof fields["del"]   != "undefined") ||
 	  		         (typeof fields.id    != "undefined") ) {
-   		         	after_save1 = function() { this_db.jsUpdateNextAction(); jsRefreshTree(); };
+   		         	after_save1 = function() { this_db.jsUpdateNextAction(); /*jsRefreshTree();*/ };
 		  		 }
 
   		         if(typeof fields.parent_id != "undefined") { //если нужно пересчитать детей у родителей всего дерева

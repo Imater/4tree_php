@@ -55,15 +55,15 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	if (ntitle.attr("contenteditable")==true) return true; 
 		 	
 		 	var nowtime = new Date();
-		 	if(((nowtime-lastclick)<800) && (lastclickelement == ntitle.attr("myid"))) needtoedit = true;
+		 	if(((nowtime-lastclick)<500) && (lastclickelement == ntitle.attr("myid"))) needtoedit = true;
 		 	else 
 		 		{
 		 		var needtoedit = false;
 		 		//if(!from_n_title) 
-//		 		ntitle.parents("li:first").click(); //противный клик
+		 		ntitle.parents("li:first").click(); //противный клик
 		 		var id = ntitle.attr("myid");
-		 		if(!isTree) this_db.jsOpenNode( id ); //открываю панель
-		 		this_db.jsSelectNode( id ,'tree');
+//		 		if(!isTree || true) this_db.jsOpenNode( id ); //открываю панель
+//		 		this_db.jsSelectNode( id ,'tree');
 		 		}
 		 	
 		 	lastclickelement = ntitle.attr("myid");
@@ -499,23 +499,23 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	
 		 	var position = (typeof ii!=undefined)?ii:(parseFloat(data.position)); // - 0.9
 
-		 	if( (data.did!=0 && settings.show_did==false) || (data.del!=0) ) isVisible = "style='display:none;'";
-		 	else isVisible = "";
+//		 	if( (data.did!=0 && settings.show_did==false) || (data.del!=0) ) isVisible = "style='display:none;'";
+		 	var isVisible = "";
 		 	
 		 	myli = "<div "+isVisible+" class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'>"+"</div>"; //разделитель
-		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='"+info.isFolder+"'>"; 
+		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='"+info.isFolder+info.crossline+"'>"; 
 		 	myli += "<div class='big_n_title'>";
-		 	myli += "<div class='tcheckbox' title='Редактировать все заметки внутри №"+data.id+"'>"+info.comment_count+"</div>" + info.icon_share;
+		 	myli += "<div class='tcheckbox' title='Выполнить дело "+data.id+"'>"+info.comment_count+"</div>" + info.icon_share;
 		 	myli += "<div class='date1' myid='"+(data.tmp_next_id?data.tmp_next_id:"")+"' childdate='"+(data.tmp_nextdate?data.tmp_nextdate:"")+"' title='"+data.date1+""+(data.tmp_next_title?data.tmp_next_title:"")+"'></div>";
 		 	myli += info.remind + info.triangle + info.countdiv + info.img + info.needsync;
-		 	myli += "<div class='n_title"+info.crossline+"' myid='"+data.id+"'>";
+		 	myli += "<div class='n_title' myid='"+data.id+"'>";
 		 	myli += info.mytitle; 
 		 	myli += "</div>"+info.add_text + info.search_sample;
 		 	myli += "<div class='note_part'></div>";
 		 	myli += "</div>"; //big_n_title
 		 	myli += "</li>";
 
-		 	if( (data.did!=0 && settings.show_did==false) || (data.del!=0) ) myli = "";
+//		 	if( (data.did!=0 && settings.show_did==false) || (data.del!=0) ) myli = "";
 
 		 	return myli;
 		 } //jsRenderOneElement

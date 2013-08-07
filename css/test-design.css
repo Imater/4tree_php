@@ -762,22 +762,33 @@ top:-5px;
 }
 
 .makedone_header li {
-   font-size: 12px;
-   text-align: center;
+font-size: 12px;
+text-align: center;
+display: inline-block;
+padding: 11px 0px 0px 0px;
+border-bottom-left-radius: 5px;
+border-bottom-right-radius: 5px;
+border: 1px solid #BBB;
+border-top: none;
+margin-top: 0px;
+cursor: pointer;
+color: #555;
+text-shadow: 0px 1px 0px #FFF;
+height: 18px;
+width: 60px;
+margin-left: 2px;
+}
 
-   display: inline-block;
-/*   padding: 5px 5px 7px 5px; */
-   border-bottom-left-radius: 5px;
-   border-bottom-right-radius: 5px;
-   border: 1px solid #BBB;
-   border-top: none;
-   margin-top: 0px;
-   cursor: pointer;
-   color: #555;
-   text-shadow: 0px 1px 0px #FFF;
-   height: 33px;
-   width: 30px;
-   margin-left: 2px;
+.makedone_header li.active:after {
+	content: "x";
+	font-size: 9px;
+	color: #DDD;
+	margin-left: 3px;
+	margin-top: 0px;
+	line-height: 15px;
+	display: inline-block;
+	vertical-align: middle;	
+	position: absolute;
 }
 
 .makedone_header li:hover {
@@ -811,9 +822,14 @@ top:-5px;
 	display: none;
 }
 
+.makedone_page_3 {
+	padding-top: 20px !important;
+}
+
+
 .makedone_pages .page {
 	text-align: center;
-	padding: 45px 5px 20px 5px !important;
+	padding: 45px 5px 20px 5px;
 	box-shadow: inset 0px 0px 3px rgba(180,180,180,1);
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
@@ -821,6 +837,7 @@ top:-5px;
 	border-top: none;
 	background: #ededed;
 }
+
 
 #ui-datepicker-div {
 	background: white;
@@ -876,14 +893,14 @@ font-weight: bold;
 }
 
 #icons_and_colors {
-	line-height: 30px;
+	line-height: 25px;
 }
 
 #icons_and_colors i {
-	font-size: 18px;
-	margin: 0px;
-	padding: 10px;
-	cursor: pointer;
+font-size: 18px;
+margin: 0px;
+padding: 10px;
+cursor: pointer;
 }
 
 .add_tab {

@@ -345,10 +345,10 @@ $(document).ready(function(){
 		
 		<div id="tree_footer2">
 			<ul class="tree_footer_menu2">
-				<li id = "tab_calendar"><a><i class="icon-calendar-2"></i></a></li>
-				<li id = "tab_files"><a><i class="icon-attach-1"></i></a></li>
-				<li id = "tab_news"><a><i class="icon-rss"></i></a></li>
-				<li id = "tab_find"><a><i class="icon-search"></i></a></li>
+				<li id = "tab_calendar" title="Большой календарь"><a><i class="icon-calendar-2"></i></a></li>
+				<li id = "tab_files" title="Файлы и картинки"><a><i class="icon-attach-1"></i></a></li>
+				<li id = "tab_news" title="Новые комментарии"><a><i class="icon-rss"></i></a></li>
+				<li id = "tab_find" title="Панель поиска"><a><i class="icon-search"></i></a></li>
 			</ul>
 		</div>
 		
@@ -618,10 +618,10 @@ font-weight: bold;">Поиск</span>
 <div class="makedone">
 	   <div class="makedone_header noselectable">
 	   		<ul>
-	   			<li myid="makedone_page_1"><i class="icon-calendar"></i></li>
-	   			<li myid="makedone_page_2"><i class="icon-export-1"></i></li>
-	   			<li myid="makedone_page_3"><i class="icon-heart"></i></li>
-	   			<li myid="makedone_page_4"><i class="icon-tools"></i></li>
+	   			<li myid="makedone_page_1">Даты</li>
+	   			<li myid="makedone_page_2">Ссылка</li>
+	   			<li myid="makedone_page_3">Иконка</li>
+	   			<li myid="makedone_page_4">Сервис</li>
 	   		</ul>
 	   </div>
 	   	   
