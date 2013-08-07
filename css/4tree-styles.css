@@ -3046,7 +3046,9 @@ font-weight: bold;
 color: black !important;
 text-align: center;
 padding: 1px;
-padding-bottom: 0px;
+padding-bottom: 1px;
+padding-top: 1px;
+min-width: 1em;
 }
 
 .tcheckbox.chdid
@@ -3277,11 +3279,16 @@ margin-left: 5px;
 #makedatebutton
 {
 position: absolute;
-top:7px;
-left: 8px;
 display: inline-block;
+margin-top: 8px;
+margin-left: -5px;
 }
 
+#makedatebutton input
+{
+width: 25px;
+height: 25px;
+}
 
 #makedatebutton label.iPhoneCheckLabelOn {
 	padding-top: 3px;

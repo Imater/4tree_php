@@ -421,7 +421,7 @@ $(document).ready(function(){
 font-size: 22px;
 display: inline-block;
 top: 5px;
-left: 20px; "></i>&nbsp;</a>
+left: 10px; "></i>&nbsp;</a>
 		  			  	<ul>
 		  			  	<li><a onclick="jsRedactorInsert('checkbox')">Вставить галочку (alt + c)</a></li>
 		  			  	<li><a onclick="jsRedactorInsert('datetime')">Вставить дату (alt + x)</a></li>

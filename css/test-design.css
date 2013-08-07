@@ -804,7 +804,7 @@ top:-5px;
 
 .makedone_pages {
 	margin-top: -30px;
-	min-height: 25px;
+	min-height: 20px;
 }
 
 .makedone_pages .page {
@@ -870,6 +870,8 @@ font-size: 18px;
 text-align: center;
 margin-top: 10px;
 margin-bottom: 12px;
+margin-left: 30px;
+margin-right: 30px;
 font-weight: bold;
 }
 

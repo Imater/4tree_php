@@ -495,7 +495,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	  var img = "<div class='node_img node_box' style='background-image:url("+icon+")'></div>";
 		 	  }
 		 /////
-		 	var datacount = data.tmp_childrens?data.tmp_childrens:0;
+		 	var datacount = api4tree.jsFindByParent(data.id).length; //data.tmp_childrens?data.tmp_childrens:0; //TEST
 		 	
 		 	if(datacount>0) 
 		 	  { 
@@ -1755,6 +1755,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					return {date:mydate, time: (spl_time[0]+":"+spl_time[1]) };
 		  }
 		  
+		  
 		  this.jsSetSettings = function(id) {
 			    	   
 			    $(".makedone").attr("myid",id);
@@ -1795,16 +1796,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 			    if(element.did=="") { //устанавливаю переключатель выполнения дела
 			       if($("#on_off_did").prop("checked")==true) {
-						is_rendering_now = true;			       
-			       		$("#on_off_did").prop("checked",false).iphoneStyle("refresh");
-				   		is_rendering_now = false;
-			       		
+			       		$("#on_off_did").prop("checked",false);
 			       	}
 			    } else {
 			       if($("#on_off_did").prop("checked")==false) {
-						is_rendering_now = true;
-		     		   $("#on_off_did").prop("checked",true).iphoneStyle("refresh");
-			 		   is_rendering_now = false;
+		     		   $("#on_off_did").prop("checked",true);
 		     		   
 			       }
 			    }
@@ -2918,7 +2914,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  $.each(to_load.top_tabs, function(i, el){
 					  api4tree.jsOpenTab(el.myid );
 					  $("#tree_header .temp").removeClass("temp");
-					  console.info(el.myid);
 				  });
 				  
 			  }
@@ -3583,6 +3578,16 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 //			  });
 			  
 		  }
+		  
+		  
+		  $("#makedatebutton").on("change","input",function() {
+//			    if(!$(this).attr("checked")) $(this).attr("checked", true);
+//			    else $(this).removeAttr("checked");
+				console.info("CHECKBOX", $(this).prop("checked"));
+		  		api4tree.jsChangeMakedoneCheckbox( $(this) , $(this).prop("checked") );
+		  		return true;
+		  		});
+		  
 		  var hide_timer;
 		  this_db.jsChangeMakedoneCheckbox = function(element,value) {
 				    if(is_rendering_now) return true;
@@ -3745,7 +3750,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  onChange: api4tree.jsChangeMakedoneCheckbox
 				});
 
-				
+		if(false)		
 			  $('#on_off_did').iphoneStyle({ checkedLabel: '<i class="icon-progress-3"></i>', uncheckedLabel: '<i class="icon-progress-1"></i>',         
 				  onChange: api4tree.jsChangeMakedoneCheckbox
 				});
@@ -4964,7 +4969,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	var answer = [];
 		 	var found = my_all_parents["p"+parent_id];
 
-		 	
 			/*var answer = my_all_data.filter(function(el,i) {
 				if((settings.show_did==false) && (el.did!=0)) return false;
 				return el && el.del!=1 && el.parent_id==parent_id;
@@ -4973,7 +4977,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			//if(!answer) return [];
 			if(found) {
 				$.each(found, function(i, el){
-					answer.push(el);
+					if((settings.show_did==true) || (el.did==0)) {
+						answer.push(el);
+					}
 				});
 			}
 			
@@ -5292,12 +5298,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     
 		 //кэширует в базе tmp_childrens, для быстрой работы (кол-во детей)
 		 this.jsUpdateChildrenCnt = function(id) {
+		 
+		 	return false;
 		 	console.time("updateCnt");
 			this_db.log("start jsUpdateChildrenTmpCnt: id="+id);
 			if(!id) { //если нужно обработать все элементы базы
 				$.each(my_all_data2, function(i, el){ 
 			        if(el) {
-			    	   	var tmp_childrens = this_db.jsFindByParent(el.id).length;
+			    	   	var tmp_childrens = 0; //this_db.jsFindByParent(el.id).length; /TEST
 			    	   	this_db.jsFind(el.id.toString(),{tmp_childrens:tmp_childrens});
 			    	}
 			    });

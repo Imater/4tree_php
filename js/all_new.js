@@ -177,7 +177,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 	 		myli.addClass("selected"); //ставим selected на выбранный элемент
 	 		
 	 
-	 		if( !element || element.tmp_childrens>0) {//если это папка, создаю панель
+	 		if( !element || (api4tree.jsFindByParent(id).length>0) ) {//если это папка, создаю панель
 		 		tree_id = $(".tree_active").attr("id");
 	     		this_db.jsShowTreeNode( tree_id, id, isTree ); //вывожу детей этого элемента
 	     	} else {
@@ -307,7 +307,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	    
     	        	if( isTree && (!$(this).hasClass("tree-open")) ) { //если дерево и нужно открыть ветку
 //    	        		$(this).find(".date1").hide();
-    	        		var timelong = element.tmp_childrens*15; 
+    	        		var timelong = api4tree.jsFindByParent(id).length*15; 
     	        		if(timelong>1000) timelong=500; //большие ветки дольше
     	        		if(timelong<300) timelong=100;   //маленькие ветки открываются быстрее
     	        		var cache_this = $(this);
