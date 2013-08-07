@@ -1,5 +1,5 @@
 //v1.01
-var myjsPlumb,isMindmap = false, isTree = true;
+var myjsPlumb,isMindmap = false, isTree = true, is_mobile = false;
 var note_saved=true,myr,t1,t2,my_all_comments,my_all_share,
 	my_all_frends,remember_old_panel="top_panel";
 var main_x = 50; //ширина левой панели в процентах

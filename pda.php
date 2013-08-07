@@ -34,7 +34,7 @@ if(isset($_GET['confirm']))
 
 <link rel="stylesheet" href="./css/jquery.mobile-1.3.1.css" />
 <link rel="stylesheet" href="./css/mobile.css" />
-<link rel="stylesheet" type="text/css" href="redactor900/redactor/redactor.css"/>
+<link rel="stylesheet" type="text/css" href="redactor904/redactor/redactor.css"/>
 <link rel="stylesheet" type="text/css" href="fontello/css/fontello.css"/>
 
 <script src="./js/jquery-1.8.2.js"></script>
@@ -42,19 +42,18 @@ if(isset($_GET['confirm']))
 <script src="js/ydn.db-jquery-0.7.5.js"></script>
 <script src="js/login.js"></script>
 <script src="js/pushstream.js"></script>
-<script src="jstree/_lib/jquery.cookie.min.js"></script>
+<script src="js/jquery.cookie.min.js"></script>
 <script src="js/md5.js"></script>
 <script src="js/js_regallkeys.js"></script>
 <script src="js/loader.js"></script>
-<script src="diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>
+<script src="4tree_extension/diff_match_patch/javascript/diff_match_patch_uncompressed.js"></script>
 <script src="js/jquery.idle-timer.js"></script>
 <script src="./js/api4tree.js"></script>
 <script src="./js/fastclick2.js"></script>
 <script src="./js/all-mobile.js<? echo "?".rand(0,5); ?>"></script>
 <script src="js/handlebars.js"></script>
-<script src="redactor900/redactor/redactor.js"></script>
-<script src="redactor900/redactor/ru.js"></script>
-<script src="b_menu/jquery.menu.js"></script>
+<script src="redactor904/redactor/redactor.js"></script>
+<script src="redactor904/redactor/ru.js"></script>
 <script src="./js/4tree.js"></script>
 <script src="js/parser.js"></script>
 

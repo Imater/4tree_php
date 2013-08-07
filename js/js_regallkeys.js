@@ -1615,7 +1615,7 @@ function onResize() //вызывается при каждом ресайзе с
 			$("#tree_news").height(newheight-21+9);
 			$("#tree_files_panel").height(newheight-21+9);			
 
-			jsSetTimeNow(); //обновляю указатель текущего времени
+			if(!is_mobile) jsSetTimeNow(); //обновляю указатель текущего времени
 			
 			api4tree.jsCalcTabs();
 
@@ -1810,7 +1810,7 @@ function jsShowCalendar() //отображаю календарь
 
 function jsSetTimeNow() //устанавливаю красную полоску - показывающую текущую дату
 {
-//		if(typeof is_mobile != "undefined") return true;
+		if(is_mobile == true) return true;
 		var cur_view = calend.fullCalendar('getView').name;
 		var myl,myleft,mywidth;
 		

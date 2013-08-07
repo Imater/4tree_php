@@ -6669,6 +6669,9 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  function jsSaveOneTextIfChanged(id, md5text, text) {
 //			    api4editor.save_text_dif_snapshot(id, text);
 
+				var now_icon = api4tree.jsFind(id);
+				now_icon = now_icon?now_icon.icon:false;
+	
 				if(/img/ig.test(text)) { 
 					var blob_text1 = $("<div>"+text+"</div>");								
 					var first_image = blob_text1.find("img:first").attr("src");				
@@ -6679,7 +6682,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 								jsRefreshTree();
 							}				
 						});
-				} else if( (api4tree.jsFind(id).icon!="") && ($(".divider_red").length==0) ) {
+				} else if( now_icon && (now_icon!="") && ($(".divider_red").length==0) ) {
 					api4tree.jsFind(id, {icon:""});
 					jsRefreshTree();
 				}
