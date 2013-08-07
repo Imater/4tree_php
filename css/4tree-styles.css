@@ -3280,14 +3280,12 @@ margin-left: 5px;
 {
 position: absolute;
 display: inline-block;
-margin-top: 8px;
-margin-left: -5px;
+margin-top: 10px;
+margin-left: -2px;
 }
 
 #makedatebutton input
 {
-width: 25px;
-height: 25px;
 }
 
 #makedatebutton label.iPhoneCheckLabelOn {
