@@ -152,6 +152,7 @@ $height			= $size[1];
 $maxWidth		= (isset($_GET['width'])) ? (int) $_GET['width'] : 0;
 $maxHeight		= (isset($_GET['height'])) ? (int) $_GET['height'] : 0;
 
+
 if (isset($_GET['color']))
 	$color		= preg_replace('/[^0-9a-fA-F]/', '', (string) $_GET['color']);
 else

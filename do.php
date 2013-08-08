@@ -60,6 +60,19 @@ function ShowTree($cnt,$note,$tree, $pid=0){
  echo "</ul>";
 }    
 
+if (isset($_GET['user_by_id'])) 
+{
+  		$sqlnews1 = "SELECT * FROM `tree_users` WHERE `id` = '".$_GET['user_by_id']."'";
+	  	$result1 = mysql_query($sqlnews1); 
+	  	@$sql1 = mysql_fetch_array($result1);
+	  	
+	  	if($sql1["foto"]) $foto = "<img style='vertical-align:middle;' height='30px' src='".$sql1["foto"]."'>";
+
+	  	echo $sql1["fio"]." [".$sql1["email"]."] ".$foto;
+	  	exit;
+}
+
+
 
 if (isset($_GET['test_it_now'])) {
  echo "Ok = ".$_POST['test_it_now'];
@@ -100,17 +113,6 @@ if (isset($_GET['curl'])) {
  exit;
 }
 
-if (isset($_GET['user_by_id'])) 
-{
-  		$sqlnews1 = "SELECT * FROM `tree_users` WHERE `id` = '".$_GET['user_by_id']."'";
-	  	$result1 = mysql_query($sqlnews1); 
-	  	@$sql1 = mysql_fetch_array($result1);
-	  	
-	  	if($sql1["foto"]) $foto = "<img style='vertical-align:middle;' height='30px' src='".$sql1["foto"]."'>";
-
-	  	echo $sql1["fio"]." [".$sql1["email"]."] ".$foto;
-	  	exit;
-}
 
 
 

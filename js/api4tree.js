@@ -2243,22 +2243,22 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	  	var time1 = twoDigits(now_time.getHours())+":"+twoDigits(now_time.getMinutes());
 					$(".screen_saver_icon").html(time1);					 	
 			 	}
-				$("#tree_left_panel").addClass("blur");
-				$("#tree_editor").addClass("blur");
-				$("body").append('<div class="screen_saver_icon"></div>');
-				jsSetTheTime();
+//				$("#tree_left_panel").addClass("blur");
+//				$("#tree_editor").addClass("blur");
+//				$("body").append('<div class="screen_saver_icon"></div>');
+//				jsSetTheTime();
 				time_timer = setInterval(function(){
-					jsSetTheTime();
+//					jsSetTheTime();
 				},30000);
-				old_title_of_screensaver = window.document.title;
-				window.document.title = "4tree.ru - Screensaver...";
+//				old_title_of_screensaver = window.document.title;
+//				window.document.title = "4tree.ru - Screensaver...";
 				api4tree.js_Compare_md5_local_vs_server();
 			 } else {
-				$("#tree_left_panel").removeClass("blur");
-				$("#tree_editor").removeClass("blur");
-				$(".screen_saver_icon").remove();
+//				$("#tree_left_panel").removeClass("blur");
+//				$("#tree_editor").removeClass("blur");
+//				$(".screen_saver_icon").remove();
 				clearInterval(time_timer);
-				if(old_title_of_screensaver) window.document.title = old_title_of_screensaver;
+//				if(old_title_of_screensaver) window.document.title = old_title_of_screensaver;
 			 }
 		 }
 		 
