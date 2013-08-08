@@ -505,7 +505,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	myli = "<div "+isVisible+" class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'>"+"</div>"; //разделитель
 		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='"+info.isFolder+info.crossline+"'>"; 
 		 	myli += "<div class='big_n_title'>";
-		 	myli += "<div class='tcheckbox' title='Выполнить дело "+data.id+"'>"+info.comment_count+" ("+data.position+")</div>" + info.icon_share;
+		 	myli += "<div class='tcheckbox' title='Выполнить дело "+data.id+"'>"+info.comment_count+"</div>" + info.icon_share;
 		 	myli += "<div class='date1' myid='"+(data.tmp_next_id?data.tmp_next_id:"")+"' childdate='"+(data.tmp_nextdate?data.tmp_nextdate:"")+"' title='"+data.date1+""+(data.tmp_next_title?data.tmp_next_title:"")+"'></div>";
 		 	myli += info.remind + info.triangle + info.countdiv + info.img + info.needsync;
 		 	myli += "<div class='n_title' myid='"+data.id+"'>";
