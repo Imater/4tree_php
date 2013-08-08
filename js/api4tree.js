@@ -13,7 +13,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	 {
 	  arguments.callee.instance = new function()
 		  {
-		  var my_all_data3=[], my_all_data2 = {},my_all_comments=[], my_all_frends=[], my_all_share=[],
+		  var my_all_data3=[], my_all_data2 = {},my_all_comments=[], my_all_frends=[], my_all_share=[],my_tags = [],
 		  	  recursive_array=[],
 		  	  scrolltimer, myhtml_for_comments ="",
 		  	  old_before_diary,
@@ -804,6 +804,92 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  		return data;
 
     	  }
+    	  
+    	  
+    	  this.jsLoadTags = function() {
+    	  	var dfd = new $.Deferred();
+			jsGetToken().done(function(token){
+				var lnk = web_site + "do.php?access_token=" + token + "&get_tags";
+				
+				$.getJSON(lnk,function(data){
+					my_tags = $.map(data, function(a) { return a });
+					dfd.resolve();
+				});
+
+			});
+			return dfd.promise();
+	    	  
+    	  }
+    	  
+
+    	  
+    	  this.jsFindTagsByParent = function(parent_id) {
+			  var answer = my_tags.filter(function(el,i) {
+				 return el.parent_id == parent_id; 
+			  });
+
+			  return answer;
+    	  }
+
+    	  this.jsFindTag = function(id) {
+			  var answer = my_tags.filter(function(el,i) {
+				 return el.id == id; 
+			  });
+
+			  return answer;
+    	  }
+    	  
+    	  var output = "", tags_level = 0;
+    	  this.jsShowAllTags =function() {
+    	  	  output = "";
+    	  	  tags_level = 0;
+	    	  api4tree.jsShowAllTagsByParent(1);
+	    	  $("#right_tags").html(output);
+	    	  
+	    	  $("#tags_ul").sortable();
+	    	  $("#tags_ul ul").sortable();
+	    	  
+	    	  return output;
+    	  };
+    	  
+    	  $("#right_tags").on("click", ".label,.label_mini", function() {
+	    	  $(this).parent("li").find("ul:first").slideToggle(200);
+	    	  return false;
+    	  });
+    	  
+    	  this.jsShowAllTagsByParent = function(parent_id) {
+			  if(tags_level>50) return false;
+    	  	  var top_tags = api4tree.jsFindTagsByParent(parent_id);
+    	  	  if(top_tags.length>0) {
+	    	  	  if(parent_id==1) {
+	    	  	  	  output += '<ul id="tags_ul">';    	  	  
+			  	  	  var isTop = "top_label";
+	    	  	  } else {
+		    	  	  output += '<ul>';    	  	  
+				  	  var isTop = "";
+	    	  	  }
+	    	  	  
+		    	  $.each(top_tags, function(i,el) {
+		    	  	output += '<li class="'+isTop+'">';
+		    	  	if(el.parent_id==1) {
+		    	  		output += '<div class="label">@'+el.title+' ('+el.id+')</div>';
+		    	  	} else {
+		    	  		output += '<div class="label_mini">@'+el.title+' ('+el.id+')</div>';
+		    	  	}
+		    	  	output += '<ul class="tags_content">'+
+									'<li><i class="icon-folder-1"></i>Мозг</li>'+
+									'<li><i class="icon-folder-1"></i>Задуматься</li>'+
+								'</ul>';
+		    	  	api4tree.jsShowAllTagsByParent(el.id);
+		    	  	output += '</li>';
+		    	  });
+		    	  output += "</ul>";
+   	 	    	  return "";
+	    	  } else {
+		    	  return "";
+	    	  }
+	    	  
+    	  }
 
 	      //создаю закладки из всех дел написанных большими буквами
     	  this.jsMakeTabs = function() { 
@@ -821,9 +907,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  				  data[i].id+"'><a>"+api4tree.jsShortText(data[i].title,20)+"</a></li>";
     	  				  //<i class='icon-folder-1'></i>
     	  		}
-    	  	alltabs= alltabs+ "<div id='fav_help'>Заголовки дерева написанные БОЛЬШИМИ буквами</div>";
+    	  	//alltabs= alltabs+ "<div id='fav_help'>Заголовки дерева написанные БОЛЬШИМИ буквами</div>";
     	  		
-    	  	$('#all_my_favorits ul').html("").append(alltabs);	
+    	  	$('#right_fav_folders ul').html("").append(alltabs);	
     	  
     	  	this_db.jsCalcTabs();  //раcсчитываю ширину табов и перекидываю лишние в всплывающий список
     	  }
@@ -1345,7 +1431,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	   this_db.jsFind(id,{ did:mydatenow.toMysqlFormat() });
 	  		   $("#node_"+id).addClass("do_did");
 
-		  	   var li = $(".mypanel.tree_active  #node_"+id);	  	   
 		  	   clearTimeout(did_timeout);
 		  	   if(!settings.show_did) {
 		  	   		did_timeout = setTimeout(function() {
@@ -1848,6 +1933,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		   	  $(".tree_tab_menu").on("click","li",function(){
 		   	  	var id = $(this).attr("myid");
+		   	  	$(this).removeClass("temp");
 		      	$(".tree_tab_menu").find(".active").removeClass("active");
 		      	$(this).addClass("active");
 				api4panel.jsOpenPath(id);
@@ -1902,12 +1988,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		      
 		      $("#open_params").on("click",function(){
-		      	$("#tree_editor").toggleClass("params_open");
-		      	if($("#tree_editor").hasClass("params_open")) {
-			      	$(this).find("i:last").attr("class", "icon-up-dir");
-		      	} else {
-			      	$(this).find("i:last").attr("class", "icon-down-dir");
-		      	}
+		      	$("body").toggleClass("params_open");
 				api4tree.jsCurrentOpenPanelsAndTabsSave();
 				return false;		      	
 		      });
@@ -1916,6 +1997,19 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	$("body").toggleClass("left_panel_hide");
 				api4tree.jsCurrentOpenPanelsAndTabsSave();		      	
 		      });
+		      
+		      $("#open_right_panel_btn").on("click",function(){
+		      	$("body").toggleClass("show_right_panel");
+				api4tree.jsCurrentOpenPanelsAndTabsSave();		      	
+		      });
+		      
+		      $("#right_fav_folders_header").on("click",function(){
+		      	$("#right_fav_folders ul").toggleClass("hide_ul");
+     		    onResize();	
+				api4tree.jsCurrentOpenPanelsAndTabsSave();		      	
+		      });
+		      
+		      
 		  
 			  $("#tree_themes").on("click", ".theme_el", function(){
 			  	var img = $(this).attr("style");
@@ -2344,28 +2438,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //кнопки боковых панелей
 		  function jsMakeSidePanelsKeys() {
 
-			 $("#right_panel").on("click","li",function() {
-				 var user_id = $(this).attr("user_id");
-				 if($(".chat_box[user_id='"+user_id+"']").length) 
-				     {
-				     //развернуть чат
-				     return false;
-				     }
-				 jsCloneChat(user_id);
-				 return false;
-			});
-			
-			$('#left_panel').on("click","h1",function(){
-			    $(this).next("ul").slideToggle(200,function(){
-			    	if($(this).is(":visible")) {
-			    			$(this).prev("h1").find(".icon-right-dir").attr("class","icon-down-dir");
-			    	} else {
-			    			$(this).prev("h1").find(".icon-down-dir").attr("class","icon-right-dir");
-			    	}
-			    	
-			    });
-			    return false;
-			});		
 			
 			$('body').on("click","#left_panel_opener1",function(){
 			    if($("#left_panel").css("width") != "0px") {
@@ -5768,7 +5840,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     		lsync = el.lsync; 
 		     		changetime = el.time; 
 		     		if(lsync>maxt) maxt=lsync; 
-		     		if( (changetime>lsync) && (mint>changetime) ) mint=parseInt(changetime,10); 
+		     		if( (changetime>lsync) && (changetime<mint) && el.id!=6562 ) {
+		     			mint=parseInt(changetime,10); 
+		     			console.info("for_mint", el.id, el);
+		     		}
 		     	
 	     		});
 	     	}
@@ -6497,7 +6572,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		  },
 		  		  toolbar:true,
 		  		  toolbarExternal: "#fav_redactor_btn", // ID selector 
-		  		  focusCallback: function() { $("#tree_header li.active.temp").removeClass("temp"); },
+//		  		  focusCallback: function() { $("#tree_header li.active.temp").removeClass("temp"); },
 		  		  keydownCallback: save_all_text_in_a_while,
 		  		  keyupCallback: save_all_text_in_a_while,
 		  		  changeCallback: save_all_text_in_a_while_2,

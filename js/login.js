@@ -8,8 +8,10 @@ function jsGetToken() {
 		
 		var dif = jsNow() - (data.start_time + data.expires_in*1000);
 		
+//		console.info("Token will expired in ",dif);
+		
 		//проверяем, просрочен ли Token
-		if( dif > 0 ) { 
+		if( dif > -10000 ) { 
 			console.info("Token устарел! Получаю новый.");
 			jsRefreshToken().done(function(data){
 				dfd.resolve(data.access_token);
@@ -28,7 +30,7 @@ function jsGetToken() {
 	 
 function jsLoginUser() {
 	
-	jsRefreshToken().done(function(data){
+	jsGetToken().done(function(data){
 		console.info( jsGetToken() );
 		jsDoFirst();		
 	});
@@ -86,6 +88,8 @@ function jsRefreshToken() {
 
 	//Проверка токена
 	//Request Access Token
+	
+	console.info("Start_refresh_token");
 
 	var oauth2 = localStorage.getItem( "oauth2" );
 

@@ -930,6 +930,19 @@ function sqltime($now)
 return date("Y-m-d <b>H:i:s</b>",($now/1000+60*60));
 }
 
+if (isset($HTTP_GET_VARS['get_tags'])) 
+{
+	$user_id = $GLOBALS['user_id'];
+	$user_id = 11;
+	
+	$sth = $db2->prepare("SELECT * FROM tree_tags WHERE user_id = '".$user_id."'");
+	$sth->execute();
+	$result = $sth->fetchAll();
+	
+	echo json_encode($result);
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////////
 if (isset($HTTP_GET_VARS['sync_new'])) 
 {
@@ -937,6 +950,9 @@ $t1 = now();
 
 
 $disp_time = false;
+$display = false; ///////////!!!!!!!!!!!!!!
+
+if( isset($HTTP_GET_VARS['test']) ) { $disp_time = true; $display = true; }
 
 $now = now();
 $what_you_need = $HTTP_GET_VARS['what_you_need'];
@@ -996,7 +1012,6 @@ $now_time = $now_time + $time_dif;
 
 
 $confirm_id = "";
-$display = false; ///////////!!!!!!!!!!!!!!
 if($display) echo "<b>Индентификатор клиента:</b> ".$sync_id."<hr>";
 if($display) echo "<b>Время последней синхронизации:</b> ".sqltime($client_time)." (".$client_time.")<hr>";
 if($display) echo "<b>Время сейчас на сервере:</b> ".sqltime($now)." (".$now.")<hr>";

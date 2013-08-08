@@ -109,7 +109,7 @@ $(document).ready(function(){
 
 </head>
 
-<body onResize="onResize();">
+<body onResize="onResize();" class="show_right_panel">
 
 <div id="welcome_screen"></div>
 <div id="load_screen" class='<? echo $theme_dark; ?>' style="background-image:url('<? echo $theme_img; ?>');top:0px;bottom:-1px;left:0px;right:0px;background-color:white;position:absolute;z-index:999;padding-top:185px;"><center><div id='pload_text'>Загрузка...</div><br><div id="progress_bar" style="width:300px;overflow:hidden;background-color:rgb(151,252,0);height:5px;margin-top:25px;border:1px solid #000;border-radius:3px;"><div id="inside_bar" style="float:left;background-color:rgb(36,150,0);height:10px;margin-left:-3px;display:inline-block;width:10px;"></div></div><a style="color:rgb(65,109,0);margin-top:280px;display:block" href="./4tree.php"><h2>4tree.ru</h2></a>
@@ -380,21 +380,182 @@ $(document).ready(function(){
 	  </div> <!-- tree_left_panel -->
 	  
 	  
-	  	  <div id="tree_right_panel">
-			<ul>
-				<li>Мысли вслух</li>
-			</ul>
-	  </div>
+	  	  <div id="tree_right_panel" class="noselectable">
+		  	<div id="top_panel_header_right">
+			</div>
+			<div id="right_tags">
+				<ul id="tags_ul">
+					<li class="top_label"><div class="label">Домашние ярлыки</div>
+						<ul>
+							<li>@Срочно								
+								<ul class="tags_content">
+									<li><i class="icon-folder-1"></i>Мозг</li>
+									<li><i class="icon-folder-1"></i>Задуматься</li>
+									<li><i class="icon-folder-1"></i>Цели в жизни</li>
+									<li><i class="icon-folder-1"></i>Потом</li>
+									<li><i class="icon-folder-1"></i>Разобрать</li>
+									<li><i class="icon-folder-1"></i>Уборка</li>
+								</ul>
+							</li>
+							<li>@Мысли
+								<ul class="tags_content">
+									<li><i class="icon-folder-1"></i>Новый завет</li>
+									<li><i class="icon-folder-1"></i>Не забыть сходить подстричься в парикмахерскую на углу второй улици справа от фонтана</li>
+									<li><i class="icon-folder-1"></i>Цели в жизни</li>
+									<li><i class="icon-folder-1"></i>Потом</li>
+									<li><i class="icon-folder-1"></i>Разобрать</li>
+									<li><i class="icon-folder-1"></i>Уборка</li>
+								</ul>
+							</li>
+							<li>@4tree</li>
+							<li>@На сайт</li>
+							<li>@Магазин</li>
+							<li>@Обдумать</li>
+							<li>@Разобрать</li>
+						</ul>
+					 </li>
+					<li class="top_label"><div class="label">Рабочие ярлыки</div>
+						<ul>
+							<li>@Срочно</li>
+							<li>@Новый компьютер</li>
+							<li>@Компьютер</li>
+							<li>@Телефон</li>
+							<li>@Босс</li>
+							<li>@Поручения</li>
+							<li>@Календарь</li>
+							<li>@Выставить</li>
+							<li>@Платежи</li>
+							<li>@Оплачено</li>
+							<li>@Долги</li>
+							<li>@Купить</li>
+							<li>@Стройка</li>
+							<li>@Обязательства</li>
+						</ul>
+					 </li>
+					<li class="top_label"><div class="label">Остальные ярлыки</div>
+						<ul>
+							<li>@Мозг</li>
+							<li>@Задуматься</li>
+							<li>@Цели в жизни</li>
+							<li>@Потом</li>
+							<li>@Разобрать</li>
+							<li>@Уборка</li>
+						</ul>
+					 </li>
+
+
+					<li class="top_label"><div class="label">Домашние ярлыки</div>
+						<ul>
+							<li>@Срочно</li>
+							<li>@Мысли</li>
+							<li>@4tree</li>
+							<li>@На сайт</li>
+							<li>@Магазин</li>
+							<li>@Обдумать</li>
+							<li>@Разобрать</li>
+						</ul>
+					 </li>
+					<li class="top_label"><div class="label">Рабочие ярлыки</div>
+						<ul>
+							<li>@Срочно</li>
+							<li>@Новый компьютер</li>
+							<li>@Компьютер</li>
+							<li>@Телефон</li>
+							<li>@Босс</li>
+							<li>@Поручения</li>
+							<li>@Календарь</li>
+							<li>@Выставить</li>
+							<li>@Платежи</li>
+							<li>@Оплачено</li>
+							<li>@Долги</li>
+							<li>@Купить</li>
+							<li>@Стройка</li>
+							<li>@Обязательства</li>
+						</ul>
+					 </li>
+					<li class="top_label"><div class="label">Остальные ярлыки</div>
+						<ul>
+							<li>@Мозг</li>
+							<li>@Задуматься</li>
+							<li>@Цели в жизни</li>
+							<li>@Потом</li>
+							<li>@Разобрать</li>
+							<li>@Уборка</li>
+						</ul>
+					 </li>
+
+					<li class="top_label"><div class="label">Домашние ярлыки</div>
+						<ul>
+							<li>@Срочно</li>
+							<li>@Мысли</li>
+							<li>@4tree</li>
+							<li>@На сайт</li>
+							<li>@Магазин</li>
+							<li>@Обдумать</li>
+							<li>@Разобрать</li>
+						</ul>
+					 </li>
+					<li class="top_label"><div class="label">Рабочие ярлыки</div>
+						<ul>
+							<li>@Срочно</li>
+							<li>@Новый компьютер</li>
+							<li>@Компьютер</li>
+							<li>@Телефон</li>
+							<li>@Босс</li>
+							<li>@Поручения</li>
+							<li>@Календарь</li>
+							<li>@Выставить</li>
+							<li>@Платежи</li>
+							<li>@Оплачено</li>
+							<li>@Долги</li>
+							<li>@Купить</li>
+							<li>@Стройка</li>
+							<li>@Обязательства</li>
+						</ul>
+					 </li>
+					<li class="top_label"><div class="label">Остальные ярлыки</div>
+						<ul>
+							<li>@Мозг</li>
+							<li>@Задуматься</li>
+							<li>@Цели в жизни</li>
+							<li>@Потом</li>
+							<li>@Разобрать</li>
+							<li>@Уборка</li>
+						</ul>
+					 </li>
+
+				</ul>
+			</div>
+			
+			<div id="right_fav_folders">
+				<div id="right_fav_folders_header">
+					Избранное
+				</div>				
+				<ul class="">
+					<li>_НОВОЕ</li>
+					<li>ДНЕВНИК</li>
+					<li>МЫСЛИ</li>
+					<li>АСТД</li>
+					<li>ОБДУМАТЬ</li>
+					<li>4TREE.RU</li>
+
+				</ul>
+			</div>
+			
+		    <div class="tree_footer">
+		    </div>
+		  </div>
 
 
   		  <div id="params_header" class="noselectable">
-  		  	<div class="top_btn first" id="hide_left_panel"><i class="icon-left-1"></i></div>
-  		  	<div class="top_btn second" id="open_params">второе дерево<i class="icon-down-dir"></i></div>
+  		  	<div class="top_btn first" id="hide_left_panel"><i class="icon-left-open"></i>дерево</div>
+  		  	<div class="top_btn second" id="open_params"><i class="icon-down-open"></i>дерево</div>
 
 			<div id="path_tree" class="path_line">
 				<ul></ul>
 			</div>
 
+  		  	<div class="top_btn" id="open_right_panel_btn"><i class="icon-tag"></i>ярлыки <i id="right-panel-arrow" class="icon-left-open"></i></div>
   		  	<div class="top_btn makedel"><i class="icon-trash"></i></div>
   		  </div>
 

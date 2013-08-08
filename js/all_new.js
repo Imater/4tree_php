@@ -505,7 +505,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	myli = "<div "+isVisible+" class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'>"+"</div>"; //разделитель
 		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='"+info.isFolder+info.crossline+"'>"; 
 		 	myli += "<div class='big_n_title'>";
-		 	myli += "<div class='tcheckbox' title='Выполнить дело "+data.id+"'>"+info.comment_count+"</div>" + info.icon_share;
+		 	myli += "<div class='tcheckbox' title='Выполнить дело "+data.id+"'>"+info.comment_count+" ("+data.position+")</div>" + info.icon_share;
 		 	myli += "<div class='date1' myid='"+(data.tmp_next_id?data.tmp_next_id:"")+"' childdate='"+(data.tmp_nextdate?data.tmp_nextdate:"")+"' title='"+data.date1+""+(data.tmp_next_title?data.tmp_next_title:"")+"'></div>";
 		 	myli += info.remind + info.triangle + info.countdiv + info.img + info.needsync;
 		 	myli += "<div class='n_title' myid='"+data.id+"'>";
@@ -726,12 +726,12 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 }
 		 
 		 //нумерация позиций для сортировки
-		 function jsReorder(mydata) {
+		 this_db.jsReorder = function(mydata) {
 		 
-			return mydata;
+//®			return mydata;
 			var j=1;
 			$.each( mydata, function(i,dd) {
-				if(dd.id.toString().indexOf("_")==-1) {
+				if( !( /_/ig.test(dd.id) ) && (dd.user_id == main_user_id) && dd.id != '6562' ) {
 					if((dd.position != j) && (dd.did=="")) { //если позиция не корректная
 						api4tree.jsFind(dd.id,{position : j});
 					}
@@ -757,16 +757,17 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 		mydata = mydata.sort(sort_by_path); //сортирую
 		 	} else { 
 		 		var mydata = api4tree.jsFindByParent(parent_node,null,true); 
-		 		var my_diary_id = api4tree.jsCreate_or_open(["_ДНЕВНИК"]);
 
-		 		if( ($("#"+tree_id+" #node_"+my_diary_id).hasClass("old_selected")) && (parent_node!=1) ) {
+		 		var isDiary = /_ДНЕВНИК/ig.test( api4tree.jsFindPath(api4tree.jsFind(13211)).textpath )
+
+		 		if( (isDiary) && (parent_node!=1) ) {
 			 		mydata = mydata.sort(sort_by_title); //сортирую
 		 		} else {
 			 		mydata = mydata.sort(sort_by_position); //сортирую
 		 		}
 
 		 		if((parent_node.toString().indexOf("_")==-1)) { //если это не синтетическая папка
-		 			mydata = jsReorder(mydata); //перенумирую элементы
+		 			mydata = api4panel.jsReorder(mydata); //перенумирую элементы
 		 		}
 		 	}
 		 	
@@ -1632,6 +1633,9 @@ function jsDoFirst() { //функция, которая выполняется �
 	jsProgressStep();
 	api4tree.js_LoadAllFromLocalDB().done(function(){ 
 		api4tree.log("Таблица загружена!"); 
+   	    api4tree.jsLoadTags().done( function() {api4tree.jsShowAllTags();} );
+   	    
+		
 		jsProgressStep();
 		jsDoAfterLoad(); //главная функция
 		jsProgressStep();

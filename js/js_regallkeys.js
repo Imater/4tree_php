@@ -559,7 +559,8 @@ if(arrow=='up')
 		{
 		current.removeClass("selected");
 		prev.addClass("selected");
-		prev.find(".n_title:first").click();
+//		prev.find(".n_title:first").click();
+		api4panel.jsSelectNode(prev.attr("myid"));
 		}
 	}
 
@@ -590,7 +591,7 @@ if(arrow=='down')
 		{
 		current.removeClass("selected");
 		prev.addClass("selected");
-		prev.find(".n_title:first").click();
+		api4panel.jsSelectNode(prev.attr("myid"));
 		}
 
 	if(current.next(".add_do_panel_top").length) {
@@ -1474,12 +1475,13 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 		$("body").unbind("mousemove");
 		$("body").unbind("mouseup");
 
-	$(".mypanel li").not("ui-draggable").draggable({
+	$(".mypanel .big_n_title").not("ui-draggable").draggable({
 				zIndex: 999,
-				delay:100,
+				delay:50,
 				revert: false,      // will cause the event to go back to its
 				helper:"clone",
 				appendTo: "body",
+				refreshPositions:true,
 				start: function(event, ui) {
 					console.info("start-drag");
 					$(".mypanel").addClass("li_compact");
@@ -1492,7 +1494,7 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 			});
 			
 	$( ".mypanel .big_n_title,.divider_li" ).not("ui-droppable").droppable({
-			accept: "li",
+			accept: ".big_n_title",
 			activeClass: "ui-can-recieve",
 			tolerance: "pointer",
 			hoverClass: "ui-can-hover",
@@ -1502,9 +1504,12 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
             drop: function( event, ui ) {
             	//console.info("drop-all",usedOverlays,ui,ui.draggable[0] );
             	
-            	var i_am_from_tree = $(ui.draggable[0]).parents(".mypanel").attr("id");
+            	var my_draggable = $(ui.draggable[0]);
+            	var my_droppable = $(event.target);
+            	
+            	var i_am_from_tree = my_draggable.parents(".mypanel").attr("id");
             	var my_left = ui.position.left;
-            	var drop_to_tree = $(event.target).parents(".mypanel").attr("id");
+            	var drop_to_tree = my_droppable.parents(".mypanel").attr("id");
 //            	$(event.target).offset().left;
             	
             	var left_panel_width = parseInt($("#tree_editor:visible").css("left").replace("px",""));
@@ -1514,41 +1519,37 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
             	}
             		
             	
-            	console.info("tree=", i_am_from_tree, drop_to_tree, my_left, $(event.target).offset().left );
-            	
-            	if( (usedOverlays.length!=0) || ($(ui.draggable[0]).hasClass("fc-event")) ){ 
+            	if( (usedOverlays.length!=0) || (my_draggable.hasClass("fc-event")) ){ 
             		console.info("ignore_second_drop");
             		return true; 
             	} //если под делом есть другое дело, но мы над календарём
-
-            	setTimeout(function(){ ignore_second_drop = false; }, 300);
             	
-            	if(event.target.attributes.pos) //если уронили на разделитель
+            	if(my_droppable.attr("pos")) //если уронили на разделитель
             		{
-	            	dropto_pos = parseFloat(event.target.attributes.pos.nodeValue);
-	            	dropto_parent_id = event.target.attributes.myid.nodeValue;
-	            	dropto = event.target.attributes.myid.nodeValue;
-	            	draggable = ui.draggable[0].attributes.myid.nodeValue;
+	            	var dropto_pos = parseFloat(my_droppable.attr("pos"));
+	            	var dropto_parent_id = my_droppable.attr("myid");
+	            	var dropto = dropto_parent_id;
+	            	var draggable = my_draggable.parents("li:first").attr("myid");
 
 	            	console.info("drop=",dropto,dropto_pos,draggable);
 
-	            	el = api4tree.jsFind(dropto);
+	            	var el = api4tree.jsFind(dropto);
 //					if(el) jsReorder( el.parent_id );
 //					else return true;
 
 					if(el.id && draggable && (draggable!=dropto_parent_id)) {
 						
-						var pos1 = parseFloat( $(event.target).prev("li").prev(".divider_li").attr("pos") );
-						var pos2 = parseFloat( $(event.target).attr("pos") );
+						var pos1 = parseFloat( my_droppable.prev("li").prev(".divider_li").attr("pos") );
+						var pos2 = parseFloat( my_droppable.attr("pos") );
 						if(!pos1) pos1 = pos2 - 5;
 						var dif = (pos2 - pos1)/2;
 						if(dif==0) dif = 0.01;
-						newposition = pos1+dif;
+						var newposition = pos1+dif;
 						
 						api4tree.jsFind(draggable,{ position:(newposition), parent_id : dropto_parent_id });
 			   			setTimeout(function(){ 
 			   				jsRefreshTree(); 
-			   			},100);
+			   			},50);
 						
 					}
 
@@ -1557,9 +1558,9 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
             		}
             	else //если уронили на другой элемент
             		{
-            		if(!$(ui.draggable).attr("myid")) return true;
-	            	dropto = $(event.target).parent("li").attr("myid");
-	            	draggable = $(ui.draggable).attr("myid");
+            		if(!my_draggable.parents("li:first").attr("myid")) return true;
+	            	var dropto = my_droppable.parents("li:first").attr("myid");
+	            	var draggable = my_draggable.parents("li:first").attr("myid");
 	            	
 	            	var drop_to_element = api4tree.jsFind(dropto);
 	            	
@@ -1618,6 +1619,8 @@ function onResize() //вызывается при каждом ресайзе с
 			if(!is_mobile) jsSetTimeNow(); //обновляю указатель текущего времени
 			
 			api4tree.jsCalcTabs();
+			
+			$("#right_tags").css("bottom", $("#right_fav_folders").height()+20 );
 
 }
 
