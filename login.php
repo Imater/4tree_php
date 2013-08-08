@@ -387,6 +387,17 @@ $(document).ready(function(){
 		localStorage.setItem("email",$("#email").val());
 	});
 
+	$("#password_reg").on("keyup",function(e){
+		if( $("#password_reg").val().length>1 ) {
+			$("#reg_please").addClass("active");
+		} else {
+			$("#reg_please").removeClass("active");
+		}
+		if(e.keyCode == 13) {
+			$("#reg_please").click();
+		}
+	});
+
 	$("#password").on("keyup",function(e){
 		if( $("#password").val().length>1 ) {
 			$("#login_please").addClass("active");

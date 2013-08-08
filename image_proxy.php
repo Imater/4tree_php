@@ -92,6 +92,8 @@ else $image = str_replace("http:/", "http://", $image);
 
 $url = $add.$image;
 
+//echo "<hr>".$url." | ".$image."<hr>";
+
 $filename_ = sha1( json_encode($_GET) );
 $filename_for_cache = $filename_.basename($url);
 
@@ -211,8 +213,8 @@ if (substr($mime, 0, 6) != 'image/')
 $width			= $size[0];
 $height			= $size[1];
 
-$maxWidth		= (isset($_GET['width'])) ? (int) $_GET['width'] : 1500;
-$maxHeight		= (isset($_GET['height'])) ? (int) $_GET['height'] : 1500;
+$maxWidth		= (isset($_GET['width'])) ? (int) $_GET['width'] : 1200;
+$maxHeight		= (isset($_GET['height'])) ? (int) $_GET['height'] : 1200;
 
 
 if (isset($_GET['color']))
