@@ -758,7 +758,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	} else { 
 		 		var mydata = api4tree.jsFindByParent(parent_node,null,true); 
 
-		 		var isDiary = /_ДНЕВНИК/ig.test( api4tree.jsFindPath(api4tree.jsFind(13211)).textpath )
+		 		var isDiary = /_ДНЕВНИК/ig.test( api4tree.jsFindPath(api4tree.jsFind(parent_node)).textpath )
 
 		 		if( (isDiary) && (parent_node!=1) ) {
 			 		mydata = mydata.sort(sort_by_title); //сортирую
