@@ -30,7 +30,7 @@ function jsGetToken() {
 	 
 function jsLoginUser() {
 	
-	jsGetToken().done(function(data){
+	jsRefreshToken().done(function(data){
 		console.info( jsGetToken() );
 		jsDoFirst();		
 	});

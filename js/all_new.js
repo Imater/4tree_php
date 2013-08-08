@@ -834,6 +834,9 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 		  }
 		 		  
 		 	}); //each(mydata)
+		 	
+		    var divider = "<div class='divider_li' pos='100000' myid='"+parent_node+"'></div>";
+		 	where_to_add_cache.append(divider);
 
 
 		 	if(!where_to_add) {

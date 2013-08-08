@@ -194,6 +194,7 @@ body .ui-datepicker th, body .ui-datepicker-week-col {
 	font-size: 14px;	
 	border-right: 1px solid #888;	
 	background: #ededed;
+	z-index: 3;
 }
 
 #tree_right_panel {
@@ -248,7 +249,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 	top: 250px;
 }
 
-.params_open #open_params i:before {
+.params_open #open_params .arrow:before {
 	content: "\e75f";
 }
 
@@ -324,14 +325,17 @@ border-top: 1px solid #FFF;
 }
 
 #params_header {
-	background: #777777;
-	color: #000;
-	height: 26px;
-	border-bottom: 1px solid #888;
-	white-space: nowrap;
-	overflow: hidden;
- 	box-shadow: 0px 2px 10px #000;
- 	text-shadow: 0px 1px 0px #999;
+background: #777777;
+color: #000;
+height: 27px;
+border-bottom: 1px solid #333;
+white-space: nowrap;
+overflow: hidden;
+text-shadow: 0px 1px 0px #999;
+position: absolute;
+left: 0px;
+right: 0px;
+z-index: 2;
 }
 
 #params_header .top_btn {
@@ -970,7 +974,7 @@ box-shadow: 0px 1px 3px #000;
 }
 
 
-.left_panel_hide #hide_left_panel i:before {
+.left_panel_hide #hide_left_panel .arrow:before {
 	content: '\e75e';
 }
 
@@ -1044,7 +1048,6 @@ border-top: 1px solid #CCC;
 background: #DDD;
 padding: 2px;
 padding-bottom: 3px;
-text-align: center;
 text-shadow: 0px 1px 0px #FFF;
 color: #000;
 cursor: pointer;

@@ -491,7 +491,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	else 
 		 	  {
 		 	  var icon = data.icon.replace("mini/","");
-	    	  var icon = icon?icon.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
+	    	  icon = icon.replace(/http:\/\//ig,"images/");
+	    	  icon = icon?icon.replace(/http:\/\/upload.4tree.ru\//gi,"https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/"):"";
 		 	  var img = "<div class='node_img node_box' style='background-image:url("+icon+")'></div>";
 		 	  }
 		 /////
@@ -938,6 +939,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    	  
 	    	  }
 	    	  api4tree.jsCalcTabs();
+			  $("#tree_header ul").sortable({axis:"x", appendTo: "body", tolerance: "intersect", zIndex: 3, stop: function(){
+					  api4tree.jsCurrentOpenPanelsAndTabsSave();
+			  }
+			  });
     	  }
     	  		      
 		  this.jsCalcTabs = function() {//устанавливает ширину табов у дневника и у избранных
@@ -2970,7 +2975,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  localStorage.setItem("users_opened_panels", answer);
 			  setTimeout(function(){ onResize(); }, 500);
 //			  console.info( answer );
-			  }, 1500);
+			  }, 800);
 		  }
 
 		  this.jsCurrentOpenPanelsAndTabsRestore = function() {
@@ -4797,11 +4802,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     			if(!myelement) { d.resolve(); return d.promise(); }
         		if(myelement.tmp_text_is_long!=1) {
 	    	  		var the_text = myelement?myelement.text:"";
+    	  			the_text = the_text.replace(/http:\/\//ig,"images/");
         			d.resolve(the_text);
         		} else {
 	    	  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
 
 	    	  			var the_text = (record && record.text)?record.text:"";
+	    	  			the_text = the_text.replace(/http:\/\//ig,"images/");
     		  			d.resolve(the_text);
 			  			});
 			  	}

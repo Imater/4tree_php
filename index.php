@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="ru" class="<? echo $theme_dark; ?>" style="background-image:url(<? echo $theme_img; ?>)" <?
 require_once("compress_timestamp.php");
-
-if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) echo "manifest='!".$compress_stamp."_manifest.appcache'"; ?> >
+echo $_SERVER["SERVER_ADDR"];
+if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) echo "manifest='!".$compress_stamp."_manifest.appcache'"; ?> >
 <!-- 1browser_manifest !!-->
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
@@ -26,7 +26,10 @@ if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)
         $gz='gz';
  else
         $gz=null;
-if( ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) {
+        
+if($_SERVER["SERVER_ADDR"]=="127.0.0.1") echo "<div style='position:absolute;bottom:3px; right: 300px;z-index:9999;font-size:9px;'>local</div>";
+                
+if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) {
 	echo '<script src="min/all_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
 	echo '<link rel="stylesheet" type="text/css" href="min/styles_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
 } else {
@@ -548,14 +551,14 @@ $(document).ready(function(){
 
 
   		  <div id="params_header" class="noselectable">
-  		  	<div class="top_btn first" id="hide_left_panel"><i class="icon-left-open"></i>дерево</div>
-  		  	<div class="top_btn second" id="open_params"><i class="icon-down-open"></i>дерево</div>
+  		  	<div class="top_btn first" id="hide_left_panel" title="Левая панель"><i class="icon-left-open arrow"></i><i class="icon-doc"></i></div>
+  		  	<div class="top_btn second" id="open_params" title="Верхняя панель (второе дерево)"><i class="icon-down-open arrow"></i><i class="icon-docs-landscape"></i></div>
 
 			<div id="path_tree" class="path_line">
 				<ul></ul>
 			</div>
 
-  		  	<div class="top_btn" id="open_right_panel_btn"><i class="icon-tag"></i>ярлыки <i id="right-panel-arrow" class="icon-left-open"></i></div>
+  		  	<div class="top_btn" id="open_right_panel_btn" title="Ярлыки (теги)"><i class="icon-tag"></i><i id="right-panel-arrow" class="icon-left-open"></i></div>
   		  	<div class="top_btn makedel"><i class="icon-trash"></i></div>
   		  </div>
 
@@ -711,7 +714,7 @@ font-weight: bold;">Поиск</span>
 
 							<div class="comment_header">
 								<div class="comment_foto">
-								    <img src="" style="background-size:15px 15px;background-image:url(image_remote.php?width=15&height=15&cropratio=1:1&image={{foto}})" height="15px" width="15px" class="comment_foto_img">
+								    <img src="" style="background-size:15px 15px;background-image:url(images/{{foto}}?width=50&height=50)" height="15px" width="15px" class="comment_foto_img">
 								</div>
 								<div class="comment_name">{{name}}</div>
 								<div class="comment_like">{{likes}}<i class="icon-heart"></i></div>
