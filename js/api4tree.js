@@ -2035,7 +2035,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	  				  '<div id="uLogin" data-ulogin="display=small;'+
 			  	  				  'fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;'+
 								  'providers=vkontakte,odnoklassniki,google,mailru,facebook,yandex,twitter;'+
-			  	  				  'hidden=other;redirect_uri=http://localhost/fpk/4tree/login.php?set_to_current_account_'+
+			  	  				  'hidden=other;redirect_uri=https://4tree.ru/login.php?set_to_current_account_'+
 			  	  				  token+
 			  	  				  '"></div>';
 			  	  			  	  
