@@ -117,11 +117,11 @@ border-top: 1px solid rgba(0,0,0,0.6);
 border-bottom: 1px solid rgba(255,255,255,0.3);
 opacity: 1;
 margin-top: 0px;
-background: rgba(255,255,255,0.3);
-background-image: linear-gradient( linear, right top, left top, color-stop(0, rgba(31, 31, 31, 0.3)), color-stop(0.46, rgba(255,255,255,0.5)), color-stop(0.56, rgba(255,255,255,0.5)), color-stop(1, rgba(36, 36, 36, 0.2)) );
-background-image: -o-linear-gradient( linear, right top, left top, color-stop(0, rgba(31, 31, 31, 0.3)), color-stop(0.46, rgba(255,255,255,0.5)), color-stop(0.56, rgba(255,255,255,0.5)), color-stop(1, rgba(36, 36, 36, 0.2)) );
-background-image: -moz-linear-gradient( linear, right top, left top, color-stop(0, rgba(31, 31, 31, 0.3)), color-stop(0.46, rgba(255,255,255,0.5)), color-stop(0.56, rgba(255,255,255,0.5)), color-stop(1, rgba(36, 36, 36, 0.2)) );
-background-image: -webkit-gradient( linear, right top, left top, color-stop(0, rgba(31, 31, 31, 0.3)), color-stop(0.46, rgba(255,255,255,0.5)), color-stop(0.56, rgba(255,255,255,0.5)), color-stop(1, rgba(36, 36, 36, 0.2)) );
+background: rgba(255,255,255,0.2);
+background-image: linear-gradient( linear, right top, left top, color-stop(0, rgba(31, 31, 31, 0.3)), color-stop(0.46, rgba(255,255,255,0.3)), color-stop(0.56, rgba(255,255,255,0.3)), color-stop(1, rgba(36, 36, 36, 0.2)) );
+background-image: -o-linear-gradient( linear, right top, left top, color-stop(0, rgba(31, 31, 31, 0.3)), color-stop(0.46, rgba(255,255,255,0.3)), color-stop(0.56, rgba(255,255,255,0.3)), color-stop(1, rgba(36, 36, 36, 0.2)) );
+background-image: -moz-linear-gradient( linear, right top, left top, color-stop(0, rgba(31, 31, 31, 0.3)), color-stop(0.46, rgba(255,255,255,0.3)), color-stop(0.56, rgba(255,255,255,0.3)), color-stop(1, rgba(36, 36, 36, 0.2)) );
+background-image: -webkit-gradient( linear, right top, left top, color-stop(0, rgba(31, 31, 31, 0.3)), color-stop(0.46, rgba(255,255,255,0.3)), color-stop(0.56, rgba(255,255,255,0.3)), color-stop(1, rgba(36, 36, 36, 0.2)) );
 background-image: -ms-linear-gradient(right , #1F1F1F 0%, #6B6B6B 46%, #666666 54%, #242424 100%);
 box-shadow: inset -3px 3px 7px rgba(0,0,0,0.2);
 border-radius: 0px;
@@ -1355,7 +1355,7 @@ vertical-align: middle;
 
 .node_box
 {
-border: 1px solid #888;
+/*border: 1px solid #888;*/
 
 /*-moz-box-shadow: 1px 1px 1px #DDD;
 -webkit-box-shadow: 1px 1px 1px #DDD;
@@ -2433,13 +2433,11 @@ display: none;
 {
 display: none;
 position: absolute;
-left: 16px;
-top: 15px;
-right: 35px;
+left: 25px;
+top: 32px;
 font-size: 12px;
 cursor: pointer;
-z-index: 1;
-text-align: center;
+z-index: 4;
 }
 
 

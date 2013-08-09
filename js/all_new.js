@@ -281,6 +281,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 
 		    //Клик в LI открывает детей этого объекта LILILI
     	    $('.mypanel').delegate("li","click", function () {
+    	    	console.info("click");
     	    	$(".tree_active").removeClass("tree_active");
     	    	var tree_id = $(this).parents(".mypanel").addClass("tree_active").attr("id");
 				var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
@@ -323,6 +324,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	        	}
     	        } else { //если ветка уже открыта, закрываю её
     	        	if(isTree) {
+	    	        	api4panel.jsSelectNode( id ,'tree');
 						$(this).removeClass("tree-open");
     	        		$(this).find("ul:first").slideUp(50,function(){
 	    	        		if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
@@ -446,7 +448,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			isTree = $(".tree_active").parent("div").hasClass("panel_type1");
 
 		   if(id != parseInt(id)) return false;
-		   if(!$(".mypanel.tree_active #node_"+id).length) {
+		   if(!$(".mypanel.tree_active #node_"+id).is(":visible")) {
 		  var mypath = api4tree.jsFindPath( api4tree.jsFind(id) );
 		 	var path1 = mypath.path;
 		 	if(!path1) return true;
@@ -462,6 +464,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
    			   }
    			   var findli = $('.tree_active #node_'+toopen);
    			   findli.addClass("tree-open");
+   			   findli.parents("li").addClass("tree-open").find("ul").show();
    			   findli.find('ul:first').show();
    			}
 		 

@@ -310,7 +310,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	}
 			  else
 			  	{
-			  	var aa = rangy.saveSelection();
 			  	txt = myr.redactor("get");
 			  	wiki_words = txt.match(/\[\[(.*?)\]\]/ig);
 			  	}
@@ -332,14 +331,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  		}
 			  	else
 			  		{
-			  		rangy.removeMarkers(aa);
 			  		}
 			  	});
 			  if(need_refresh) 
 			  	{
 			  	myr.redactor("set", newtxt);
 			  	note_saved = false;
-			    rangy.restoreSelection(aa);
+			  	$(".redactor_").focus();
+			  	$('#redactor').redactor('setCaret', last_cursor, last_cursor_offset);
 			    api4editor.jsSaveAllText(1);
 			    api4tree.jsParseWikiLinks(myr.attr("myid"));
 			  	}
@@ -431,9 +430,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  			jsFixScroll(2);
 		  			}
 
-   			 	$("#wiki_back_button").html('<i class="icon-left-bold"></i>вернуться к '+back_title);
+		  		setTimeout(function(){
+	   			 	$("#wiki_back_button").html('<i class="icon-left-bold"></i>вернуться к '+back_title);			  		
+	   			 	$("#wiki_back_button").show().attr("myid",parent_id);
+		  		}, 500);
 		  			
-		  		$("#wiki_back_button").show().attr("myid",parent_id);
 		  		setTimeout(function(){ $(".redactor_").focus(); },200);
 		  }
 
@@ -2968,7 +2969,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  to_save.is_show_top_tree = $("#tree_editor").hasClass("params_open");
 
 			  to_save.top_tabs = [];
-			  $("#tree_header .tree_tab_menu li").each(function(i,el) {
+			  $("#tree_header .tree_tab_menu li:not(.temp)").each(function(i,el) {
 				  to_save.top_tabs.push( {myid: $(this).attr("myid"), title: $(this).html(), active: $(this).hasClass("active") });
 			  });
 			  var answer = JSON.stringify(to_save);
@@ -4820,13 +4821,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 
 		 this.jsProxyImage = function(text) {
 		 	if( /http:/ig.test(text) ) {
-		 		console.info("PROXY IMAGES SAVED");
+//		 		console.info("PROXY IMAGES SAVED");
 		 		
 		 		var text_div = $("<div>"+text+"</div>");
 		 		text_div.find("img").each(function(){
 		 			var link = $(this).attr("src");
 		 			if(/http:\/\//ig.test(link)) {
-		 				console.info("old_link_of_image", link);
+//		 				console.info("old_link_of_image", link);
 		 				link = link.replace(/http:\/\//ig,"images/");
 		 				console.info("new_link_for_image", link);
 		 				$(this).attr("src", link); //присваиваем новую ссылку на прокси
@@ -4834,7 +4835,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 			}
 		 		});
 		 		text = text_div.html();
-		 		console.info(text);
+//		 		console.info(text);
 		 		
 		 	}
 		 	return text;
@@ -6392,10 +6393,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					     	$.each(data.saved, function(i,d) {
 					     		if(d.old_id) { //если нужно присвоить выданный id вместо отрицательного
 					     			jsChangeNewId(d);
-						 			$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); 
+						 			$(".panel li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); 
 						 			//скрываю зелёный кружок
 					     		}
-   				 	    	$("li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); //скрываю зелёный кружок
+   				 	    	$(".panel li[myid='"+d.id+"'] .sync_it_i").addClass("hideit"); //скрываю зелёный кружок
 			 		   		var lsync = parseInt(data.lsync);
    				 	    	this_db.jsFind(d.id,{"new":"",lsync: lsync},"save_anyway");
 
@@ -6889,7 +6890,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			  });
 			  	
 			  //кнопка "назад" к основной статье
-			  $("#bottom_panel").on("click","#wiki_back_button",function() {
+			  $("#tree_editor").on("click","#wiki_back_button",function() {
 			  	var myid = $(this).attr("myid");
 			  	$(this).hide();
 			  	api4panel.jsOpenPath(myid);

@@ -26,10 +26,10 @@ if($h)
 			 $result2 = mysql_query_my($sqlnews2); 
 		   	 @$sql2 = mysql_fetch_array($result2);
 		     
-		     $divider = "<div class='divider_red' myid='".$id."'><div class='divider_count'>".$i."</div>".$sql['changedate']."<h6>".$sql2["title"]."</h6></div>";
+		     $divider = "<div class='divider_red' myid='".$id."'><div class='divider_count'>".$i."</div>".$sql['changedate']."<h6>".strip_tags($sql2["title"])."</h6></div>";
 
 		     
-		     $txt = $txt.$divider."<div class='edit_text'>".$sql['text']."</div>";
+		     $txt = $txt.$divider."<div class='edit_text'>".strip_tags($sql['text'])."</div>";
 		     $title = "4tree.ru: " . $sql['title'];
 		     $titleshort = $sql['title'];
 		     }
@@ -69,8 +69,8 @@ if($q)
 		     $q = $sql['id'];
 		     if($answer == "") $txt = $sql['text'];
 		     else $txt = $answer;
-		     $title = "4tree.ru: " . $sql['title'];
-		     $titleshort = $sql['title'];
+		     $title = "4tree.ru: " . strip_tags($sql['title']);
+		     $titleshort = strip_tags($sql['title']);
 		     }
 		//    <base href="http://4tree.ru/">
 		}

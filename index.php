@@ -596,6 +596,7 @@ left: 10px; "></i>&nbsp;</a>
 
 	  		  
 	  		  
+			  <div id="wiki_back_button" title="Вернуться назад в wiki"><i class="icon-left-bold"></i> вернуться</div>
 			  <div class="noselectable" id="fav_redactor_btn"></div>
 			  <div class="noselectable" id="fav_redactor_btn_comment"></div>
 	  			<textarea id="redactor">
@@ -714,7 +715,7 @@ font-weight: bold;">Поиск</span>
 
 							<div class="comment_header">
 								<div class="comment_foto">
-								    <img src="" style="background-size:15px 15px;background-image:url(images/{{foto}}?width=50&height=50)" height="15px" width="15px" class="comment_foto_img">
+								    <img src="" style="background-size:15px 15px;background-image:url(images/{{foto}}?width=20&height=20)" height="15px" width="15px" class="comment_foto_img">
 								</div>
 								<div class="comment_name">{{name}}</div>
 								<div class="comment_like">{{likes}}<i class="icon-heart"></i></div>
@@ -772,7 +773,7 @@ font-weight: bold;">Поиск</span>
 					<div id="comment_enter">
 						<!-- <div class="fullscreen_button icon-resize-full" title="На весь экран"></div> -->
 						<div class="comment_enter_input"></div>
-						<div class="comment_send_button" title="alt+enter">отправить<span style='color:#DFDFDF'>(alt+enter)</span></div>
+						<div class="comment_send_button" title="alt+enter">отправить <span style='color:#DFDFDF'>(alt+enter)</span></div>
 					</div>
 				</div>
 				

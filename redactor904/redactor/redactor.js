@@ -789,7 +789,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 
 			if (html !== '' && html.length<100000) html = this.cleanHtml(html);
 			else { 
-				if( parseInt(Math.random()*42) == 13 ) html = this.cleanHtml(html);
+				if( true || parseInt(Math.random()*42) == 13 ) html = this.cleanHtml(html);
 			}
 
 			// before callback
@@ -3817,7 +3817,13 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 			html = html.replace(/<embed(.*?)>([\w\W]*?)<\/embed>/gi, '[embed$1]$2[/embed]');
 			html = html.replace(/<object(.*?)>([\w\W]*?)<\/object>/gi, '[object$1]$2[/object]');
 			html = html.replace(/<param(.*?)>/gi, '[param$1]');
-			html = html.replace(/<img(.*?)style="(.*?)"(.*?)>/gi, '[img$1$3]');
+			
+			html = html.replace(/<img(.*?)>/gi, '[img$1]'); //4TREE
+//			html = html.replace(/<img(.*?)style="(.*?)"(.*?)>/gi, '[img$1$3]'); //4TREE
+
+//			html = html.replace(/<img(.*?)style="(.*?)"(.*?)\>/gi, '[img$1$3]'); //спорный момент
+//			html = html.replace(/<img(.*?)(.*?)>/gi, '[img$1$2]');
+
 
 			// remove classes
 			html = html.replace(/ class="(.*?)"/gi, '');
@@ -3841,7 +3847,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 			html = html.replace(/\[embed(.*?)\]([\w\W]*?)\[\/embed\]/gi, '<embed$1>$2</embed>');
 			html = html.replace(/\[object(.*?)\]([\w\W]*?)\[\/object\]/gi, '<object$1>$2</object>');
 			html = html.replace(/\[param(.*?)\]/gi, '<param$1>');
-			html = html.replace(/\[img(.*?)\]/gi, '<img$1>');
+//			html = html.replace(/\[img(.*?)\]/gi, '<img$1>');
 
 			// convert div to p
 			if (this.opts.convertDivs)
@@ -3896,6 +3902,8 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 				html = html.replace(/<font>([\w\W]*?)<\/font>/gi, '$1');
 			}
 
+			html = html.replace(/\[img(.*?)&gt;/gi, "<img$1>"); //4TREE:
+			html = html.replace(/\[img(.*?)]/gi, "<img$1>");
 
 			this.pasteInsert(html);
 

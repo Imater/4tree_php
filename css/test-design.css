@@ -577,6 +577,7 @@ ul.tabs > li.active:not(.add_tab){
 
 ul.tabs > li.active:not(.add_tab) a{
   color: #FFF;
+  cursor: pointer;
 }
 
 ul.tabs > li.active:not(.add_tab):before{
