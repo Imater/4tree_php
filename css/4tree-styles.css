@@ -2786,6 +2786,8 @@ font-weight: bold;
 font-size: 0.6em;
 -webkit-box-shadow: none;
 text-shadow: none;
+box-shadow: none;
+-o-box-shadow:none;
 }
 
 .selected > .big_n_title .fromchildren
