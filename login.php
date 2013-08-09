@@ -14,9 +14,8 @@ $db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   
 
   if( isset($_POST['token']) ) {
-		$s = file_get_contents('http://ulogin.ru/token.php?token=' . @$_POST['token'] . '&host=' . $_SERVER['HTTP_HOST']);
+		$s = file_get_contents('https://ulogin.ru/token.php?token=' . @$_POST['token'] . '&host=' . $_SERVER['HTTP_HOST']);
 		$user = json_decode($s, true);
-		
 		
 
 		////устанавливаем выбранную социальную сеть в текущий аккаунт
@@ -34,9 +33,12 @@ $db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			//echo $answer_id;
 		}
 
-		if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/http.html?")) {
+		if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"https://ulogin.ru/")) {
 			//если пользователь существует, входим
+			
 			$token_text = user_exist($user,$db2);
+			
+//			echo "YES".$token_text;
 			
 			if( $token_text == "") {
 			//create_new_user($user, $db2);
@@ -648,7 +650,7 @@ var params_get = 'grant_type=password&username='+md5email+
 		<div id="social" style="" title="">
 		<label>вход с помощью:</label>
 		<script src="//ulogin.ru/js/ulogin.js" async></script> 
-		<div id="uLogin" data-ulogin="display=small;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=http://4tree.ru/login.php?login_me"></div>
+		<div id="uLogin" data-ulogin="display=small;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=https://4tree.ru/login.php?login_me"></div>
 		<!-- http%3A%2F%2F4tree.ru%2F4tree.php -->
 		</div>		
 
