@@ -47,7 +47,7 @@ $db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				
 				
 					if( isset($_GET['set_to_current_account']) ) {
-						echo "<center style='margin: 63px;position: absolute;width: 300px;left: 50%;margin-left: -150px;color: #CCC;font-size: 10px;'>Связываю соц.сервис с вашим акканутом</center>";	
+						echo "<center style='margin: 63px;position: absolute;width: 300px;left: 50%;margin-left: -150px;color: #CCC;font-size: 10px;'>Связываю соц.сервис с вашим акканутом.</center>";	
 																		
 												
 						
@@ -55,8 +55,9 @@ $db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 						echo "<center style='margin: 63px;position: absolute;width: 300px;left: 50%;margin-left: -150px;color: #CCC;font-size: 10px;'>Ваш аккаунт не связан с этим социальным сервисом.<br>Зарегистрируйтесь в 4tree с паролем и свяжите аккаунт с соц.сервисом в меню настройки.</center>";
 					}
 				} else {
-					echo "<center style='margin: 63px;position: absolute;width: 300px;left: 50%;margin-left: -150px;color: #CCC;font-size: 10px;'>Создаём вам аккаунт связанный с выбранным соц.сервисом.</center>";
+					echo "<center style='margin: 63px;position: absolute;width: 300px;left: 50%;margin-left: -150px;color: #CCC;font-size: 10px;'>Создаём вам аккаунт связанный с выбранным соц.сервисом.<br><b>Теперь можете войти через соц.кнопку.</b></center>";
 					create_new_user($user,$db2);					
+					$token_text = user_exist($user,$db2);
 				}
 			} else {
 				
