@@ -4802,13 +4802,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     			if(!myelement) { d.resolve(); return d.promise(); }
         		if(myelement.tmp_text_is_long!=1) {
 	    	  		var the_text = myelement?myelement.text:"";
-    	  			the_text = the_text.replace(/http:\/\//ig,"images/");
+    	  			the_text = api4tree.jsProxyImage(the_text);
         			d.resolve(the_text);
         		} else {
 	    	  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
 
 	    	  			var the_text = (record && record.text)?record.text:"";
-	    	  			the_text = the_text.replace(/http:\/\//ig,"images/");
+			  			the_text = api4tree.jsProxyImage(the_text);
     		  			d.resolve(the_text);
 			  			});
 			  	}
@@ -4818,6 +4818,27 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  	return d.promise();
 		 } //jsFindLongText
 		 
+		 this.jsProxyImage = function(text) {
+		 	if( /http:/ig.test(text) ) {
+		 		console.info("PROXY IMAGES SAVED");
+		 		
+		 		var text_div = $("<div>"+text+"</div>");
+		 		text_div.find("img").each(function(){
+		 			var link = $(this).attr("src");
+		 			if(/http:\/\//ig.test(link)) {
+		 				console.info("old_link_of_image", link);
+		 				link = link.replace(/http:\/\//ig,"images/");
+		 				console.info("new_link_for_image", link);
+		 				$(this).attr("src", link); //присваиваем новую ссылку на прокси
+		 				
+		 			}
+		 		});
+		 		text = text_div.html();
+		 		console.info(text);
+		 		
+		 	}
+		 	return text;
+		 };
 		 
 		 this.jsFindLongTextComment = function(id,newtext) {
 			 var d = $.Deferred();
