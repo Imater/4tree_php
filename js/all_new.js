@@ -129,12 +129,13 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 	    	},100);
 			 	}
 
-			 	this_db.jsPathTitle(id); //устанавливаем путь в шапку
-		 		api4tree.jsSetSettings(id);
-		 	 	api4editor.jsRedactorOpen([id],iamfrom); 
-		 	 	jsCalendarNode(id);
-//		 	 	jsAddFavRed("",id);
-		 	 	$(".redactor_").blur();
+		 	 	api4editor.jsRedactorOpen([id],iamfrom).done(function(){
+				 	this_db.jsPathTitle(id); //устанавливаем путь в шапку
+			 		api4tree.jsSetSettings(id);
+			 	 	jsCalendarNode(id);
+	//		 	 	jsAddFavRed("",id);
+			 	 	$(".redactor_").blur();
+		 	 	}); 
 		 	 	},50 );
 		 
 		 }

@@ -6658,6 +6658,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  
 		  //открывает заметки в редакторе [12,4556,4433]
 		  this.jsRedactorOpen = function(some_ids,iamfrom,dont_save) {
+		  	var dfd = new $.Deferred();
 		  	last_open_redactor_time = jsNow();
 			if(!note_saved && !dont_save) {
 				this_db.jsSaveAllText(); //сохраняю старый текст
@@ -6729,6 +6730,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 				}
 				//console.profile("loading_text");
 				myr.redactor("set",  mytext, false ); //загружаю текст в редактор
+				dfd.resolve();
 				//console.profileEnd("loading_text");
 //			    setTimeout(function() {api4editor.save_text_dif_snapshot(mytext); }, 1000);
 				$(".bottom_right>.redactor_box").scrollTop(scroll_top);
@@ -6740,7 +6742,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 			  
 			 			  
 			  
-			  
+			return dfd.promise();  
 		  } //jsRedactorOpen
 		  
 		  //рекурсивно открывает все заметки детей и внуков
