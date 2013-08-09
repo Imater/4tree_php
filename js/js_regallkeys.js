@@ -2401,7 +2401,7 @@ function _manageEvent(eventMessage) {
         
         if( eventMessage.type == "need_refresh_now" ) { 
         		api4tree.jsSync(); 
-        		setTimeout(function(){ alert("Пришло новое письмо!");},800); 
+        		setTimeout(function(){ alert("Пришло новое письмо! (Оно в папке _НОВОЕ - сверху)");},800); 
         }
         if( eventMessage.type == "need_refresh_id" ) //сообщение о изменившихся данных от do.php
         	{ 

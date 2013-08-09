@@ -4803,13 +4803,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     			if(!myelement) { d.resolve(); return d.promise(); }
         		if(myelement.tmp_text_is_long!=1) {
 	    	  		var the_text = myelement?myelement.text:"";
-    	  			the_text = api4tree.jsProxyImage(the_text);
         			d.resolve(the_text);
         		} else {
 	    	  		db.get(global_table_name+"_texts",id.toString()).done(function(record) {
 
 	    	  			var the_text = (record && record.text)?record.text:"";
-			  			the_text = api4tree.jsProxyImage(the_text);
     		  			d.resolve(the_text);
 			  			});
 			  	}
@@ -6161,7 +6159,6 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  	  				   replace(".gif","_p2.gif").replace(".png","_p2.png");
 			  	  	  d.resolve(p2_url);		  	  	  
 			  	  } else if(src) {
-			  	  
 			  	  	  var lnk = web_site + "do.php?access_token=" + token + "&save_thumb_remote="+encodeURIComponent(src);
 				  	  $.getJSON(lnk,function(data){
 				  	  	 console.info("thumb",data);
@@ -6677,6 +6674,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
     	    	  			text = "<p>&#x200b;</p>";
     	    	  			//api4tree.jsFind(id,{text:text},"dont_sync");
     	    	  		}
+			  			text = api4tree.jsProxyImage(text);
 				  		all_texts.push({id:id, text:text, path:path, title:element.title, s:element.s});
 	
     	    	  	}
@@ -6776,21 +6774,26 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 //			    api4editor.save_text_dif_snapshot(id, text);
 
 				var now_icon = api4tree.jsFind(id);
-				now_icon = now_icon?now_icon.icon:false;
+				now_icon = now_icon?now_icon.icon:"";
+				
+				var ico = now_icon.split("/");
+				
+				if(text.indexOf(ico[ico.length-1])==-1) {
 	
-				if(/img/ig.test(text)) { 
-					var blob_text1 = $("<div>"+text+"</div>");								
-					var first_image = blob_text1.find("img:first").attr("src");				
-					api4tree.jsThumbnail(first_image, id).done(function(new_icon){
-							if(new_icon) {
-								api4tree.jsFind(id, {icon:new_icon});
-								console.info("new_thumb!!!=",new_icon);
-								jsRefreshTree();
-							}				
-						});
-				} else if( now_icon && (now_icon!="") && ($(".divider_red").length==0) ) {
-					api4tree.jsFind(id, {icon:""});
-					jsRefreshTree();
+					if(/<img/ig.test(text)) { 
+						var blob_text1 = $("<div>"+text+"</div>");								
+						var first_image = blob_text1.find("img:first").attr("src");				
+						api4tree.jsThumbnail(first_image, id).done(function(new_icon){
+								if(new_icon) {
+									api4tree.jsFind(id, {icon:new_icon});
+									console.info("new_thumb!!!=",new_icon);
+									jsRefreshTree();
+								}				
+							});
+					} else if( now_icon && (now_icon!="") && ($(".divider_red").length==0) ) {
+						api4tree.jsFind(id, {icon:""});
+						jsRefreshTree();
+					}
 				}
 
 		  		api4tree.jsFindLongText(id, text);
