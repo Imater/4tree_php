@@ -262,8 +262,8 @@ var last_message_sync_time = 0;
 var progress_load=0;
 function jsProgressStep()
 {
-	if(progress_load>=200) var how_long = 80;
-	else var how_long = 20;
+	if(progress_load>=200) var how_long = 100;
+	else var how_long = 50;
 
 	progress_load = progress_load + 30;
 	$("#inside_bar").animate({width:progress_load},how_long);

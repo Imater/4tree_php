@@ -189,11 +189,10 @@ $(document).ready(function(){
     })();
 </script><noscript><a href="http://reformal.ru"><img src="http://media.reformal.ru/reformal.png" /></a><a href="http://reformal.4tree.ru">Oтзывы и предложения для 4tree.ru — дела, календарь, заметки, файлы. Всё в одном месте. </a></noscript></li>
 
+        <li class="blank"></li>
         <li>
         	<a href="./!versions.html?<? echo $compress_stamp; ?>" target="_blank"><i class="icon-info-circle"></i>Что нового в версии <span id="this_version"><? echo $compress_stamp; ?></span></a>
         </li>
-        <li class="blank"></li>
-        <li><a href="./login.php?logout"><i class="icon-home-2"></i>Выход (смена пользователя)</a></li>
     </ul>  
 
 
@@ -310,6 +309,7 @@ $(document).ready(function(){
 			</ul>
         </li>
     </ul>
+        <li id="exit_and_purge" title="Удаление ваших персональных данных в этом браузере (но не на сервере)"><a><i class="icon-cancel-1"></i>Выход</a></li>
 </li>
 
 </ul>
@@ -531,9 +531,6 @@ $(document).ready(function(){
 			</div>
 			
 			<div id="right_fav_folders">
-				<div id="right_fav_folders_header">
-					Избранное
-				</div>				
 				<ul class="">
 					<li>_НОВОЕ</li>
 					<li>ДНЕВНИК</li>
@@ -546,6 +543,7 @@ $(document).ready(function(){
 			</div>
 			
 		    <div class="tree_footer">
+				<div id="open_favorits"><i class="icon-down-open"></i>Избранное</div>
 		    </div>
 		  </div>
 

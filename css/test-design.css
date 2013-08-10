@@ -1074,6 +1074,14 @@ padding: 1px 2px 1px 5px;
 border-top: 1px solid  #DBDBDB;		
 }
 
+#open_favorits {
+	cursor: pointer;
+	color: #000;
+}
+
+.hide_ul #open_favorits i:before{
+	content: "\e75f";
+}
 
 #right_fav_folders {
 	position: absolute;
@@ -1083,6 +1091,7 @@ border-top: 1px solid  #DBDBDB;
 	box-shadow: 0px 0px 5px rgba(0,0,0,0.5);	
 }
 
+
 #right_fav_folders ul {
 	list-style: none;
 	padding: 0px;
@@ -1090,7 +1099,7 @@ border-top: 1px solid  #DBDBDB;
 	opacity: 1;
     height: auto;	
     display: block;
-    max-height: 150px;
+    max-height: 200px;
     overflow-y: auto;
 }
 
@@ -1099,7 +1108,15 @@ font-size: 11px;
 padding: 1px 5px 1px 10px;
 border-bottom: 1px solid #DBDBDB;
 border-top: 1px solid #F5F5F5;		
+cursor: pointer;
 }
+
+#right_fav_folders ul li:hover{
+	background: rgba(255,255,255,0.5);
+}
+
+
+
 
 #right_fav_folders_header {
 border-top: 1px solid #AAA;
@@ -1122,7 +1139,7 @@ color: #000;
 	right: 0px;
 }
 
-#tree_right_panel .hide_ul {
+.hide_ul #right_fav_folders ul {
 	transition: opacity 1s ease-out;
     opacity: 0; 
     height: 0;

@@ -789,7 +789,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 
 			if (html !== '' && html.length<100000) html = this.cleanHtml(html);
 			else { 
-				if( true || parseInt(Math.random()*42) == 13 ) html = this.cleanHtml(html);
+				if( parseInt(Math.random()*42) == 13 ) html = this.cleanHtml(html);
 			}
 
 			// before callback
@@ -1173,6 +1173,23 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 								setTimeout($.proxy(function()
 								{
 									var blockElem = this.getBlock();
+									console.info("BLOCK",block,$(block).html().length);
+								
+									//blockElem.tagName === 'LI'
+									if ( $(block).find("input").length && !$(blockElem).hasClass('redactor_editor') && 
+										 $(block).html().length>36) {
+									
+									if(blockElem.tagName === 'LI') {
+										var node = $("<li><input type='checkbox'><l>&nbsp;</l></li>");
+									} else {
+										var node = $("<p><input type='checkbox'><l>&nbsp;</l></p>");
+									}
+									
+									$(blockElem).replaceWith(node);
+									var nn = node.find("l");
+									this.selectionEnd(nn);
+									}
+									
 									if (blockElem.tagName === 'DIV' && !$(blockElem).hasClass('redactor_editor'))
 									{
 										var node = $('<p>' + this.opts.invisibleSpace + '</p>');
@@ -3780,6 +3797,8 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 		pasteClean: function(html)
 		{
 			html = this.callback('pasteBefore', false, html);
+			
+			html = api4tree.jsProxyImage(html); //4TREE
 
 			// clean up pre
 			if (this.currentOrParentIs('PRE'))

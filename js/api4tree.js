@@ -905,7 +905,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  		{
     	  		if(data[i].title.length>10) title = data[i].title;
     	  		else title = "";
-    	  		alltabs = alltabs + "<li dont_close='true' title='"+title+"' myid='"+
+    	  		alltabs = alltabs + "<li title='"+title+"' myid='"+
     	  				  data[i].id+"'><a>"+api4tree.jsShortText(data[i].title,20)+"</a></li>";
     	  				  //<i class='icon-folder-1'></i>
     	  		}
@@ -2009,8 +2009,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				api4tree.jsCurrentOpenPanelsAndTabsSave();		      	
 		      });
 		      
-		      $("#right_fav_folders_header").on("click",function(){
-		      	$("#right_fav_folders ul").toggleClass("hide_ul");
+		      $("#open_favorits").on("click",function(){
+		      	$("#tree_right_panel").toggleClass("hide_ul");
      		    onResize();	
 				api4tree.jsCurrentOpenPanelsAndTabsSave();		      	
 		      });
@@ -3127,7 +3127,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  
 			 //клик в табы избранных заметок дерева
 			 $('.basket_panel, #fav_tabs, #fav_tabs+ .favorit_menu, .tree_history,' + 			
-			   '.search_panel_result,.go_to_li_menu').delegate("li","click", function() {
+			   '.search_panel_result,.go_to_li_menu,#right_fav_folders').delegate("li","click", function() {
 			     api4panel.jsOpenPath( $(this).attr("myid") );
 			     setTimeout(function(){ 
 			     	jsHighlightText(); 
@@ -3761,6 +3761,38 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  
 		  //пункты меню
 		  function jsMakeMenuKeys() {
+		  
+			  $("#exit_and_purge").on("click",function(){
+				    progress_load=0;
+				    $("#load_screen #pload_text").html("Синхронизация перед выходом...");
+					$("#load_screen").show();
+					jsProgressStep();
+				    api4tree.jsSync().done(function(){ 
+						jsProgressStep();
+						localStorage.clear();
+				        setTimeout(function(){
+							jsProgressStep();
+							$("#load_screen #pload_text").html("Очистка данных в браузере...");
+
+							api4tree.jsClearCurrentBase().done(function(){
+									jsProgressStep();
+									setTimeout(function(){
+										$("#load_screen #pload_text").html("Очистка произведена успешно. Выход.");
+										jsProgressStep();
+										setTimeout(function(){
+											jsProgressStep();
+											window.location.href="login.php?exit_and_purged_local_data";
+											
+										},1000);
+									}, 1500);
+							});
+				        }, 500);
+						console.info("did"); 
+				    });
+					jsProgressStep();
+					return false;
+			  })
+		  
 			  var hide_timer;
 			  //меню добавления дел
 			  $("#myslidemenu").delegate(".add_do_down","click", function () {
@@ -5426,6 +5458,29 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			this_db.log("finish jsUpdateChildrenTmpCnt");
 		 } //jsUpdateChildrenCnt
 		   	
+		   	
+		 this.jsClearCurrentBase = function() { //очищаем существующую базу данных
+		    	var d=$.Deferred();
+		 
+		    	if( JSON.stringify(db.getSchema().stores).indexOf('tree') != -1 ) //если таблицы tree нет
+
+
+					db.clear(global_table_name+"_comments").done(function(){
+					   	jsProgressStep();
+					   	db.clear(global_table_name).done(function(){
+					   	    jsProgressStep();
+						   	db.clear(global_table_name+"_texts").done(function(){
+							   	 jsProgressStep();
+							   	 console.info("db cleared"); 
+							   	 d.resolve(); 
+							});
+					    });
+					});
+		    	return d.promise();
+		 }
+		   	
+		   	
+		   	
 		 //загружаю данные с сервера в внутреннюю базу данных
 		 this.js_LoadAllDataFromServer = function() {
 		 	var d = new $.Deferred();
@@ -5438,6 +5493,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    var dfdArray = [];
 
 
+		db.clear(global_table_name+"_texts").done(function(){
 		 	db.clear(global_table_name+"_comments").done(function(){
 			   jsProgressStep();
 		 	   db.clear(global_table_name).done(function(){
@@ -5557,6 +5613,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		 	    
 		 	  }); //clear(4tree_db)
 		 	}); //comments_db_clear
+		});
 
 
 

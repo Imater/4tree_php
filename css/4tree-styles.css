@@ -16,6 +16,22 @@ body {
 /* To set it to none use a totally transparent RGBA */
 body:link { -webkit-tap-highlight-color: rgba(0,0,0,0); }
 
+
+.ui-can-hover
+{
+-moz-transition: all 0.1s;
+-webkit-transition: all 0.1s;
+-ms-transition: all 0.1s;
+-o-transition: all 0.1s;
+transition: all 0.1s;
+background: rgba(0,0,0,0.5) !important;
+color: #FFF;
+}
+
+.ui-can-hover.divider_li {
+	background: red !important;
+}
+
 .calendar_and_others{
 height: 300px;
 width: auto;
@@ -546,13 +562,13 @@ height: 3px;
 }
 
 
-.panel li.selected > .big_n_title/* > .n_title */
+.panel li.selected > .big_n_title:not(.ui-can-hover)/* > .n_title */
 {
 /* color: white; */
 background-color: #9E9E9E !important;
 }
 
-.tree_active .panel li.selected > .big_n_title/* > .n_title */
+.tree_active .panel li.selected > .big_n_title:not(.ui-can-hover)/* > .n_title */
 {
 /* color: white; */
 background-color: #09358c !important;
@@ -4613,15 +4629,6 @@ margin-left: 20px;
 padding: 2px;
 }
 
-.ui-can-hover
-{
--moz-transition: all 0.1s; 
--webkit-transition: all 0.1s;  
--ms-transition: all 0.1s;  
--o-transition: all 0.1s;  
-transition: all 0.1s;  
-background: red !important;
-}
 
 #tree_comments
 {
