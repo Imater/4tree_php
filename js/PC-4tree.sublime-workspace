@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"fo",
+				"font-family"
+			],
+			[
+				"ma",
+				"margin-left"
+			],
+			[
+				"fon",
+				"font-size"
+			],
+			[
+				"ba",
+				"background"
+			],
+			[
+				"fu",
+				"function"
+			],
+			[
+				"paddin",
+				"padding-left"
+			],
+			[
+				"text",
+				"text-align"
+			],
+			[
+				"password",
+				"password_lock_now"
+			],
+			[
 				"disp",
 				"disp_time"
 			],
@@ -40,10 +72,6 @@
 				"my_all_data2"
 			],
 			[
-				"text",
-				"text-decoration"
-			],
-			[
 				"show",
 				"showCalendar"
 			],
@@ -62,10 +90,6 @@
 			[
 				"te",
 				"text-decoration"
-			],
-			[
-				"ma",
-				"margin-left"
 			],
 			[
 				"pa",
@@ -106,18 +130,6 @@
 			[
 				"c",
 				"color"
-			],
-			[
-				"fo",
-				"font-size"
-			],
-			[
-				"ba",
-				"background-image"
-			],
-			[
-				"fon",
-				"font-size"
 			],
 			[
 				"no",
@@ -164,10 +176,34 @@
 	"buffers":
 	[
 		{
-			"file": "all_new.js",
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/do.php",
 			"settings":
 			{
-				"buffer_size": 64987,
+				"buffer_size": 150489,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/.htaccess",
+			"settings":
+			{
+				"buffer_size": 1977,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/db.php",
+			"settings":
+			{
+				"buffer_size": 49958,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/login.php",
+			"settings":
+			{
+				"buffer_size": 13609,
 				"line_ending": "Unix"
 			}
 		},
@@ -175,7 +211,39 @@
 			"file": "/Applications/MAMP/htdocs/fpk/4tree/index.php",
 			"settings":
 			{
-				"buffer_size": 26466,
+				"buffer_size": 9377,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/css/login.css",
+			"settings":
+			{
+				"buffer_size": 9750,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "login.js",
+			"settings":
+			{
+				"buffer_size": 4264,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/index_tree.php",
+			"settings":
+			{
+				"buffer_size": 31639,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "all_new.js",
+			"settings":
+			{
+				"buffer_size": 66953,
 				"line_ending": "Unix"
 			}
 		},
@@ -183,7 +251,7 @@
 			"file": "js_regallkeys.js",
 			"settings":
 			{
-				"buffer_size": 65595,
+				"buffer_size": 68105,
 				"line_ending": "Unix"
 			}
 		},
@@ -191,47 +259,31 @@
 			"file": "api4tree.js",
 			"settings":
 			{
-				"buffer_size": 227254,
+				"buffer_size": 255556,
 				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/do.php",
-			"settings":
-			{
-				"buffer_size": 149669,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/db.php",
-			"settings":
-			{
-				"buffer_size": 49891,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/db2.php",
-			"settings":
-			{
-				"buffer_size": 776,
-				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "/Applications/MAMP/htdocs/fpk/4tree/css/4tree-styles.css",
 			"settings":
 			{
-				"buffer_size": 100796,
+				"buffer_size": 102937,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.css",
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/css/jqueryslidemenu.css",
 			"settings":
 			{
-				"buffer_size": 13095,
+				"buffer_size": 3337,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Applications/MAMP/htdocs/fpk/4tree/css/test-design.css",
+			"settings":
+			{
+				"buffer_size": 23808,
 				"line_ending": "Unix"
 			}
 		}
@@ -239,11 +291,15 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 0.0,
+		"height": 392.0,
 		"selected_items":
 		[
+			[
+				"pa",
+				"Package Control: Install Package"
+			]
 		],
-		"width": 0.0
+		"width": 449.0
 	},
 	"console":
 	{
@@ -266,6 +322,13 @@
 	},
 	"file_history":
 	[
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/Applications/MAMP/htdocs/fpk/4tree/test/package.json",
+		"/Applications/MAMP/htdocs/fpk/4tree/test/test1.js",
+		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.css",
+		"/Applications/MAMP/htdocs/fpk/4tree/db2.php",
+		"/Applications/MAMP/htdocs/fpk/4tree/db.php",
 		"/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.js",
 		"/Applications/MAMP/htdocs/fpk/4tree/mm.php",
 		"/Applications/MAMP/htdocs/fpk/4tree/js/mindmap.js",
@@ -275,7 +338,6 @@
 		"/Applications/MAMP/htdocs/fpk/4tree/js/jquery.mobile-1.3.1.js",
 		"/Applications/MAMP/htdocs/fpk/4tree/css/4tree.css",
 		"/Applications/MAMP/htdocs/fpk/4tree/redactor900/redactor/redactor.css",
-		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/Applications/MAMP/htdocs/fpk/4tree/redactor/redactor/redactor.js",
 		"/Applications/MAMP/htdocs/fpk/4tree/favicon-mobile.png",
 		"/Applications/MAMP/htdocs/fpk/4tree/favicon1.png",
@@ -284,9 +346,7 @@
 		"/Users/iBook/Downloads/images/icons-18-white.png",
 		"/Users/iBook/Downloads/images/icons-36-black.png",
 		"/Users/iBook/Downloads/images/icons-36-white.png",
-		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.css",
 		"/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.js",
-		"/Users/iBook/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
 		"/Applications/MAMP/htdocs/fpk/4tree/js/js_regallkeys.js"
 	],
 	"find":
@@ -306,6 +366,53 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"tree_add_new_element",
+			"plumb",
+			"jsPlumb",
+			"context",
+			"sortable",
+			"path_tree",
+			"trash",
+			"jsMakeUnDid",
+			"избранные",
+			"home",
+			"sortable",
+			"jsShowTreePanel",
+			"check_hash_add_do",
+			"hash",
+			"вход",
+			"reg_please",
+			"проверьте email",
+			"jsReg",
+			".click",
+			"jsReg",
+			"reg_or_login",
+			"h1",
+			"р1",
+			"прове",
+			"проверьте",
+			"Проверьте",
+			"войти",
+			"forget",
+			"social",
+			"jsClearCurrentBase",
+			"#password",
+			"input",
+			"login",
+			"jsDoFirst",
+			"jsLogin",
+			"index.php",
+			"'fav'",
+			"\"fav\"",
+			"get_new",
+			"get_all_data2",
+			".fav",
+			"encrypted",
+			"мастер",
+			"path_tree",
+			"path_line",
+			"path_tree",
+			"padding-bott",
 			"undo_last_step",
 			"undo",
 			"share_ids",
@@ -386,54 +493,7 @@
 			"$.each",
 			"test",
 			".each",
-			"quickEach =",
-			"$.each",
-			".each",
-			"indexOf",
-			"hex_md",
-			"n strip_tags",
-			"hex_md",
-			"js_my_all_data2test2",
-			"jsDoFirst",
-			"jsFind =",
-			"js_My_all",
-			"js_LoadAllDataFromServer",
-			"my_all_data",
-			"my_all_data2",
-			"savealltext",
-			"js_LoadAllFromLocalDB",
-			"jsSaveAllText",
-			"savealltext",
-			"md5(",
-			"jsFindPath(",
-			"jsFindPath =",
-			"jsFindPath",
-			"открыть",
-			"больше",
-			"divider_red",
-			"folder_closed",
-			"divider_red",
-			"divider_li",
-			"comment",
-			"handlebars",
-			"openred",
-			"api4panel.jsMakeIcontext",
-			"jsMakeIcontext",
-			"api4panel.jsMakeIconText",
-			"makeicon",
-			"jsSaveOneTextIfChanged",
-			"save_all_",
-			"myr =",
-			"api4editor",
-			"api4editor(",
-			"api4editor =",
-			"API_4PANEL",
-			"theme",
-			"showCalendar",
-			"scrollTo(",
-			"Календар",
-			"Календарь",
-			"календарь"
+			"quickEach ="
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -466,135 +526,24 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 7,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "all_new.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 64987,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/index.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 26466,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/PHP/PHP.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 487.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "js_regallkeys.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 65595,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 41957.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "api4tree.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 227254,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 94342.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
 					"file": "/Applications/MAMP/htdocs/fpk/4tree/do.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 149669,
+						"buffer_size": 150489,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1598,
+								1630
 							]
 						],
 						"settings":
@@ -605,26 +554,53 @@
 							"wrap_width": 100
 						},
 						"translation.x": 0.0,
-						"translation.y": 26165.0,
+						"translation.y": 806.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/db.php",
+					"buffer": 1,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/.htaccess",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 49891,
+						"buffer_size": 1977,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1911,
+								1911
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 627.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/db.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 49958,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								867,
+								872
 							]
 						],
 						"settings":
@@ -634,26 +610,139 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2544.0,
+						"translation.y": 110.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/db2.php",
+					"buffer": 3,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/login.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 776,
+						"buffer_size": 13609,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								391,
-								391
+								9847,
+								9847
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 5902.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/index.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9377,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2620,
+								2620
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 653.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/css/login.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9750,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9672,
+								9672
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 4113.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "login.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4264,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1019,
+								1034
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 414.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/index_tree.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 31639,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								17547,
+								17547
 							]
 						],
 						"settings":
@@ -661,64 +750,181 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/css/4tree-styles.css",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 100796,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 8338.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 8,
-					"file": "/Applications/MAMP/htdocs/fpk/4tree/fullcalendar-1.6.1/fullcalendar/fullcalendar.css",
+					"file": "all_new.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 13095,
+						"buffer_size": 66953,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								32057,
+								32061
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 15291.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "js_regallkeys.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 68105,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3090,
+								3997
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1805.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "api4tree.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 255556,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								138887,
+								138887
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 72204.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/css/4tree-styles.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 102937,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								100172,
+								100172
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 106379.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/css/jqueryslidemenu.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3337,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3242,
+								3242
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2226.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 13,
+					"file": "/Applications/MAMP/htdocs/fpk/4tree/css/test-design.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 23808,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5940,
+								5940
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 5390.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -743,11 +949,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.617688582529,
 			1.0
 		],
 		"rows":
@@ -764,7 +977,7 @@
 	"project": "/Users/iBook/Documents/4tree.sublime-project",
 	"replace":
 	{
-		"height": 64.0
+		"height": 46.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -797,7 +1010,7 @@
 	"show_minimap": true,
 	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 244.0,
 	"status_bar_visible": true,
 	"template_settings":

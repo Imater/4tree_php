@@ -1,5 +1,5 @@
 <html lang="ru" manifest="">
-<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no"> 
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1,user-scalable=no"> 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
 <meta charset="utf-8">
 <head>
@@ -78,254 +78,8 @@ $db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 <meta name="keywords" content="gtd, 4tree.ru, заметки, задачи, гтд, таймменеджмент, хранение заметок, календарь"/>
 <meta name="viewport" content="width=device-width">
 
-<style>
-
-#login_page,#reg_page {
-height: 100%;
-width: 100%;
-}
-
-#login_form {
-	margin: 0 auto;
-	display: inline-block;
-	left: 50%;
-	position: absolute;
-	margin-left: -125px;
-	top:50%;
-	margin-top: -145px;
-	height: 200px;
-	width: 250px;
-}
-
-.send_button {
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
-	width: 250px;
-	text-align: center;
-	font-size: 16px;
-	color: rgba(0,0,0,0.3);
-	padding: 5px 0px;
-	border-radius: 10px;
-	cursor: pointer;
-text-shadow: 0px 1px 1px rgba(255,255,255,1);
-
-background: rgb(238,238,238); /* Old browsers */
-/* IE9 SVG, needs conditional override of 'filter' to 'none' */
-background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2VlZWVlZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjY2NjY2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#cccccc',GradientType=0 ); /* IE6-8 */
-
--moz-box-shadow: 0px 2px 2px rgb(64,64,64);
--webkit-box-shadow: 0px 2px 2px rgb(64,64,64);
-box-shadow: 0px 2px 2px rgb(64,64,64);
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
-
-}
-
-.send_button.active {
-	color: #000;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;	
-}
-
-
-.send_button.active:hover {
--moz-box-shadow: 0px 1px 2px rgb(64,64,64);
--webkit-box-shadow: 0px 1px 2px rgb(64,64,64);
-box-shadow: 0px 1px 2px rgb(64,64,64);
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
-}
-
-.send_button:active {
--moz-box-shadow: none;
--webkit-box-shadow: none;
-box-shadow: none;
-}
-
-
-#registrate_form {
-	position: absolute;
-	bottom: 40px;
-	left:50%;
-	margin-left: -100px;
-	width: 200px;
-
-}
-
-.reg_or_login {
-	width: 200px;
-	text-align: center;
-	font-size: 12px;
-	font-weight: bold;
-	color:rgb(36,68,25);
-	padding: 5px 0px;
-	border-radius: 5px;
-	cursor: pointer;
-text-shadow: 0px 1px 1px rgba(255,255,255,1);
-
-
-background: rgb(210,255,82); /* Old browsers */
-/* IE9 SVG, needs conditional override of 'filter' to 'none' */
-background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2QyZmY1MiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM5MWU4NDIiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-background: -moz-linear-gradient(top,  rgba(210,255,82,1) 0%, rgba(145,232,66,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(210,255,82,1)), color-stop(100%,rgba(145,232,66,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  rgba(210,255,82,1) 0%,rgba(145,232,66,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  rgba(210,255,82,1) 0%,rgba(145,232,66,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  rgba(210,255,82,1) 0%,rgba(145,232,66,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom,  rgba(210,255,82,1) 0%,rgba(145,232,66,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d2ff52', endColorstr='#91e842',GradientType=0 ); /* IE6-8 */
-
--moz-box-shadow: 0px 1px 2px rgb(64,64,64);
--webkit-box-shadow: 0px 1px 2px rgb(64,64,64);
-box-shadow: 0px 1px 2px rgb(64,64,64);
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
-
-}
-
-.reg_or_login:hover {
--moz-box-shadow: 0px 0px 2px rgb(64,64,64);
--webkit-box-shadow: 0px 0px 2px rgb(64,64,64);
-box-shadow: 0px 0px 2px rgb(64,64,64);
--ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444')";
-filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#444444');
-
-}
-
-.bottom_link {
-	position: absolute;
-	bottom: 10px;
-	text-decoration: underline;
-	font-size: 12px;
-	left:50%;
-	margin-left: -100px;
-	width: 200px;
-	text-align: center;
-	color:  rgba(255,255,255,0.5);
-	display: inline-block;
-	cursor: pointer;
-}
-.bottom_link:hover {
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;	
-	color:  rgba(255,255,255,1);
-}
-
-
-body {
-font-size: 14px;
-margin:0px;
-padding: 0px;
-font-family: verdana, arial;
-position: relative;	
-overflow: hidden;
-
-background: rgb(41,154,11); /* Old browsers */
-/* IE9 SVG, needs conditional override of 'filter' to 'none' */
-background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPHJhZGlhbEdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY3g9IjUwJSIgY3k9IjUwJSIgcj0iNzUlIj4KICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiMyOTlhMGIiIHN0b3Atb3BhY2l0eT0iMSIvPgogICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjNGI5OTM1IiBzdG9wLW9wYWNpdHk9IjEiLz4KICA8L3JhZGlhbEdyYWRpZW50PgogIDxyZWN0IHg9Ii01MCIgeT0iLTUwIiB3aWR0aD0iMTAxIiBoZWlnaHQ9IjEwMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-background: -moz-radial-gradient(center, ellipse cover,  rgba(41,154,11,1) 0%, rgba(75,153,53,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(41,154,11,1)), color-stop(100%,rgba(75,153,53,1))); /* Chrome,Safari4+ */
-background: -webkit-radial-gradient(center, ellipse cover,  rgba(41,154,11,1) 0%,rgba(75,153,53,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-radial-gradient(center, ellipse cover,  rgba(41,154,11,1) 0%,rgba(75,153,53,1) 100%); /* Opera 12+ */
-background: -ms-radial-gradient(center, ellipse cover,  rgba(41,154,11,1) 0%,rgba(75,153,53,1) 100%); /* IE10+ */
-background: radial-gradient(ellipse at center,  rgba(41,154,11,1) 0%,rgba(75,153,53,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#299a0b', endColorstr='#4b9935',GradientType=1 ); /* IE6-8 fallback on horizontal gradient */
-}
-
-
-input {
-	font-size: 16px;
-	padding: 10px 10px;
-	width:250px;
-	border: none;
-	margin:0px;
-	background: rgb(247,247,247);
-	border-radius: 0px;
-	outline: none;
-	-webkit-appearance: none;
-}
-
-
-.email {
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-	border-bottom: 1px solid #888;
-	box-shadow: inset 2px 2px 3px rgba(0,0,0,0.4);
-	-webkit-box-shadow: inset 2px 2px 3px rgba(0,0,0,0.4);
-}
-
-.password {
-	border-bottom-left-radius: 10px;
-	border-bottom-right-radius: 10px;
-	box-shadow: inset 2px -2px 3px rgba(0,0,0,0.4);
-	-webkit-box-shadow: inset 2px -2px 3px rgba(0,0,0,0.4);
-	padding-top: 8px;
-
-}
-
-h1 {
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;	
-	text-align: center;
-	color: rgba(255,255,255,0.7);
-	font-size: 23px;
-	margin: 0px;
-	font-weight: bold;
-	font-family: Verdana;
-text-shadow: 0px -1px 1px rgba(0,0,0,0.9);
-	cursor: pointer;
-	word-wrap: break-word;
-}
-
-h1:hover {
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;	
-	color: rgba(255,255,255,0.7);
-}
-
-#social {
-	position: absolute;
-	top:0px;
-	left: 50%;
-	margin-left: -175px;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;	
-	width:350px;
-	height:20px;
-	margin-top:19px;
-	text-align: center;
-}
-
-#social label {
-	font-size: 12px;
-	color:  rgba(255,255,255,0.7);
-	margin-bottom: 5px;
-	display: inline-block;
-}
-
-
-
-
-</style>
+<link rel="stylesheet" type="text/css" href="css/login.css"/>
+<link rel="stylesheet" type="text/css" href="fontello/css/fontello.css"/>
 
 <script src="./js/jquery-1.8.2.js"></script>
 <script src="js/jquery.cookie.min.js"></script>
@@ -393,6 +147,7 @@ $(document).ready(function(){
 	$("#password_reg").on("keyup",function(e){
 		if( $("#password_reg").val().length>1 ) {
 			$("#reg_please").addClass("active");
+			localStorage.setItem("email",$("#email").val());
 		} else {
 			$("#reg_please").removeClass("active");
 		}
@@ -404,6 +159,7 @@ $(document).ready(function(){
 	$("#password").on("keyup",function(e){
 		if( $("#password").val().length>1 ) {
 			$("#login_please").addClass("active");
+			localStorage.setItem("email",$("#email").val());
 		} else {
 			$("#login_please").removeClass("active");
 		}
@@ -488,7 +244,7 @@ function jsNewPass() {
 	
 	var pass = $("#password").val();
 	if(pass.length<3) {
-		$("#login_page h1").html("Слишком короткий пароль");
+		$("#registrate_form h5").html("Слишком короткий пароль");
 		dfd.resolve();
 		return dfd.promise();
 	}
@@ -509,7 +265,7 @@ function jsNewPass() {
 	    processData: false,
 	    cache: true,
 	    success: function (data) {
-		    $("#login_page h1").html("Пароль установлен");
+		    $("#registrate_form h5").html("Пароль установлен");
 		    dfd.resolve();
 	    },
 	    abort: function (data) {
@@ -528,14 +284,20 @@ function jsNewPass() {
 
 function jsClearCurrentBase() { //очищаем существующую базу данных
    	var d=$.Deferred();
+   	var global_table_name = "4tree_db";
 
-   	if( JSON.stringify(db.getSchema().stores).indexOf('tree') != -1 ) //если таблицы tree нет
-       	db.clear().done(function(){ console.info("db cleared"); d.resolve(); }).fail(function(x){
-	       	alert(1);
-       	});
-       else {
- 	    console.info("db cleared"); d.resolve();
-       }
+		 
+    if( JSON.stringify(db.getSchema().stores).indexOf('tree') != -1 ) {//если таблицы tree нет
+
+
+	db.clear(global_table_name+"_comments").done(function(){
+	   	db.clear(global_table_name).done(function(){
+		   	db.clear(global_table_name+"_texts").done(function(){
+			   	 console.info("db cleared"); 
+			   	 d.resolve(); 
+			});
+	    });
+	});
        	
     $.cookie("4tree_passw",null);
     $.cookie("4tree_email",null);
@@ -547,6 +309,9 @@ function jsClearCurrentBase() { //очищаем существующую баз
     $.cookie("main_y",null);
     $.cookie("pwidth",null);
     $.cookie("sh",null);
+	} else {
+		d.resolve(); 
+	}
 
    	return d.promise();
 }
@@ -555,7 +320,7 @@ function jsClearCurrentBase() { //очищаем существующую баз
 
 function jsRemindMePassword() {
 
-    $("#login_page h1").html("Отправляю...");
+    $("#registrate_form h5").html("Отправляю...");
 
 	var email = encodeURIComponent( $("#email").val() )
 	var params_get = 'remind_me_password='+email+'&secret='+Math.random();
@@ -571,7 +336,7 @@ function jsRemindMePassword() {
 	    processData: false,
 	    cache: true,
 	    success: function (data) {
-		    $("#login_page h1").html("Проверьте почту");
+		    $("#registrate_form h5").html("Проверьте почту");
 	    },
 	    abort: function (data) {
 	        console.log("abort");
@@ -584,6 +349,12 @@ function jsRemindMePassword() {
 	});
 
 }
+
+
+	if(/reg_me/ig.test(window.location.href)) {
+		setTimeout(function(){ $("#reg_please2").click(); }, 0);
+	}
+
 
 //curl http://localhost/fpk/4tree/oauth2/resource.php -d 'access_token=bdc76b02741a0f1faee803cd8ec5d712ac538331'
 //curl -u testclient:testpass http://localhost/fpk/4tree/oauth2/token.php -d 'grant_type=client_credentials&code=2db11b2d10f60a07a1038c5ebc06b8c4fc15d0d7'  - получение TOKEN
@@ -647,13 +418,12 @@ var params_get = 'grant_type=password&username='+md5email+
 
 <body>
 
+	<a id="go_home" href="index.php" title="Перейти на главную страницу"><i class="icon-home"></i></a>
 
-		<div id="social" style="" title="">
-		<label>вход с помощью:</label>
-		<script src="//ulogin.ru/js/ulogin.js" async></script> 
-		<div id="uLogin" data-ulogin="display=small;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=vkontakte,google,odnoklassniki,mailru,facebook,yandex,twitter;hidden=other;redirect_uri=https://4tree.ru/login.php?login_me"></div>
-		<!-- http%3A%2F%2F4tree.ru%2F4tree.php -->
-		</div>		
+	<div id="registrate_form">
+		<div id="reg_please2" class="reg_or_login">Регистрация на 4tree</div>
+		<h5></h5>
+	</div>
 
 
 <div id="reg_page" style="display:none;">
@@ -671,7 +441,7 @@ var params_get = 'grant_type=password&username='+md5email+
 	
 	
 	<div id="registrate_form">
-		<div id="to_login_page" class="reg_or_login">Войти</div> 
+		<div id="to_login_page" class="reg_or_login">Вход в 4tree</div> 
 	
 	</div>
 <!--		<div id="to_login_page" class="bottom_link">Войти в 4tree</div>  -->
@@ -690,15 +460,17 @@ var params_get = 'grant_type=password&username='+md5email+
 		<div id="login_please" class="send_button">вход</div>
 	
 	</div>
-	
-	
-	<div id="registrate_form">
-		<div id="reg_please" class="reg_or_login">Регистрация на 4tree</div>
-	
-	</div>
-		<div id="forget_password" class="bottom_link">забыл пароль</div>
+
 </div>
 
+		<div id="social" style="" title="">
+		<label>вход с помощью:</label>
+		<script src="//ulogin.ru/js/ulogin.js" async></script> 
+		<div id="uLogin" data-ulogin="display=panel;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=google,vkontakte,facebook,mailru,twitter;hidden=other;redirect_uri=https://4tree.ru/login.php?login_me"></div>
+		<!-- http%3A%2F%2F4tree.ru%2F4tree.php -->
+		</div>		
+
+		<div id="forget_password" class="bottom_link">забыл пароль</div>
 
 
 </body>

@@ -150,7 +150,7 @@ if (isset($_GET['remind_me_password']))
 	  push(array("am"),array('type' => "send_mail", 'from' => $fpk_id, 'txt' => "Пользователь запросил восстановление пароля: ".$email));
 	  
 	  $mytxt = "<b>".$result['fio'].", вы или кто-то другой запросил смену пароля:</b><br><br>".
-	  		   "<h1><a href='https://4tree.ru/login.php?change_pass=".$pass_code."'>Ввести новый пароль</a></h1>".
+	  		   "<h1><a href='https://4tree.ru/login/?change_pass=".$pass_code."'>Ввести новый пароль</a></h1>".
 	  		   "<br><br><font size='0.9em'>Если это сделали не вы, то игнорируйте это письмо. Ваш 4tree.ru</font><br>";
 	  
 	  require_once('Zend/Mail.php');
@@ -1431,7 +1431,7 @@ global $db2;
 if($display) echo "SAVE CHANGES<br>";
 
 	$fields = array ("parent_id","position","title","tab_order","text",
-					 "date1","date2","remind","did","s","fav","del","node_icon");
+					 "date1","date2","remind","did","s","fav","pas","smth","del","node_icon");
 
 		$sqlnews2 = "UPDATE  `tree` SET ";
 
@@ -1481,6 +1481,8 @@ if($display) echo "SAVE CHANGES<br>";
 				":did" =>  $did,
 				":s" => $changes[$i]['s'],
 				":fav" =>  $changes[$i]['fav'],
+        ":pas" =>  $changes[$i]['pas'],
+        ":smth" =>  $changes[$i]['smth'],
 				":changetime" => $changetime,
 				":del" => $del,
 				":node_icon" => $changes[$i]['icon']);
@@ -1771,7 +1773,7 @@ if($show)	echo "!!!".$dif.' change_time = '.$change_time." from_db_time=".$fromd
 		else $del = 0;
 		
 		$fields = array ("parent_id","position","title","tab_order","text",
-						 "date1","date2","remind","did","s","fav","del","node_icon");
+						 "date1","date2","remind","did","s","fav","pas","smth","del","node_icon");
 		
 		$sqlnews2 = "UPDATE  `tree` SET ";
 
@@ -1842,6 +1844,8 @@ if($show)	echo "!!!".$dif.' change_time = '.$change_time." from_db_time=".$fromd
 				":did" =>  $did,
 				":s" => $changes[$i]['s'],
 				":fav" =>  $changes[$i]['fav'],
+        ":pas" =>  $changes[$i]['pas'],
+        ":smth" =>  $changes[$i]['smth'],
 				":changetime" => $changetime,
 				":del" => $del,
 				":node_icon" => $changes[$i]['node_icon']
@@ -1977,6 +1981,8 @@ if($show) 		echo "<li>".$sql['id']."</li>";
 		$server_changes[$i]['date1']=$date1;
 		$server_changes[$i]['date2']=$date2;
 		$server_changes[$i]['fav']=$sql['fav'];
+    $server_changes[$i]['pas']=$sql['pas'];
+    $server_changes[$i]['smth']=$sql['smth'];
 		$server_changes[$i]['tab']=$sql['tab_order'];
 		$server_changes[$i]['parent_id']=($sql['parent_id']);
 		$server_changes[$i]['did']=($did);
@@ -2513,6 +2519,8 @@ VALUES ";
 	    
 	    $answer[$i]['tab']=$sql['tab_order'];
 	    $answer[$i]['fav']=$sql['fav'];
+      $answer[$i]['pas']=$sql['pas'];
+      $answer[$i]['smth']=$sql['smth'];
 	    $answer[$i]['del']=$sql['del'];
 	    
 	    $answer[$i]['img_class']=$class;

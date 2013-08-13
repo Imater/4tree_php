@@ -19,6 +19,8 @@ background-image: url("../img/textures/1.jpg");
     background: #000;
     /* border-bottom: 1px solid #888; */
  }
+ 
+
 
 .tree_tab_menu {
 	list-style: none;	
@@ -104,7 +106,7 @@ display: inline-block;
 
 .for_sos {
 	float: left;
-	margin: 2px 10px;
+	margin: 2px 0px 0px 1px;
 }
 
 .tree_tab_menu .icon-cd:hover {
@@ -298,20 +300,78 @@ body.left_panel_hide .top_panel {
 	height: 153px;
 }
 
-#top_panel_header {
+.top_panel_header {
 	border-top: 1px solid #FFF;
-	height: 28px;
-	line-height: 28px;
+	height: 20px;
+	line-height: 20px;
 	vertical-align: middle;
 	text-align: center;
 	font-size: 16px;
 	border-bottom: 1px solid #888;
 }
 
+.tree_add_new_element {  
+font-size: 20px;
+float: right;
+border-left: 1px solid #616161;
+padding-left: 20px;
+line-height: 27px;
+height: 27px;
+width: 43px;
+vertical-align: middle;
+text-align: left;
+}
+
+.tree_add_new_element:hover {  
+	background: rgba(140, 255, 140, 0.5);
+}
+
+.tree_add_new_element:hover .icon-down-dir-1{  
+	text-shadow: none;
+	color:green;
+}
+
+.tree_add_new_element .icon-plus {  
+height: 20px;
+cursor: pointer;
+display: inline-block;
+margin-top: 4px;
+}
+
+.tree_add_new_element .icon-down-dir-1 {
+position: absolute;
+top: 8px;
+right: 2px;
+font-size: 12px;
+cursor: pointer;
+color: #616161;
+text-shadow: none;
+}
+
+
+
+.tree_history_arrows {
+	float: left;	
+	font-size: 0px;
+	vertical-align: middle;
+	line-height: 27px;
+}
+
+.tree_history_arrows i {
+padding: 0px 1px 0px 5px;
+cursor: pointer;
+font-size: 17px;
+}
+
+.tree_history_arrows i:hover {
+background: rgba(255,255,255,0.5);
+}
+
+
 #top_panel_header_right {
 	border-top: 1px solid #FFF;
-	height: 28px;
-	line-height: 28px;
+	height: 20px;
+	line-height: 20px;
 	vertical-align: middle;
 	text-align: center;
 	font-size: 16px;
@@ -356,13 +416,13 @@ z-index: 5;
 
 
 #params_header .top_btn.first {
-	float: left;
+	float: right;
 	border-right: 1px solid #888;	
 	border-left: none;
 }
 
 #params_header .top_btn.second {
-	float: left;
+	float: right;
 	border-right: 1px solid #888;
 	border-left: none;
 }
@@ -566,13 +626,14 @@ ul.tabs{
   max-height: 27px;
   overflow: hidden;
   padding-right: 50px;
-  padding-left: 50px;
+  padding-left: 35px;
 }
 
 ul.tabs > li.active:not(.add_tab){
-  z-index: 2;
+  z-index:3 !important;
   background: #777777;
   color: #FFF;
+  overflow: visible !important;
 }
 
 ul.tabs > li.active:not(.add_tab) a{
@@ -620,7 +681,9 @@ ul.tabs > li.temp a{
 }
 
 ul.tabs > li.temp a:before {
-	content:"* ";
+	content:"📌";
+	font-family: "fontello";
+	margin-right: 10px;
 }
 
 ul.tabs > li:not(.add_tab):hover a{
@@ -947,6 +1010,7 @@ padding-left: 1px;
 z-index: 5;
 cursor: pointer;
 float: none;
+position: absolute;
 }
 
 .add_tab:hover {
@@ -1133,7 +1197,7 @@ color: #000;
 #right_tags {
 	overflow-y: auto;
 	position: absolute;
-	top:30px;
+	top:22px;
 	bottom:133px;
 	left: 0px;
 	right: 0px;
@@ -1160,3 +1224,217 @@ text-overflow: ellipsis;
 white-space: nowrap;
 overflow: hidden;
 }
+
+.encrypt_note {
+}
+
+
+
+
+
+
+.pass_block {
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+
+.pass_block i.leftright {
+	display: inline-block;
+	margin-left: 20px;
+	margin-right: 20px;
+	color: #9E9E9E;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+.pass_locker
+{
+	display: inline-block;
+	padding-left: 6px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	font-size: 40px;
+	cursor: pointer;
+	text-shadow: 0px 2px 1px #FFF;
+	opacity: 0.3;
+}
+
+.pass_block b {
+	display: inline-block;
+	font-size: 12px;
+	cursor: pointer;
+	text-shadow: 0px 2px 1px #FFF;
+}
+
+
+#password_lock_now_master {
+	color:green;
+}
+
+#password_lock_now_user {
+	opacity: 1;
+}
+
+.master_active #password_lock_now_master {
+	opacity: 1;
+}
+
+.master_active #password_lock_now_user {
+	opacity: 0.3;
+}
+
+#password_lock_now_user {
+	opacity: 1;
+}
+
+.master_active .label_user {
+	display: none;
+}
+
+.label_master {
+	display: none !important;
+}
+
+.master_active .label_master {
+	display: inline-block !important;
+}
+
+.password_field {
+	margin-top: 5px;
+	display: block;
+}
+
+.encrypt_note input {
+	font-size: 14px;
+	padding: 5px 10px;
+	width: 145px;
+	text-align: center;
+}
+
+.encrypted:before {
+	content:'🔒' !important;
+}
+
+#password_lock_now {
+}
+
+#password_lock_now:hover {
+	color: #820000;
+}
+
+#tree_view_container_box {
+	position: absolute;
+	top:4px;
+	left: 60px;
+	width: auto;
+	height: auto;
+	z-index: 4;
+}
+
+#tree_view_container_box .label {
+	margin-top: 2px;
+	margin-left: 6px;
+}
+
+#tree_view_container {
+	position: absolute;
+	top:0px;
+	width: auto;
+	height: auto;
+	z-index: 4;
+	border-radius: 5px;
+	font-size: 0px;
+	text-align: center;
+	left: 42px;
+	border: 1px solid #333;
+}
+
+#tree_view_container .button {
+	width: 29px;
+	display: inline-block;
+	height: 18px;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 22px;
+	cursor: pointer;
+}
+
+
+
+#tree_view_container .box {
+	background: rgba(255,255,255,0.25);
+	height: 10px;
+	display: inline-block;
+	margin: 0px;
+	width: 10px;
+	margin-top: 4px;
+}
+#tree_view_container .tree_view_center {
+	border-left:1px solid #555;
+	border-right:1px solid #555;
+}
+
+#tree_view_container .tree_view_left {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+}
+
+#tree_view_container .tree_view_right {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+#tree_view_container .tree_view_left .box {
+	border-left: 5px solid rgba(255,255,255,0.35);	
+}
+
+#tree_view_container .tree_view_center .box {
+	border-top: 4px solid rgba(255,255,255,0.35);	
+	height: 6px;
+	width: 16px;
+}
+
+#tree_view_container .tree_view_right .box {
+	border-right: 5px solid rgba(255,255,255,0.35);	
+}
+
+.show_right_panel .tree_view_right {
+	box-shadow: inset 0px 0px 3px #000;
+	background: rgba(0,0,0,0.5);
+}
+
+.tree_view_left {
+	box-shadow: inset 0px 0px 3px #000;
+	background: rgba(0,0,0,0.5);
+}
+
+.left_panel_hide .tree_view_left{
+	box-shadow: none;
+	background: none;
+}
+
+.params_open .tree_view_center {
+	box-shadow: inset 0px 0px 3px #000;
+	background: rgba(0,0,0,0.5);
+}
+
+.left_panel_hide .tree_footer .icon-left-open.left:before {
+	content: "\e75e";
+}
+
+.show_right_panel .tree_footer .icon-left-open.right:before {
+	content: "\e75e";
+}
+
+.context-menu-item b {
+	float: right;
+	font-weight: normal;
+	margin-right: 7px;
+	margin-left: 20px;
+}
+
+.context-menu-item b i:before {
+	margin-right: -4px;
+}
+

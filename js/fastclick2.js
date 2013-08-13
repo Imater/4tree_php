@@ -230,7 +230,7 @@ FastClick.prototype.needsClick = function(target) {
   }
 
   if ( $(target).parents(".all_editor_place").length || 
-       $(target).is(".all_editor_place").length || $(target).hasClass("ui-body-b") ) { return true; }
+       $(target).is(".all_editor_place").length || $(target).hasClass("ui-body-b") || $(target).parents(".needsclick").length) { return true; }
 
   return (/\bneedsclick\b/).test(target.className);
 };

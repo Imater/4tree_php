@@ -45,7 +45,7 @@ var passw = $('#password_reg').val();
 if((email.indexOf('@')>0) && (email.indexOf('.')>0)) email_ok = 1;
 else
   {
-  $('#reg_page h1').hide().html('проверьте email').fadeIn();
+  $('#registrate_form h5').hide().html('проверьте email').fadeIn();
   $('#email_reg').focus();
   return false;
   }
@@ -68,7 +68,7 @@ var mydata = {
 var md5email = hex_md5(email+'990990');
 
 var $txt = $.ajax({type: "GET",url: "do.php", data: mydata, success: function(t) { 
-	$('#reg_page h1').hide().html(t).fadeIn();
+	$('#registrate_form h5').hide().html(t).fadeIn();
 	if (t=='Вы успешно зарегистрировались.<br>Перенаправляю на сайт...') 
 	   {
 	   jsLogin(md5email, passw);
@@ -162,7 +162,7 @@ function jsGetMyFirstToken() {
 				    cache: true,
 				    success: function (data) {
 				        console.log("success");
-				        window.location.href = "./index.php";
+				        window.location.href = "./home/index.php";
 				    },
 				    abort: function (data) {
 				        console.log(data);

@@ -851,7 +851,7 @@ function jsSetHashAndPath(new_id) {
 
 	var mypath = api4tree.jsFindPath( api4tree.jsFind( new_id ) );
 	if(!mypath) return true;
-	var new_path = "/home";
+	var new_path = "";
 
 	$.each(mypath.path, function(i, el) {
 		  new_path += "/";
@@ -1087,6 +1087,8 @@ if(id==-5) //отборы
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
+		element.pas = "";
+		element.smth = "";
 		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
@@ -1113,6 +1115,8 @@ if(id==-6) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
+		element.pas = "";
+		element.smth = "";
 		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
@@ -1139,6 +1143,8 @@ if(id==-7) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
+		element.pas = "";
+		element.smth = "";
 		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
@@ -1165,6 +1171,8 @@ if(id==-8) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
+		element.pas = "";
+		element.smth = "";
 		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
@@ -1191,6 +1199,8 @@ if(id==-9) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
+		element.pas = "";
+		element.smth = "";
 		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
@@ -1217,6 +1227,8 @@ if(id==-10) //по дате изменения
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
+		element.pas = "";
+		element.smth = "";
 		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
@@ -1244,6 +1256,8 @@ if(id==-3)
 		element.del = 0;
 		element.tab = 0;
 		element.fav = 0;
+		element.pas = "";
+		element.smth = "";
 		element["new"] = "";
 		element.time = 0;
 		element.lsync = 1;
@@ -1280,6 +1294,8 @@ if(id)
 			   	element.del = 0;
 			   	element.tab = 0;
 			   	element.fav = 0;
+				element.pas = "";
+				element.smth = "";
 			   	element["new"] = "";
 			   	element.time = 0;
 				element.user_id = id;

@@ -13,9 +13,9 @@ height: 27px;
 }
 
 .jqueryslidemenu .iPhoneCheckContainer{
-right: 25px !important;
+right: 10px !important;
 position: absolute !important;
-top: 6px !important;
+top: 4px !important;
 }
 
 .jqueryslidemenu span + a{
@@ -25,7 +25,8 @@ top: 6px !important;
 .jqueryslidemenu a > i {
 	position: absolute;
 	left: 11px;
-	top:9px;
+	top:8px;
+	font-size: 11px;
 }
 
 .jqueryslidemenu ul{
@@ -141,10 +142,10 @@ top: 0;
 
 /* Sub level menu links style */
 .jqueryslidemenu ul li ul li a{
-font: normal 14px Arial;
+font: normal 13px;
 /*width: 160px; /*width of sub menus*/
-padding: 7px 33px;
-padding-right: 40px;
+padding: 6px 30px;
+padding-right: 30px;
 margin: 0;
 white-space: nowrap;
 }
@@ -165,7 +166,7 @@ right: 7px;
 
 .rightarrowclass{
 position: absolute;
-top: 7px;
+top: 5px;
 right: 5px;
 float: right;
 font-size: 17px;
