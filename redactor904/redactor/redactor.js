@@ -1309,7 +1309,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 						var value = $.trim(current.nodeValue.replace(/[^\u0000-~]/g, ''));
 						if (current.remove && current.nodeType === 3 && current.nodeValue.charCodeAt(0) == 8203 && value == '')
 						{
-							current.remove();
+							//current.remove();
 						}
 					}
 				}
