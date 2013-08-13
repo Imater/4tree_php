@@ -149,7 +149,8 @@ $(document).ready(function(){
 
     <li><a id="show_settings"><i class="icon-cog-2"></i>Настройки</a></li>
     <li class="blank"></li>
-    <li><a href="../"><i class="icon-home"></i>Обучение программе</a></li>
+    <li><a href="../"><i class="icon-home"></i>Главная страница</a></li>
+    <li><a onclick="jsLoadWelcome();"><i class="icon-info"></i>Вводный тур</a></li>
 
     <li><a href="http://reformal.4tree.ru" target="_blank">
     	<i class="icon-thumbs-up"></i>Oтзывы и предложения (reformal.ru)</a>

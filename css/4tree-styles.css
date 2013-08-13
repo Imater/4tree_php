@@ -6072,8 +6072,8 @@ color: #777 !important;
 #welcome_screen {
   display: none;
   position: absolute;
-  bottom:100px;
-  left:50px;
+  bottom:50px;
+  right:50px;
   height: 250px;
   width: 350px;
   background: #FFF;
@@ -6177,7 +6177,7 @@ body > ._jsPlumb_connector {
   position: absolute;
   left: 200px;;
   top: 3px;
-  right: 65px;
+  right: 107px;
   text-align: center;
 }
 
