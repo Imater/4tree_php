@@ -129,9 +129,10 @@ function jsDrawWelcomeLine(){
     			if(line_to == ".tcheckbox:eq(2)") {
     				clearTimeout(t_check);
     				t_check = setTimeout(function(){ $(line_to).click(); }, 500 );
+    				setTimeout(function(){ $("#context-menu-layer").trigger("mousedown");}, 5000);
     			} else {
 	    			clearTimeout(t_check);
-	    			$(".makedone").hide();
+	    			$("#context-menu-layer").trigger("mousedown");
     			}
     			
     	}
