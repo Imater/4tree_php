@@ -4086,7 +4086,7 @@ $.contextMenu({
 		  
 ////////////////////////////////////Главное контекстное меню//////////////////////////////////////////		  
 $.contextMenu({
-        selector: '.panel .n_title, .panel .tcheckbox ,.fc-event', 
+        selector: '.panel .big_n_title, .panel .tcheckbox ,.fc-event', 
         events: { show: function(opt){ 
         		$(this).parents("li:first").parents(".mypanel").find(".selected").removeClass("selected");
 				$(this).parents("li:first").addClass("selected").parents(".mypanel").addClass("tree_active");
