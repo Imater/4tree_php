@@ -509,7 +509,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	myli = "<div "+isVisible+" class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'>"+"</div>"; //разделитель
 		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='"+info.isFolder+info.crossline+"'>"; 
 		 	myli += "<div class='big_n_title'>";
-		 	myli += "<div class='tcheckbox' title='Выполнить дело "+data.id+"'>"+info.comment_count+"</div>" + info.icon_share;
+		 	info.comment_count = info.comment_count?info.comment_count:"<i class='icon-down-open'></i>";
+		 	myli += "<div class='tcheckbox' title='Выполнить дело "+data.id+"'><b>"+info.comment_count+"</b></div>" + info.icon_share;
 		 	myli += "<div class='date1' myid='"+(data.tmp_next_id?data.tmp_next_id:"")+"' childdate='"+(data.tmp_nextdate?data.tmp_nextdate:"")+"' title='"+data.date1+""+(data.tmp_next_title?data.tmp_next_title:"")+"'></div>";
 		 	myli += info.remind + info.triangle + info.countdiv + info.img + info.needsync;
 		 	myli += "<div class='n_title' myid='"+data.id+"'>";
@@ -1658,18 +1659,6 @@ function jsDoFirst() { //функция, которая выполняется �
 			check_hash_add_do();
 //			$("li[myid=makedone_page_1]").click();
 //			$("#open_params").click();
-			if(false)
-			setTimeout(function(){
-				alert("Шоу начинается!")
-				var t2 = api4tree.js_my_all_data2test2();
-				var t1 = api4tree.js_my_all_data2test();
-				alert(t1+" : "+t2+" = "+(t2/t1) );
-
-				var t2 = api4tree.js_my_all_data2test2(1);
-				var t1 = api4tree.js_my_all_data2test(1);
-				var t3 = api4tree.js_my_all_data2test3(1);
-				alert("t1crc="+t1+" : t2="+t2+" : t3hex="+t3+" = "+(t2/t1) );
-			},5000);
 //			$("#tab_files").click();
 			//$('.mypanel').dragscrollable({dragSelector: '.mypanel', acceptPropagatedEvent: true, preventDefault: false});
 		},5); //отображаю страницу
@@ -1689,17 +1678,12 @@ function jsDoAfterLoad() {
 	}
 	
 	_connect(main_user_id);
-	
-	if( window.location.hash.indexOf("edit") !=-1 ) { //если открыли заметку в новом окне
-	  	fullscreen_mode = true;
-	} else {
-	  	fullscreen_mode = false;
-	}
-	
+		
 	jsSetDiaryDate(0); //устанавливаю сегодняшнюю дату в дневнике в заголовке
 	
 	//preloader = $('#myloader').krutilka("show"); //глобально регистрирую крутилку
 	preloader = $('#myloader').krutilka({color: "#777777", petalWidth: "3px", size:"19"}); //глобально 
+	preloader.trigger("hide");
 				
 	$(window).bind('hashchange', jsSethash ); //при смене хеша, запускать функцию перехода на заметку
 			
@@ -1781,7 +1765,7 @@ function jsShowTreePanel() {//запускается единожды
       	if(!id) id = api4tree.jsCreate_or_open(["_НОВОЕ"]).toString();
     }
 				
-	if(!isTree) {
+	if(true) {
 	  	if(!(!id)) {
 		  			api4panel.jsOpenPath( id ); //перехожу на заметку в hash
   		}
