@@ -89,6 +89,14 @@ $(document).ready(jsDoFirst);
 <div id="header">
 	<div id="logo"><img src="img/4tree-logo.png" width="498" height="150"></div>
 	<div id="login">
+		<?
+		
+		$last_user_id = $_COOKIE['4tree_user_id'];
+		if($last_user_id)
+		echo '
+		<a href="./home/index.php" id="login_now" style="font-size:11px;float:right;margin-bottom:10px;">Вход в открытое дерево</a><br>
+		';
+		?>
 		<a href="./login.php?login_me" id="login_now">Вход</a><br>
     <a href="./login.php?reg_me" id="login_now">Регистрация</a><br>
 	</div>
