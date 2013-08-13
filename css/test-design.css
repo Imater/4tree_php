@@ -311,13 +311,15 @@ body.left_panel_hide .top_panel {
 }
 
 .tree_add_new_element {  
-font-size: 20px;
+font-size: 13px;
 float: right;
 border-left: 1px solid #616161;
-padding-left: 20px;
-line-height: 27px;
+padding-left: 10px;
+font-style: normal !important;
+font-family: Tahoma;
+line-height: 22px;
 height: 27px;
-width: 43px;
+width: 95px;
 vertical-align: middle;
 text-align: left;
 }
@@ -333,14 +335,16 @@ text-align: left;
 
 .tree_add_new_element .icon-plus {  
 height: 20px;
+font-family: Tahoma;
+font-style: inherit;
 cursor: pointer;
 display: inline-block;
-margin-top: 4px;
+margin-top: 3px;
 }
 
 .tree_add_new_element .icon-down-dir-1 {
 position: absolute;
-top: 8px;
+top: 9px;
 right: 2px;
 font-size: 12px;
 cursor: pointer;

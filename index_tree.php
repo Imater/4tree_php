@@ -470,7 +470,7 @@ $(document).ready(function(){
 			</div>
 		
 			<div id="tree_add_new_element" class="tree_add_new_element" title="Добавить новое дело вниз">
-				<i class="icon-plus"></i>
+				<i class="icon-plus">Добавить</i>
 				<i class="icon-down-dir-1"></i>
 			</div>
 
