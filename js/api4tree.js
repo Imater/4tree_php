@@ -2397,7 +2397,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	jsSetTimeNow();
 		  },30000);
 
-			$.idleTimer(50000000*1000);
+			$.idleTimer(5*1000);
 			
 			window.onblur = function(){
 				$("#hotkeyhelper").hide();			
