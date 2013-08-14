@@ -2397,7 +2397,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  	jsSetTimeNow();
 		  },30000);
 
-			$.idleTimer(5*1000);
+			$.idleTimer(50000000*1000);
 			
 			window.onblur = function(){
 				$("#hotkeyhelper").hide();			
@@ -4054,6 +4054,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					api4tree.jsFind(new_element.id, { parent_id: -800} );
 					api4tree.jsFind(new_element.id, { parent_id: to_new_parent, title: pre_word+element.title} );	
 					
+					api4tree.jsFindLongText(id).done(function(text){
+						api4tree.jsFindLongText(new_element.id, text);
+					});
+					
 					console.info("Дублирую "+ element.title, id, to_new_parent, "new_id=", new_element.id);
 					
 					return new_element.id;
@@ -4903,7 +4907,7 @@ $.contextMenu({
   		       		{
   		       		is_changed = true;
 
-  		       		if(namefield=="id") {
+  		       		if(namefield=="id") { //если меняем id
 						
 						var element = record;
   		       			var old_id = id;
@@ -4936,10 +4940,12 @@ $.contextMenu({
 
   		       			if(my_all_parents["p"+old_id]) { //обход всех, у кого этот элемент является родителем и меняем старый id на новый
 	       					console.info("my_all_parents=", old_id);
+	       					var childs = [];
   		       				$.each(my_all_parents["p"+old_id], function(i,el){
-  		       					console.info("child=", el, el?el.id:"");
-  		       					if(el) api4tree.jsFind(el.id,{parent_id:new_id});
-  		       					if(el) console.info("Установил ребёнку ("+el.id+") нового родителя =",new_id);
+  		       					childs.push(el.id);
+  		       				});
+  		       				$.each(childs, function(i,el){
+  		       					api4tree.jsFind(el,{parent_id:new_id});
   		       				});
   		       				my_all_parents.renameProperty("p"+old_id, "p"+new_id); //переименовываем в массиве родителей
   		       				console.info("Переименовал родителя ("+old_id+") в =",new_id,my_all_parents["p"+new_id]);
@@ -5851,47 +5857,52 @@ $.contextMenu({
 			
 			return element;
 		 }
+		 
+		 var update_timer1;
 		     		  
 		 //кэширует в базе tmp_next (id следующего по дате дела)    
 		 this.jsUpdateNextAction = function(id) {
-		 	console.info("jsUpdateNextAction",id);
-			this_db.log("Start filter Date");
-			var answer = []
-			$.each(my_all_data2, function(i, el) {
-			    if(el.tmp_nextdate) {  //стираю временные поля установленные ранее
-			   		this_db.jsFind(el.id,{tmp_nextdate:"",
-			   							  tmp_next_id:"", 
-			   							  tmp_next_title:""});
-			    }
-			    if (!((el.del==1) || (el.did!=0)) && el && el.date1!="" ) answer.push(el);
-			});
-			
-			//console.info("Найдено "+answer.length+" записей с датой");
-			
-			$.each(answer,function(i,el) { //обходим все элементы с датой
-			    var id_parent = el.id;
-			    var j=0,old_id;
-			    
-			    while(j<50) {//не больше 50 уровней вложенности, чтобы исключить бесконечность
-			    	old_id = id_parent;
-			    	element = this_db.jsFind(id_parent);
-			    	if(!element) {j++; console.info(id_parent,"!!!Не обнаружен"); continue;}
-			    	id_parent=element.parent_id;
-			    	
-			    	if( ((!element.tmp_nextdate) || (element.tmp_nextdate > el.date1)) && (el.id!=element.id)) {
-			    		element.tmp_nextdate = el.date1; //устанавливаю новые поля
-			    		element.tmp_next_id = el.id;
-			    		element.tmp_next_title = el.title;
-			    		this_db.jsFind(element.id,{tmp_nextdate:el.date1,
-			    								   tmp_next_id:el.id, 
-			    								   tmp_next_title:el.title});
-			    	}
-			    	
-			    	if((id_parent==1) || (!id_parent)) break;
-			    	j++;
-			    }
-			 });
-			 this_db.log("finish jsUpdateNextAction");
+		 	clearTimeout(update_timer1);
+		 	update_timer1 = setTimeout(function(){			 	
+				 	console.info("jsUpdateNextAction",id);
+					this_db.log("Start filter Date");
+					var answer = []
+					$.each(my_all_data2, function(i, el) {
+					    if(el.tmp_nextdate) {  //стираю временные поля установленные ранее
+					   		this_db.jsFind(el.id,{tmp_nextdate:"",
+					   							  tmp_next_id:"", 
+					   							  tmp_next_title:""});
+					    }
+					    if (!((el.del==1) || (el.did!=0)) && el && el.date1!="" ) answer.push(el);
+					});
+					
+					//console.info("Найдено "+answer.length+" записей с датой");
+					
+					$.each(answer,function(i,el) { //обходим все элементы с датой
+					    var id_parent = el.id;
+					    var j=0,old_id;
+					    
+					    while(j<50) {//не больше 50 уровней вложенности, чтобы исключить бесконечность
+					    	old_id = id_parent;
+					    	element = this_db.jsFind(id_parent);
+					    	if(!element) {j++; console.info(id_parent,"!!!Не обнаружен"); continue;}
+					    	id_parent=element.parent_id;
+					    	
+					    	if( ((!element.tmp_nextdate) || (element.tmp_nextdate > el.date1)) && (el.id!=element.id)) {
+					    		element.tmp_nextdate = el.date1; //устанавливаю новые поля
+					    		element.tmp_next_id = el.id;
+					    		element.tmp_next_title = el.title;
+					    		this_db.jsFind(element.id,{tmp_nextdate:el.date1,
+					    								   tmp_next_id:el.id, 
+					    								   tmp_next_title:el.title});
+					    	}
+					    	
+					    	if((id_parent==1) || (!id_parent)) break;
+					    	j++;
+					    }
+					 });
+					 this_db.log("finish jsUpdateNextAction");
+		 	}, 500);
 		 } //jsUpdateNextAction
 		    
 		 //кэширует в базе кол-во комментариев

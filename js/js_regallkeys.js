@@ -1880,7 +1880,7 @@ function jsMakeLeftRightPanelResizable() //настраиваю ресайзы �
 
 
 
-if(false)
+if(true)
   $("body").on('mousedown.presize','.presize', function(e)
      { 
 			  e.preventDefault();
@@ -1888,6 +1888,7 @@ if(false)
 			  var oldleft = e.pageX-25;		
 			  var oldwidth = widthpanel.prev(".panel").width();
 			  $('.bottom_left,.resize_me i').addClass('noselectable');
+			  jsTitle("Можно регулировать ширину всех панелей, если удерживать Shift",10000);
 
 		$("body").on("mousemove.presize",function(e){
 			  neww = oldwidth - oldleft+e.pageX-25;			  
