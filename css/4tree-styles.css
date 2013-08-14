@@ -321,8 +321,8 @@ position: absolute;
 left: 20px;
 right: 20px;
 top:0px;
-color: #FFF;
-text-shadow:none;
+color: #000;
+text-shadow: 0px 1px 0px #ССС;
 }
 
 #add_do_panel
@@ -826,6 +826,33 @@ margin-top: 55px;
 width: 5px;
 text-align: center;
 cursor: col-resize;
+z-index: 6;
+bottom: 0px;
+}
+
+#resize_me_right
+{
+position: absolute;
+top: 0px;
+left: 0px;
+height: auto;
+width: 4px;
+text-align: center;
+cursor: col-resize;
+z-index: 5;
+bottom: 0px;
+}
+
+
+#resize_me1
+{
+position: absolute;
+bottom: 0px;
+left: 0px;
+right:0px;
+height: 4px;
+text-align: center;
+cursor: row-resize;
 z-index: 6;
 bottom: 0px;
 }

@@ -94,6 +94,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 			imageDeleteCallback: false,
 			fileUploadCallback: false,
 			fileUploadErrorCallback: false,
+			undoCallback: false,
 
 			// settings
 			rangy: false,
@@ -1106,8 +1107,11 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 				if (ctrl && key === 90 && !e.shiftKey && !e.altKey) // z key
 				{
 					e.preventDefault();
+					this.callback('undo'); //4TREE
+					/*
 					if (this.opts.buffer.length) this.bufferUndo();
 					else this.document.execCommand('undo', false, false);
+					*/
 					return;
 				}
 				// undo

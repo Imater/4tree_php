@@ -1624,7 +1624,11 @@ function onResize() //вызывается при каждом ресайзе с
 
 			$("#tree_editor .all_editor_place").css('bottom',main_y);
 			$("#tree_editor .calendar_and_others").css('height',main_y);
+			$("#tree_center").css('height',main_y_top-1);
+			$(".all_editor_place").css('top',main_y_top);
 			
+			$("#tree_right_panel").css("width",main_x_right-1);
+			$("#tree_editor").css("right",main_x_right);
 			
 			var newheight=$('#calendar').parent("div").height()-30-10;
 			if( $("#content1").hasClass("v3")  ) newheight += 0;

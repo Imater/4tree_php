@@ -23,6 +23,12 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 <script src="sjcl/sjcl.js"></script>
 <!--<script src="sjcl/core/aes.js"></script> -->
 <script src="js/rangy-selectionsaverestore.js"></script>
+
+<link rel="stylesheet" href="css/hightlight/default.css">
+<link rel="stylesheet" href="css/hightlight/github.css">
+
+<script src="js/highlight.pack.js"></script>
+
 <?
 if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)   
         $gz='gz';
@@ -119,7 +125,7 @@ $(document).ready(function(){
 
 </head>
 
-<body onResize="onResize();" class="">
+<body onResize="onResize();" class="params_hide hide_right_panel">
 
 <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 
@@ -299,6 +305,7 @@ $(document).ready(function(){
 	  
 	  
 	  	  <div id="tree_right_panel" class="noselectable">
+		  	<div id="resize_me_right"></div>
 		  	<div id="top_panel_header_right">
 			</div>
 			<div id="right_tags">
@@ -517,6 +524,7 @@ $(document).ready(function(){
 			  	      <div class="mypanel" style="" id="tree_2">
 			  	      </div>
 			  	  </div>
+			  <div id="resize_me1"></div>
 		  	  </div>
 	  		  
 	  		  <div class="all_editor_place" class="needsclick">

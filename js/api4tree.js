@@ -1992,7 +1992,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 		      
 		      $(".tree_view_center").on("click",function(){
-		      	$("body").toggleClass("params_open");
+		      	$("body").toggleClass("params_hide");
 				api4tree.jsCurrentOpenPanelsAndTabsSave();
 				return false;		      	
 		      });
@@ -2003,7 +2003,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      });
 		      
 		      $(".tree_view_right,.tree_footer .icon-left-open.right").on("click",function(){
-		      	$("body").toggleClass("show_right_panel");
+		      	$("body").toggleClass("hide_right_panel");
 				api4tree.jsCurrentOpenPanelsAndTabsSave();		      	
 		      });
 		      
@@ -2176,9 +2176,45 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	});
 
 			 //джойстик управляет размером 3х окон и запускает синхронизацию
+			 $('#resize_me_right').mousedown( function(e) {
+			       e.preventDefault();
+	       		   var move_t;
+	       		   var parent_div_height = $("body").width();
+			       $("body").mousemove(function(e) {
+		     			  main_x_right = parent_div_height-e.pageX;//высота верхней панели в пикселях
+			     		  onResize();	
+			     	});
+			   
+			       $("body").mouseup( function() {
+			         	$("body").unbind("mousemove");
+			         	localStorage.setItem('main_x_right',main_x_right);	
+			         	jsMakeDrop();		
+			          	return false;
+			       });
+			  }); //mousedown
+
+
+			 //джойстик управляет размером 3х окон и запускает синхронизацию
+			 $('#resize_me1').mousedown( function(e) {
+			       e.preventDefault();
+	       		   var move_t;
+	       		   var parent_div_height = $("#tree_center").offset().top;
+			       $("body").mousemove(function(e) {
+		     			  main_y_top = e.pageY - parent_div_height;//высота верхней панели в пикселях
+			     		  onResize();	
+			     	});
+			   
+			       $("body").mouseup( function() {
+			         	$("body").unbind("mousemove");
+			         	localStorage.setItem('main_y_top',main_y_top);	
+			         	jsMakeDrop();		
+			          	return false;
+			       });
+			  }); //mousedown
+
+			 //джойстик управляет размером 3х окон и запускает синхронизацию
 			 $('#resize_me2').mousedown( function(e) {
 			       e.preventDefault();
-			   			   
 	       		   var move_t;
 	       		   var parent_div_height = $("body").height();
 			       $("body").mousemove(function(e) {
@@ -2191,14 +2227,11 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			     	});
 			   
 			       $("body").mouseup( function() {
-			         	
 			         	$("body").unbind("mousemove");
 			         	localStorage.setItem('main_y',main_y);	
 			         	jsMakeDrop();		
 			          	return false;
 			       });
-			
-			
 			  }); //mousedown
 
 
@@ -2961,7 +2994,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			  to_save.is_left_open = !( $("body").hasClass("left_panel_hide") );
 			  to_save.is_show_pomidors = $("#tree_left_panel").hasClass("show_pomidors");
-			  to_save.is_show_top_tree = $("#tree_editor").hasClass("params_open");
+			  to_save.is_show_top_tree = $("body").hasClass("params_hide");
+			  to_save.is_show_right_panel = !$("body").hasClass("hide_right_panel");
 
 			  to_save.top_tabs = [];
 			  $("#tree_header .tree_tab_menu li:not(.temp)").each(function(i,el) {
@@ -2992,7 +3026,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  		$("#tree_left_panel").addClass("show_pomidors");
 				  }
 				  if(to_load.is_show_top_tree) {
-				  		$("#tree_editor").addClass("params_open");
+				  		$("body").addClass("params_hide");
+				  } else {
+				  		$("body").removeClass("params_hide");
+				  }
+				  if(!to_load.is_show_right_panel) {
+				  		$("body").addClass("hide_right_panel");
+				  } else {
+				  		$("body").removeClass("hide_right_panel");
 				  }
 				  
 				  $.each(to_load.top_tabs, function(i, el){
@@ -7189,6 +7230,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 				}
 				//console.profile("loading_text");
 				myr.redactor("set",  mytext, false ); //загружаю текст в редактор
+				$('.redactor_box pre').each(function(i, e) { hljs.highlightBlock(e); });
 				dfd.resolve();
 				//console.profileEnd("loading_text");
 //			    setTimeout(function() {api4editor.save_text_dif_snapshot(mytext); }, 1000);

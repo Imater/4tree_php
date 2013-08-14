@@ -246,25 +246,31 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 	margin: 0px 15px 42px 15px; 
 }
 
-.params_open .all_editor_place
+.all_editor_place
 {
 	top: 250px;
 }
 
-.params_open #open_params .arrow:before {
-	content: "\e75f";
-}
+.params_hide .all_editor_place {
+	top: 0px !important;
+} 
 
 #tree_editor.bottom_open .all_editor_place
 {
 	bottom: 300px;
 }
 
-.show_right_panel #tree_editor {
+#tree_editor {
 	right: 200px;
 }
 
-.show_right_panel #right-panel-arrow:before {
+.hide_right_panel #tree_editor {
+	right: 0px !important;
+}
+
+
+
+.hide_right_panel #right-panel-arrow:before {
 	content: "\e75e";
 }
 
@@ -747,6 +753,12 @@ z-index: 5;
 .tree_footer i {
 	display: inline-block;
 	cursor: pointer;
+}
+
+.tree_footer i:hover {
+	display: inline-block;
+	cursor: pointer;
+	color: #000;
 }
 
 .tree_footer .float_right {
@@ -1403,9 +1415,14 @@ overflow: hidden;
 	border-right: 5px solid rgba(255,255,255,0.35);	
 }
 
-.show_right_panel .tree_view_right {
+.tree_view_right {
 	box-shadow: inset 0px 0px 3px #000;
 	background: rgba(0,0,0,0.5);
+}
+
+.hide_right_panel .tree_view_right {
+	box-shadow: none;
+	background: none;
 }
 
 .tree_view_left {
@@ -1418,17 +1435,27 @@ overflow: hidden;
 	background: none;
 }
 
-.params_open .tree_view_center {
+.tree_view_center {
 	box-shadow: inset 0px 0px 3px #000;
 	background: rgba(0,0,0,0.5);
 }
+
+.params_hide .tree_view_center {
+	box-shadow: none;
+	background: none;
+}
+
 
 .left_panel_hide .tree_footer .icon-left-open.left:before {
 	content: "\e75e";
 }
 
-.show_right_panel .tree_footer .icon-left-open.right:before {
+.tree_footer .icon-left-open.right:before {
 	content: "\e75e";
+}
+
+.hide_right_panel .tree_footer .icon-left-open.right:before {
+	content: "\e75d";
 }
 
 .context-menu-item b {
@@ -1441,4 +1468,6 @@ overflow: hidden;
 .context-menu-item b i:before {
 	margin-right: -4px;
 }
+
+
 
