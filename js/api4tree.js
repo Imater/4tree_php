@@ -4030,7 +4030,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	            	return false;
 		        } else if(key=="dublicate") {
 
-					jsDublicate(id);		        
+					api4tree.jsClone(id);		        
 			 	    jsRefreshTree();
 
 			        
@@ -4038,7 +4038,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  }
 		  
 		  
-		  function jsDublicate(id) {
+		  function jsDublicate(id, to_new_parent, is_first_level) {
 		        	var element = api4tree.jsFind(id);
 			 	    var copy = clone( element );
 			 	    var newposition = element.position + 0.3;
@@ -4048,8 +4048,39 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 		copy.newposition = newposition;
 			 		my_all_data2["n"+new_element.id] = copy;
 					
+					if(is_first_level) { var pre_word = "Копия "; } else 
+									   { var pre_word = ""; }
+					
 					api4tree.jsFind(new_element.id, { parent_id: -800} );
-					api4tree.jsFind(new_element.id, { parent_id: element.parent_id, title: "Копия "+element.title} );			  				return new_element.id;
+					api4tree.jsFind(new_element.id, { parent_id: to_new_parent, title: pre_word+element.title} );	
+					
+					console.info("Дублирую "+ element.title, id, to_new_parent, "new_id=", new_element.id);
+					
+					return new_element.id;
+		  }
+		  
+		  this.jsClone = function(id) {
+		  	  var show_did_was = settings.show_did;
+			  settings.show_did = true;
+
+			  var parent_id = api4tree.jsFind(id).parent_id;
+			  
+			  jsCloneChilds(id, parent_id, "first_level");
+
+			  settings.show_did = show_did_was;
+		  }
+
+		  function jsCloneChilds(id, new_parent_id, is_first_level) {
+			  var clone_parent_id = jsDublicate(id, new_parent_id, is_first_level);
+		  	  
+		  	  var childs = api4tree.jsFindByParent(id);
+		  	  if(childs.length>0) {
+				  $.each(childs, function(i, the_child) {
+					 jsCloneChilds(the_child.id, clone_parent_id); 
+				  });
+			  	  
+		  	  }
+		  	  
 		  }
 		  
 		  ///////////////////////////////////////////////////////////////////
@@ -4904,9 +4935,11 @@ $.contextMenu({
   		       			record = answer = my_all_data2["n"+newvalue];
 
   		       			if(my_all_parents["p"+old_id]) { //обход всех, у кого этот элемент является родителем и меняем старый id на новый
+	       					console.info("my_all_parents=", old_id);
   		       				$.each(my_all_parents["p"+old_id], function(i,el){
-  		       					api4tree.jsFind(el.id,{parent_id:new_id});
-  		       					console.info("Установил ребёнку ("+el.id+") нового родителя =",new_id);
+  		       					console.info("child=", el, el?el.id:"");
+  		       					if(el) api4tree.jsFind(el.id,{parent_id:new_id});
+  		       					if(el) console.info("Установил ребёнку ("+el.id+") нового родителя =",new_id);
   		       				});
   		       				my_all_parents.renameProperty("p"+old_id, "p"+new_id); //переименовываем в массиве родителей
   		       				console.info("Переименовал родителя ("+old_id+") в =",new_id,my_all_parents["p"+new_id]);

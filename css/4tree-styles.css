@@ -531,6 +531,23 @@ padding-top: 0px;
 padding-bottom: 0px;
 }
 
+#tree_2 .panel ul li
+{
+padding-left: 5px;
+}
+
+#tree_1 .panel ul li
+{
+border-left: 1px solid #CCC;
+}
+
+#tree_1 ul div li:nth-last-child(2)
+{
+font-size: red;
+border-bottom-left-radius: 10px;
+padding-bottom: 0px;
+}
+
 .panel ul li:first-child
 {
 padding-top: 6px;
@@ -2140,6 +2157,7 @@ padding-top: 3px;
 
 .icon-play-div
 {
+margin-left: -0.08em;
 font-size:1.15em;
 display: inline-block;
 }
