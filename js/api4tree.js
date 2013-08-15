@@ -5160,7 +5160,7 @@ $.contextMenu({
 			  var element = api4tree.jsFind(id);
 			  
 			  if(element) {
-				  if(element.tmp_undo && element.tmp_undo != "[]") {
+				  if(element.tmp_redo && element.tmp_redo != "[]") {
 					var tmp_redo = JSON.parse( element.tmp_redo );
 				  } else {
 				  	var tmp_redo = [];
@@ -5233,7 +5233,7 @@ $.contextMenu({
 			  element = api4tree.jsFind(id);
 			  
 			  if(element) {
-				  if(element.tmp_undo) {
+				  if(element[tmp_redo]) {
 					var tmp_undo = JSON.parse( element[tmp_redo] );
 				  } else {
 				  	var tmp_undo = [];

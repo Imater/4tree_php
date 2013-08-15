@@ -2484,8 +2484,7 @@ pushstream.onstatuschange = _statuschanged;
 
 function jsRedactorInsert(what_insert) {
 	api4panel.jsCloseAllMenu();
-	$(".redactor_").focus();
-	$('#redactor').redactor('setCaret', last_cursor, last_cursor_offset);
+	api4editor.jsRestoreCursor();
 	
 	if(what_insert == "checkbox") {
 		var node=$('<l><input type=checkbox>&nbsp;</l>'); 		
