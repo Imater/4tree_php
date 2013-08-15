@@ -154,6 +154,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 
 
 body {
+height: 100%;
 font-size: 14px;
 margin:0px;
 padding: 0px;

@@ -850,7 +850,7 @@ function jsFixScroll(type,only_selected_panel)
 function jsSetHashAndPath(new_id) {
 	var id_hash = parseInt(new_id).toString(36);
 
-	var mypath = api4tree.jsFindPath( api4tree.jsFind( new_id ) );
+/*	var mypath = api4tree.jsFindPath( api4tree.jsFind( new_id ) );
 	if(!mypath) return true;
 	var new_path = "";
 
@@ -858,12 +858,12 @@ function jsSetHashAndPath(new_id) {
 		  new_path += "/";
 		  new_path += strip_tags(el.path.title).trim().replace(/ /ig,"_");
 
-	});
+	});*/
 
 
 
 
-	window.location.hash = new_path+"/"+id_hash;
+	window.location.hash = id_hash; //new_path+"/"+
 }
 
 function jsSethash(dont_open)

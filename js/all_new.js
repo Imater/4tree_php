@@ -97,6 +97,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	open_redactor_timer = setTimeout(function()
 		 		{
 
+			 	if(iamfrom != "from_history") {
+			 		api4panel.jsSaveIdToHistory( $(".tree_active").attr("id"), id); //сохраняю в истории переходов
+			 	}
+
 			 	$("#wiki_back_button").hide();
 			 	clearTimeout(hash_timer);
 			 	
@@ -279,6 +283,14 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			this.jsOpenFolder = function(tree_id, id) {
 				alert(1);
 			} 
+
+		    //Клик в LI открывает детей этого объекта LILILI
+    	    $('.mypanel').delegate("li","dblclick", function () {
+    	    	var tree_id = $(this).parents(".mypanel").addClass("tree_active").attr("id");
+   	        	var id = api4tree.node_to_id( $(this).attr("id") );
+				api4panel.jsShowFocus(tree_id, id);    	    	
+    	    });
+
 			 
 		    //Клик в LI открывает детей этого объекта LILILI
     	    $('.mypanel').delegate("li","click", function () {
@@ -441,12 +453,69 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		      	log_i++;
 		    }
 		 } //log
+		 
+		 
+		 $(".tree_history_arrows").on("click","i",function() {
+			var isBack = $(this).attr("class").indexOf("left");
+			if(isBack) api4panel.jsHistoryBack();
+		 });
+		 
+		 var my_all_history = { 
+		 						"tree_1": { "list":[], current:"0", focus_id:"1" },
+								"tree_2": { "list":[], current:"0", focus_id:"1" } 
+							  };
+
+		 this.jsHistoryBack = function() {
+		 	 
+			 var tree_id = $(".tree_active").attr("id");
+			 var now_focus_id = $(".tree_active").attr("focus_id");
+			 
+			 var the_list = my_all_history[tree_id]["list"];
+			 
+			 var prev_element = the_list[ the_list.length-2 ];
+			 
+			 if(prev_element) {
+			 	
+			 	
+			 	 if( now_focus_id!=prev_element.focus_id ) {
+				 	 api4panel.jsShowFocus(tree_id, prev_element.focus_id);
+			 	 }
+			 	 
+				 api4panel.jsOpenPath( prev_element.id, "from_history" );
+				 the_list = the_list.slice(0, the_list.length-1); //-1 так как там предыдущий элемент
+				 my_all_history[tree_id]["list"] = the_list;
+				 console.info("now_to", the_list); 
+			 }
+			 console.info("Hist_back", the_list);
+			 
+		 }
+
+		 this.jsSaveIdToHistory = function (tree_id, id) {
+		    
+			 var focus_id = $(".tree_active").attr("focus_id");
+			 focus_id = focus_id?focus_id:1;
+
+		 	 var history_item = {};
+		 	 history_item.id = id;
+		 	 history_item.tree_id = id;
+		 	 history_item.focus_id = focus_id;
+		 	 history_item.isFolder = api4tree.jsFindByParent(id).length>0;
+		 	 history_item.title = api4tree.jsFind(id).title;
+		 	 
+			 my_all_history[tree_id]["list"].push( history_item );
+//			 my_all_history[tree_id]["current"] = my_all_history[tree_id]["list"].length-1;
+			 
+			 console.info("!!!SAVED History:", my_all_history );
+		 }
 		 		 		 	
 		 //открывает путь до указанного элемента
 		 this.jsOpenPath = function( id, iamfrom ) {
 
+			 
+
  		 	var isTree = false;
 			isTree = $(".tree_active").parent("div").hasClass("panel_type1");
+
 
 		   if(id != parseInt(id)) return false;
 		   if(!$(".mypanel.tree_active #node_"+id).is(":visible")) {
@@ -472,7 +541,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
 		   }//if length
 		 	api4panel.jsOpenNode(id, false,iamfrom);
-		 	if(iamfrom!="divider_click") api4panel.jsSelectNode( id , false,iamfrom);
+		 	if(iamfrom!="divider_click") api4panel.jsSelectNode( id , iamfrom);
 		   
 		 	findli = $('.tree_active #node_'+id);
 		 	findli.addClass("tree-open");
@@ -751,7 +820,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		  	 var parent_id = id;
 		 	 $("#"+tree_id+".mypanel").html("<div id='panel_"+parent_id+"' class='panel'><ul myid='"+parent_id+"'></ul></div>").attr("focus_id",parent_id);
 			 api4panel.jsShowTreeNode(tree_id, parent_id, false);
+			 var first_id = $("#"+tree_id+" li:first").attr("myid");
+			 api4panel.jsSelectNode(first_id);
 		 }
+		 
 		 
 		 //функция отображения панели для дерева		 
 		 this.jsShowTreeNode = function(tree_id, parent_node,isTree1,other_data, where_to_add) {
