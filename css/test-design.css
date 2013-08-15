@@ -1026,7 +1026,7 @@ padding-left: 1px;
 z-index: 5;
 cursor: pointer;
 float: none;
-position: absolute;
+position: relative;
 }
 
 .add_tab:hover {

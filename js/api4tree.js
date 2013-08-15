@@ -337,8 +337,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  	{
 			  	myr.redactor("set", newtxt);
 			  	note_saved = false;
-			  	$(".redactor_").focus();
-			  	$('#redactor').redactor('setCaret', last_cursor, last_cursor_offset);
+			  	api4tree.jsRestoreCursor();
 			    api4editor.jsSaveAllText(1);
 			    api4tree.jsParseWikiLinks(myr.attr("myid"));
 			  	}
@@ -3983,6 +3982,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  //////////////////////////////////////////////////////////////////
 		  jsNeedAction = function(key, options) { //выполнение всех действий контекстновго меню дел
 			   	var id = api4tree.node_to_id( $(".tree_active .selected").attr('id') ); 
+	        	var tree_id = $(".tree_active").attr("id");
 			   	
 	            if( key=="add_down" ) {
 		            api4tree.jsAddDoLeftRight('down');
@@ -4031,9 +4031,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		        } else if(key=="dublicate") {
 
 					api4tree.jsClone(id);		        
-			 	    jsRefreshTree();
-
-			        
+			 	    jsRefreshTree();			        
+		        } else if(key=="focus_in") {
+			        api4panel.jsShowFocus(tree_id, id);
+		        } else if(key=="focus_out") {		        	
+			        api4panel.jsShowFocus(tree_id, 1);
+			        api4panel.jsOpenPath(id);
 		        }
 		  }
 		  
@@ -4203,10 +4206,10 @@ $.contextMenu({
 	            }
             },
 
-            "context_make_did1011": {"name": "Просмотр", "icon": "icon-eye", "disabled":true,
+            "context_make_did1011": {"name": "Просмотр", "icon": "icon-eye", 
 	            "items": {
-					"context_make_did2": {"name": "Фокус", "icon": "icon-zoom-in"},
-					"context_make_did3": {"name": "Фокус снять", "icon": "icon-zoom-out"},
+					"focus_in": {"name": "Фокус", "icon": "icon-zoom-in"},
+					"focus_out": {"name": "Фокус снять", "icon": "icon-zoom-out"},
 					"context_make_did4": {"name": "Редактировать вложенные заметки", "icon": "icon-th-list-2"},
 					"context_make_did5": {"name": "Цвет папки", "icon": "icon-right"},
 					"sep611": "---------",
@@ -5158,14 +5161,14 @@ $.contextMenu({
 			  
 			  if(element) {
 				  if(element.tmp_undo && element.tmp_undo != "[]") {
-					var tmp_undo = JSON.parse( element.tmp_undo );
+					var tmp_redo = JSON.parse( element.tmp_redo );
 				  } else {
-				  	var tmp_undo = [];
+				  	var tmp_redo = [];
 				  }				  
 			  
-			  if(tmp_undo.length==0) return false;
+			  if(tmp_redo.length==0) return false;
 			  
-			  var last_step_in_history = tmp_undo[tmp_undo.length-1];
+			  var last_step_in_history = tmp_redo[tmp_redo.length-1];
 			  var delta = last_step_in_history.delta;
 
 			  var restored_text = diff_plugin.patch_apply(delta, text)[0];
@@ -5174,9 +5177,9 @@ $.contextMenu({
 				  var element = api4tree.jsFind(id);
 			  	  api4editor.jsRefreshRedactor(element);
 				  console.info( last_step_in_history.md5, "?=" ,crc32(restored_text), restored_text );
-				  tmp_undo = tmp_undo.slice(0,tmp_undo.length-1); //удаляем использованную delta
-				  var json_tmp = JSON.stringify(tmp_undo);
-				  api4tree.jsFind(id, {tmp_undo: json_tmp } );				 				  
+				  tmp_redo = tmp_redo.slice(0,tmp_redo.length-1); //удаляем использованную delta
+				  var json_tmp = JSON.stringify(tmp_redo);
+				  api4tree.jsFind(id, {tmp_redo: json_tmp } );				 				  
 			  }); 
 			  
 			  }
@@ -5189,6 +5192,8 @@ $.contextMenu({
 			  var element = api4tree.jsFind(id);
 			  
 			  if(element) {
+			  
+			  
 				  if(element.tmp_undo && element.tmp_undo != "[]") {
 					var tmp_undo = JSON.parse( element.tmp_undo );
 				  } else {
@@ -5202,6 +5207,8 @@ $.contextMenu({
 
 			  var restored_text = diff_plugin.patch_apply(delta, text)[0];
 
+			  api4tree.save_text_dif_snapshot(id, restored_text, "tmp_redo"); //сохраняем для redo
+
 			  api4tree.jsFindLongText(id, restored_text).done(function(x) { //сохраняю восстановленный текст
 				  var element = api4tree.jsFind(id);
 			  	  api4editor.jsRefreshRedactor(element);
@@ -5218,14 +5225,16 @@ $.contextMenu({
 			  
 		  }
 		  
-		  this.save_text_dif_snapshot = function(id, text) {
+		  this.save_text_dif_snapshot = function(id, text, tmp_redo) {
+		  	  var tmp_redo = tmp_redo?tmp_redo:"tmp_undo";
 		      var d=$.Deferred();
+		      
 
 			  element = api4tree.jsFind(id);
 			  
 			  if(element) {
 				  if(element.tmp_undo) {
-					var tmp_undo = JSON.parse( element.tmp_undo );
+					var tmp_undo = JSON.parse( element[tmp_redo] );
 				  } else {
 				  	var tmp_undo = [];
 				  }				  
@@ -5244,7 +5253,9 @@ $.contextMenu({
 					  if(tmp_undo.length>100) tmp_undo=tmp_undo.slice(1);
 	
 					  var json_tmp = JSON.stringify(tmp_undo);
-					  api4tree.jsFind(id, {tmp_undo: json_tmp } );
+					  var to_save = {};
+					  to_save[tmp_redo] = json_tmp;
+					  api4tree.jsFind(id, to_save );
 					  d.resolve();					  
 				  });
 
@@ -7088,10 +7099,15 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  
 
 		  $(".all_editor_place").on("click", ".redactor_editor", function(){
-			  jsSaveCurrentCursor();
+			  api4editor.jsSaveCurrentCursor();
 		  });
+		  
+		  this.jsRestoreCursor = function() {
+ 			  	$(".redactor_").focus();
+			  	$('#redactor').redactor('setCaret', last_cursor, last_cursor_offset);
+		  }
 
-		  function jsSaveCurrentCursor(){
+		  this.jsSaveCurrentCursor = function(){
 		  	   var cursor = $('#redactor').redactor('getCurrent');
 		  	   if(cursor) {
 		  		   var offset = $('#redactor').redactor('getCaretOffset', cursor);
@@ -7116,9 +7132,10 @@ var API_4EDITOR = function(global_panel_id,need_log) {
   					  //console.info("start_change_timer");
   					  clearTimeout(my_autosave);
   					  my_autosave = setTimeout( function() { 
-	  					  jsSaveCurrentCursor();
+  					  	  console.info("savetext");
+	  					  api4editor.jsSaveCurrentCursor();
   					      api4editor.jsSaveAllText(1); 
-  					  }, 500 );
+  					  }, 90 );
 		  }			  
 		  
 		  function refresh_file_panel() {

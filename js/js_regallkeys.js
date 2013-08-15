@@ -1424,7 +1424,12 @@ function jsSnapShotApply(tree_id, snapshot)
 		$("#"+tree_id).addClass("tree_active");
 	}
 	
-	api4panel.jsShowTreeNode("tree_1",1,false);
+	
+	var focus_id = $("#"+tree_id).attr("focus_id");
+	if(!focus_id) focus_id = 1;
+	api4panel.jsShowFocus("tree_1", focus_id);
+	
+//	api4panel.jsShowTreeNode("tree_1",6223,false);
 
 //	$("#"+tree_id+" .selected").removeClass(".selected");
 //	$("#"+tree_id+" .old_selected").removeClass(".old_selected");

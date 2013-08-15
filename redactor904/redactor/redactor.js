@@ -1118,8 +1118,9 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 				else if (ctrl && key === 90 && e.shiftKey && !e.altKey)
 				{
 					e.preventDefault();
-					if (this.opts.rebuffer.length != 0) this.bufferRedo();
-					else this.document.execCommand('redo', false, false);
+					this.callback('redo'); //4TREE
+					/*if (this.opts.rebuffer.length != 0) this.bufferRedo();
+					else this.document.execCommand('redo', false, false); */
 					return;
 				}
 
@@ -3963,6 +3964,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 		// BUFFER
 		bufferSet: function(html)
 		{
+			console.info("bufferSet ");
 			if (html !== undefined) this.opts.buffer.push(html);
 			else
 			{

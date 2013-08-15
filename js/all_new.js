@@ -746,6 +746,13 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			return mydata;
 		 }
 		 
+		 this.jsShowFocus = function(tree_id, id) {
+		  	 var element = api4tree.jsFind(id);
+		  	 var parent_id = id;
+		 	 $("#"+tree_id+".mypanel").html("<div id='panel_"+parent_id+"' class='panel'><ul myid='"+parent_id+"'></ul></div>").attr("focus_id",parent_id);
+			 api4panel.jsShowTreeNode(tree_id, parent_id, false);
+		 }
+		 
 		 //функция отображения панели для дерева		 
 		 this.jsShowTreeNode = function(tree_id, parent_node,isTree1,other_data, where_to_add) {
 		 	
