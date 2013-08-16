@@ -814,6 +814,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				
 				$.getJSON(lnk,function(data){
 					my_tags = $.map(data, function(a) { return a });
+					if(my_tags) localStorage.setItem("my_tags",JSON.stringify(my_tags));
 					dfd.resolve();
 				});
 
@@ -840,25 +841,203 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  return answer;
     	  }
     	  
-    	  var output = "", tags_level = 0;
-    	  this.jsShowAllTags =function() {
-    	  	  output = "";
-    	  	  tags_level = 0;
-	    	  api4tree.jsShowAllTagsByParent(1);
-	    	  $("#right_tags").html(output);
-	    	  
-	    	  $("#tags_ul").sortable();
-	    	  $("#tags_ul ul").sortable();
-	    	  
-	    	  return output;
-    	  };
+
+		  this.jsLoadTagsFromLocalStorage = function() {
+     	  	  if(!my_tags || !my_tags.length) {
+  	          	  var my_tags_json = localStorage.getItem("my_tags");
+  	          	  if(my_tags_json) {
+					 my_tags = JSON.parse(my_tags_json);
+  	          	  }
+
+    	  	  }
+		  }
+
     	  
     	  $("#right_tags").on("click", ".label,.label_mini", function() {
 	    	  $(this).parent("li").find("ul:first").slideToggle(200);
 	    	  return false;
     	  });
     	  
+    	  $("#right_tags").on("click", ".tag_checkbox", function() {
+    	  	  $(this).toggleClass("checked");
+    	  	  
+    	  	  var tag_id = parseInt( $(this).parents("li:first").attr("myid") );
+			  var id = api4tree.node_to_id( $(".tree_active .selected").attr('id') );
+    	  	  
+    	  	  if($(this).hasClass("checked")) {
+	    	  	 api4tree.jsSetTagToId(id, tag_id);
+	    	  	 api4tree.jsRefreshAllTagsContent();
+	    	  	 api4panel.jsRefreshOneElement(id);
+    	  	  } else {
+	    	  	 api4tree.jsRemoveTagToId(id, tag_id);  
+	    	  	 api4tree.jsRefreshAllTagsContent();
+	    	  	 api4panel.jsRefreshOneElement(id);
+    	  	  }
+    	  	  return false;
+		  });    	
+		  
+    	  $("#right_tags").on("click", ".tags_content li", function() {
+    	  	  var id = $(this).attr("myid");
+    	  	  api4tree.jsSelectTag(id);
+    	  	  api4panel.jsOpenPath(id);
+    	  	  return false;
+    	  });
+		  
+		  this.jsSelectTag = function(id) {
+      	  	  $("#right_tags .tags_selected").removeClass("tags_selected");
+    	  	  $("#right_tags .tags_content li[myid='"+id+"']").addClass("tags_selected");
+		  }
+		  		  
+		  this.jsSetTagsCheckboxes = function(id) {
+		  		var element = api4tree.jsFind(id);
+  			    $("#right_tags .checked").removeClass("checked");
+			    if(element.smth) {
+			    	var tags_array = JSON.parse(element.smth);
+			    	var need_tags = tags_array["tags"];
+			    	$.each(need_tags, function(i,el) {
+						$("#right_tags li[myid="+el+"] .tag_checkbox:first").addClass("checked");
+			    	});
+			    }
+		  }
+
+		  		  
+		  this.jsGetTagsForElement = function(element) {
+		  	  if(!my_tags) return "";
+		  	  var answer = "";
+			  if(element.smth) {
+		    	  var smth = JSON.parse(element.smth);
+		    	  var tags = smth["tags"];
+		    	  answer = " <span class='tree_tags'>";
+		    	  $.each(tags, function(i, el){
+			    	  var the_tag = api4tree.jsFindTag(el);
+			    	  if(the_tag.length) {
+				    	  if(i!=0) var comma = " ";
+				    	  else comma = " ";
+				    	  answer += comma+"<b title='@"+the_tag[0].title+"'><a>"+the_tag[0].title+"</a></b>";
+			    	  }
+		    	  });
+		    	  answer += "</span>";
+			  } 
+			  return answer;
+		  }
+    	  
+    	  this.jsSetTagToId = function (id, tag_id) {
+	    	  var element = api4tree.jsFind(id);
+	    	  if(element.smth) {
+		    	  var smth = JSON.parse(element.smth);
+		      } else {
+		          var smth = {tags:[]};
+		      }
+
+	    	  var tags = smth["tags"];
+	    	  tags = tags?tags:[];
+        	  
+        	  if(tags.indexOf(tag_id)==-1) {
+        	  	tags.push( parseInt(tag_id) );
+        	  	smth["tags"] = tags;
+        	  	var save_smth = JSON.stringify(smth);
+        	  	
+        	  	api4tree.jsFind(id, {smth: save_smth});
+        	  } 
+        	  
+	    	  
+    	  }
+
+    	  this.jsRemoveTagToId = function (id, tag_id) {
+	    	  var element = api4tree.jsFind(id);
+	    	  if(element.smth) {
+		    	  var smth = JSON.parse(element.smth);
+		      } else {
+		          var smth = {tags:[]};
+		      }
+
+	    	  var tags = smth["tags"];
+	    	  tags = tags?tags:[];
+	    	  
+	    	  var sliced = false;
+	    	  $.each(tags, function(i,tag) {
+				  if(tag==tag_id) {
+				  	 tags.splice(i,1);
+				  	 console.info(tags);
+				  	 sliced = true;
+				  };
+	    	  });
+        	  
+        	  if(sliced) {
+        	  	smth["tags"] = tags;
+        	  	var save_smth = JSON.stringify(smth);
+        	  	
+        	  	api4tree.jsFind(id, {smth: save_smth});
+        	  } 
+        	  
+	    	  
+    	  }
+    	  
+    	  this.jsFindByTag = function (tag_id) { //все дела этого тега
+		      var answer = [];
+		      	$.each(my_all_data2, function(i,el) { //все дела с датами (нужно для календариков)
+  	            if(!el) return false;
+		      	if(el.smth) {
+		      		if ((el.del!=1) && ( (el.did=="") || settings.show_did==true ) ) {
+		      			var tags = JSON.parse(el.smth)["tags"];
+		      			if(tags.indexOf(tag_id)!=-1) answer.push(el);
+		      		}
+		      	}
+		      });		    	  
+		      return answer;
+    	  }
+    	  
+		  this.jsRefreshAllTagsContent = function() {
+		      var html_cache = $("#tags_ul").clone();
+		      html_cache.find(".tags_content").html("");
+		      html_cache.find(".count").html("0");
+		      
+		      var old_selected = $("#right_tags .tags_selected:first").attr("myid");
+		     
+		      
+		   	  $.each(my_all_data2, function(i,el) { //все дела с датами (нужно для календариков)
+  	            if(!el) return false;
+		      	if(el.smth) {
+		      		if ((el.del!=1) && ( (el.did=="") || settings.show_did==true ) ) {
+		      			var tags = JSON.parse(el.smth)["tags"];
+		      				$.each(tags, function(i, the_tag) {
+		      					var li = html_cache.find("li[myid='"+the_tag+"']");
+		      					li.find(".count:first").html( parseInt(li.find(".count:first").html())+1 );
+			      				var tags_ul = li.find(".tags_content:first");
+			      				
+			      				tags_ul.append("<li myid='"+el.id+"'><i class='icon-folder-1'></i>"+el.title+"</li>");
+		      				});
+		      		}
+		      	}
+		      });	
+		      
+		      $("#tags_ul").html(html_cache.html());
+
+			  api4tree.jsSelectTag(old_selected);
+
+	    	  $("#tags_ul").sortable();
+	    	  $("#tags_ul ul").sortable();
+			  
+		  }
+    	  
+    	  var output = "", tags_level = 0;
+    	  this.jsShowAllTags =function() {
+
+    	  	  output = "";
+    	  	  tags_level = 0;
+	    	  api4tree.jsShowAllTagsByParent(1);
+	    	  $("#right_tags").html(output);
+			  var id = api4tree.node_to_id( $(".tree_active .selected").attr('id') );
+	    	  api4tree.jsSetTagsCheckboxes(id);
+
+	    	  api4tree.jsRefreshAllTagsContent();
+	    	  	    	  
+	    	  return output;
+    	  };
+    	  
+    	  
     	  this.jsShowAllTagsByParent = function(parent_id) {
+    	      	  
 			  if(tags_level>50) return false;
     	  	  var top_tags = api4tree.jsFindTagsByParent(parent_id);
     	  	  if(top_tags.length>0) {
@@ -871,16 +1050,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	    	  	  }
 	    	  	  
 		    	  $.each(top_tags, function(i,el) {
-		    	  	output += '<li class="'+isTop+'">';
+		    	  	output += '<li myid="'+el.id+'" class="'+isTop+'">';
+
+
 		    	  	if(el.parent_id==1) {
-		    	  		output += '<div class="label">@'+el.title+' ('+el.id+')</div>';
+		    	  		output += '<div class="tag_checkbox"></div><div class="label">@'+el.title+' (<span class="count">0</span>)</div>';
 		    	  	} else {
-		    	  		output += '<div class="label_mini">@'+el.title+' ('+el.id+')</div>';
+		    	  		output += '<div class="tag_checkbox checked"></div><div class="label_mini">@'+el.title+' (<span class="count">0</span>)</div>';
 		    	  	}
-		    	  	output += '<ul class="tags_content">'+
-									'<li><i class="icon-folder-1"></i>Мозг</li>'+
-									'<li><i class="icon-folder-1"></i>Задуматься</li>'+
-								'</ul>';
+		    	  	
+		    	  	output += '<ul class="tags_content">';			    	  													output += '</ul>';
+		    	  	
+					
 		    	  	api4tree.jsShowAllTagsByParent(el.id);
 		    	  	output += '</li>';
 		    	  });
@@ -1842,7 +2023,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			        var spl_time = split_time[1].split(":");
 					return {date:mydate, time: (spl_time[0]+":"+spl_time[1]) };
 		  }
-		  
+		  		  
 		  
 		  this.jsSetSettings = function(id) {
 			    	   
@@ -1909,6 +2090,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		     		    
 			       }
 			    }
+			    
+			    ///устанавливаем выбранные теги
+			    api4tree.jsSetTagsCheckboxes(id);
 			     
 		        return false;
 			 }; //jsSetSettings
@@ -4833,6 +5017,7 @@ $.contextMenu({
 
 		  //инициализация базы данных
 		  this.js_InitDB = function() {
+		    api4tree.jsLoadTagsFromLocalStorage();
 		  	diff_plugin = new diff_match_patch();
 		  
 		  	//схема структуры базы данных

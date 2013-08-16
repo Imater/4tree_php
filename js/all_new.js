@@ -94,6 +94,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	$(".tree_active #node_"+id).addClass("selected");
 //			if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
 		 	clearTimeout(open_redactor_timer);
+		 	api4tree.jsSelectTag(id);
 		 	open_redactor_timer = setTimeout(function()
 		 		{
 
@@ -575,6 +576,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 //		 	if( (data.did!=0 && settings.show_did==false) || (data.del!=0) ) isVisible = "style='display:none;'";
 		 	var isVisible = "";
 		 	
+		 	var tags_html = api4tree.jsGetTagsForElement( data );
+		 	
 		 	myli = "<div "+isVisible+" class='divider_li' pos='"+position+"' myid='"+data.parent_id+"'>"+"</div>"; //разделитель
 		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='"+info.isFolder+info.crossline+"'>"; 
 		 	myli += "<div class='big_n_title'>";
@@ -584,7 +587,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	myli += info.remind + info.triangle + info.countdiv + info.img + info.needsync;
 		 	myli += "<div class='n_title' myid='"+data.id+"'>";
 		 	myli += info.mytitle; 
-		 	myli += "</div>"+info.add_text + info.search_sample;
+		 	myli += "</div>"+tags_html + info.add_text + info.search_sample;
 		 	myli += "<div class='note_part'></div>";
 		 	myli += "</div>"; //big_n_title
 		 	myli += "</li>";

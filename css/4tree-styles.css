@@ -675,7 +675,7 @@ padding-left: 7px;
 .top_panel /* Верхняя панель */
 {
 position: absolute;
-top:22px;
+top:27px;
 left: -10px;
 right: 0px;
 height: auto; 
@@ -996,7 +996,7 @@ color: white !important;
     position: absolute;
     border: none;
     bottom: 0px;
-    top: 22px;
+    top: 27px;
     left: 0px;
     right: 0px;
     overflow: auto;
@@ -1007,16 +1007,16 @@ color: white !important;
 .redactor_menu {
 padding: 1px !important;
 width: 46px;
-height: 20px;
+height: 25px;
 }
 
 .redactor_menu i{
-  top:1px !important;
-  color: #000;
-  font-size: 22px !important;
-  display: inline-block;
-  top: 0px;
-  left: 10px; 
+top: 4px !important;
+color: #000;
+font-size: 20px !important;
+display: inline-block;
+top: 0px;
+left: 5px;
 }
 
 .fullscreen .redactor_box
@@ -1230,6 +1230,8 @@ top:0px;
 border: none !important;
 background: none !important;
 text-align: center;
+white-space: nowrap;
+overflow: hidden;
 }
 
 
@@ -2330,7 +2332,7 @@ position: absolute;
 top: 0px;
 right:0px;
 left:0px;
-height: 20px;
+height: 25px;
 padding-left: 40px; 
 border-bottom: 1px solid #888;
 background: #FFF;
@@ -2363,7 +2365,7 @@ width: 25px;
 #fav_redactor_btn li,#fav_redactor_btn_comment li {
 float: none !important;
 display: inline-block;
-height: 20px;
+height: 24px;
 padding: 0px;
 width: 23px;
 border-top-right-radius: 0px;
@@ -2389,13 +2391,13 @@ color: inherit;
 font-size: 12px;
 margin: 0px !important;
 display: inline-block;
-padding-top: 3px;
+padding-top: 6px;
 padding-left: 3px;
 color: #222;
 }
 #fav_redactor_btn li a, #fav_redactor_btn_comment li a{
   color: inherit;
-  height: 100%;
+  height: 23px;
 }
 
 /*
@@ -2827,31 +2829,26 @@ background: green;
 color: white;
 font-size: 0.6em;
 height: 1.15em;
-border-radius: 5px;
+border-radius: 3px;
 vertical-align: middle;
 padding: 3px;
-padding-left: 5px;
-padding-right: 2px;
+padding-left: 2px;
+padding-right: 1px;
 width: 4em;
 text-align: center;
 margin-right: 3px;
-box-shadow: inset 1px 1px 1px rgba(0,0,0,0.8);
 }
 
 li .shortdate {
-text-shadow: 1px 1px 1px #000;
 background:#da5700;
 }
 li .shortdatelong {
-text-shadow: 1px 1px 1px #000;
 background:#516f8f;
 }
 li .shortdatepast {
-text-shadow: 1px 1px 1px #000;
 background-image:-webkit-gradient(linear, right top, left top, color-stop(0, #990000), color-stop(0.8, #da5700));
 }
 li .shortdatepastlong {
-text-shadow: 1px 1px 1px #000;
 background:#990000; 
 }
 
