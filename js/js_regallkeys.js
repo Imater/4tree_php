@@ -1574,6 +1574,7 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 
 	            	var path_of_dropto = api4tree.jsFindPath(api4tree.jsFind(dropto)); //проверяем на "инцест"
 	            	no_incest = true;
+	            	if(dropto != 1)
 	            	$.each(path_of_dropto.path, function(i, el) {
 	            		if(el.path.id == draggable ) {
 	            			no_incest = false;
