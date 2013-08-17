@@ -281,7 +281,6 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 	height: 249px;
 	top:0px;
 	background: #ededed; 
-	background: rgba(255,255,255,0.8);
 	border-bottom: 1px solid #888;
 	font-size: 14px;
 	z-index: 2;
