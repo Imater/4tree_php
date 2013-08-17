@@ -377,6 +377,11 @@ font-size: 17px;
 background: rgba(255,255,255,0.5);
 }
 
+.tree_history_arrows .disabled {
+	color: #555;
+	text-shadow: none;
+}
+
 
 #top_panel_header_right {
 	border-top: 1px solid #FFF;
@@ -1508,6 +1513,7 @@ cursor: pointer;
 .tree_tags {
 	color: #003500;
 	display: inline;
+	vertical-align: baseline;
 }
 
 .selected > .big_n_title .tree_tags {

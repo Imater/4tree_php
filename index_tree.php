@@ -480,8 +480,8 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
   		  <div id="params_header" class="noselectable">
 
 			<div class="tree_history_arrows">
-				<i class="icon-left-dir"></i>
-				<i class="icon-right-dir"></i>
+				<i class="icon-left-dir disabled"></i>
+				<i class="icon-right-dir disabled"></i>
 			</div>
 		
 			<div id="tree_add_new_element" class="tree_add_new_element" title="Добавить новое дело вниз">
@@ -498,19 +498,19 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
   		  	<div id="tree_view_container_box">
   		  	<div class="label">Вид:</div>
   		  	<div id="tree_view_container">
-  		  		<div class="tree_view_left button active">
+  		  		<div class="tree_view_left button active" title="Левая панель - дерево">
   		  			<div class="box"></div>
   		  		</div>
 
   		  		
 
-  		  		<div class="tree_view_center button">
+  		  		<div class="tree_view_center button"  title="Верхняя панель - второе дерево">
   		  			<div class="box"></div>
   		  		</div>
 
   		  		
 
-  		  		<div class="tree_view_right button">
+  		  		<div class="tree_view_right button" title="Правая панель - теги и избранные">
   		  			<div class="box"></div>
   		  		</div>
 

@@ -457,44 +457,68 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 
 		 
 		 $(".tree_history_arrows").on("click","i",function() {
-			var isBack = $(this).attr("class").indexOf("left");
-			if(isBack) api4panel.jsHistoryBack();
+			var isBack = $(this).attr("class").indexOf("left")!=-1;
+			api4panel.jsHistoryBack(!isBack);
 		 });
 		 
 		 var my_all_history = { 
-		 						"tree_1": { "list":[], current:"0", focus_id:"1" },
-								"tree_2": { "list":[], current:"0", focus_id:"1" } 
+		 						"tree_1": { "list":[], "list_forward":[], current:"0", focus_id:"1" },
+								"tree_2": { "list":[], "list_forward":[], current:"0", focus_id:"1" } 
 							  };
 
-		 this.jsHistoryBack = function() {
-		 	 
+		 this.jsHistoryBack = function(forward) {
+
 			 var tree_id = $(".tree_active").attr("id");
 			 var now_focus_id = $(".tree_active").attr("focus_id");
 			 
-			 var the_list = my_all_history[tree_id]["list"];
+			 forward = forward?"_forward":"";
 			 
-			 var prev_element = the_list[ the_list.length-2 ];
+			 
+			 var the_list = my_all_history[tree_id]["list"+forward];
+			 
+			 if(!forward) { var dif = 2; } else { var dif = 1; }
+			 
+			 
+			 var prev_element = the_list[ the_list.length-dif ];
 			 
 			 if(prev_element) {
 			 	
+			 	 var current_element_id = api4tree.node_to_id( $(".tree_active li.selected").attr("id") );
+				 if(!forward) {
+				 	api4panel.jsSaveIdToHistory(tree_id, current_element_id, "_forward"); //сохраняю текущую позицию для кнопки вперёд
+				 } else {
+				 	api4panel.jsSaveIdToHistory(tree_id, current_element_id, false); //сохраняю текущую позицию для кнопки назад
+				 }
 			 	
-			 	 if( now_focus_id!=prev_element.focus_id ) {
+			 	 if( now_focus_id && now_focus_id!=prev_element.focus_id ) {
 				 	 api4panel.jsShowFocus(tree_id, prev_element.focus_id);
 			 	 }
+
+
+				 
+				 $(".tree_history_arrows i:last").removeClass("disabled");
 			 	 
 				 api4panel.jsOpenPath( prev_element.id, "from_history" );
 				 the_list = the_list.slice(0, the_list.length-1); //-1 так как там предыдущий элемент
-				 my_all_history[tree_id]["list"] = the_list;
-				 console.info("now_to", the_list); 
+				 my_all_history[tree_id]["list"+forward] = the_list;
+				 console.info("my_all_history", my_all_history); 
 			 }
 			 console.info("Hist_back", the_list);
+			 if(my_all_history[tree_id]["list"].length==1) { 
+			 	$(".tree_history_arrows i:first").addClass("disabled");
+			 }
+			 if(my_all_history[tree_id]["list_forward"].length==0) { 
+			 	$(".tree_history_arrows i:last").addClass("disabled");
+			 }
 			 
 		 }
 
-		 this.jsSaveIdToHistory = function (tree_id, id) {
+		 this.jsSaveIdToHistory = function (tree_id, id, to_forward) {
 		    
 			 var focus_id = $(".tree_active").attr("focus_id");
 			 focus_id = focus_id?focus_id:1;
+			 
+			 to_forward = to_forward?to_forward:"";
 
 		 	 var history_item = {};
 		 	 history_item.id = id;
@@ -503,7 +527,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	 history_item.isFolder = api4tree.jsFindByParent(id).length>0;
 		 	 history_item.title = api4tree.jsFind(id).title;
 		 	 
-			 my_all_history[tree_id]["list"].push( history_item );
+			 my_all_history[tree_id]["list"+to_forward].push( history_item );
+			 
+		 	 if(my_all_history[tree_id]["list"].length==2) $(".tree_history_arrows i:first").removeClass("disabled");
+
 //			 my_all_history[tree_id]["current"] = my_all_history[tree_id]["list"].length-1;
 			 
 			 console.info("!!!SAVED History:", my_all_history );
@@ -743,8 +770,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 function sort_by_path(a,b) {
 
-		   var aa = a.path?a.path:"_";
-		   var bb = b.path?b.path:"_";
+		   var aa = strip_tags(a.path?a.path:"_");
+		   var bb = strip_tags(b.path?b.path:"_");
 		   
 		   var year_position = aa.indexOf(" год → ");
 		   if(year_position!=-1) {
@@ -780,8 +807,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 //сортировка по полю title для дневника
 		 function sort_by_title(a,b) {
-		   var aa = a.title?a.title:"_";
-		   var bb = b.title?b.title:"_";
+		   var aa = strip_tags(a.title?a.title:"_");
+		   var bb = strip_tags(b.title?b.title:"_");
 		   
 		   if( (a.id.toString().indexOf("_")!=-1) || (a.id.toString().indexOf("_")!=-1) ) return -1;
 
