@@ -1489,6 +1489,11 @@ function jsRefreshOneFolder(panel_id)
 }
 
 
+function jsMakeDrop1() {
+		$("body").unbind("mousemove");
+		$("body").unbind("mouseup");
+		$(".mypanel ul > div").sortable();
+}
 
 
 function jsMakeDrop() //обеспечивает элементам drag&drop
@@ -1496,6 +1501,7 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 //return true;
 		$("body").unbind("mousemove");
 		$("body").unbind("mouseup");
+
 
 	$(".mypanel .big_n_title").not("ui-draggable").draggable({
 				zIndex: 999,
@@ -1535,8 +1541,14 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 //            	$(event.target).offset().left;
             	
             	var left_panel_width = parseInt($("#tree_editor:visible").css("left").replace("px",""));
-            	if(($(event.target).offset().left<$("#tree_left_panel").width()) && drop_to_tree=="tree_2" ) {
-	            	console.info("second_drop_false!!!");
+            	
+            	if( !$("body").hasClass("left_panel_hide") && ($(event.target).offset().left<$("#tree_left_panel").width()) && drop_to_tree=="tree_2" ) {
+	            	console.info("second_drop_false_to_tree_2!!!");
+	            	return false;
+            	}
+
+            	if( $("body").hasClass("left_panel_hide") && drop_to_tree=="tree_1" ) {
+	            	console.info("second_drop_false_to_tree_1 by hide!!!");
 	            	return false;
             	}
             		
@@ -1556,6 +1568,7 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 	            	console.info("drop=",dropto,dropto_pos,draggable);
 
 	            	var el = api4tree.jsFind(dropto);
+	            	if(dropto==1) { el = []; el.id = true; }
 //					if(el) jsReorder( el.parent_id );
 //					else return true;
 
@@ -1586,11 +1599,22 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 	            	
 	            	var drop_to_element = api4tree.jsFind(dropto);
 	            	
+	            	var path_of_dropto = api4tree.jsFindPath(api4tree.jsFind(dropto)); //проверяем на "инцест"
+	            	
+	            	no_incest = true;
+	            	$.each(path_of_dropto.path, function(i, el) {
+	            		if(el.path.id == draggable ) {
+	            			no_incest = false;
+	            			jsTitle("Не могу переместить родителя внутрь своих потомков",10000);
+	            		}
+	            	});
+	            	
+	            	
 /*	          	if(jsFind(draggable).share)
 	            	if( jsFind(dropto).share != jsFind(draggable).share ) 
 	            		{ alert("Вы не можете переместить чужую заметку к себе — "+jsFind(draggable).share+"!="+jsFind(dropto).share); return true; }*/
 	            	
-	           		if(drop_to_element.id && (draggable!=dropto)) {
+	           		if(no_incest && drop_to_element.id && (draggable!=dropto)) {
 	           			api4tree.jsFind(draggable, {parent_id : dropto});
 			   			setTimeout(function(){ 
 			   				jsRefreshTree(); 

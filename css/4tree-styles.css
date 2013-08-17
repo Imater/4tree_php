@@ -24,7 +24,7 @@ body:link { -webkit-tap-highlight-color: rgba(0,0,0,0); }
 -ms-transition: all 0.1s;
 -o-transition: all 0.1s;
 transition: all 0.1s;
-background: rgba(0,0,0,0.5) !important;
+background: red !important;
 color: #FFF;
 }
 

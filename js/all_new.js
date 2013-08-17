@@ -860,6 +860,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	
  		 	var isTree = false;
 			isTree = $("#"+tree_id).parent("div").hasClass("panel_type1");
+			
+			
 
 
 		 	if(other_data) { //если данные внешние
@@ -1838,8 +1840,12 @@ function jsShowTreePanel() {//запускается единожды
  	var isTree = false;
 	isTree = $(".tree_active").parent("div").hasClass("panel_type1");
 
-	api4panel.jsShowTreeNode("tree_1",1,false);
-	api4panel.jsShowTreeNode("tree_2",1,false);
+//	api4panel.jsShowTreeNode("tree_1",1,false);
+//	api4panel.jsShowTreeNode("tree_2",1,false);
+
+	api4panel.jsShowFocus("tree_1", 1);    	    	
+	api4panel.jsShowFocus("tree_2", 1);    	    	
+
 		
 	if( window.location.hash.indexOf("edit") !=-1 ) {
       	$(".bottom_right").addClass("fullscreen");
