@@ -1572,7 +1572,17 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 //					if(el) jsReorder( el.parent_id );
 //					else return true;
 
-					if(el.id && draggable && (draggable!=dropto_parent_id)) {
+	            	var path_of_dropto = api4tree.jsFindPath(api4tree.jsFind(dropto)); //проверяем на "инцест"
+	            	no_incest = true;
+	            	$.each(path_of_dropto.path, function(i, el) {
+	            		if(el.path.id == draggable ) {
+	            			no_incest = false;
+	            			jsTitle("Не могу переместить родителя внутрь своих потомков",10000);
+	            		}
+	            	});
+
+
+					if(no_incest && el.id && draggable && (draggable!=dropto_parent_id)) {
 						
 						var pos1 = parseFloat( my_droppable.prev("li").prev(".divider_li").attr("pos") );
 						var pos2 = parseFloat( my_droppable.attr("pos") );
@@ -1600,7 +1610,6 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 	            	var drop_to_element = api4tree.jsFind(dropto);
 	            	
 	            	var path_of_dropto = api4tree.jsFindPath(api4tree.jsFind(dropto)); //проверяем на "инцест"
-	            	
 	            	no_incest = true;
 	            	$.each(path_of_dropto.path, function(i, el) {
 	            		if(el.path.id == draggable ) {
