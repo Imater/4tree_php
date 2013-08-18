@@ -272,7 +272,7 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 		
 		</div>
 		<div class="top_panel panel_type1">
-			<div class="mypanel tree_active  noselectable" style="" id="tree_1">
+			<div class="mypanel tree_active" style="" id="tree_1">
 			</div>
 		</div>
 		<div id="left_calendar" class="clean_calendar">
@@ -532,8 +532,8 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 		  		  </div>
 
 		  	  <div id="tree_center">
-			  	  <div class="top_panel2 panel_type3">
-			  	      <div class="mypanel  noselectable" style="" id="tree_2">
+			  	  <div class="top_panel2 panel_type3 noselectable">
+			  	      <div class="mypanel" style="" id="tree_2">
 			  	      </div>
 			  	  </div>
 			  <div id="resize_me1"></div>
