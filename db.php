@@ -1662,6 +1662,7 @@ if (!($tt = $server->verifyResourceRequest(OAuth2\Request::createFromGlobals()))
 //   setcookie('fpk_id', $fpk_id);
 	
    setcookie('4tree_user_id', $fpk_id,time()+60*60*24*60);
+   setcookie('4tree_user_id', $fpk_id,time()+60*60*24*60, "/", ".4tree.ru");
 
 if($fpk_id=='') return false;
 else return true;
