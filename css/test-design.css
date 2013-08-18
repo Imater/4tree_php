@@ -5,8 +5,6 @@ body,html {
 	font-size: 12px;
 	font-family: Tahoma, Arial, Verdana;
 
-background-image: url("../img/textures/1.jpg");
-	
 }
 
 #tree_header {
@@ -214,7 +212,6 @@ body .ui-datepicker th, body .ui-datepicker-week-col {
 
 #tree_editor {
 	position: absolute;
-	max-width: 1200px;
 	top:55px;
 	left:280px;
 	right: 0px;
@@ -1564,3 +1561,39 @@ vertical-align: middle;
 	background: #09358c;
 	color: #FFF;
 }
+
+
+.top_panel_header ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	text-align: right;
+	margin-right: 5px;
+}
+
+.top_panel_header li {
+	display: inline-block;
+}
+.top_panel_header li i {
+	display: inline-block;
+	margin-top: 5px;
+	font-size: 17px;
+	color:#555;
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

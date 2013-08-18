@@ -846,12 +846,13 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 }
 		 
 		 this.jsShowFocus = function(tree_id, id) {
+		 	 if(api4tree.jsFindByParent(id).length==0) return false;
 		  	 var element = api4tree.jsFind(id);
 		  	 var parent_id = id;
 		 	 $("#"+tree_id+".mypanel").html("<div id='panel_"+parent_id+"' class='panel'><ul myid='"+parent_id+"'></ul></div>").attr("focus_id",parent_id);
 			 api4panel.jsShowTreeNode(tree_id, parent_id, false);
-			 var first_id = $("#"+tree_id+" li:first").attr("myid");
-			 api4panel.jsSelectNode(first_id);
+			 //var first_id = $("#"+tree_id+" li:first").attr("myid");
+			 //api4panel.jsSelectNode(first_id);
 		 }
 		 
 		 

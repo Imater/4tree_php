@@ -46,6 +46,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			   prtContent.innerHTML=strOldOne;
 			  }
 
+		  this.jsRefreshParents = function() {
+		  	  my_all_parents = {};
+		  	  
+			  $.each(my_all_data2, function(i,el){
+				 var parent_id = el.parent_id;
+				 if(parent_id) {
+				 	 if(!my_all_parents["p"+parent_id]) my_all_parents["p"+parent_id] = [];
+					 my_all_parents["p"+parent_id].push( el );
+				 }
+			  });
+			  console.info(my_all_parents);
+		  }
 
 		  /* !Добавление нового дела */
 		  this.jsAddDoLeftRight = function(arrow, myparent, mytitle, 
@@ -1537,12 +1549,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  		sync_now = true;
 		  		var answer = false;
 
-		  		var childs = my_all_parents["p"+element.parent_id];
-		  		$.each(childs, function(i,el) {
-		  			if(el && el.id == id) my_all_parents["p"+element.parent_id].splice(i,1);
-		  		});
 		  		delete my_all_data2["n"+id];
-
+		  		api4tree.jsRefreshParents();
 
 
 				var dfdArray = [];
@@ -5067,7 +5075,7 @@ $.contextMenu({
 					break;
 				}
 			}*/
-			answer = my_all_data2["n"+id];
+			var answer = my_all_data2["n"+id];
 //			var answer = my_all_data.filter(function(el,i) {
 //				return el && el.id==id;
 //			})[0];
@@ -5126,37 +5134,16 @@ $.contextMenu({
   		       			answer = my_all_data2.renameProperty("n"+id, "n"+newvalue); //переименовываем в главном массиве
   		       			record = answer = my_all_data2["n"+newvalue];
 
-  		       			if(my_all_parents["p"+old_id]) { //обход всех, у кого этот элемент является родителем и меняем старый id на новый
-	       					console.info("my_all_parents=", old_id);
-	       					var childs = [];
-  		       				$.each(my_all_parents["p"+old_id], function(i,el){
-  		       					childs.push(el.id);
-  		       				});
-  		       				$.each(childs, function(i,el){
-  		       					api4tree.jsFind(el,{parent_id:new_id});
-  		       				});
-  		       				my_all_parents.renameProperty("p"+old_id, "p"+new_id); //переименовываем в массиве родителей
-  		       				console.info("Переименовал родителя ("+old_id+") в =",new_id,my_all_parents["p"+new_id]);
-  		       			}
+  			   			api4tree.jsRefreshParents();
 
   		       		} // namefield == "id"
 
-  		       		if(namefield=="parent_id" && (record[namefield] != newvalue) ) {
-  		       			var my_old_parents = my_all_parents["p"+answer.parent_id];
-  		       			$.each(my_old_parents, function(i,el) {
-  		       				if(el && answer && (el.id == answer.id) ) {
-  		       					my_all_parents["p"+answer.parent_id].splice(i,1);
-
-								if(!my_all_parents["p"+newvalue]) my_all_parents["p"+newvalue] = [];
-								my_all_parents["p"+newvalue].push(answer);
-
-
-  		       				}
-  		       			})
-  		       		}
-
 
   		       		if(namefield!="id") record[namefield] = newvalue;   //главное присвоение !!!!!!!!!!!!!!!!!!!
+
+  		       		if(namefield=="parent_id") {
+	  			   		api4tree.jsRefreshParents();
+  		       		}
 
 
   		       		if(namefield=="text") {
@@ -6078,10 +6065,14 @@ $.contextMenu({
 					    var id_parent = el.id;
 					    var j=0,old_id;
 					    
-					    while(j<50) {//не больше 50 уровней вложенности, чтобы исключить бесконечность
+					    while(j<100) {//не больше 100 уровней вложенности, чтобы исключить бесконечность
 					    	old_id = id_parent;
 					    	element = this_db.jsFind(id_parent);
-					    	if(!element) {j++; console.info(id_parent,"!!!Не обнаружен"); continue;}
+					    	if(!element) {
+					    		j++; console.info(id_parent,"!!!Не обнаружен"); 
+					    		api4tree.jsFind( el.id, {parent_id:"1"});
+					    		continue;
+					    	}
 					    	id_parent=element.parent_id;
 					    	
 					    	if( ((!element.tmp_nextdate) || (element.tmp_nextdate > el.date1)) && (el.id!=element.id)) {
