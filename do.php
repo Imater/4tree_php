@@ -636,7 +636,7 @@ if (isset($HTTP_GET_VARS['off_welcome']))
 
 if (isset($HTTP_GET_VARS['get_settings'])) 
 {
-  push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Загружаю параметры"));
+//  push(array("am"),array('type' => "share", 'from' => $fpk_id, 'txt' => "Загружаю параметры"));
 
   $sqlnews = "SELECT * FROM tree_users WHERE id='$user_id'";
   $result = mysql_query_my($sqlnews); 

@@ -4225,9 +4225,9 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					api4tree.jsClone(id);		        
 			 	    jsRefreshTree();			        
 		        } else if(key=="focus_in") {
-			        api4panel.jsShowFocus(tree_id, id);
+			        api4panel.jsShowFocus(tree_id, id, "need_select_first");
 		        } else if(key=="focus_out") {		        	
-			        api4panel.jsShowFocus(tree_id, 1);
+			        api4panel.jsShowFocus(tree_id, 1, "need_select_first");
 			        api4panel.jsOpenPath(id);
 		        }
 		  }
@@ -4322,7 +4322,42 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				return false; 
 			 });
 			 
+			 $('.tree_history_arrows').on("contextmenu", "i", function(){
+
+			 var items = {};
+							  
+			 var my_all_history = api4panel.jsGetHistory();
+        	 var tree_id = $(".tree_active").attr("id");			 
+			 var the_history = my_all_history[tree_id]["list"].reverse();
+			 $.each(the_history, function(i,el){
+			 	if(el.isFolder) var icon = "icon-folder-1";
+			 	else var icon = "icon-docs-landscape";
+				if(i<25) items[el.id] = { name: el.title, icon: icon };
+			 });
 			 
+			 $.contextMenu("destroy",".tree_history_arrows");
+			 $.contextMenu({
+			         selector: '.tree_history_arrows', 
+			         trigger: 'none',
+			         callback: function(key, options) {
+			         	api4panel.jsOpenPath(key);
+			         },
+			         delay:0,
+			         events: { show: function(opt){ 
+			 				console.info("!!",opt);
+			         	},
+			         	hide: function(opt){ 
+			         	}  
+			         },
+			         items: items
+			 		});		  
+
+
+
+			 $(".tree_history_arrows").contextmenu();
+			 });
+			 
+			
 		  
 $.contextMenu({
         selector: '.tree_add_new_element', 
@@ -4361,6 +4396,8 @@ $.contextMenu({
         events: { show: function(opt){ 
         		$(this).parents("li:first").parents(".mypanel").find(".selected").removeClass("selected");
 				$(this).parents("li:first").addClass("selected").parents(".mypanel").addClass("tree_active");
+				$(".tree_active").removeClass("tree_active");
+				$(this).parents(".mypanel").addClass("tree_active");
         	},
         	hide: function(opt){ 
         	}  

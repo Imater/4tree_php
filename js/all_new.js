@@ -289,7 +289,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	    $('.mypanel').delegate("li","dblclick", function () {
     	    	var tree_id = $(this).parents(".mypanel").addClass("tree_active").attr("id");
    	        	var id = api4tree.node_to_id( $(this).attr("id") );
-				api4panel.jsShowFocus(tree_id, id);    	    	
+				api4panel.jsShowFocus(tree_id, id,  "need_select_first");    	    	
     	    });
 
 			 
@@ -465,6 +465,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 						"tree_1": { "list":[], "list_forward":[], current:"0", focus_id:"1" },
 								"tree_2": { "list":[], "list_forward":[], current:"0", focus_id:"1" } 
 							  };
+							  
+		 this.jsGetHistory = function() {
+			return my_all_history; 
+		 };
 
 		 this.jsHistoryBack = function(forward) {
 
@@ -519,13 +523,15 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 focus_id = focus_id?focus_id:1;
 			 
 			 to_forward = to_forward?to_forward:"";
+			 
+			 var title = api4tree.jsFind(id).title;
 
 		 	 var history_item = {};
 		 	 history_item.id = id;
 		 	 history_item.tree_id = id;
 		 	 history_item.focus_id = focus_id;
 		 	 history_item.isFolder = api4tree.jsFindByParent(id).length>0;
-		 	 history_item.title = api4tree.jsFind(id).title;
+		 	 history_item.title = title?title:"";
 		 	 
 			 my_all_history[tree_id]["list"+to_forward].push( history_item );
 			 
@@ -547,14 +553,27 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		   if(id != parseInt(id)) return false;
 		   if(!$(".mypanel.tree_active #node_"+id).is(":visible")) {
-		  var mypath = api4tree.jsFindPath( api4tree.jsFind(id) );
+		    var mypath = api4tree.jsFindPath( api4tree.jsFind(id) );
 		 	var path1 = mypath.path;
 		 	if(!path1) return true;
 		 	//if(path1.length<0) return false;
+		 	
+		 	var focus_id = $(".tree_active").attr("focus_id");
+		 	
+		 	if(focus_id!=1) { //проверяем, нужно ли выйти из текущего фокуса
+			 	var all_childrens_of_focus_id = api4tree.jsRecursive(focus_id);
+			 	var need_focus_to_root = true;
+			 	$.each(all_childrens_of_focus_id, function(i, el){
+				 	if( el && el.id == id ) need_focus_to_root = false;
+			 	});
+			 	all_childrens_of_focus_id = "";
+			 	if(need_focus_to_root) api4panel.jsShowFocus($(".mypanel.tree_active").attr("id"), 1);
+		 	}
 			
 			var p_len = path1.length;
    			for(var ik=0; ik<p_len; ik=ik+1) {
    			   var toopen = path1[ik].path.id;
+   			   console.info( "to-open", toopen, $(".tree_active").attr("focus_id") );
    			   if(ik==path1.length-1) {
    			   	  api4panel.jsOpenNode(toopen);
    			   } else {
@@ -845,14 +864,17 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			return mydata;
 		 }
 		 
-		 this.jsShowFocus = function(tree_id, id) {
+		 this.jsShowFocus = function(tree_id, id, need_select_first_element) {
 		 	 if(api4tree.jsFindByParent(id).length==0) return false;
 		  	 var element = api4tree.jsFind(id);
 		  	 var parent_id = id;
 		 	 $("#"+tree_id+".mypanel").html("<div id='panel_"+parent_id+"' class='panel'><ul myid='"+parent_id+"'></ul></div>").attr("focus_id",parent_id);
 			 api4panel.jsShowTreeNode(tree_id, parent_id, false);
-			 //var first_id = $("#"+tree_id+" li:first").attr("myid");
-			 //api4panel.jsSelectNode(first_id);
+			 
+			 if(need_select_first_element) {
+				 var first_id = $("#"+tree_id+" li:first").attr("myid");
+				 api4panel.jsSelectNode(first_id);
+			 }
 		 }
 		 
 		 
@@ -1844,8 +1866,8 @@ function jsShowTreePanel() {//запускается единожды
 //	api4panel.jsShowTreeNode("tree_1",1,false);
 //	api4panel.jsShowTreeNode("tree_2",1,false);
 
-	api4panel.jsShowFocus("tree_1", 1);    	    	
-	api4panel.jsShowFocus("tree_2", 1);    	    	
+	api4panel.jsShowFocus("tree_1", 1, "need_select_first");    	    	
+	api4panel.jsShowFocus("tree_2", 1, "need_select_first");    	    	
 
 		
 	if( window.location.hash.indexOf("edit") !=-1 ) {

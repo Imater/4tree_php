@@ -363,12 +363,16 @@ text-shadow: none;
 	font-size: 0px;
 	vertical-align: middle;
 	line-height: 27px;
+	margin-left: 3px;
 }
 
 .tree_history_arrows i {
-padding: 0px 1px 0px 5px;
+padding: 5px 3px 4px 6px;
+display: inline-block;
+margin-top: 3px;
 cursor: pointer;
-font-size: 17px;
+font-size: 13px;
+border-radius: 3px;
 }
 
 .tree_history_arrows i:hover {

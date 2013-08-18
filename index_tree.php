@@ -272,7 +272,7 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 		
 		</div>
 		<div class="top_panel panel_type1">
-			<div class="mypanel tree_active" style="" id="tree_1">
+			<div class="mypanel tree_active  noselectable" style="" id="tree_1">
 			</div>
 		</div>
 		<div id="left_calendar" class="clean_calendar">
@@ -485,8 +485,8 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
   		  <div id="params_header" class="noselectable">
 
 			<div class="tree_history_arrows">
-				<i class="icon-left-dir disabled"></i>
-				<i class="icon-right-dir disabled"></i>
+				<i title="Нажмите, чтобы вернуться. Нажмите правую клавишу для вывода истории просмотров." class="icon-left-1 disabled"></i>
+				<i title="Нажмите, чтобы перейти вперёд. Нажмите правую клавишу для вывода истории просмотров." class="icon-right-1 disabled"></i>
 			</div>
 		
 			<div id="tree_add_new_element" class="tree_add_new_element" title="Добавить новое дело вниз">
@@ -533,7 +533,7 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 
 		  	  <div id="tree_center">
 			  	  <div class="top_panel2 panel_type3">
-			  	      <div class="mypanel" style="" id="tree_2">
+			  	      <div class="mypanel  noselectable" style="" id="tree_2">
 			  	      </div>
 			  	  </div>
 			  <div id="resize_me1"></div>
