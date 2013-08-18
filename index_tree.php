@@ -532,7 +532,7 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 		  		  </div>
 
 		  	  <div id="tree_center">
-			  	  <div class="top_panel2 panel_type3 noselectable">
+			  	  <div class="top_panel2 panel_type3">
 			  	      <div class="mypanel" style="" id="tree_2">
 			  	      </div>
 			  	  </div>
