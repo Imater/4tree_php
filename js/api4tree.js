@@ -864,9 +864,13 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  	  }
 		  }
 
-    	  
+    	  var save_tag_timer;
     	  $("#right_tags").on("click", ".label,.label_mini", function() {
-	    	  $(this).parent("li").find("ul:first").slideToggle(200);
+	    	  $(this).parent("li").find("ol:first").slideToggle(200);
+	    	  clearTimeout(save_tag_timer);
+	    	  save_tag_timer = setTimeout(function(){ 
+	    	  	api4tree.jsSaveTagsFromScreen(); 
+	    	  }, 3000);
 	    	  return false;
     	  });
     	  
@@ -1017,7 +1021,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      					li.find(".count:first").html( parseInt(li.find(".count:first").html())+1 );
 			      				var tags_ul = li.find(".tags_content:first");
 			      				
-			      				tags_ul.append("<li myid='"+el.id+"'><i class='icon-folder-1'></i>"+el.title+"</li>");
+			      				tags_ul.append("<li myid='"+el.id+"'>"+el.title+"</li>");
 		      				});
 		      		}
 		      	}
@@ -1027,10 +1031,45 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 
 			  api4tree.jsSelectTag(old_selected);
 
-	    	  $("#tags_ul").sortable();
-	    	  $("#tags_ul ul").sortable();
+	    	  $("#tags_ul").sortable({stop:jsSaveTags});
+	    	  $("#tags_ul ul").sortable({stop:jsSaveTags});
 			  
 		  }
+		  
+		  function jsSaveTags() {
+  	    	  clearTimeout(save_tag_timer);
+	    	  save_tag_timer = setTimeout(function(){ 
+	    	  	api4tree.jsSaveTagsFromScreen(); 
+	    	  }, 3000);
+
+		  }
+		  
+		  this.jsSaveTagsFromScreen = function() {
+			 $("#right_tags .tag").each(function(i, el){
+			 	 var title = $(el).find(".title").html();
+			 	 var id = $(el).attr("myid");
+			 	 var is_open = $(el).find(".tags_content:first").is(":visible");
+			 	 var parent_id = $(el).attr("parent_id");
+			 	 var element = api4tree.jsFindTag(id)[0];
+			 	 element.id = id;
+			 	 element.parent_id = parent_id;
+			 	 element.position = i;
+			 	 element.is_open = is_open?1:0;				 
+			 });
+			 
+			jsGetToken().done(function(token){
+				
+				var lnk = web_site + "do.php?access_token=" + token + "&save_tags";
+				var my_tags_json = JSON.stringify(my_tags);
+				var changes = 'my_tags='+encodeURIComponent(my_tags_json);
+				
+				$.getJSON(lnk,changes, function(data,j,k) { //////////////A J A X/////////////////
+				});
+
+			});
+			 
+		  }
+		  
     	  
     	  var output = "", tags_level = 0;
     	  this.jsShowAllTags =function() {
@@ -1062,16 +1101,22 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	    	  	  }
 	    	  	  
 		    	  $.each(top_tags, function(i,el) {
-		    	  	output += '<li myid="'+el.id+'" class="'+isTop+'">';
+		    	    if(el.is_open==1) var is_open="display:block;";
+		    	    else var is_open = "";
+		    	    
+		    	  	output += '<li myid="'+el.id+'" parent_id="'+el.parent_id+'" class="'+isTop+' tag">';
 
+				  	label_for_contextmenu = "<div class='tags_contextmenu' title='Управление тегом. Добавление нового.'><i class='icon-down-dir'></i></div>";
+				  	
+				  	output += label_for_contextmenu;
 
 		    	  	if(el.parent_id==1) {
-		    	  		output += '<div class="tag_checkbox"></div><div class="label">@'+el.title+' (<span class="count">0</span>)</div>';
+		    	  		output += '<div class="tag_checkbox"></div><div class="label">@<span class="title">'+el.title+'</span> (<span class="count">0</span>)</div>';
 		    	  	} else {
-		    	  		output += '<div class="tag_checkbox checked"></div><div class="label_mini">@'+el.title+' (<span class="count">0</span>)</div>';
+		    	  		output += '<div class="tag_checkbox checked"></div><div class="label_mini">@<span class="title">'+el.title+'</span> (<span class="count">0</span>)</div>';
 		    	  	}
 		    	  	
-		    	  	output += '<ul class="tags_content">';			    	  													output += '</ul>';
+		    	  	output += '<ol class="tags_content" style="'+is_open+'">';			    	  													output += '</ol>';
 		    	  	
 					
 		    	  	api4tree.jsShowAllTagsByParent(el.id);
@@ -4357,7 +4402,56 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 $(".tree_history_arrows").contextmenu();
 			 });
 			 
+			$("#right_tags").on("click", ".tags_contextmenu", function(){
+				$(this).contextmenu();
+				return false;
+			});
+			 
 			
+$.contextMenu({
+        selector: '.tags_contextmenu', 
+        trigger: 'none',
+        callback: function(key, options) {
+        	var tag_id = $(this).parents("li:first").attr("myid");
+        	
+            if( key=="add_tag_down" || key=="add_tag_right" ) {
+     	      var answer = prompt("Напишите название тега (без @):", "Срочно");
+	          if(answer) {
+	          	 var max_id = 0;
+	          	 var parent_id = "1";
+	          	 console.info(my_tags);
+	          	 $.each(my_tags, function(i, el){
+		          	 if(el.id>max_id) max_id = parseInt(el.id);
+		          	 if(el.id==tag_id) { parent_id = el.parent_id;
+		          	 console.info(el.parent_id, tag_id, el);
+		          	 }
+	          	 });
+	          	 
+	          	 if(key=="add_tag_right") parent_id = tag_id;
+	          	 
+		    	 my_tags.push({id:(max_id+1), title: answer, parent_id: parent_id}); 
+		    	 api4tree.jsShowAllTags();
+		    	 api4tree.jsSaveTagsFromScreen(); //сохраняю все теги на сервер
+	          }
+	        }
+        },
+        delay:0,
+        events: { show: function(opt){ 
+				console.info("!!",opt);
+        	},
+        	hide: function(opt){ 
+        	}  
+        },
+        items: {
+        	"add_tag_down": {"name":"Добавить тег вниз", "icon": "icon-down-1"},
+        	"add_tag_right": {"name":"Добавить тег внутрь", "icon": "icon-right-1"},
+        	"rename_tag": {"name":"Переименовать тег", "icon": "icon-edit-1"},
+        	"sep1": "--------",
+        	"move_tag": {"name":"Переместить", "icon": "icon-shuffle"},
+        	"sep2": "--------",
+        	"remove_tag": {"name":"Удалить тег", "icon": "icon-trash"}
+		}
+		});		  
 		  
 $.contextMenu({
         selector: '.tree_add_new_element', 

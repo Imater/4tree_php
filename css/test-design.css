@@ -1136,20 +1136,31 @@ font-size: 150%;
 }
 
 #tags_ul li.top_label .label {
-border-top: 1px solid #CCC;
 background: #DDD;
 padding: 2px;
 padding-bottom: 3px;
-text-shadow: 0px 1px 0px #FFF;
 color: #000;
 cursor: pointer;
 font-size: 11px;
 padding-right: 8px;
+padding-left: 20px;
+background: #BBB;
+text-shadow: 0px 1px 0px #DDD;
+color: #333;
+/*rgba(156,255,141,0.3);*/
 }
 
 #tags_ul .label_mini {
 	cursor: pointer;
 	padding-right: 8px;
+	padding-left: 20px;
+	font-size: 11px;
+	color: #555;
+}
+
+
+#tags_ul .label_mini b {
+	text-shadow: 0px 0px 1px rgba(0,255,155,0.5);
 }
 
 #tags_ul ul {
@@ -1160,12 +1171,23 @@ padding-right: 8px;
 	margin-left: 10px;
 }
 
+#tags_ul ol {
+	margin: 0px;
+	padding: 0px;	
+	margin-left: 20px;
+	padding-left: 15px;
+	font-size: 10px;
+}
 
-#tags_ul ul li {
+
+#tags_ul ul > li {
 font-size: 11px;
 padding: 1px 2px 1px 5px;
 border-top: 1px solid  #DBDBDB;		
 }
+
+
+
 
 #open_favorits {
 	cursor: pointer;
@@ -1232,6 +1254,7 @@ color: #000;
 	right: 0px;
 }
 
+
 .hide_ul #right_fav_folders ul {
 	transition: opacity 1s ease-out;
     opacity: 0; 
@@ -1251,6 +1274,12 @@ margin-bottom: 0px;
 margin-left: 5px;
 cursor: pointer;
 }
+
+#tags_ul ol li{
+	font-size: 10px !important;
+	padding: 1px 0px;
+}
+
 
 .encrypt_note {
 }
@@ -1482,13 +1511,13 @@ cursor: pointer;
 
 
 #right_tags .tag_checkbox {
-	width:10px;
-	height: 10px;
+	width:9px;
+	height: 9px;
 	margin-top: 1px;
 	background: rgba(255,255,255,0.8);
 	position: absolute;
 	font-size: 11px;
-	right: 5px;
+	left: 5px;
 	border: 1px solid #CCC;
 	cursor: pointer;
 }
@@ -1506,7 +1535,7 @@ cursor: pointer;
 #right_tags .tag_checkbox.checked:before {
 	width: 12px;
 	margin-left: 1px;
-	margin-top: -2px;
+	margin-top: -3px;
 	color: #444;
 	display: inline-block;
 	height: 10px;
@@ -1515,6 +1544,33 @@ cursor: pointer;
 	font-family: fontello;
 }
 
+.tags_contextmenu {
+	position: absolute;
+	right: 5px;
+	margin-top: 2px;
+	border: 1px solid #AAA;
+	color: #AAA;
+	width: 7px;
+	height: 7px;
+	font-size: 11px;
+	background: #FFF;
+}
+
+.tags_contextmenu i {
+margin-left: -2px;
+margin-top: -1px;
+display: inline-block;
+}
+
+.tags_contextmenu:hover {
+	color: #000;
+	border: 1px solid #888;
+	cursor: pointer;
+}
+
+#right_tags .top_label > .tags_contextmenu {
+	margin-top: 5px;
+}
 
 .tree_tags {
 	color: #003500;
@@ -1562,8 +1618,16 @@ vertical-align: middle;
 
 
 .tags_selected {
-	background: #09358c;
-	color: #FFF;
+	background: rgba(0,0,135,0.2);
+	color: #000;
+}
+
+.tags_selected:before {
+	content: "\26ab";
+	position: absolute;
+	left:7px;
+	font-family: fontello;
+	
 }
 
 

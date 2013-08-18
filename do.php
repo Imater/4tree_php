@@ -935,13 +935,98 @@ if (isset($HTTP_GET_VARS['get_tags']))
 	$user_id = $GLOBALS['user_id'];
 	$user_id = 11;
 	
-	$sth = $db2->prepare("SELECT * FROM tree_tags WHERE user_id = '".$user_id."'");
+	$sth = $db2->prepare("SELECT * FROM tree_tags WHERE user_id = '".$user_id."' ORDER by position");
 	$sth->execute();
 	$result = $sth->fetchAll();
+	
+	if(!$result) {
+		$sth = $db2->prepare("SELECT * FROM tree_tags WHERE user_id = '11' AND (id = '2' OR id = '3' OR id = '4' OR id = '7') ORDER by position");
+		$sth->execute();
+		$result = $sth->fetchAll();
+	}
 	
 	echo json_encode($result);
 
 }
+
+if (isset($HTTP_GET_VARS['save_tags'])) 
+{
+	$ch = $HTTP_GET_VARS['my_tags'];
+
+	if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru")) 
+		{
+		$ch = stripslashes($ch);
+		}
+
+	$my_tags = json_decode( $ch );
+	$user_id = $GLOBALS['user_id'];
+	$result = "ok";
+//	print_r($my_tags);
+	
+	$sth = $db2->prepare("UPDATE tree_tags SET saved = -1 WHERE user_id = :user_id");
+	$sth->execute( array(":user_id"=>$user_id) );
+
+	for ($i=0; $i<count($my_tags); $i++) {
+		$id = $my_tags[$i]->id;
+		$title = $my_tags[$i]->title;
+		$position = $my_tags[$i]->position;
+		$is_open = $my_tags[$i]->is_open;
+		$parent_id = $my_tags[$i]->parent_id;
+		
+		echo $id." / ".$title."/".$position."/".$is_open."/".$parent_id."<br>";
+		
+		$sth = $db2->prepare("SELECT count(*) cnt FROM tree_tags WHERE id = :id AND user_id = :user_id");
+		
+		$sth->execute( array(":id"=>$id, ":user_id"=>$user_id) );
+		$result = $sth->fetchAll();
+
+
+	    if($result[0]["cnt"]>0)	{ //1. есть ли такая запись, если есть сохраняем данные
+			$sth = $db2->prepare("UPDATE tree_tags SET title = :title, ".
+												  "parent_id = :parent_id,".
+												  "position = :position,".
+												  "is_open = :is_open,".
+												  "saved = '0'".
+												  "  WHERE user_id = :user_id AND id = :id");
+			$sth->execute( array(":id"=>$id, 
+							     ":user_id"=> $user_id, 
+							     ":title"=> $title, 
+							     ":parent_id"=> $parent_id, 
+							     ":position"=> $position, 
+							     ":is_open"=> $is_open
+							     ) );
+	    } else { //2. если нет, то добавляем
+	    
+			$sth = $db2->prepare("INSERT INTO tree_tags SET title = :title, ".
+												  "parent_id = :parent_id,".
+												  "position = :position,".
+												  "is_open = :is_open,".
+												  "saved = '0',".
+												  "user_id = :user_id,".
+												  "id = :id");
+			$val = array(":id"=>$id, 
+							     ":user_id"=> $user_id, 
+							     ":title"=> $title, 
+							     ":parent_id"=> $parent_id, 
+							     ":position"=> $position, 
+							     ":is_open"=> $is_open
+							     );
+							     
+			print_r($val);				     
+			
+			$sth->execute( $val );
+			echo "Добавил: ".$title;
+	    }
+		
+		
+	}
+	
+	//3. удаляем оставшиеся -1
+	
+	echo json_encode($result);
+
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////
 if (isset($HTTP_GET_VARS['sync_new'])) 

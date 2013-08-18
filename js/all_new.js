@@ -305,6 +305,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
     	    	
     	        if( $(this).find(".ntitle").attr("contenteditable") ) return true; //если редактируется
+    	        $(".ntitle[contenteditable=true]").blur();
+    	        $(".mypanel .n_title").trigger("blur");
     	        var dif_between_click = jsNow() - lastclick;
     	        lastclick = jsNow();
     	        
@@ -656,17 +658,20 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 //обновляет элемент на экране
 		 this.jsRefreshOneElement = function(myid) {
-		    var el = $(".tree_active.mypanel #node_"+myid);
-		    var make_class="";
-		    if (el.hasClass("selected")) make_class = "selected";
-		    if (el.hasClass("old_selected")) make_class = "old_selected";
-		    el.prev(".divider_li").remove();
-		    var myul = el.find("ul:first").clone(); //сохраняю вложенный список
-		    el.replaceWith( api4panel.jsRenderOneElement( api4tree.jsFind(myid) ) );
-		    $(myul).appendTo(".tree_active #node_"+myid); //вставляю вложенный список обратно
-		    if(make_class!="") {
-		 	    $(".tree_active #node_"+myid).addClass(make_class);
-    		}
+		    var elements = $(".mypanel #node_"+myid);
+		    $.each(elements, function(i, el){
+		    	el = $(el);
+			    var make_class="";
+			    if (el.hasClass("selected")) make_class = "selected";
+			    if (el.hasClass("old_selected")) make_class = "old_selected";
+			    el.prev(".divider_li").remove();
+			    var myul = el.find("ul:first").clone(); //сохраняю вложенный список
+			    el.replaceWith( api4panel.jsRenderOneElement( api4tree.jsFind(myid) ) );
+			    $(myul).appendTo(".tree_active #node_"+myid); //вставляю вложенный список обратно
+			    if(make_class!="") {
+			 	    $(".tree_active #node_"+myid).addClass(make_class);
+	    		}
+		    });
 		    this_db.jsPrepareDate();
 		    jsMakeDrop();
 		 }
