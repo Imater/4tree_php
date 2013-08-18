@@ -48,22 +48,37 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				  //$.Menu.closeAll();
 		 }
 		 		 
+		 		 
+		 function start_rename_current( ntitle ) {
+		 	if( $(".tree_active .selected .n_title:first").toString() == ntitle.toString() ) {
+ 		 	  	ntitle.attr("contenteditable","true").attr("spellcheck","false").focus(); 
+		 	  	ntitle.attr("old_title",ntitle.html());
+		 	  	setTimeout(function(){ 
+		 	  		if(ntitle.is(":focus")) document.execCommand('selectAll',false,null); 
+		 	  	},70);
+		 	}
+		 }
+		 		 
+		 var rename_timer;
 		 //клик по Названию дела. ntitle = $(".ntitle"). Нужно для определения двойного клика.
 		 this.jsTitleClick = function(ntitle,from_n_title) {
  			var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
 
 		 	if (ntitle.attr("contenteditable")==true) return true; 
 		 	
+		 	if(ntitle.parents("li:first").hasClass("selected")) {
+		 		rename_timer = setTimeout(function(){
+			 		start_rename_current(ntitle);
+		 		}, 600);
+		 	}
+		 	
 		 	var nowtime = new Date();
 		 	if(((nowtime-lastclick)<500) && (lastclickelement == ntitle.attr("myid"))) needtoedit = true;
 		 	else 
 		 		{
 		 		var needtoedit = false;
-		 		//if(!from_n_title) 
 		 		ntitle.parents("li:first").click(); //противный клик
 		 		var id = ntitle.attr("myid");
-//		 		if(!isTree || true) this_db.jsOpenNode( id ); //открываю панель
-//		 		this_db.jsSelectNode( id ,'tree');
 		 		}
 		 	
 		 	lastclickelement = ntitle.attr("myid");
@@ -71,18 +86,6 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	//запоминаю время последнего клика, чтобы переходить в режим редактирования только при двойном клике
 		 	lastclick = new Date(); 
 		 
-		 	if( needtoedit )
-		 		{
-		 	  	ntitle.attr("contenteditable","true").attr("spellcheck","false").focus(); 
-		 	  	ntitle.attr("old_title",ntitle.html());
-		 	  	setTimeout(function(){ document.execCommand('selectAll',false,null); },70);
-
-		 	  	}
-		 	else 
-		 		{
-		 	    //document.execCommand('unselect');
-		 		return true;
-		 		}
 		 
 		 }
 
@@ -281,18 +284,19 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				return false;
 			});
 			 
-			this.jsOpenFolder = function(tree_id, id) {
-				alert(1);
-			} 
-
+			 
 		    //Клик в LI открывает детей этого объекта LILILI
     	    $('.mypanel').delegate("li","dblclick", function () {
+    	    	console.info("dblclick");
+    	    	clearTimeout(rename_timer);
+    	    	clearTimeout(li_click_timer);
     	    	var tree_id = $(this).parents(".mypanel").addClass("tree_active").attr("id");
    	        	var id = api4tree.node_to_id( $(this).attr("id") );
 				api4panel.jsShowFocus(tree_id, id,  "need_select_first");    	    	
+				return false;
     	    });
 
-			 
+			var li_click_timer;
 		    //Клик в LI открывает детей этого объекта LILILI
     	    $('.mypanel').delegate("li","click", function () {
     	    	console.info("click");
@@ -326,24 +330,29 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	        		if(timelong>1000) timelong=500; //большие ветки дольше
     	        		if(timelong<300) timelong=100;   //маленькие ветки открываются быстрее
     	        		var cache_this = $(this);
-    	        		$(this).find("ul:first").slideDown(timelong,function(){ 
-							if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
-							cache_this.addClass("tree-open");
-							
-							console.info("repaint: Ветка отсутствует, открываю");
-							
-//    	        			setTimeout(function(){  },10);
-    	        			console.info("rep-fol_closed");
-    	        		});
+    	        		setTimeout(function(){
+	    	        		cache_this.find("ul:first").slideDown(timelong,function(){ 
+								if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
+								cache_this.addClass("tree-open");
+								
+								console.info("repaint: Ветка отсутствует, открываю");
+								
+	//    	        			setTimeout(function(){  },10);
+	    	        			console.info("rep-fol_closed");
+	    	        		});
+    	        		}, 200);
     	        	}
     	        } else { //если ветка уже открыта, закрываю её
     	        	if(isTree) {
 	    	        	api4panel.jsSelectNode( id ,'tree');
 						$(this).removeClass("tree-open");
-    	        		$(this).find("ul:first").slideUp(50,function(){
-	    	        		if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
-							console.info("repaint: Ветка просто свёрнута, открываю");
-    	        		});
+						var cache_this2 = $(this);
+    	        		setTimeout(function(){
+	    	        		cache_this2.find("ul:first").slideUp(50,function(){
+		    	        		if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
+								console.info("repaint: Ветка просто свёрнута, открываю");
+	    	        		});
+	    	        	},200);
     	        	} else {
     	        		$(this).removeClass("tree-open");
     	        		var id = api4tree.node_to_id( $(this).attr("id") );
@@ -355,6 +364,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	    
 				jsHighlightText("remove");
     	        return false;
+    	        
     	    }); //lili
     	    
 
@@ -524,7 +534,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 
 			 to_forward = to_forward?to_forward:"";
 			 
-			 var title = api4tree.jsFind(id).title;
+			 var title = api4tree.jsFind(id);
+			 if(title) title=title.title;
 
 		 	 var history_item = {};
 		 	 history_item.id = id;
@@ -905,7 +916,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		mydata = mydata.sort(sort_by_position); //сортирую
 		 		}
 
-		 		if((parent_node.toString().indexOf("_")==-1)) { //если это не синтетическая папка
+		 		if(parent_node && (parent_node.toString().indexOf("_")==-1)) { //если это не синтетическая папка
 		 			mydata = api4panel.jsReorder(mydata); //перенумирую элементы
 		 		}
 		 	}

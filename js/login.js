@@ -125,7 +125,7 @@ var params_get = 'grant_type=refresh_token'+
 	    error: function (data) {
 	        console.log("error");
 	        console.info(data.responseText);
-	        window.location.href = "./login.php?refresh_token_expired";
+	        window.location.href = "../login.php?refresh_token_expired"+data.responseText+":"+oauth2data.refresh_token;
 	    }
 	});
 
