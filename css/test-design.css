@@ -1035,6 +1035,10 @@ float: none;
 position: relative;
 }
 
+.add_tab i{
+	vertical-align: top;
+}
+
 .add_tab:hover {
 background: #777777;
 	
