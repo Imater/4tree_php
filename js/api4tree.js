@@ -875,12 +875,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  });
     	  
     	  $("#right_tags").on("click", ".tag_checkbox", function() {
-    	  	  $(this).toggleClass("checked");
+    	  	  $(this).parents("li:first").toggleClass("checked");
     	  	  
     	  	  var tag_id = parseInt( $(this).parents("li:first").attr("myid") );
 			  var id = api4tree.node_to_id( $(".tree_active .selected").attr('id') );
     	  	  
-    	  	  if($(this).hasClass("checked")) {
+    	  	  if($(this).parents("li:first").hasClass("checked")) {
 	    	  	 api4tree.jsSetTagToId(id, tag_id);
 	    	  	 api4tree.jsRefreshAllTagsContent();
 	    	  	 api4panel.jsRefreshOneElement(id);
@@ -911,7 +911,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    	var tags_array = JSON.parse(element.smth);
 			    	var need_tags = tags_array["tags"];
 			    	$.each(need_tags, function(i,el) {
-						$("#right_tags li[myid="+el+"] .tag_checkbox:first").addClass("checked");
+						$("#right_tags li[myid="+el+"]").addClass("checked");
 			    	});
 			    }
 		  }
@@ -1113,7 +1113,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		    	  	if(el.parent_id==1) {
 		    	  		output += '<div class="tag_checkbox"></div><div class="label">@<span class="title">'+el.title+'</span> (<span class="count">0</span>)</div>';
 		    	  	} else {
-		    	  		output += '<div class="tag_checkbox checked"></div><div class="label_mini">@<span class="title">'+el.title+'</span> (<span class="count">0</span>)</div>';
+		    	  		output += '<div class="tag_checkbox"></div><div class="label_mini"><span class="title">'+el.title+'</span> (<span class="count">0</span>)</div>';
 		    	  	}
 		    	  	
 		    	  	output += '<ol class="tags_content" style="'+is_open+'">';			    	  													output += '</ol>';
