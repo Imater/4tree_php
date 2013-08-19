@@ -951,7 +951,7 @@ if (isset($HTTP_GET_VARS['get_tags']))
 
 if (isset($HTTP_GET_VARS['save_tags'])) 
 {
-	$ch = $HTTP_GET_VARS['my_tags'];
+	$ch = $HTTP_POST_VARS['my_tags'];
 
 	if(!stristr($_SERVER["HTTP_HOST"],"4tree.ru")) 
 		{

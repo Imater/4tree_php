@@ -1063,7 +1063,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				var my_tags_json = JSON.stringify(my_tags);
 				var changes = 'my_tags='+encodeURIComponent(my_tags_json);
 				
-				$.getJSON(lnk,changes, function(data,j,k) { //////////////A J A X/////////////////
+				$.postJSON(lnk,changes, function(data,j,k) { //////////////A J A X/////////////////
 				});
 
 			});
