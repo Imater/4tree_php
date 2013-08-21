@@ -190,7 +190,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 			deniedTags: ['html', 'head', 'link', 'body', 'meta', 'script', 'style', 'applet'],
 
 			boldTag: 'b',
-			italicTag: 'em',
+			italicTag: 'i',
 
 			// private
 			indentValue: 20,
@@ -2904,7 +2904,7 @@ var 			buttons_i = {formatting: 'icon-wrench', bold:'icon-bold', italic:'icon-it
 			if (this.opts.italicTag === 'em') html = html.replace(/<i>([\w\W]*?)<\/i>/gi, '<em>$1</em>');
 			else html = html.replace(/<em>([\w\W]*?)<\/em>/gi, '<i>$1</i>');
 
-			html = html.replace(/<strike>([\w\W]*?)<\/strike>/gi, '<del>$1</del>');
+//			html = html.replace(/<strike>([\w\W]*?)<\/strike>/gi, '<del>$1</del>'); //4TREE
 
 			if (!/<span(.*?)data-redactor="verified"(.*?)>([\w\W]*?)<\/span>/gi.test(html))
 			{

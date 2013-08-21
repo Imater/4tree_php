@@ -91,7 +91,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			   	
 			   		if(isTree) {
 			      		if( $(".ul_childrens[myid="+panel+"]").length==0 ) {
-			    			$(".top_panel #node_"+panel).append("<ul class='ul_childrens' myid="+
+			    			$(".tree_active #node_"+panel).append("<ul class='ul_childrens' myid="+
 			    												panel+"></ul>");
 						}
 						sender.find(".node_img").addClass('folder_closed').removeClass("node_box").
@@ -4216,6 +4216,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  return answer;
 		  } 	
 		  
+		  var copy_id={ id:0, cut: false };
+		  
 		  //////////////////////////////////////////////////////////////////
 		  jsNeedAction = function(key, options) { //выполнение всех действий контекстновго меню дел
 			   	var id = api4tree.node_to_id( $(".tree_active .selected").attr('id') ); 
@@ -4274,7 +4276,45 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		        } else if(key=="focus_out") {		        	
 			        api4panel.jsShowFocus(tree_id, 1, "need_select_first");
 			        api4panel.jsOpenPath(id);
+		        } else if(key=="copy") {
+			        console.info("copy_id",id);
+			        copy_id.id = id;
+			        copy_id.cut = false;
+			        jsTitle("<b><i class='icon-docs'></i>В буфере:</b> "+api4tree.jsFind(id).title, 5*60000);
+		        } else if(key=="cut") {
+			        console.info("copy_id",id);
+			        copy_id.id = id;
+			        copy_id.cut = true;
+			        jsTitle("<b><i class='icon-scissors'></i>В буфере:</b> "+api4tree.jsFind(id).title, 5*60000);
+		        } else if(key=="paste_down") {
+					parent_id = api4tree.jsFind(id).parent_id;
+		        	if(copy_id.cut) {
+						if( api4tree.jsCheckIncest(parent_id, copy_id.id) ) {
+							console.info("Вставляю:", copy_id.id);
+							api4tree.jsFind(copy_id.id, {parent_id: parent_id});
+							jsRefreshTree();
+						}			        	
+		        	} else {
+						if( api4tree.jsCheckIncest(parent_id, copy_id.id) ) {
+							console.info("Копирую:", copy_id.id);
+						}			        	
+		        	}
+		        	  
 		        }
+		        
+		  }
+		  
+		  this.jsCheckIncest = function(old_id, new_id) {
+	            	var path_of_dropto = api4tree.jsFindPath(api4tree.jsFind(old_id)); //проверяем на "инцест"
+	            	no_incest = true;
+	            	if(old_id != 1)
+	            	$.each(path_of_dropto.path, function(i, el) {
+	            		if(el.path.id == new_id ) {
+	            			no_incest = false;
+	            			jsTitle("Не могу переместить родителя внутрь своих потомков",10000);
+	            		}
+	            	});
+	            	return no_incest;			  
 		  }
 		  
 		  
@@ -4486,7 +4526,7 @@ $.contextMenu({
 		  
 ////////////////////////////////////Главное контекстное меню//////////////////////////////////////////		  
 $.contextMenu({
-        selector: '.panel .big_n_title, .panel .tcheckbox ,.fc-event', 
+        selector: '.panel .big_n_title1, .panel .tcheckbox ,.fc-event', 
         events: { show: function(opt){ 
         		$(this).parents("li:first").parents(".mypanel").find(".selected").removeClass("selected");
 				$(this).parents("li:first").addClass("selected").parents(".mypanel").addClass("tree_active");
@@ -4519,13 +4559,13 @@ $.contextMenu({
             },
             "context_make_did101": {"name": "Правка", "icon": "icon-edit",
 	            "items": {
-					"copy": {"name": "Копировать", "icon": "icon-docs", "disabled":true},
-					"cut": {"name": "Вырезать", "icon": "icon-scissors", "disabled":true},
-					"paste_down": {"name": "Вставить вниз", "icon": "icon-down", "disabled":true},
-					"paste_right": {"name": "Вставить вправо", "icon": "icon-right", "disabled":true},
+					"copy": {"name": "Копировать", "icon": "icon-docs", "disabled":false},
+					"cut": {"name": "Вырезать", "icon": "icon-scissors", "disabled":false},
+					"paste_down": {"name": "Вставить вниз", "icon": "icon-down"},
+					"paste_right": {"name": "Вставить вправо", "icon": "icon-right"},
 					"sep611": "---------",
 					"dublicate": {"name": "Дублировать", "icon": "icon-docs"},
-					"move_to": {"name": "Переместить", "icon": "icon-flow-cascade", "disabled":true}
+					"move_to": {"name": "Переместить", "icon": "icon-flow-cascade"}
 	            }
             },
 
@@ -5264,6 +5304,14 @@ $.contextMenu({
 
   		       			answer = my_all_data2.renameProperty("n"+id, "n"+newvalue); //переименовываем в главном массиве
   		       			record = answer = my_all_data2["n"+newvalue];
+  		       			
+  		       			my_all_parents_clone = clone( my_all_parents["p"+old_id] );
+
+  			   		if(my_all_parents_clone) 
+  			   			$.each(my_all_parents_clone, function(k,child) {
+	  			   			api4tree.jsFind(child.id, {parent_id: new_id});
+	  			   			console.info("NEW ID!!!",child.id, {parent_id: new_id});
+  			   			});
 
   			   			api4tree.jsRefreshParents();
 
@@ -6769,6 +6817,8 @@ $.contextMenu({
 	   		$('.redactor_editor[myid='+old_id+']').attr("myid", new_id);
 	   		$('#redactor[myid='+old_id+']').attr("myid", new_id);
 	   	    $('.divider_red[myid="'+old_id+'"]').attr('myid',new_id);
+	   	    $('.divider_li[myid="'+old_id+'"]').attr('myid',new_id);
+	   	    $('.ul[myid="'+old_id+'"]').attr('myid',new_id);
 	   	    $(".makedone[myid="+old_id+"]").attr("myid",new_id); //заменяю индексы makedone
 	   	    $("#node_"+old_id).attr("id", "node_"+new_id).find(".tcheckbox").attr("title", new_id);
 	   	    $("#node_"+new_id).find(".n_title").attr("myid",new_id);

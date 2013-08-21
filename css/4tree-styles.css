@@ -318,11 +318,13 @@ white-space: nowrap;
 font-size: 1em;
 text-align: center;
 position: absolute;
-left: 20px;
-right: 20px;
+left: 30px;
+right: 30px;
 top:0px;
 color: #000;
 text-shadow: 0px 1px 0px #ССС;
+text-overflow: ellipsis;
+overflow: hidden;
 }
 
 #add_do_panel
@@ -2829,7 +2831,7 @@ background: green;
 color: white;
 font-size: 0.6em;
 height: 1.15em;
-border-radius: 3px;
+border-radius: 20px;
 vertical-align: middle;
 padding: 3px;
 padding-left: 2px;
@@ -5949,20 +5951,57 @@ margin: 0px;
 
 .mindmap .mypanel .big_n_title
 {
-margin-right: 20px;
+margin-right: 40px;
 position: relative;
 display: inline-block;
 vertical-align: baseline;
 padding: 0px;
 margin-bottom: 2px;
-border-bottom: 2px solid #777;
+border-bottom: 1px solid rgba(0,0,0,0.4);
 max-width: 400px;
+	padding-top: 5px;
+	padding-bottom: 1px;
+
 }
+
+.mindmap .mypanel .big_n_title:before {
+	content:"";
+	width:4px;
+	height:4px;
+	border-radius: 10px;
+	bottom: -2.4px;
+	left: 0px;
+	background: #AAA;
+	z-index: 90;
+	display: inline-block;
+	position: absolute;
+}
+
+.mindmap .node_img {
+	display: none;
+}
+
+.mindmap .folder_closed {
+	font-size: 10px;
+}
+
+.mindmap .folder_closed i {
+	font-size: 10px;
+	left: 3px;
+	top: 0px;
+	display: inline-block;
+}
+
+.mindmap .icon-play-div {
+	display: none;
+}
+
 
 
 .mindmap .mypanel .big_n_title .n_title
 {
 position: relative;
+padding-left: 5px;
 }
 
 .mindmap .mypanel .map_title
@@ -5986,6 +6025,7 @@ white-space: nowrap !important;
   height: auto !important;
   background-attachment: scroll;
   background-image: url('../img/cross.png');  
+  padding-top: 10em;
   padding-right: 1000px;
   padding-bottom: 1000px;
 }
@@ -6096,12 +6136,43 @@ color: #777 !important;
   text-shadow: 1px 1px 3px #FFF;
 }
 
-._jsPlumb_connector {
-/*  display: none; */
+#tree_2 ul ._jsPlumb_connector {
+  display: none; 
 }
 
-.tree-open ._jsPlumb_connector {
+#tree_2 .tree-open > ._jsPlumb_connector {
   display: block;
+  opacity: 0.4;
+}
+
+#mindmap_center ._jsPlumb_connector {
+	display: block !important;
+	opacity: 0.4;
+}
+
+
+#mindmap_center {
+	display: none;
+	cursor: pointer;
+}
+
+
+.mindmap #mindmap_center {
+	display: inline-block;
+	min-width: 7em;
+	margin-right: 3em;
+	vertical-align: middle;
+	white-space: nowrap;
+	margin-left: 3em;
+}
+
+.mindmap #mindmap_center b {
+	background: white;
+	border: 2px solid green;
+	border-radius: 10px;
+	padding: 5px;
+	font-weight: normal;
+	box-shadow: 2px 2px 5px #888;
 }
 
 

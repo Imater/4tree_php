@@ -1,5 +1,5 @@
 //v1.01
-var myjsPlumb,isMindmap = false, isTree = true, is_mobile = false;
+var myjsPlumb,isMindmap = false, isTree = true, is_mobile = false, my_connections = {};
 var note_saved=true,myr,t1,t2,my_all_comments,my_all_share,
 	my_all_frends,remember_old_panel="top_panel";
 var main_x = 50; //ширина левой панели в процентах
@@ -63,12 +63,13 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 //клик по Названию дела. ntitle = $(".ntitle"). Нужно для определения двойного клика.
 		 this.jsTitleClick = function(ntitle,from_n_title) {
  			var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
+			var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
 
 		 	if (ntitle.attr("contenteditable")==true) return true; 
 		 	
 		 	if(ntitle.parents("li:first").hasClass("selected")) {
 		 		rename_timer = setTimeout(function(){
-			 		start_rename_current(ntitle);
+//			 		start_rename_current(ntitle);
 		 		}, 600);
 		 	}
 		 	
@@ -93,6 +94,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 //выбрать заметку и загрузить в редакторе
 		 this.jsSelectNode = function(id,iamfrom) { //открыть заметку в календаре и в редакторе
 		 //	i_am_from - кто вызвал: redactor, calendar, tree, diary
+		    api4panel.jsDrawMindmap();
 		    $(".tree_active .selected").removeClass("selected");
 		 	$(".tree_active #node_"+id).addClass("selected");
 //			if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
@@ -151,6 +153,10 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 this.isTree = {}; //обозначаем элементы - дерево ли это
 		 this.isTree["tree_1"] = $("#tree_1").parent("div").hasClass("panel_type1");
 		 this.isTree["tree_2"] = $("#tree_2").parent("div").hasClass("panel_type1");
+
+		 this.isMindmap = {}; //обозначаем элементы - карта ума ли это
+		 this.isMindmap["tree_1"] = $("#tree_1").parent("div").hasClass("mindmap");
+		 this.isMindmap["tree_2"] = $("#tree_2").parent("div").hasClass("mindmap");
 		 
 		 
 		 
@@ -159,6 +165,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 //открыть заметку с номером, если она на экране (make .selected)
 		 this.jsOpenNode = function(id,nohash,iamfrom) {
 			var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
+			var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
 		 	var element = api4tree.jsFind(id);
 	 		var myli = $(".tree_active #node_"+id+":last");
 	 		var mypanel = myli.parents(".panel");
@@ -303,6 +310,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	    	$(".tree_active").removeClass("tree_active");
     	    	var tree_id = $(this).parents(".mypanel").addClass("tree_active").attr("id");
 				var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
+				var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
+				
     	    	
     	        if( $(this).find(".ntitle").attr("contenteditable") ) return true; //если редактируется
     	        $(".ntitle[contenteditable=true]").blur();
@@ -323,7 +332,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	        	var id = api4tree.node_to_id( $(this).attr("id") );
 
     	        if( !$(this).hasClass('tree-open') ) { //если ветка свёрнута
-    	        	api4panel.jsOpenNode( id ); //открываю панель
+    	        	if( !$(this).find("ul:first li").length ) api4panel.jsOpenNode( id ); //открываю панель
     	        	api4panel.jsSelectNode( id ,'tree');
     	    
     	        	if( isTree && (!$(this).hasClass("tree-open")) ) { //если дерево и нужно открыть ветку
@@ -358,7 +367,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	        	} else {
     	        		$(this).removeClass("tree-open");
     	        		var id = api4tree.node_to_id( $(this).attr("id") );
-    	        		api4panel.jsOpenNode( id ); //открываю панель
+    	        		if( !$(this).find("ul:first li").length ) api4panel.jsOpenNode( id ); //открываю панель
     	        		api4panel.jsSelectNode( id ,'tree');
     	        		$(this).addClass("tree-open");
     	        	}
@@ -562,6 +571,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
  		 	var isTree = false;
 			isTree = $(".tree_active").parent("div").hasClass("panel_type1");
+			var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
 
 
 		   if(id != parseInt(id)) return false;
@@ -621,6 +631,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 //				$(".mypanel").scrollLeft(9999999);
 				//$(".mypanel").stop().animate({"scrollLeft":99999999},500);		 		
 			}
+			api4panel.jsDrawMindmap();
 			
 		 }
 		 			 			 
@@ -880,12 +891,12 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			return mydata;
 		 }
 		 
-		 this.jsShowFocus = function(tree_id, id, need_select_first_element) {
+		 this.jsShowFocus = function(tree_id, id, need_select_first_element, expand_all) {
 		 	 if(api4tree.jsFindByParent(id).length==0) return false;
 		  	 var element = api4tree.jsFind(id);
 		  	 var parent_id = id;
 		 	 $("#"+tree_id+".mypanel").html("<div id='panel_"+parent_id+"' class='panel'><ul myid='"+parent_id+"'></ul></div>").attr("focus_id",parent_id);
-			 api4panel.jsShowTreeNode(tree_id, parent_id, false);
+			 api4panel.jsShowTreeNode(tree_id, parent_id, false, undefined, undefined, expand_all);
 			 
 			 if(need_select_first_element) {
 				 var first_id = $("#"+tree_id+" li:first").attr("myid");
@@ -893,15 +904,20 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 }
 		 }
 		 
+
+		 this.jsShowTreeNode = function(tree_id, parent_node,isTree1,other_data, where_to_add, expand_all) {
+			 api4panel.jsShowTreeNodeHtml(tree_id, parent_node,isTree1,other_data, where_to_add, expand_all);
+	     }
 		 
 		 //функция отображения панели для дерева		 
-		 this.jsShowTreeNode = function(tree_id, parent_node,isTree1,other_data, where_to_add) {
+		 this.jsShowTreeNodeHtml = function(tree_id, parent_node,isTree1,other_data, where_to_add, expand_all) {
 		 	
  		 	var isTree = false;
 			isTree = $("#"+tree_id).parent("div").hasClass("panel_type1");
+			var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
+			isMindmap = ((tree_id == "tree_2"));
 			
-			
-
+			if(isMindmap) focus_id = $("#tree_2").attr("focus_id");
 
 		 	if(other_data) { //если данные внешние
 		 		$(".search_panel_result ul").html('');
@@ -939,6 +955,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	}
 
 		 	var where_to_add_cache = $("<div></div>");
+		 			 	
+		 	
 		 	var line_cache = [];
 		 	
 		 	$.each(mydata, function(i,data) {
@@ -948,10 +966,14 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		  if(i==0) {
 			 		  	if(isTree && parent_node!=1) {  // если это дерево
 			 		  		if( $("#"+tree_id+" .ul_childrens[myid="+parent_node+"]").length==0 ) {
-			 		  			$("#"+tree_id+" #node_"+parent_node).
-			 		  				append("<ul class='ul_childrens' myid="+parent_node+"></ul>");
+			 		  		
+//			 		  			var childrens = api4panel.jsShowTreeNode(tree_id, parent_id, false, undefined, undefined, expand_all);
+								var childrens = "";
+			 		  		
+			 		  			$("#"+tree_id+" #node_"+parent_node).append("<ul class='ul_childrens' myid="+parent_node+">"+childrens+"</ul>");
+			 		  				
 			 		  		} else {
-//			 		  			alert(1);
+			 		  			alert(1);
 			 		  			//return false;
 			 		  		}
 			 		  	} else {
@@ -982,11 +1004,14 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 		  where_to_add_cache.append( api4panel.jsRenderOneElement(data,data.position,parent_node) );
 		 		  
-		 		  if(parent_node!=1 && parent_node!=-1) {
 			 		  if(isMindmap) {
-			 		  	line_cache.push( {source: "node_"+parent_node+" .big_n_title:first", target: "node_"+data.id+" .big_n_title:first"} );
+			 		  	if(parent_node == focus_id) {
+			 		  		var source = "mindmap_center";
+			 		  	} else {
+				 		  	var source = parent_node;
+			 		  	}
+			 		  	line_cache.push( {source: source, target: data.id} );
 			 		  }
-		 		  }
 		 		  
 		 	}); //each(mydata)
 		 	
@@ -1006,12 +1031,39 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	api4panel.jsPrepareDate( where_to_add_cache );
 
 		 	where_to_add.html( where_to_add_cache );
+		 	
+ 		    if(parent_node==$("#tree_2").attr("focus_id")) {
+ 		    	if(parent_node==1) {
+ 		    		var title_center = "4tree.ru";
+ 		    	} else {
+	 		    	var title_center = api4tree.jsFind(parent_node).title;
+ 		    	}
+ 		    	
+ 		    	where_to_add.parents(".panel:first").prepend("<div id='mindmap_center'><b>"+title_center+"</b></div>");
+ 		    }
 
- 		  if(isMindmap) {
+ 		  if(isMindmap && false) {
 
  		    $.each(line_cache, function(i, el){
- 		  		  myjsPlumb.connect({source: el.source, 
-			 											   target: el.target, scope:"someScope"});
+ 		    	
+ 		    	if( !my_connections[ el.target ] && !my_connections[ el.target ]) {
+ 		    	
+ 		    		if(el.source == "mindmap_center") {
+	 		    	  var p1 = myjsPlumb.addEndpoint("tree_2 #mindmap_center b", { anchor: [ 1, 0.5, 1, 0, -1, -1 ]});	
+	 		    	  var LineType = "Bezier";
+ 		    		} else {
+ 		    	      var p1 = myjsPlumb.addEndpoint("tree_2 #"+"node_"+el.source+" .big_n_title:first", { anchor: [ 1, 1, 1, 0, -1, -1 ]});
+ 		    	      if( api4tree.jsFindByParent(el.source).length>10 ) var LineType = "Bezier";
+ 		    	      else var LineType = "Bezier";
+ 		    	    }
+ 		    	    var p2 = myjsPlumb.addEndpoint("tree_2 #"+"node_"+el.target+" .big_n_title:first", { anchor: [ 0, 1, -1, 0, 1, -1 ]});
+ 		    	    
+ 		  		  	xxx = myjsPlumb.connect({source: p1, target: p2, scope:"someScope", deleteEndpointsOnDetach:true, connector:[ LineType, { curviness: 30 } ]});
+ 		  		  	console.info("connect_to", strip_tags(api4tree.jsFind(el.target).title), el.target );
+ 		  		  	my_connections[ el.target ] = xxx; //кэшируем все линии, чтобы потом пользоваться
+ 		  		  } else {
+ 		  		  	console.info("Линии уже есть");
+ 		  		  }
  		  	});
 
  		  }
@@ -1047,6 +1099,87 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	
 		 } //jsShowTreeNode
 		 
+		 
+		 $("body").on("click","#mindmap_center", function(){
+			var tree_id = $(this).parents(".mypanel").attr("id");
+			var id = $(this).parents(".mypanel").attr("focus_id");
+			if(focus_id==1) {
+				var parent_id = 1;
+			} else {
+				var parent_id = api4tree.jsFind(id).parent_id;
+			}
+			api4panel.jsShowFocus(tree_id, parent_id, true, "expand_all");
+		 });
+		 
+		 this.jsExpandAll = function(tree_id) {
+			 $("#"+tree_id+" li").each(function(){
+			 	var id = $(this).addClass("tree-open").attr("myid");
+			 	api4panel.jsOpenNode(id);
+			 });
+		 }
+
+		 this.jsDrawMindmap = function() {
+
+
+		 	line_cache = [];
+		 	
+		 	$("#tree_2 ul:visible").each(function(){
+		 		var ul_id = $(this).attr("myid");
+		 		var childs = api4tree.jsFindByParent(ul_id);
+		 		var focus_id = $("#tree_2").attr("focus_id");
+			 	$.each(childs, function(i,el){
+				 	var target = el.id;
+				 	if(!$("#tree_2 #node_"+target+" .big_n_title").hasClass("_jsPlumb_endpoint_anchor_")) {
+					 	var parent_id = el.parent_id;
+					 	
+					 	if(parent_id == focus_id) parent_id = "mindmap_center";
+					 	line_cache.push( {source: parent_id, target: target} );
+				 	}
+			 	});
+		 	});
+		 	
+		 	if(line_cache.length) {
+			 	if(!myjsPlumb.isSuspendDrawing() && isMindmap) {
+			 		myjsPlumb.setSuspendDrawing(true, true);
+			 		console.info("set_suspend");
+			 	}
+		 	}
+		 	
+		 	
+ 		    $.each(line_cache, function(i, el){
+ 		    	
+ 		    	if( true ) {
+ 		    	
+ 		    		if(el.source == "mindmap_center") {
+     		    	  var p1 = myjsPlumb.addEndpoint("tree_2 #mindmap_center b", { anchor: [ 1, 0.5, 1, 0, -1, -1 ]});	
+     		    	  LineType = "Bezier";
+ 		    		} else {
+ 		    	      var p1 = myjsPlumb.addEndpoint("tree_2 #"+"node_"+el.source+" .big_n_title:first", { anchor: [ 1, 1, 1, 0, -1, -1 ]});
+ 		    	      ;
+ 		    	      var count = api4tree.jsFindByParent(el.source).length;
+ 		    	      if( count > 10 ) {
+	 		    	      var LineType = "Flowchart";
+ 		    	      } else {
+ 		    	      	  var LineType = "Bezier";
+ 		    	      }
+ 		    	      
+ 		    	      if(count<4) var LineType = "Straight";
+ 		    	      
+ 		    	    }
+ 		    	    var p2 = myjsPlumb.addEndpoint("tree_2 #"+"node_"+el.target+" .big_n_title:first", { anchor: [ 0, 1, -1, 0, 1, -1 ]});
+ 		    	    
+ 		  		  	xxx = myjsPlumb.connect({source: p1, target: p2, scope:"someScope", deleteEndpointsOnDetach:true, connector:[ LineType, { curviness: 30, cornerRadius: 20 } ]});
+					xxx = true;
+ 		  		  	my_connections[ el.target ] = xxx; //кэшируем все линии, чтобы потом пользоваться
+ 		  		  } else {
+ 		  		  	console.info("Линии уже есть");
+ 		  		  }
+ 		  	});
+		 	if(line_cache.length) {
+				myjsPlumb.setSuspendDrawing(false, true);
+			}
+		 }
+
 
 		 this.jsPathTitle = function(id) {
 		 		var mypath = api4tree.jsFindPath( api4tree.jsFind( id ) );
@@ -1721,13 +1854,13 @@ function jsDoFirst() { //функция, которая выполняется �
 		myjsPlumb = jsPlumb.getInstance({
 			DragOptions: { cursor: 'pointer', zIndex: 2000 },
 			PaintStyle:{ 
-			  lineWidth:2, 
-			  strokeStyle:"#777"
+			  lineWidth:1, 
+			  strokeStyle:"rgba(0,0,0);"
 //			  outlineColor:"black", 
 //			  outlineWidth:1 
 			},
 			Connector:[ "Bezier", { curviness: 30 } ],
-			Endpoint:[ "Blank", { radius:2 } ],
+			Endpoint:[ "Blank", { radius:5 } ],
 			EndpointStyle : { fillStyle: "#567567"  },
 			Anchors : [[ 1, 1, 1, 0, -1, -1 ],[ 0, 1, -1, 0, 1, -1 ]]
 		});
@@ -1878,6 +2011,7 @@ function jsShowTreePanel() {//запускается единожды
 
  	var isTree = false;
 	isTree = $(".tree_active").parent("div").hasClass("panel_type1");
+	var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
 
 //	api4panel.jsShowTreeNode("tree_1",1,false);
 //	api4panel.jsShowTreeNode("tree_2",1,false);
@@ -1955,6 +2089,8 @@ function jsAddFavRed(mytitle,id) {
 function jsRefreshTreeFast(element,arrow,date1)
 {
 var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
+var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
+
 //var element = jsFind(myid);
 if(element)
 	{
@@ -1984,19 +2120,31 @@ if(element)
 				$( api4panel.jsRenderOneElement(element,iii) ).insertAfter( $(".tree_active li.selected") );
 			}
 
-	  if((element.parent_id!=1) && (isMindmap)) {
+	  if(false && (element.parent_id!=1) && (isMindmap)) {
 	      if(isMindmap) {
 			  myjsPlumb.connect({source:"node_"+element.parent_id+" .big_n_title:first", 
 			  					 target: "node_"+element.id+" .big_n_title:first", scope:"someScope"});
 			  myjsPlumb.setSuspendDrawing(false,true);
 		  }
       }
-
+    api4panel.jsDrawMindmap();
 	}
 	
 
 }
 
+function jsConnectLines() {
+/*	  myjsPlumb.connect({source:"node_"+element.parent_id+" .big_n_title:first", 
+	  					 target: "node_"+element.id+" .big_n_title:first", scope:"someScope"}); */
+	  myjsPlumb.detachEveryConnection();
+	  
+	  $("#tree_2 ul:visible").each(function(i,el){
+		  $(this).find("li").each(function(j,li) {
+			 console.info("li_to", $(this)) ;
+		  });
+	  });
+	
+}
 
 
 var last_refresh;
@@ -2004,6 +2152,7 @@ var need_to_re_refresh;
 //обновление дерева
 function jsRefreshTree() {
 	console.info("RefreshTree");
+	
 
 	var myselected,myold_selected,old_scroll;
 	last_refresh = jsNow();
@@ -2018,25 +2167,39 @@ function jsRefreshTree() {
 
 	jsSnapShotApply("tree_1", jsSnapShotMake("tree_1") ); //обновляем правое дерево
 
-	var scrollleft = $("#tree_2.mypanel").scrollLeft();
-	
-	$("#tree_2 .panel").quickEach( function() {
-    	var id = $(this).attr('id');
-    	if(id) {
-	    	var panel_id = id.replace("panel_","");
-	    	if( api4tree.jsFindByParent( panel_id ).length >0 ) {
-	    		myselected = api4tree.node_to_id( $(this).find(".selected").attr('id') ); 
-	    		myold_selected = api4tree.node_to_id( $(this).find(".old_selected").attr('id') ); 
-	    		old_scroll = $(this).scrollTop();
-	    		api4panel.jsShowTreeNode( "tree_2", panel_id ); 
-	    		$(this).scrollTop(old_scroll);
-	    		$("#tree_2 #node_"+myselected).addClass("selected").addClass("tree-open"); 
-	    		$("#tree_2 #node_"+myold_selected).addClass("old_selected").addClass("tree-open"); 
-    		} else {
-	    		$(this).remove();
-    		}
-    	}
-    });
+
+    if( $("#tree_2").parent("div").hasClass("mindmap") ) {
+
+			myjsPlumb.setSuspendDrawing(false,true);
+		    myjsPlumb.reset();		
+    		var snapshot = jsSnapShotMake("tree_2");
+	    	
+	    	setTimeout(function(){
+				jsSnapShotApply("tree_2", snapshot ); //обновляем правое дерево
+				api4panel.jsDrawMindmap();		    	
+	    	},10);
+
+    } else {
+			var scrollleft = $("#tree_2.mypanel").scrollLeft();
+			
+			$("#tree_2 .panel").quickEach( function() {
+		    	var id = $(this).attr('id');
+		    	if(id) {
+			    	var panel_id = id.replace("panel_","");
+			    	if( api4tree.jsFindByParent( panel_id ).length >0 ) {
+			    		myselected = api4tree.node_to_id( $(this).find(".selected").attr('id') ); 
+			    		myold_selected = api4tree.node_to_id( $(this).find(".old_selected").attr('id') ); 
+			    		old_scroll = $(this).scrollTop();
+			    		api4panel.jsShowTreeNode( "tree_2", panel_id ); 
+			    		$(this).scrollTop(old_scroll);
+			    		$("#tree_2 #node_"+myselected).addClass("selected").addClass("tree-open"); 
+			    		$("#tree_2 #node_"+myold_selected).addClass("old_selected").addClass("tree-open"); 
+		    		} else {
+			    		$(this).remove();
+		    		}
+		    	}
+		    });
+    }
 		
 	$('#calendar').fullCalendar( 'refetchEvents' ); 
 	$("#tree_2.mypanel").stop().scrollLeft(scrollleft);

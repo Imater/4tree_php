@@ -1427,7 +1427,7 @@ function jsSnapShotApply(tree_id, snapshot)
 	
 	var focus_id = $("#"+tree_id).attr("focus_id");
 	if(!focus_id) focus_id = 1;
-	api4panel.jsShowFocus("tree_1", focus_id);
+	api4panel.jsShowFocus(tree_id, focus_id);
 	
 //	api4panel.jsShowTreeNode("tree_1",6223,false);
 
@@ -1439,7 +1439,7 @@ function jsSnapShotApply(tree_id, snapshot)
 	$.each(snapshot.tree_open, function(i,el){
 		var id_to_open = el.replace("node_","");
 		api4panel.jsOpenNode( id_to_open );
-		$("#node_"+id_to_open).addClass("tree-open").find("ul:first").show();
+		$("#"+tree_id+" #node_"+id_to_open).addClass("tree-open").find("ul:first").show();
 //		$("#"+tree_id+" #"+el).
 	})
 	
@@ -1463,6 +1463,9 @@ function jsSnapShotApply(tree_id, snapshot)
 		$(".tree_active").removeClass("tree_active");
 		$("#"+tree_active).addClass("tree_active");
 	}
+	
+	isMindmap = $(".mindmap").length;
+	if(isMindmap) tm_resize = setTimeout(function(){ myjsPlumb.setSuspendDrawing(false,true) },0);
 	
 }
 
@@ -1628,9 +1631,11 @@ function jsMakeDrop() //обеспечивает элементам drag&drop
 	           			api4tree.jsFind(draggable, {parent_id : dropto});
 			   			setTimeout(function(){ 
 			   				jsRefreshTree(); 
-			   				$(".tree_active").removeClass("tree_active");
-			   				$("#"+drop_to_tree).addClass("tree_active");
-			   				api4panel.jsOpenPath(draggable);
+			   				setTimeout(function(){
+				   				$(".tree_active").removeClass("tree_active");
+				   				$("#"+drop_to_tree).addClass("tree_active");
+				   				api4panel.jsOpenPath(draggable);
+			   				}, 15);
 			   			},100);
 			   		}
 			    	
@@ -1647,6 +1652,7 @@ var tm_resize;
 function onResize() //вызывается при каждом ресайзе страницы
 {	
 	clearTimeout(tm_resize);
+	isMindmap = $(".mindmap").length;
 	if(isMindmap) tm_resize = setTimeout(function(){ myjsPlumb.setSuspendDrawing(false,true) },1000);
 	
 	if($(".ui-resizable-resizing").length) return true;
