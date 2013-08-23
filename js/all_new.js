@@ -1317,6 +1317,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				 	jsRefreshTree();
 				 	api4tree.jsZoomTree(-2000);
 			 } else {
+			 		if( $("body").hasClass("params_hide")  ) $(".tree_view_center").click();
 			 		$("#tree_center .top_panel_header").show();
 			 		$(this).addClass("active");
 			 		$("#tree_2 .panel").nextAll(".panel").hide();
