@@ -4607,7 +4607,8 @@ $.contextMenu({
 		  
 ////////////////////////////////////Главное контекстное меню//////////////////////////////////////////		  
 $.contextMenu({
-        selector: '.panel .big_n_title1, .panel .tcheckbox ,.fc-event', 
+        selector: '.panel .big_n_title, .panel .tcheckbox ,.fc-event', 
+//        triger: "right",
         events: { show: function(opt){ 
 		        var id = $(this).parents("li:first").attr("myid"); 
         		$(this).parents("li:first").parents(".mypanel").find(".selected").removeClass("selected");
