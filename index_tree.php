@@ -265,9 +265,10 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 	  <div id="tree_left_panel" class="">
 		<div class="top_panel_header">
 			<ul>
-				<li><i class="icon-minus-circle"></i></li>
-				<li><i class="icon-plus-circle"></i></li>
-				<li><i class="icon-plus"></i></li>
+				<li id="tree_1_home" title="На главную"><i class="icon-home"></i></li>
+				<li id="tree_1_collapse" title="Свернуть всё"><i class="icon-minus round_box"></i></li>
+				<li id="tree_1_expand" title="Развернуть всё"><i class="icon-plus round_box"></i></li>
+				<li id="tree_1_add"><i class="icon-plus"></i></li>
 			</ul>
 		
 		</div>
@@ -318,161 +319,15 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 	  
 	  	  <div id="tree_right_panel" class="noselectable">
 		  	<div id="resize_me_right"></div>
-		  	<div id="top_panel_header_right">
+		  	<div class="top_panel_header">
+		  	  <ul>
+			  	<b>Ярлыки:</b>
+				<li id="tags_collapse" title="Свернуть всё"><i class="icon-minus round_box"></i></li>
+				<li id="tags_expand" title="Развернуть всё"><i class="icon-plus round_box"></i></li>
+			  </ul>
 			</div>
 			<div id="right_tags">
 				<ul id="tags_ul">
-					<li class="top_label"><div class="label">Домашние ярлыки</div>
-						<ul>
-							<li>@Срочно								
-								<ul class="tags_content">
-									<li><i class="icon-folder-1"></i>Мозг</li>
-									<li><i class="icon-folder-1"></i>Задуматься</li>
-									<li><i class="icon-folder-1"></i>Цели в жизни</li>
-									<li><i class="icon-folder-1"></i>Потом</li>
-									<li><i class="icon-folder-1"></i>Разобрать</li>
-									<li><i class="icon-folder-1"></i>Уборка</li>
-								</ul>
-							</li>
-							<li>@Мысли
-								<ul class="tags_content">
-									<li><i class="icon-folder-1"></i>Новый завет</li>
-									<li><i class="icon-folder-1"></i>Не забыть сходить подстричься в парикмахерскую на углу второй улици справа от фонтана</li>
-									<li><i class="icon-folder-1"></i>Цели в жизни</li>
-									<li><i class="icon-folder-1"></i>Потом</li>
-									<li><i class="icon-folder-1"></i>Разобрать</li>
-									<li><i class="icon-folder-1"></i>Уборка</li>
-								</ul>
-							</li>
-							<li>@4tree</li>
-							<li>@На сайт</li>
-							<li>@Магазин</li>
-							<li>@Обдумать</li>
-							<li>@Разобрать</li>
-						</ul>
-					 </li>
-					<li class="top_label"><div class="label">Рабочие ярлыки</div>
-						<ul>
-							<li>@Срочно</li>
-							<li>@Новый компьютер</li>
-							<li>@Компьютер</li>
-							<li>@Телефон</li>
-							<li>@Босс</li>
-							<li>@Поручения</li>
-							<li>@Календарь</li>
-							<li>@Выставить</li>
-							<li>@Платежи</li>
-							<li>@Оплачено</li>
-							<li>@Долги</li>
-							<li>@Купить</li>
-							<li>@Стройка</li>
-							<li>@Обязательства</li>
-						</ul>
-					 </li>
-					<li class="top_label"><div class="label">Остальные ярлыки</div>
-						<ul>
-							<li>@Мозг</li>
-							<li>@Задуматься</li>
-							<li>@Цели в жизни</li>
-							<li>@Потом</li>
-							<li>@Разобрать</li>
-							<li>@Уборка</li>
-						</ul>
-					 </li>
-
-
-					<li class="top_label"><div class="label">Домашние ярлыки</div>
-						<ul>
-							<li>@Срочно</li>
-							<li>@Мысли</li>
-							<li>@4tree</li>
-							<li>@На сайт</li>
-							<li>@Магазин</li>
-							<li>@Обдумать</li>
-							<li>@Разобрать</li>
-						</ul>
-					 </li>
-					<li class="top_label"><div class="label">Рабочие ярлыки</div>
-						<ul>
-							<li>@Срочно</li>
-							<li>@Новый компьютер</li>
-							<li>@Компьютер</li>
-							<li>@Телефон</li>
-							<li>@Босс</li>
-							<li>@Поручения</li>
-							<li>@Календарь</li>
-							<li>@Выставить</li>
-							<li>@Платежи</li>
-							<li>@Оплачено</li>
-							<li>@Долги</li>
-							<li>@Купить</li>
-							<li>@Стройка</li>
-							<li>@Обязательства</li>
-						</ul>
-					 </li>
-					<li class="top_label"><div class="label">Остальные ярлыки</div>
-						<ul>
-							<li>@Мозг</li>
-							<li>@Задуматься</li>
-							<li>@Цели в жизни</li>
-							<li>@Потом</li>
-							<li>@Разобрать</li>
-							<li>@Уборка</li>
-						</ul>
-					 </li>
-
-					<li class="top_label"><div class="label">Домашние ярлыки</div>
-						<ul>
-							<li>@Срочно</li>
-							<li>@Мысли</li>
-							<li>@4tree</li>
-							<li>@На сайт</li>
-							<li>@Магазин</li>
-							<li>@Обдумать</li>
-							<li>@Разобрать</li>
-						</ul>
-					 </li>
-					<li class="top_label"><div class="label">Рабочие ярлыки</div>
-						<ul>
-							<li>@Срочно</li>
-							<li>@Новый компьютер</li>
-							<li>@Компьютер</li>
-							<li>@Телефон</li>
-							<li>@Босс</li>
-							<li>@Поручения</li>
-							<li>@Календарь</li>
-							<li>@Выставить</li>
-							<li>@Платежи</li>
-							<li>@Оплачено</li>
-							<li>@Долги</li>
-							<li>@Купить</li>
-							<li>@Стройка</li>
-							<li>@Обязательства</li>
-						</ul>
-					 </li>
-					<li class="top_label"><div class="label">Остальные ярлыки</div>
-						<ul>
-							<li>@Мозг</li>
-							<li>@Задуматься</li>
-							<li>@Цели в жизни</li>
-							<li>@Потом</li>
-							<li>@Разобрать</li>
-							<li>@Уборка</li>
-						</ul>
-					 </li>
-
-				</ul>
-			</div>
-			
-			<div id="right_fav_folders">
-				<ul class="">
-					<li>_НОВОЕ</li>
-					<li>ДНЕВНИК</li>
-					<li>МЫСЛИ</li>
-					<li>АСТД</li>
-					<li>ОБДУМАТЬ</li>
-					<li>4TREE.RU</li>
-
 				</ul>
 			</div>
 			
@@ -519,9 +374,11 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
   		  			<div class="box"></div>
   		  		</div>
 
+  		  		
   		  	</div>
 
   		  </div>
+  		  <div id="mindmap_on" title="Карта ума вкл/выкл"><i class='icon-sitemap'>карта ума</i></div>
   		  </div>
 
 
@@ -532,8 +389,18 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 		  		  </div>
 
 		  	  <div id="tree_center">
-			  	  <div class="top_panel2 panel_type1 mindmap">
-			  	      <div class="mypanel" style="" id="tree_2" class="mindmap">
+		<div class="top_panel_header noselectable">
+			<ul>
+				<li id="tree_2_home" title="На главную"><i class="icon-home"></i></li>
+				<li id="tree_2_collapse" title="Свернуть всё"><i class="icon-minus round_box"></i></li>
+				<li id="tree_2_expand" title="Развернуть всё"><i class="icon-plus round_box"></i></li>
+				<li id="tree_2_zoom_in" title="Увеличить"><i class="icon-zoom-in"></i></li>
+				<li id="tree_2_zoom_out" title="Уменьшить"><i class="icon-zoom-out"></i></li>
+			</ul>
+		
+		</div>
+			  	  <div class="top_panel2 panel_type3">
+			  	      <div class="mypanel" style="" id="tree_2">
 			  	      </div>
 			  	  </div>
 			  <div id="resize_me1"></div>

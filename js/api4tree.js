@@ -95,12 +95,12 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			    												panel+"></ul>");
 						}
 						sender.find(".node_img").addClass('folder_closed').removeClass("node_box").
-			   				   html("<div class='countdiv'>1</div>").removeClass("node_img").
+			   				   html("<i class='icon-folder-1'><div class='countdiv'>1</div></i>").removeClass("node_img").
 			   				   removeAttr("style");
 			   		} else {
 			   			sender.parents(".panel").nextAll(".panel").not("#panel_"+panel).remove();
 						sender.find(".node_img").addClass('folder_closed').removeClass("node_box").
-			   				   html("<div class='countdiv'>1</div>").removeClass("node_img").
+			   				   html("<i class='icon-folder-1'><div class='countdiv'>1</div></i>").removeClass("node_img").
 			   				   removeAttr("style");
 			   			iii = $("#panel_"+panel).length; 
 			   			if(iii==0) $(".tree_active.mypanel").append("<div id='panel_"+panel+
@@ -770,7 +770,8 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  //			if(id<0) jsStartSync("soon","IF NEW ELEMENT");
     	  			sender.removeAttr("old_title");
 			 		api4tree.jsSetSettings(id);
-	 	  			jsRefreshTree();
+			 		if( sender.parents(".mypanel:first").attr("id")=="tree_2" )	jsRefreshTree("tree_1");
+			 		else jsRefreshTree("tree_2");
     	  			}
     	  	  }
     	  	else
@@ -1020,14 +1021,18 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      					var li = html_cache.find("li[myid='"+the_tag+"']");
 		      					li.find(".count:first").html( parseInt(li.find(".count:first").html())+1 );
 			      				var tags_ul = li.find(".tags_content:first");
+				  				
+				  				var date1 = "<div class='date1' title='"+el.date1+"'></div>";
 			      				
-			      				tags_ul.append("<li myid='"+el.id+"'>"+el.title+"</li>");
+			      				tags_ul.append("<li myid='"+el.id+"'>"+el.title+date1+"</li>");
 		      				});
 		      		}
 		      	}
 		      });	
 		      
 		      $("#tags_ul").html(html_cache.html());
+		      
+		      api4panel.jsPrepareDate($("#tags_ul"));
 
 			  api4tree.jsSelectTag(old_selected);
 
@@ -2011,7 +2016,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		  		
 		  
 		  	$(".mypanel").css("font-size",tree_font+'em');
-			if((zoom_step!=-2000) &&(isMindmap)) myjsPlumb.setSuspendDrawing(false,true);	
+			if((zoom_step!=-2000) &&(isMindmap)) jsRepaint("Zoom");
 		  	
 		    localStorage.setItem('main_tree_font',tree_font);	
 //		    onResize();		
@@ -3239,7 +3244,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			  });
 			  var answer = JSON.stringify(to_save);
 			  localStorage.setItem("users_opened_panels", answer);
-			  setTimeout(function(){ onResize(); }, 500);
+			  //setTimeout(function(){ onResize(); }, 500);
 //			  console.info( answer );
 			  }, 800);
 		  }
@@ -4269,8 +4274,10 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 	            	return false;
 		        } else if(key=="dublicate") {
 
-					api4tree.jsClone(id);		        
+					var clone_id = api4tree.jsClone(id);		        
 			 	    jsRefreshTree();			        
+			 	    api4panel.jsSelectNode(clone_id);
+			 	    
 		        } else if(key=="focus_in") {
 			        api4panel.jsShowFocus(tree_id, id, "need_select_first");
 		        } else if(key=="focus_out") {		        	
@@ -4287,19 +4294,52 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			        copy_id.cut = true;
 			        jsTitle("<b><i class='icon-scissors'></i>В буфере:</b> "+api4tree.jsFind(id).title, 5*60000);
 		        } else if(key=="paste_down") {
-					parent_id = api4tree.jsFind(id).parent_id;
+		        	var click_element = api4tree.jsFind(id);
+					var parent_id = click_element.parent_id;
+					var position = parseFloat(click_element.position)+0.1;
 		        	if(copy_id.cut) {
 						if( api4tree.jsCheckIncest(parent_id, copy_id.id) ) {
-							console.info("Вставляю:", copy_id.id);
-							api4tree.jsFind(copy_id.id, {parent_id: parent_id});
+							api4tree.jsFind(copy_id.id, {parent_id: parent_id, position: position});
+							console.info("Вставляю:", copy_id.id, {parent_id: parent_id, position: position} );
 							jsRefreshTree();
+							api4panel.jsSelectNode(copy_id.id);
 						}			        	
 		        	} else {
 						if( api4tree.jsCheckIncest(parent_id, copy_id.id) ) {
 							console.info("Копирую:", copy_id.id);
+							var clone_id = api4tree.jsClone(copy_id.id, parent_id );
+							api4tree.jsFind(clone_id, {position: position});
+							jsRefreshTree();
+							api4panel.jsSelectNode(clone_id);
 						}			        	
 		        	}
 		        	  
+		        } else if(key=="paste_right") {
+
+		        	var click_element = api4tree.jsFind(id);
+					var parent_id = click_element.id;
+					var position = 10000;
+		        	if(copy_id.cut) {
+						if( api4tree.jsCheckIncest(parent_id, copy_id.id) ) {
+							api4tree.jsFind(copy_id.id, {parent_id: parent_id, position: position});
+							console.info("Вставляю:", copy_id.id, {parent_id: parent_id, position: position} );
+							jsRefreshTree();
+							api4panel.jsSelectNode(copy_id.id);
+						}			        	
+		        	} else {
+						if( api4tree.jsCheckIncest(parent_id, copy_id.id) ) {
+							console.info("Копирую:", copy_id.id);
+							var clone_id = api4tree.jsClone(copy_id.id, id);
+							api4tree.jsFind(clone_id, {position: position});
+							
+							jsRefreshTree();
+							api4panel.jsSelectNode(clone_id);
+						}			        	
+		        	}
+
+			        
+		        } else if(key=="edit_all") {
+			    	api4editor.jsRedactorOpenRecursive(id);    
 		        }
 		        
 		  }
@@ -4343,15 +4383,21 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					return new_element.id;
 		  }
 		  
-		  this.jsClone = function(id) {
+		  this.jsClone = function(id, new_parent_id) {
 		  	  var show_did_was = settings.show_did;
 			  settings.show_did = true;
 
-			  var parent_id = api4tree.jsFind(id).parent_id;
+			  if(new_parent_id) {
+			  	var parent_id = new_parent_id;
+			  } else {
+			  	var parent_id = api4tree.jsFind(id).parent_id;
+			  }
 			  
-			  jsCloneChilds(id, parent_id, "first_level");
+			  var _parent_id = jsCloneChilds(id, parent_id, "first_level");
 
 			  settings.show_did = show_did_was;
+			  
+			  return _parent_id;
 		  }
 
 		  function jsCloneChilds(id, new_parent_id, is_first_level) {
@@ -4364,6 +4410,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				  });
 			  	  
 		  	  }
+		  	  return clone_parent_id;
 		  	  
 		  }
 		  
@@ -4406,6 +4453,21 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 			 	$('.tree_add_new_element').contextmenu();
 				return false; 
 			 });
+			 
+			 
+			 $("#tags_collapse").on("click", function(){
+				$("#right_tags .tags_content").slideUp(100);
+			 });
+
+			 $("#tags_expand").on("click", function(){
+				$("#right_tags .tags_content").slideDown(300);
+			 });
+			 
+			 $('#tree_1_add').on("click", function(){
+			 	$('#tree_1_add').contextmenu();
+				return false; 
+			 });
+			 
 			 
 			 $('.tree_history_arrows').on("contextmenu", "i", function(){
 
@@ -4473,6 +4535,27 @@ $.contextMenu({
 		    	 api4tree.jsShowAllTags();
 		    	 api4tree.jsSaveTagsFromScreen(); //сохраняю все теги на сервер
 	          }
+	        } else if (key=="remove_tag") {
+		        alert("Удалить тег?"+tag_id);
+		         var delete_id = false;
+	          	 $.each(my_tags, function(i, el){
+		          	 if(el.id==tag_id) { 
+		          	 	delete_id = i;
+		          	 }
+	          	 });
+	          	 
+	          	 if(delete_id) my_tags.splice(delete_id,1); //удаляю тег из массива
+	          	 
+		    	 api4tree.jsShowAllTags();
+		    	 api4tree.jsSaveTagsFromScreen(); //сохраняю все теги на сервер
+				 jsRefreshTree();
+	        } else if (key=="rename_tag") {
+     	      var answer = prompt("Напишите новое название тега (без @):", api4tree.jsFindTag(tag_id)[0].title );
+     	      if(answer) api4tree.jsFindTag(tag_id)[0].title = answer;
+	    	  api4tree.jsShowAllTags();
+		      api4tree.jsSaveTagsFromScreen(); //сохраняю все теги на сервер
+		      jsRefreshTree();
+		        
 	        }
         },
         delay:0,
@@ -4487,14 +4570,12 @@ $.contextMenu({
         	"add_tag_right": {"name":"Добавить тег внутрь", "icon": "icon-right-1"},
         	"rename_tag": {"name":"Переименовать тег", "icon": "icon-edit-1"},
         	"sep1": "--------",
-        	"move_tag": {"name":"Переместить", "icon": "icon-shuffle"},
-        	"sep2": "--------",
         	"remove_tag": {"name":"Удалить тег", "icon": "icon-trash"}
 		}
 		});		  
 		  
 $.contextMenu({
-        selector: '.tree_add_new_element', 
+        selector: '.tree_add_new_element, #tree_1_add', 
         trigger: 'none',
         callback: function(key, options) {
             if( key=="add_down" ) {
@@ -4528,15 +4609,21 @@ $.contextMenu({
 $.contextMenu({
         selector: '.panel .big_n_title1, .panel .tcheckbox ,.fc-event', 
         events: { show: function(opt){ 
+		        var id = $(this).parents("li:first").attr("myid"); 
         		$(this).parents("li:first").parents(".mypanel").find(".selected").removeClass("selected");
 				$(this).parents("li:first").addClass("selected").parents(".mypanel").addClass("tree_active");
 				$(".tree_active").removeClass("tree_active");
 				$(this).parents(".mypanel").addClass("tree_active");
+				if(api4tree.jsFind(id).did!=0)	opt.items.context_make_did1.selected = true;
+				else opt.items.context_make_did1.selected = false;
         	},
         	hide: function(opt){ 
         	}  
         },
         callback: jsNeedAction,
+        build: function(trigger, e){
+	        console.info($(this), trigger, e);
+        },
         delay:0,
         items: {
             "add_down": {"name": "Добавить вниз<b>alt + <i class='icon-down-1'></i></b>", "icon": "icon-down-1"},
@@ -4561,11 +4648,11 @@ $.contextMenu({
 	            "items": {
 					"copy": {"name": "Копировать", "icon": "icon-docs", "disabled":false},
 					"cut": {"name": "Вырезать", "icon": "icon-scissors", "disabled":false},
+					"sep61166": "---------",
 					"paste_down": {"name": "Вставить вниз", "icon": "icon-down"},
 					"paste_right": {"name": "Вставить вправо", "icon": "icon-right"},
 					"sep611": "---------",
-					"dublicate": {"name": "Дублировать", "icon": "icon-docs"},
-					"move_to": {"name": "Переместить", "icon": "icon-flow-cascade"}
+					"dublicate": {"name": "Дублировать", "icon": "icon-docs"}
 	            }
             },
 
@@ -4573,8 +4660,8 @@ $.contextMenu({
 	            "items": {
 					"focus_in": {"name": "Фокус", "icon": "icon-zoom-in"},
 					"focus_out": {"name": "Фокус снять", "icon": "icon-zoom-out"},
-					"context_make_did4": {"name": "Редактировать вложенные заметки", "icon": "icon-th-list-2"},
-					"context_make_did5": {"name": "Цвет папки", "icon": "icon-right"},
+					"edit_all": {"name": "Редактировать вложенные заметки", "icon": "icon-th-list-2"}
+/*					"context_make_did5": {"name": "Цвет папки", "icon": "icon-right"},
 					"sep611": "---------",
 					"context_make_did9": {"name": "Поделиться", "icon": "icon-export",
 					    "items": {
@@ -4585,11 +4672,21 @@ $.contextMenu({
 					                "fold2-key21": {"name": "vKontakte"},
 					                "fold2-key31": {"name": "Google+"}
 					    }
-					}
+					}*/
 	            }
             },
 			"sep131": "--------",
-            "context_make_did1": {"name": "Выполнено", type: "checkbox", "disabled":true}
+            "context_make_did1": {"name": "Выполнено", type: "checkbox", events:{ click:function(){
+		   			   var id = api4tree.node_to_id( $(".tree_active .selected").attr('id') ); 
+			           var value = $(this).prop("checked");
+			           
+				  	   if(value) {
+				    		api4tree.jsMakeDid(id);
+				  	   } else {
+				    		api4tree.jsMakeUnDid(id);
+				  	   }
+            	}}
+            }
             
         }
     });		  
@@ -5740,7 +5837,7 @@ $.contextMenu({
 		 	 
 		 	 if(parent_id && (parent_id!=1) && ( !( /_/.test(parent_id) ) ) ) return answer;
 		 	 	
-		 	 if(id && ( id.toString().indexOf("_")==-1 )) return answer;
+		 	 if( (id && ( id.toString().indexOf("_")==-1 )) && id != 1) return answer;
 		 	 	
 		 	 var shablon={};
 		 	 
@@ -5768,6 +5865,16 @@ $.contextMenu({
 			 shablon.tmp_childrens = 0;
 			 shablon.tmp_comments = 0;
 			 shablon.tmp_text_is_long = 0;
+			 
+			 if(id == 1) {
+				 	 var element = clone( shablon );
+				 	 element.id = 1;
+				 	 element.parent_id = 0;
+				 	 element.position = "0";
+				 	 element.title = "<i class='icon-home'></i> 4tree.ru";
+				 	 element.tmp_childrens = api4tree.jsFindByParent(1).length;
+					 answer.push(element);
+			 }
 		 	 
 		 	 
 			 if(parent_id==1 || id) {
@@ -6007,7 +6114,7 @@ $.contextMenu({
 			 	$("#tree_2 #node_"+tree_id+" .tcheckbox:first").html(comments_count);
 			 	myhtml_for_comments += "";
 			 	$("#tree_comments_container").html(myhtml_for_comments); //выводим на экран
-			 	onResize();
+			 	//onResize(); 
 			 	//if( $("#tree_news").is(":visible") ) api4tree.jsShowNews(0);
 			});
 		 }

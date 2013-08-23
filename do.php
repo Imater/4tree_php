@@ -1022,6 +1022,9 @@ if (isset($HTTP_GET_VARS['save_tags']))
 	}
 	
 	//3. удаляем оставшиеся -1
+	$sth = $db2->prepare("DELETE FROM tree_tags WHERE saved = -1 AND user_id = :user_id");
+	$sth->execute( array(":user_id"=>$user_id) );
+
 	
 	echo json_encode($result);
 

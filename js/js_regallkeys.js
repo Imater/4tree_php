@@ -412,11 +412,23 @@ function jsAddComment(tree_id,parent_id,text)
 }
 
 
+var repaint_timer;
+function jsRepaint(from) {
+//	if(from!="li click") return true;
+	clearTimeout(repaint_timer);
+	repaint_timer = setTimeout(function(){
+		console.info("@@@repainted_from",from);
+		myjsPlumb.setSuspendDrawing(false, true);
+	}, 15);
+}
+
+
 function jsGo(arrow)
 {
 
 var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
 
+var isMindmap = $(".tree_active").parent("div").hasClass("mindmap");
 
 if(isMindmap) {
 	if(arrow=='down')
@@ -476,6 +488,7 @@ if(arrow=='right')
 			if(el.length) {
 				var new_id = el.attr("id").replace("node_","");
 				api4panel.jsOpenNode(new_id);
+				el.addClass("tree-open");
 				api4panel.jsSelectNode(new_id);				
 			}
 
@@ -483,7 +496,7 @@ if(arrow=='right')
 		else
 			{
 			current.click();
-			jsGo("right");
+			//jsGo("right");
 			}
 		}
 	else
@@ -524,7 +537,7 @@ if(isMindmap || isTree) {
 				var offset_top = $(".mypanel.tree_active").height()/2;
 				var offset_left = $(".mypanel.tree_active").width()/2;// - $(".selected").parent("ul:first").width()*1.5;
 				if($(".tree_active .selected").length) {
-					$(".mypanel.tree_active").stop().scrollTo($(".selected"),600,{offset:{ top: -offset_top, left: -offset_left}});
+					$(".mypanel.tree_active").stop().scrollTo($(".tree_active .selected"),600,{offset:{ top: -offset_top, left: -offset_left}});
 				}
 			}
 return true;
@@ -560,7 +573,7 @@ if(arrow=='up')
 		{
 		current.removeClass("selected");
 		prev.addClass("selected");
-//		prev.find(".n_title:first").click();
+		prev.find(".n_title:first").click();
 		api4panel.jsSelectNode(prev.attr("myid"));
 		}
 	}
@@ -592,6 +605,7 @@ if(arrow=='down')
 		{
 		current.removeClass("selected");
 		prev.addClass("selected");
+		prev.find(".n_title:first").click();
 		api4panel.jsSelectNode(prev.attr("myid"));
 		}
 
@@ -1427,14 +1441,14 @@ function jsSnapShotApply(tree_id, snapshot)
 	
 	var focus_id = $("#"+tree_id).attr("focus_id");
 	if(!focus_id) focus_id = 1;
-	api4panel.jsShowFocus(tree_id, focus_id);
+	api4panel.jsShowFocus(tree_id, focus_id, undefined, undefined, {snapshot:snapshot.tree_open});
 	
 //	api4panel.jsShowTreeNode("tree_1",6223,false);
 
 //	$("#"+tree_id+" .selected").removeClass(".selected");
 //	$("#"+tree_id+" .old_selected").removeClass(".old_selected");
 //	$("#"+tree_id+".tree_open").removeClass("tree_open");
-
+/*
 	if(snapshot.tree_open)
 	$.each(snapshot.tree_open, function(i,el){
 		var id_to_open = el.replace("node_","");
@@ -1442,7 +1456,7 @@ function jsSnapShotApply(tree_id, snapshot)
 		$("#"+tree_id+" #node_"+id_to_open).addClass("tree-open").find("ul:first").show();
 //		$("#"+tree_id+" #"+el).
 	})
-	
+*/	
 	$("#"+tree_id+" .selected").removeClass("selected");
 	$("#"+tree_id+" .old_selected").removeClass("old_selected");
 	
@@ -1465,7 +1479,7 @@ function jsSnapShotApply(tree_id, snapshot)
 	}
 	
 	isMindmap = $(".mindmap").length;
-	if(isMindmap) tm_resize = setTimeout(function(){ myjsPlumb.setSuspendDrawing(false,true) },0);
+	if(isMindmap) jsRepaint("SnapshotApply");
 	
 }
 
@@ -1653,7 +1667,6 @@ function onResize() //вызывается при каждом ресайзе с
 {	
 	clearTimeout(tm_resize);
 	isMindmap = $(".mindmap").length;
-	if(isMindmap) tm_resize = setTimeout(function(){ myjsPlumb.setSuspendDrawing(false,true) },1000);
 	
 	if($(".ui-resizable-resizing").length) return true;
 	
@@ -1687,6 +1700,12 @@ function onResize() //вызывается при каждом ресайзе с
 			api4tree.jsCalcTabs();
 			
 			$("#right_tags").css("bottom", $("#right_fav_folders").height()+20 );
+
+
+	if(isMindmap) {
+		clearTimeout(tm_resize);
+		tm_resize = setTimeout(function(){ jsRepaint("Resize"); },500);
+	}
 
 }
 

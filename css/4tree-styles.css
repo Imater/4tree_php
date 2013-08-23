@@ -1669,7 +1669,7 @@ margin: 0px !important;
 font-size: 1.3em;
 vertical-align: middle;
 position: absolute;
-top:-0.17em;
+top: -0.1em;
 color:#fbdf8c;
 text-shadow: -1px 0 #888, 0 1px #888, 1px 0 #888, 0 -1px #888;
 }
@@ -1858,7 +1858,7 @@ margin-top: -16px;
 {
 background-size: 1.2em 1em;
 width: 1.25em;
-height: 1.03em;
+height: 1.04em;
 }
 
 .panel_type2 li > .note-clean, 
@@ -3107,13 +3107,13 @@ opacity: 0.7;
 
 .tcheckbox
 {
-min-height: 1.4em;
-min-width: 1.4em;
+min-height: 1.55em;
+padding-top: 0.35em;
+min-width: 1.9em;
 display: inline-block;
 opacity: 1;
 float: right;
-margin-top: 0.4em;
-margin-right: 3px;
+margin-right: 0.5em;
 clear: right;
 border-radius: 2px;
 border: 1px solid #CCC;
@@ -3130,10 +3130,11 @@ content: "\e869";
 margin: 0px;
 font-size: 1.2em;
 padding: 0px;
-margin-right: -0.08em;
-margin-top: 2px;
+margin-left: 0.11em;
+margin-top: 0.2em;
 color: #CCC;
 }
+
 
 .do_did .tcheckbox
 {
@@ -5943,6 +5944,10 @@ display: inline-block;
 margin: 0px;
 }
 
+.mindmap .old_selected {
+	background: none !important;
+}
+
 .mindmap .mypanel ul > li
 {
 display: block;
@@ -5957,11 +5962,13 @@ display: inline-block;
 vertical-align: baseline;
 padding: 0px;
 margin-bottom: 2px;
-border-bottom: 1px solid rgba(0,0,0,0.4);
+border-bottom: 1px solid #888;
 max-width: 400px;
-	padding-top: 5px;
-	padding-bottom: 1px;
+	padding-top: 0.5em;
 
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
 }
 
 .mindmap .mypanel .big_n_title:before {
@@ -5975,6 +5982,7 @@ max-width: 400px;
 	z-index: 90;
 	display: inline-block;
 	position: absolute;
+	display: none;
 }
 
 .mindmap .node_img {
@@ -6025,7 +6033,7 @@ white-space: nowrap !important;
   height: auto !important;
   background-attachment: scroll;
   background-image: url('../img/cross.png');  
-  padding-top: 10em;
+  padding-top: 50px;
   padding-right: 1000px;
   padding-bottom: 1000px;
 }
@@ -6142,12 +6150,10 @@ color: #777 !important;
 
 #tree_2 .tree-open > ._jsPlumb_connector {
   display: block;
-  opacity: 0.4;
 }
 
 #mindmap_center ._jsPlumb_connector {
 	display: block !important;
-	opacity: 0.4;
 }
 
 
@@ -6288,7 +6294,7 @@ body > ._jsPlumb_connector {
     color: inherit;
     font-weight: normal;    
   position: absolute;
-  left: 200px;;
+  left: 300px;;
   top: 3px;
   right: 107px;
   text-align: center;
@@ -6307,17 +6313,6 @@ body > ._jsPlumb_connector {
     vertical-align: middle;
     margin: 0px;
     cursor: pointer;    
-}
-
-.path_line li:hover {
-   color:#000;
-  -moz-transition: all 0.5s; 
-  -webkit-transition: all 0.5s;  
-  -ms-transition: all 0.5s;  
-  -o-transition: all 0.5s;  
-  transition: all 0.5s;  
-  max-width: 550px !important;;
-
 }
 
 .p.path_line .icon-right-open{

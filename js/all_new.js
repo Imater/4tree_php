@@ -94,7 +94,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 //выбрать заметку и загрузить в редакторе
 		 this.jsSelectNode = function(id,iamfrom) { //открыть заметку в календаре и в редакторе
 		 //	i_am_from - кто вызвал: redactor, calendar, tree, diary
-		    api4panel.jsDrawMindmap();
+		    
 		    $(".tree_active .selected").removeClass("selected");
 		 	$(".tree_active #node_"+id).addClass("selected");
 //			if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
@@ -102,10 +102,8 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	api4tree.jsSelectTag(id);
 		 	open_redactor_timer = setTimeout(function()
 		 		{
+			 	api4panel.jsDrawMindmap();
 
-			 	if(iamfrom != "from_history") {
-			 		api4panel.jsSaveIdToHistory( $(".tree_active").attr("id"), id); //сохраняю в истории переходов
-			 	}
 
 			 	$("#wiki_back_button").hide();
 			 	clearTimeout(hash_timer);
@@ -164,6 +162,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 
 		 //открыть заметку с номером, если она на экране (make .selected)
 		 this.jsOpenNode = function(id,nohash,iamfrom) {
+
 			var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
 			var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
 		 	var element = api4tree.jsFind(id);
@@ -195,7 +194,11 @@ var API_4PANEL = function(global_panel_id,need_log) {
 	 
 	 		if( !element || (api4tree.jsFindByParent(id).length>0) ) {//если это папка, создаю панель
 		 		tree_id = $(".tree_active").attr("id");
-	     		this_db.jsShowTreeNode( tree_id, id, isTree ); //вывожу детей этого элемента
+		 		if( !$(".tree_active ul[myid="+id+"] li").length ) { 
+		 			this_db.jsShowTreeNode( tree_id, id, isTree ); //вывожу детей этого элемента 
+		 		} else {
+			 		$("ul[myid="+id+"]").show();
+		 		}
 	     	} else {
 	     		if( !isTree ) {
 	 		  		if(!pwidth) pwidth = 285;
@@ -268,9 +271,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 //	     if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
 //		 console.info("rep-open_node_1");
 	     
-	     clearTimeout(repaint_timer);
-	     if(isMindmap) repaint_timer = setTimeout(function(){myjsPlumb.setSuspendDrawing(false,true);},5);
-
+		 jsRepaint("OpenNode");		 		 
 		 } //jsOpenNode
 		 
 		 
@@ -340,10 +341,11 @@ var API_4PANEL = function(global_panel_id,need_log) {
     	        		var timelong = api4tree.jsFindByParent(id).length*15; 
     	        		if(timelong>1000) timelong=500; //большие ветки дольше
     	        		if(timelong<300) timelong=100;   //маленькие ветки открываются быстрее
+    	        		if(isMindmap) timelong = 0;
     	        		var cache_this = $(this);
     	        		setTimeout(function(){
 	    	        		cache_this.find("ul:first").slideDown(timelong,function(){ 
-								if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
+								if(isMindmap) jsRepaint("li click");
 								cache_this.addClass("tree-open");
 								
 								console.info("repaint: Ветка отсутствует, открываю");
@@ -351,7 +353,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 	//    	        			setTimeout(function(){  },10);
 	    	        			console.info("rep-fol_closed");
 	    	        		});
-    	        		}, 200);
+    	        		}, timelong);
     	        	}
     	        } else { //если ветка уже открыта, закрываю её
     	        	if(isTree) {
@@ -360,7 +362,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 						var cache_this2 = $(this);
     	        		setTimeout(function(){
 	    	        		cache_this2.find("ul:first").slideUp(50,function(){
-		    	        		if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
+		    	        		if(isMindmap) jsRepaint("li click2");
 								console.info("repaint: Ветка просто свёрнута, открываю");
 	    	        		});
 	    	        	},200);
@@ -482,7 +484,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			api4panel.jsHistoryBack(!isBack);
 		 });
 		 
-		 var my_all_history = { 
+		 my_all_history = { 
 		 						"tree_1": { "list":[], "list_forward":[], current:"0", focus_id:"1" },
 								"tree_2": { "list":[], "list_forward":[], current:"0", focus_id:"1" } 
 							  };
@@ -510,13 +512,13 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 	
 			 	 var current_element_id = api4tree.node_to_id( $(".tree_active li.selected").attr("id") );
 				 if(!forward) {
-				 	api4panel.jsSaveIdToHistory(tree_id, current_element_id, "_forward"); //сохраняю текущую позицию для кнопки вперёд
+				 	api4panel.jsSaveIdToHistory(tree_id, current_element_id, "_forward", "force"); //сохраняю текущую позицию для кнопки вперёд
 				 } else {
-				 	api4panel.jsSaveIdToHistory(tree_id, current_element_id, false); //сохраняю текущую позицию для кнопки назад
+				 	api4panel.jsSaveIdToHistory(tree_id, current_element_id, false, "force"); //сохраняю текущую позицию для кнопки назад
 				 }
 			 	
 			 	 if( now_focus_id && now_focus_id!=prev_element.focus_id ) {
-				 	 api4panel.jsShowFocus(tree_id, prev_element.focus_id);
+				 	 api4panel.jsShowFocus(tree_id, prev_element.focus_id, undefined, undefined, undefined, "from_history");
 			 	 }
 
 
@@ -528,7 +530,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 				 my_all_history[tree_id]["list"+forward] = the_list;
 				 console.info("my_all_history", my_all_history); 
 			 }
-			 console.info("Hist_back", the_list);
+			 console.info("Hist_back", my_all_history);
 			 if(my_all_history[tree_id]["list"].length==1) { 
 			 	$(".tree_history_arrows i:first").addClass("disabled");
 			 }
@@ -538,7 +540,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 
 		 }
 
-		 this.jsSaveIdToHistory = function (tree_id, id, to_forward) {
+		 this.jsSaveIdToHistory = function (tree_id, id, to_forward, force) {
 		    
 			 var focus_id = $(".tree_active").attr("focus_id");
 			 focus_id = focus_id?focus_id:1;
@@ -555,13 +557,23 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	 history_item.isFolder = api4tree.jsFindByParent(id).length>0;
 		 	 history_item.title = title?title:"";
 		 	 
-			 my_all_history[tree_id]["list"+to_forward].push( history_item );
+		 	 var cnt = my_all_history[tree_id]["list"+to_forward].length-1;
+		 	 if(my_all_history[tree_id]["list"+to_forward].length) {
+		 	 var old_focus_id = my_all_history[tree_id]["list"+to_forward][cnt].focus_id;
+		 	 } else old_focus_id = -2;
+		 	 
+		 	 
+			 if(focus_id != old_focus_id || to_forward || force) {
+			 	my_all_history[tree_id]["list"+to_forward].push( history_item );
 			 
-		 	 if(my_all_history[tree_id]["list"].length==2) $(".tree_history_arrows i:first").removeClass("disabled");
+			 	if(my_all_history[tree_id]["list"].length==2) $(".tree_history_arrows i:first").removeClass("disabled");
 
 //			 my_all_history[tree_id]["current"] = my_all_history[tree_id]["list"].length-1;
 			 
-			 console.info("!!!SAVED History:", my_all_history );
+			 	console.info("!!!SAVED History:", my_all_history );
+			 } else {
+				 console.info("!!!Save ignore");
+			 }
 		 }
 		 		 		 	
 		 //открывает путь до указанного элемента
@@ -608,7 +620,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
    			   findli.find('ul:first').show();
    			}
 		 
-			if(isMindmap) myjsPlumb.setSuspendDrawing(false,true);
+			if(isMindmap) jsRepaint("jsOpenPath");
 		   }//if length
 		 	api4panel.jsOpenNode(id, false,iamfrom);
 		 	if(iamfrom!="divider_click") api4panel.jsSelectNode( id , iamfrom);
@@ -652,7 +664,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	myli +=  "<li "+isVisible+"id='node_"+data.id+"' time='"+data.time+"' myid='"+data.id+"' class='"+info.isFolder+info.crossline+"'>"; 
 		 	myli += "<div class='big_n_title'>";
 		 	info.comment_count = info.comment_count?info.comment_count:"<i class='icon-down-open'></i>";
-		 	myli += "<div class='tcheckbox' title='Выполнить дело "+data.id+"'><b>"+info.comment_count+"</b></div>" + info.icon_share;
+		 	myli += "<div class='tcheckbox' title='Меню для "+data.id+"'><b>"+info.comment_count+"</b></div>" + info.icon_share;
 		 	myli += "<div class='date1' myid='"+(data.tmp_next_id?data.tmp_next_id:"")+"' childdate='"+(data.tmp_nextdate?data.tmp_nextdate:"")+"' title='"+data.date1+""+(data.tmp_next_title?data.tmp_next_title:"")+"'></div>";
 		 	myli += info.remind + info.triangle + info.countdiv + info.img + info.needsync;
 		 	myli += "<div class='n_title' myid='"+data.id+"'>";
@@ -891,38 +903,143 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			return mydata;
 		 }
 		 
-		 this.jsShowFocus = function(tree_id, id, need_select_first_element, expand_all) {
+		 this.jsShowFocus = function(tree_id, id, need_select_first_element, expand_all, snapshot, iamfrom) {
+
+		 	 console.info("SNAPSHOT:", snapshot);
 		 	 if(api4tree.jsFindByParent(id).length==0) return false;
 		  	 var element = api4tree.jsFind(id);
 		  	 var parent_id = id;
 		 	 $("#"+tree_id+".mypanel").html("<div id='panel_"+parent_id+"' class='panel'><ul myid='"+parent_id+"'></ul></div>").attr("focus_id",parent_id);
-			 api4panel.jsShowTreeNode(tree_id, parent_id, false, undefined, undefined, expand_all);
+
+		 	 if( tree_id=="tree_1" || api4panel.isMindmap["tree_2"] ) {
+		 	 var html = api4panel.jsGetNodeHtml({tree_id:tree_id, parent_id: parent_id, html: "", focus_id: parent_id, snapshot:snapshot, expand: expand_all});
+		 	 $("#"+tree_id).html( html );
+		 	 
+		 	 api4panel.jsPrepareDate( $("#"+tree_id) );
+
+		 	 } else {
+				 api4panel.jsShowTreeNode(tree_id, parent_id, false, undefined, undefined, expand_all);
+			 }
 			 
 			 if(need_select_first_element) {
 				 var first_id = $("#"+tree_id+" li:first").attr("myid");
 				 api4panel.jsSelectNode(first_id);
 			 }
+			 	if(iamfrom != "from_history") {
+			 		api4panel.jsSaveIdToHistory( $(".tree_active").attr("id"), id); //сохраняю в истории переходов
+			 	}
+			 jsMakeDrop();
+		 }
+		 
+		 //tree_id, parent_id, other_data
+		 this.jsGetNodeHtml = function(params) {
+		 	var isMindmap = $("#"+params.tree_id).parent("div").hasClass("mindmap");
+		 	
+		 	if(isMindmap) var visible_block = "display:inline-block;";
+		 	else var visible_block = "display:block;";
+		 
+		 	if(params.parent_id==-1) { 
+		 		var mydata = params.other_data;
+		 		mydata = mydata.sort(sort_by_path); //сортирую
+		 	} else { 
+		 		var mydata = api4tree.jsFindByParent(params.parent_id,null,true); 
+
+		 		var isDiary = /_ДНЕВНИК/ig.test( api4tree.jsFindPath(api4tree.jsFind(params.parent_id)).textpath );
+
+		 		if( (isDiary) && (params.parent_id!=1) ) { //test
+			 		mydata = mydata.sort(sort_by_title); //сортирую
+		 		} else {
+			 		mydata = mydata.sort(sort_by_position); //сортирую
+		 		}
+
+		 		if(params.parent_id && (params.parent_id.toString().indexOf("_")==-1)) { //если это не синтетическая папка
+		 			mydata = api4panel.jsReorder(mydata); //перенумирую элементы
+		 		}
+		 	}
+		 	
+		 	var this_parent_data = api4tree.jsFind(params.parent_id);
+		 	if(!this_parent_data) return params.html;
+		 	
+ 		    if( ((/_/ig.test(params.parent_id.toString())) || ( params.parent_id==1 && (mydata.length>50)) ) || (!params.expand) ) var dont_expand = true;
+ 		    else var dont_expand = false;
+ 		    
+ 		    if( params.parent_id==params.focus_id ) dont_expand = false;
+ 		    
+ 			if( typeof params.snapshot != "undefined" && params.snapshot.snapshot.indexOf("node_"+params.parent_id)!=-1) {
+ 				dont_expand = false;
+ 				console.info("FOUND IN SNAPSHOT",params.parent_id);
+ 			}
+ 			
+ 			if(dont_expand) visible_block = "";
+		 	
+		 	var ul = "";
+		 	
+		 	if(params.parent_id==params.focus_id) { 
+
+ 		    	if(params.parent_id==1) {
+ 		    		var title_center = "4tree.ru";
+ 		    		var add_ = "<i class='icon-home'></i>";
+ 		    	} else {
+	 		    	var title_center = api4tree.jsFind(this_parent_data.parent_id).title;
+	 		    	var add_ = "<i class='icon-fast-bw'></i>";
+ 		    	}
+ 		    	
+ 		    	var mindmap_center = ("<div id='mindmap_center'><b>"+add_+title_center+"</b></div>");
+
+ 				
+		 		var ul_first = "<ul class='ul_childrens' style='"+visible_block+"' myid="+params.parent_id+"><div>"; 
+		 		var ul_last = "</div></ul>";
+		 		var parent_li = "<div class='panel' id='panel_"+params.parent_id+"'>"+mindmap_center+"<ul>";
+		 		parent_li += api4panel.jsRenderOneElement(this_parent_data,this_parent_data.position?this_parent_data.position:0,params.parent_id);
+		 		parent_li += "</ul></div>";
+		 	} else {
+			 	var ul_first = "<ul class='ul_childrens' style='"+visible_block+"' myid="+params.parent_id+"><div>";
+		 		var ul_last = "</div></ul>";
+		 		var parent_li = api4panel.jsRenderOneElement(this_parent_data,this_parent_data.position?this_parent_data.position:0,params.parent_id);
+		 	}
+
+ 		    
+ 		    
+ 		    if(!dont_expand) {
+
+	 		    if(mydata.length>0) ul += ul_first;
+
+			 	$.each(mydata, function(i,data) {
+			 		  if(!data) return params.html;
+				 	  ul += api4panel.jsGetNodeHtml({tree_id:params.tree_id, parent_id: data.id, html:ul, focus_id:params.focus_id, expand: params.expand,
+					 	  							 snapshot:params.snapshot});
+			    });
+				
+				ul += "<div class='divider_li' pos='100000' myid='"+params.parent_id+"'></div>";
+
+				if(mydata.length>0) { 
+				    ul += ul_last;
+				    var new_p = $("<div>"+parent_li+"</div>");
+				    new_p.find("li:first").append( ul );
+				    if(!dont_expand || params.parent_id==params.focus_id) new_p.find("li:first").addClass("tree-open");
+				    parent_li = new_p.html();
+				}
+
+			}
+		 	
+ 		    
+
+ 		    
+// 		    $(parent_li).find("li").addClass("tree-open").find("ul").show();
+ 		    
+ 		    params.html = parent_li;
+// 			console.info(params.parent_id,params.html);
+		 	jsPrepareDate();
+		 	return params.html;
 		 }
 		 
 
-		 this.jsShowTreeNode = function(tree_id, parent_node,isTree1,other_data, where_to_add, expand_all) {
-			 api4panel.jsShowTreeNodeHtml(tree_id, parent_node,isTree1,other_data, where_to_add, expand_all);
-	     }
-		 
-		 //функция отображения панели для дерева		 
-		 this.jsShowTreeNodeHtml = function(tree_id, parent_node,isTree1,other_data, where_to_add, expand_all) {
-		 	
- 		 	var isTree = false;
-			isTree = $("#"+tree_id).parent("div").hasClass("panel_type1");
-			var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
-			isMindmap = ((tree_id == "tree_2"));
-			
-			if(isMindmap) focus_id = $("#tree_2").attr("focus_id");
+		 this.jsShowTreeNodeInside = function(tree_id, parent_node,isTree1,other_data, where_to_add, expand_all) {
 
-		 	if(other_data) { //если данные внешние
-		 		$(".search_panel_result ul").html('');
-		 	}
-		 
+		 	var h3_search_already_added = false;
+		 	var isTree = api4panel.isTree[ $(".tree_active").attr("id") ];
+		 	var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
+
 		 	if(parent_node==-1) { 
 		 		var mydata = other_data;
 		 		mydata = mydata.sort(sort_by_path); //сортирую
@@ -945,22 +1062,13 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 	if(mydata.length==0)  //если папку уже удалили, скрываю её
 		 		{
 		 		$("#"+tree_id+" .panel[myid='"+parent_node+"']").remove();
-		 		return true;
+		 		return "";
 		 		}
 
-		 	var h3_search_already_added = false;
-		 	if(!myjsPlumb.isSuspendDrawing() && isMindmap) {
-		 		myjsPlumb.setSuspendDrawing(true, true);
-		 		console.info("set_suspend");
-		 	}
-
 		 	var where_to_add_cache = $("<div></div>");
-		 			 	
-		 	
-		 	var line_cache = [];
 		 	
 		 	$.each(mydata, function(i,data) {
-		 		  if(!data)	return true;
+		 		  if(!data)	return "";
 
 		 		  if(parent_node!=-1) {//если мы находимся не в поиске
 			 		  if(i==0) {
@@ -968,12 +1076,16 @@ var API_4PANEL = function(global_panel_id,need_log) {
 			 		  		if( $("#"+tree_id+" .ul_childrens[myid="+parent_node+"]").length==0 ) {
 			 		  		
 //			 		  			var childrens = api4panel.jsShowTreeNode(tree_id, parent_id, false, undefined, undefined, expand_all);
-								var childrens = "";
+								var childrens = api4panel.jsShowTreeNodeInside(tree_id, data.id,isTree1,other_data, where_to_add, expand_all);
+								if(expand_all && !(childrens == "") ) 
+									childrens = childrens.html();
+								else childrens = "";
+								console.info("!!!",data.id, where_to_add);
 			 		  		
 			 		  			$("#"+tree_id+" #node_"+parent_node).append("<ul class='ul_childrens' myid="+parent_node+">"+childrens+"</ul>");
 			 		  				
 			 		  		} else {
-			 		  			alert(1);
+			 		  			//alert(1);
 			 		  			//return false;
 			 		  		}
 			 		  	} else {
@@ -1004,19 +1116,38 @@ var API_4PANEL = function(global_panel_id,need_log) {
 
 		 		  where_to_add_cache.append( api4panel.jsRenderOneElement(data,data.position,parent_node) );
 		 		  
-			 		  if(isMindmap) {
-			 		  	if(parent_node == focus_id) {
-			 		  		var source = "mindmap_center";
-			 		  	} else {
-				 		  	var source = parent_node;
-			 		  	}
-			 		  	line_cache.push( {source: source, target: data.id} );
-			 		  }
 		 		  
 		 	}); //each(mydata)
 		 	
 		    var divider = "<div class='divider_li' pos='100000' myid='"+parent_node+"'></div>";
 		 	where_to_add_cache.append(divider);
+		 	return where_to_add_cache;
+
+	     }
+		 
+		 //функция отображения панели для дерева		 
+		 this.jsShowTreeNode = function(tree_id, parent_node,isTree1,other_data, where_to_add, expand_all) {
+		 	
+ 		 	var isTree = false;
+			isTree = $("#"+tree_id).parent("div").hasClass("panel_type1");
+			var isMindmap = api4panel.isMindmap[ $(".tree_active").attr("id") ];
+//			isMindmap = ((tree_id == "tree_2"));
+			
+			if(isMindmap) focus_id = $("#tree_2").attr("focus_id");
+
+		 	if(other_data) { //если данные внешние
+		 		$(".search_panel_result ul").html('');
+		 	}
+		 
+
+		 	if(!myjsPlumb.isSuspendDrawing() && isMindmap) {
+		 		myjsPlumb.setSuspendDrawing(true, true);
+		 		console.info("set_suspend");
+		 	}
+
+		 	//Цикл
+		 	where_to_add_cache = api4panel.jsShowTreeNodeInside(tree_id, parent_node,isTree1,other_data, where_to_add, expand_all);
+		 	
 
 
 		 	if(!where_to_add) {
@@ -1103,25 +1234,122 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 $("body").on("click","#mindmap_center", function(){
 			var tree_id = $(this).parents(".mypanel").attr("id");
 			var id = $(this).parents(".mypanel").attr("focus_id");
+		 	var focus_id = $("#tree_2").attr("focus_id");
+
 			if(focus_id==1) {
 				var parent_id = 1;
 			} else {
 				var parent_id = api4tree.jsFind(id).parent_id;
 			}
-			api4panel.jsShowFocus(tree_id, parent_id, true, "expand_all");
+			api4panel.jsShowFocus(tree_id, parent_id, true);
+		 });
+
+		 $("#tree_1_home").on("click", function(){
+		 	api4panel.jsShowFocus("tree_1", 1, "true", false);
+		 });
+
+		 
+		 $("#tree_1_collapse").on("click", function(){
+		 	 $(this).find("i").css("background", "#888");
+		 	 var i = $(this);
+		 	 setTimeout(function(){
+				 api4panel.jsExpandAll("tree_1", false);
+				 i.find("i").css("background", "none");
+		 	 },0);
+		 });
+
+		 $("#tree_1_expand").on("click", function(){
+		 	 $(this).find("i").css("background", "#888");
+		 	 var i = $(this);
+		 	 setTimeout(function(){
+				 api4panel.jsExpandAll("tree_1", "expand_all");
+				 i.find("i").css("background", "none");
+		 	 },0);
 		 });
 		 
-		 this.jsExpandAll = function(tree_id) {
-			 $("#"+tree_id+" li").each(function(){
-			 	var id = $(this).addClass("tree-open").attr("myid");
-			 	api4panel.jsOpenNode(id);
-			 });
+		 var mindmap_font_size = 10;
+
+		 $("#tree_2_zoom_out").on("click", function(){
+		 	if(mindmap_font_size>5)	mindmap_font_size -= 1;
+		 	$("#tree_2").css("font-size",mindmap_font_size+"px");
+		 	jsRepaint();
+		 });
+
+		 $("#tree_2_zoom_in").on("click", function(){
+		 	if(mindmap_font_size<25)	mindmap_font_size += 1;
+		 	$("#tree_2").css("font-size",mindmap_font_size+"px");
+		 	jsRepaint();
+		 });
+
+		 $("#tree_2_home").on("click", function(){
+		 	api4panel.jsShowFocus("tree_2", 1, "true", false);
+		 });
+
+		 
+		 $("#tree_2_collapse").on("click", function(){
+		 	 $(this).find("i").css("background", "#888");
+		 	 var i = $(this);
+		 	 setTimeout(function(){
+				 api4panel.jsExpandAll("tree_2", false);
+				 i.find("i").css("background", "none");
+		 	 },0);
+		 });
+
+		 $("#tree_2_expand").on("click", function(){
+		 	 $(this).find("i").css("background", "#888");
+		 	 var i = $(this);
+		 	 setTimeout(function(){
+				 api4panel.jsExpandAll("tree_2", "expand_all");
+				 i.find("i").css("background", "none");
+		 	 },0);
+		 });
+
+		 $("#mindmap_on").on("click", function(){
+		 
+		 	var id = api4tree.node_to_id( $(".tree_active li.selected").attr("id") );
+			 if( $("#tree_2").parent("div").hasClass("mindmap") ) {
+			 		$("#tree_center .top_panel_header").hide();
+			 		$(this).removeClass("active");
+				 	$("#tree_2").parent("div").removeClass("mindmap").removeClass("panel_type1").addClass("panel_type3");
+				 	api4panel.isMindmap["tree_2"] = $("#tree_2").parent("div").hasClass("mindmap");
+				 	api4panel.isTree["tree_2"] = $("#tree_2").parent("div").hasClass("panel_type1");
+				 	myjsPlumb.reset();
+				 	jsRefreshTree();
+				 	api4tree.jsZoomTree(-2000);
+			 } else {
+			 		$("#tree_center .top_panel_header").show();
+			 		$(this).addClass("active");
+			 		$("#tree_2 .panel").nextAll(".panel").hide();
+				 	$("#tree_2").parent("div").addClass("mindmap").addClass("panel_type1").removeClass("panel_type3");
+				 	api4panel.isMindmap["tree_2"] = $("#tree_2").parent("div").hasClass("mindmap");
+				 	api4panel.isTree["tree_2"] = $("#tree_2").parent("div").hasClass("panel_type1");
+				 	jsRefreshTree();
+			 }
+		 	 api4panel.jsOpenPath(id);
+		 });
+
+
+		 
+		 this.jsExpandAll = function(tree_id, expand) {
+		 
+		 	var focus_id = $("#"+tree_id).attr("focus_id");
+		 	api4panel.jsShowFocus(tree_id, focus_id, "true", expand);
+		 	
 		 }
 
 		 this.jsDrawMindmap = function() {
 
+			if( !api4panel.isMindmap["tree_2"] ) return true;
+		 	console.info("DRAW LINES");
 
-		 	line_cache = [];
+		 	
+		 	var line_cache = [];
+		 	
+		 	var focus_id = $("#tree_2").attr("focus_id");
+		 	
+		 	if(!$("#tree_2 #node_"+focus_id+" .big_n_title:first").hasClass("_jsPlumb_endpoint_anchor_")) {
+			 	line_cache.push( {source: "mindmap_center", target: focus_id} );
+			}
 		 	
 		 	$("#tree_2 ul:visible").each(function(){
 		 		var ul_id = $(this).attr("myid");
@@ -1129,14 +1357,19 @@ var API_4PANEL = function(global_panel_id,need_log) {
 		 		var focus_id = $("#tree_2").attr("focus_id");
 			 	$.each(childs, function(i,el){
 				 	var target = el.id;
-				 	if(!$("#tree_2 #node_"+target+" .big_n_title").hasClass("_jsPlumb_endpoint_anchor_")) {
+				 	if(!$("#tree_2 #node_"+target+" .big_n_title:first").hasClass("_jsPlumb_endpoint_anchor_")) {
 					 	var parent_id = el.parent_id;
 					 	
-					 	if(parent_id == focus_id) parent_id = "mindmap_center";
+					 	//if(parent_id == focus_id) parent_id = "mindmap_center";
 					 	line_cache.push( {source: parent_id, target: target} );
 				 	}
 			 	});
 		 	});
+		 	
+		 	if(line_cache.length>400) {
+		 		jsTitle("Слишком много элементов, воспользуйтесь фокусом (2 клика): "+ line_cache.length, 50000);
+		 		line_cache = line_cache.reverse().splice(0,400);
+		 	}
 		 	
 		 	if(line_cache.length) {
 			 	if(!myjsPlumb.isSuspendDrawing() && isMindmap) {
@@ -1157,7 +1390,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
  		    	      var p1 = myjsPlumb.addEndpoint("tree_2 #"+"node_"+el.source+" .big_n_title:first", { anchor: [ 1, 1, 1, 0, -1, -1 ]});
  		    	      ;
  		    	      var count = api4tree.jsFindByParent(el.source).length;
- 		    	      if( count > 10 ) {
+ 		    	      if( count > 20 ) {
 	 		    	      var LineType = "Flowchart";
  		    	      } else {
  		    	      	  var LineType = "Bezier";
@@ -1176,7 +1409,7 @@ var API_4PANEL = function(global_panel_id,need_log) {
  		  		  }
  		  	});
 		 	if(line_cache.length) {
-				myjsPlumb.setSuspendDrawing(false, true);
+			 		jsRepaint("Draw Mindmap");
 			}
 		 }
 
@@ -1855,7 +2088,7 @@ function jsDoFirst() { //функция, которая выполняется �
 			DragOptions: { cursor: 'pointer', zIndex: 2000 },
 			PaintStyle:{ 
 			  lineWidth:1, 
-			  strokeStyle:"rgba(0,0,0);"
+			  strokeStyle:"#888"
 //			  outlineColor:"black", 
 //			  outlineWidth:1 
 			},
@@ -2059,7 +2292,7 @@ function jsShowTreePanel() {//запускается единожды
 				
 	if(true) {
 	  	if(!(!id)) {
-		  			api4panel.jsOpenPath( id ); //перехожу на заметку в hash
+		  			api4panel.jsSelectNode( id ); //перехожу на заметку в hash
   		}
 	}
 
@@ -2150,9 +2383,9 @@ function jsConnectLines() {
 var last_refresh;
 var need_to_re_refresh;
 //обновление дерева
-function jsRefreshTree() {
+function jsRefreshTree( tree_id ) {
 	console.info("RefreshTree");
-	
+		
 
 	var myselected,myold_selected,old_scroll;
 	last_refresh = jsNow();
@@ -2164,42 +2397,46 @@ function jsRefreshTree() {
 		myrefreshtimer = setTimeout(function(){ jsRefreshTree(); },3000);
 		return false;
 	}
+	
+	if(!tree_id || tree_id == "tree_1") {
+		jsSnapShotApply("tree_1", jsSnapShotMake("tree_1") ); //обновляем правое дерево
+	}
 
-	jsSnapShotApply("tree_1", jsSnapShotMake("tree_1") ); //обновляем правое дерево
-
-
-    if( $("#tree_2").parent("div").hasClass("mindmap") ) {
-
-			myjsPlumb.setSuspendDrawing(false,true);
-		    myjsPlumb.reset();		
-    		var snapshot = jsSnapShotMake("tree_2");
-	    	
-	    	setTimeout(function(){
-				jsSnapShotApply("tree_2", snapshot ); //обновляем правое дерево
-				api4panel.jsDrawMindmap();		    	
-	    	},10);
-
-    } else {
-			var scrollleft = $("#tree_2.mypanel").scrollLeft();
-			
-			$("#tree_2 .panel").quickEach( function() {
-		    	var id = $(this).attr('id');
-		    	if(id) {
-			    	var panel_id = id.replace("panel_","");
-			    	if( api4tree.jsFindByParent( panel_id ).length >0 ) {
-			    		myselected = api4tree.node_to_id( $(this).find(".selected").attr('id') ); 
-			    		myold_selected = api4tree.node_to_id( $(this).find(".old_selected").attr('id') ); 
-			    		old_scroll = $(this).scrollTop();
-			    		api4panel.jsShowTreeNode( "tree_2", panel_id ); 
-			    		$(this).scrollTop(old_scroll);
-			    		$("#tree_2 #node_"+myselected).addClass("selected").addClass("tree-open"); 
-			    		$("#tree_2 #node_"+myold_selected).addClass("old_selected").addClass("tree-open"); 
-		    		} else {
-			    		$(this).remove();
-		    		}
-		    	}
-		    });
-    }
+	
+	if(!tree_id || tree_id =="tree_2") {
+	
+	    if( $("#tree_2").parent("div").hasClass("mindmap") ) {
+	
+				myjsPlumb.setSuspendDrawing(true,true);
+	    		var snapshot = jsSnapShotMake("tree_2");
+			    myjsPlumb.reset();		
+		    	setTimeout(function(){
+					jsSnapShotApply("tree_2", snapshot ); //обновляем правое дерево
+					api4panel.jsDrawMindmap();		    	
+		    	},0);
+	
+	    } else {
+				var scrollleft = $("#tree_2.mypanel").scrollLeft();
+				
+				$("#tree_2 .panel").quickEach( function() {
+			    	var id = $(this).attr('id');
+			    	if(id) {
+				    	var panel_id = id.replace("panel_","");
+				    	if( api4tree.jsFindByParent( panel_id ).length >0 ) {
+				    		myselected = api4tree.node_to_id( $(this).find(".selected").attr('id') ); 
+				    		myold_selected = api4tree.node_to_id( $(this).find(".old_selected").attr('id') ); 
+				    		old_scroll = $(this).scrollTop();
+				    		api4panel.jsShowTreeNode( "tree_2", panel_id ); 
+				    		$(this).scrollTop(old_scroll);
+				    		$("#tree_2 #node_"+myselected).addClass("selected").addClass("tree-open"); 
+				    		$("#tree_2 #node_"+myold_selected).addClass("old_selected").addClass("tree-open"); 
+			    		} else {
+				    		$(this).remove();
+			    		}
+			    	}
+			    });
+	    }
+	}
 		
 	$('#calendar').fullCalendar( 'refetchEvents' ); 
 	$("#tree_2.mypanel").stop().scrollLeft(scrollleft);
