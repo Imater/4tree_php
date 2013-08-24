@@ -113,19 +113,19 @@
           <img class="img-circle" src="img/web/screen-round-1.png" data-src="bootstrap-3/js/holder.js/140x140" alt="Generic placeholder image">
           <h2>Карты ума</h2>
           <p>Размышляйте при помощи карт ума. Создавайте новые ветки горячими клавишами. Перетаскивайте элементы мышкой по карте или на второе дерево. Фокусируйтесь на части карты двойным кликом.</p>
-          <p><a class="btn btn-default" href="#">Поробнее &raquo;</a></p>
+          <p><a class="btn btn-default" style="display:none" href="#">Поробнее &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" src="img/web/screen-round-2.jpg" data-src="bootstrap-3/js/holder.js/140x140" alt="Generic placeholder image">
           <h2>Дерево</h2>
           <p>Отображайте дерево любым из трёх видов: обычное дерево, панели или карта ума. Наводите порядок, открывая два дерева одновременно и перетаскивая дела и заметки между ними.</p>
-          <p><a class="btn btn-default" href="#">Поробнее &raquo;</a></p>
+          <p><a class="btn btn-default" style="display:none" href="#">Поробнее &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
           <img class="img-circle" src="img/web/screen-round-3.jpg" data-src="bootstrap-3/js/holder.js/140x140" alt="Generic placeholder image">
           <h2>Календарь</h2>
           <p>Перетаскивайте любые дела в большой календарь и отображайте их любым из пяти видов. Переносите дела внутри календаря мышкой. Ставьте себе SMS напоминания.</p>
-          <p><a class="btn btn-default" href="#">Поробнее &raquo;</a></p>
+          <p><a class="btn btn-default"  style="display:none" href="#">Поробнее &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 
@@ -167,7 +167,7 @@
           <h2 class="featurette-heading">C чего начать <span class="text-muted">и как изучить?</span></h2>
           <p class="lead">Чтобы ничего не пропустить, нужно 2 шага:</p>
 		  <a href="login.php?reg"><button type="button" class="btn btn-success">Регистрация</button></a>
-		  <a href="login.php?reg"><button type="button" class="btn btn-info">Пройти курс молодого бойца</button></a>
+		  <a href="./getting_started"><button type="button" class="btn btn-info">Пройти курс молодого бойца</button></a>
         </div>
         <div class="col-md-6">
           <img class="featurette-image img-responsive" src="img/web/screen-words-3.jpg" data-src="bootstrap-3/js/holder.js/500x500/auto" alt="Generic placeholder image">

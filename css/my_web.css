@@ -93,3 +93,26 @@ display: block;
 	overflow-y: auto;
 }
 }
+
+@media (min-width: 1024px) {
+#login_or_reg {
+	position: absolute;
+	right:120px;	
+}
+
+#reg_button {
+	position: absolute;
+	right: 10px;
+}
+}
+
+.navbar-inverse {
+background: rgba(10,10,10,0.945)
+}
+
+#mylogo {
+	vertical-align: top;
+	margin-right: 3px;
+	margin-top: 2px;
+	
+}

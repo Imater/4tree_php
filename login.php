@@ -427,13 +427,13 @@ var params_get = 'grant_type=password&username='+md5email+
 
 <?				
 
-if( !isset($_GET['reg_me']) ) { 
-	$reg_visible = "block"; 
-	$log_visible = "none"; 	
+if( isset($_GET['reg_me']) ) { 
+	$reg_visible = "none"; 
+	$log_visible = "block"; 	
 	$social = "регистрация";
 } else {
-	$reg_visible = "block"; 	
-	$log_visible = "none"; 	
+	$reg_visible = "none"; 	
+	$log_visible = "block"; 	
 	$social = "вход";
 }
 	

@@ -5,6 +5,7 @@ $s = file_get_contents('http://ulogin.ru/token.php?token=' . @$_POST['token'] . 
 $user = json_decode($s, true);
 //$user = array( "uid" => "38346778", "bdate" => "12.5.1978", "network" => "vkontakte", "country" => "Россия ", "profile" => "http://vk.com/id38346778", "sex" => "2", "last_name" => "Вецель", "first_name" => "Евгений", "city" => "Челябинск", "identity" => "http://vk.com/id38346778", "photo_big" => "http://cs4480.vk.me/u38346778/a_7e2ce3e6.jpg", "photo" => "http://cs4480.vk.me/u38346778/e_8908007b.jpg", "email" => "eugene.leonar@gmail.com");
 
+if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) 
   push(array("am"),array('type' => "new_visit", 'from' => $fpk_id, 'txt' => "Визит <b title='".addslashes($_SERVER["HTTP_USER_AGENT"]." / ".$_SERVER["HTTP_COOKIE"])."'>".$_SERVER["REMOTE_ADDR"]."</b>"));
 
 
@@ -36,199 +37,179 @@ if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/ht
 	
 }
 
+
+		if(isset($_GET["part"])) {
+			$part = $_GET["part"];
+			if($part == "getting_started") {
+				$include = "_getting_started.php";		
+				$navbar = "navbar-fixed-top";
+			}
+		} else {
+			$include = "_first_page.php";
+			$navbar = "navbar-static-top";
+		}
+
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="ru" class="" style="" 
 
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width">
+
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="favicon1.png" type="image/x-icon" />
+<link rel="icon" href="favicon1.png" type="image/x-icon" />
 
 <html>
-<head>
-<title>4tree.ru — мои дела</title>
+  <head>
+    <title>4tree.ru — мои дела</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="bootstrap-3/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="bootstrap-3/css/carousel.css" rel="stylesheet" media="screen">
+    <link href="css/my_web.css" rel="stylesheet" media="screen">
+	<link rel="stylesheet" type="text/css" href="fontello/css/fontello.css"/>
 
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-<link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="//code.jquery.com/jquery.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap-3/js/bootstrap.min.js"></script>
 
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+    
+    
+  </head>
+  
+  
+  
+  
+  
+  
+<!-- NAVBAR
+================================================== -->
+  <body data-spy="scroll" data-target="#navbar-example" data-offset="150">
+  
+      <script>
+    
+		  $(document).ready(function(){ //переход к хеш ссылке
+			  $('a[href^="#"]').on('click',function (e) {
+			      e.preventDefault();
+			  
+			      var target = this.hash,
+			      $target = $(target);
+			  
+			      $('html, body').stop().animate({
+			          'scrollTop': $target.offset().top - 60
+			      }, 900, 'swing', function () {
+			          window.location.hash = target;
+			      });
+			  });
+			  
+			  $(".nav li .active").removeClass("active");
+			  setTimeout(function(){
+			  
+				  <? if($include == "_getting_started.php") echo ' $("#getting_started_li").addClass("active");' ?>
+				  
+			  }, 150);
+		  
+		  });
+    
+    </script>
 
-<link rel="stylesheet" type="text/css" href="css/4tree.css">
-
-<script src="js/jquery-1.10.1.min.js"></script>
-<script src="js/md5.js"/></script>
-<script src="js/4tree.js"/></script>
-<script src="js/jquery.cookie.min.js"/></script>
-
-
+  
 <?
-/*
-require_once('compress_timestamp.php');         //load timestamp created by compress.php module sets field $compress_stamp=unix_timestamp                                       
-if (stripos($_SERVER['HTTP_ACCEPT_ENCODING'],'GZIP')!==false)   
-        $gz='gz';
- else
-        $gz=null;
-echo '<link rel="stylesheet" type="text/css" href="min/4tree_'.$compress_stamp.'.css'.$gz.'" />',PHP_EOL;
-echo '<script src="min/4tree_'.$compress_stamp.'.js'.$gz.'" /></script>',PHP_EOL;
-*/
-?>
+if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) 
+{
+} else {
+	echo "<script>document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1\"></' + 'script>')</script>";
+	
+}
 
 
-<script type="text/javascript">
-<? if (isset($HTTP_GET_VARS['fpk_id'])) echo "$.cookie('fpk_id',".$HTTP_GET_VARS['fpk_id'].");" ?>
-
-$(document).ready(jsDoFirst); 
-</script>
-
-
-
-</head>
-
-
-<body>
-<div id="fade"></div>
-<div id="header">
-	<div id="logo"><img src="img/4tree-logo.png" width="498" height="150"></div>
-	<div id="login">
-		<?
 		
+
+
+?>
+    <header class="navbar">
+
+      
+
+        <nav class="navbar navbar-inverse <? echo $navbar; ?>">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="./"><img src="favicon1.png" id="mylogo"> 4tree.ru</a>
+            </div>
+            <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="./">Главная</a></li>
+                <li id="getting_started_li"><a href="./getting_started">Пошаговое руководство</a></li>
+                <li class="dropdown" style="display:none;">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ещё <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-header">Что нового?</li>
+                    <li><a href="#">Блог 4tree.ru</a></li>
+                    <li><a href="#">Интересные статьи по ТМ</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Продвинутые возможности</li>
+                    <li><a href="#">Горячие клавиши</a></li>
+                    <li><a href="#">Часто задаваемые вопросы</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header">О сайте 4tree.ru</li>
+					<li><a href="#docs">Тарифы</a></li>
+					<li><a href="#docs">Конфеденциальность</a></li>
+					<li><a href="#docs">Соглашение с пользователями</a></li>
+                  </ul>
+                </li>
+
+                <li id="login_or_reg">       
+
+		<?
 		$last_user_id = $_COOKIE['4tree_user_id'];
-		if($last_user_id)
-		echo '
-		<a href="./home/index.php" id="login_now" style="font-size:11px;float:right;margin-bottom:10px;">Вход в открытое дерево</a><br>
-		';
-		?>
-		<a href="./login.php?login_me" id="login_now">Вход</a><br>
-    <a href="./login.php?reg_me" id="login_now">Регистрация</a><br>
-	</div>
-</div>
+		if($last_user_id) $index = "./home/index.php";
+		else $index = "login.php?log";
+		?>				
 
-<div id="content">
-  <div id="lozung">
-  Мы заботимся о ваших деревьях,<br> чтобы у вас оставалось время строить и воспитывать…
-  <br><br>
-  <img src="./img/mainpage/clip_750_fc1baf3e.png" width="530" height="410">
-  </div>
-</div>
+                	<a href="<? echo $index; ?>"><button type="button" class="btn btn-success">Войти</button></a>
+				</li>
 
-<div id="white">
-  <div id="air"><img src="./img/mainpage/clip_4152_1ff1f204.png" width="417" height="250"></div>
-<p>дела + календарь + заметки<br>
-всё в одном дереве</p>
-</div>
+                <li id="reg_button">       
+                	<a href="login.php?reg"><button type="button" class="btn btn-primary">Регистрация</button></a>
+				</li>
+				
 
-<div id="green">
-<center><b>Всё в одном дереве:</b></center>
-<ul>
-<li>Дела</li>
-<li>SMS напоминания</li>
-<li>Календарь</li>
-<li>Карта ума</li>
-<li>Wiki</li>
-<li>Html редактор</li>
-<li>Сворачивающийся дневник</li>
-<li>Таймер Pomodorro</li>
-<li>Отправка заметок короткой ссылкой</li>
-<li>Загрузка фотографий и документов</li>
-<li>Ваши письма из электронной почты</li>
-<li>Статьи из интернета</li>
-<li>Комментарии к вашим заметкам и делам</li>
-</ul>
-</div>
+              </ul>
+            </div>
+          </div>
+        </nav>
 
-<div id="white">
-<h1>Видео-обзор сервиса 4tree.ru</h1>
-<iframe width="640" height="390" src="http://www.youtube.com/embed/q6noLA6XwRw" frameborder="0" allowfullscreen></iframe>
-</div>
-
-<div id="green">
-<center><b>Online/offline:</b></center>
-<ul>
-<li>Работает в любом браузере</li>
-<li>Хранит данные на вашем компьютере</li>
-<li>Может работать без интернета</li>
-<li>Синхронизируется с сервером</li>
-<li>PUSH технологии мгновенного обновления</li>
-<li>Работает мгновенно</li>
-
-</ul>
-</div>
-
-<div id="white" class="some_more">
-<center><b>HTML редактор:</b></center><br>
-<img src="./img/mainpage/clip_9375_e99fe479.png" width="400px" align="left">Текстовый html редактор.<br>
-Позволяет писать и украшать тексты форматированием. Вы можете добавить картинки не только из файла, но и из буфера обмена.<br><br>
-Вы можете комментировать собственные записи и отвечать на эти комментарии. Вы можете использовать редактор как дневник. Заметка сегодняшнего дня создаётся автоматически и доступна при помощи горячей клавиши.<br><br>
-В правом нижнем углу — можно заметить таймер, который можно заводить мышкой. Этот таймер настроен на работу с симтемой Pomodorro (25 минут работы, потом 5 минут перерыв. Каждые 4 "помидорки" 15 минутный отдых).<br><br>
-Вы можете вставлять в редактор статьи с других сайтов, даже если они включают в себя картинки и таблицы.
-</div>
-
-<div id="green" class="some_more">
-<center><b>Календарь:</b></center><br>
-<img src="./img/mainpage/clip_1448_80c8e22d.png" width="400px" align="left">Может отображать данные в режиме месяца, недели и дня.<br><br>
-Поддерживает перетаскивание дел с даты на дату. Дело можно переместить из дерева в календарь. При клике в дело календаря, эта заметка откроется и в дереве и в редакторе.<br><br>
-Текущее время отображается красной чертой.<br><br>
-Слева переключатели на: панель картинок и файлов, новости и поиск.<br><br>
-В поиске можно не только искать нужные слова, но и считать арифметические выражения.
-</div>
-
-<div id="white" class="some_more">
-<center><b>3 режима отображения дерева:</b></center><br>
-<center>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Панельный режим:<br>
-<img src="./img/mainpage/clip_9087_31a9bd91.png" width="650px" align="center">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Режим дерева:<br>
-<img src="./img/mainpage/clip_6517_5d22e5da.png" width="650px" align="center">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Режим карты ума:<br>
-<img src="./img/mainpage/clip_8580_658cb30a.png" width="650px" align="center">
-</center>
-<p>
-Любую заметку дерева можно превратить в папку, просто добавив в неё элементы при помощи клавиш alt+вправо.<br><br>
-При добавлении новых дел или переименовании старых, вы можете написать "позвонить через 3 дня в 10:50 напомнить", эта фраза расшифруется и делу присвоится соответствующая дата.<br><br>
-Вы можете создать собственную структуру дел, основанную, например, на технологии Getting Things Done (GTD). Дела по дереву можно перетаскивать мышкой.<br><br>Всё что вы напишите БОЛЬШИМИ буквами, автоматически добавится в панель избранных над деревом. При клике в избранные, эта папка открывается в дереве, календаре и редакторе.<br><br>
-При клике мышкой в синюю папку рядом с делом, в редактор загружаются все заметки этой папки. Вы можете редактировать несколько заметок одновременно.<br><br>
-Дата следующего действия транслируется на все родительские папки. Если кликнуть на эту дату, открывается дело, дата которого ближайшая.
-</p>
-</div>
-
-<div id="green" class="some_more" style="height:360px !important;">
-<center>Добро пожаловать на альфа-тестирование 4tree.<br><br>
-<img src="./img/mainpage/clip_8495_e5256a80.png" width="450px" align="center"></center>
-</div>
-
-
-<div id="bubu" style="display:none"></div>
-
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-(function (d, w, c) {
-    (w[c] = w[c] || []).push(function() {
-        try {
-            w.yaCounter21558199 = new Ya.Metrika({id:21558199,
-                    webvisor:true,
-                    clickmap:true,
-                    trackLinks:true,
-                    accurateTrackBounce:true,
-                    trackHash:true});
-        } catch(e) { }
-    });
-
-    var n = d.getElementsByTagName("script")[0],
-        s = d.createElement("script"),
-        f = function () { n.parentNode.insertBefore(s, n); };
-    s.type = "text/javascript";
-    s.async = true;
-    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
-
-    if (w.opera == "[object Opera]") {
-        d.addEventListener("DOMContentLoaded", f, false);
-    } else { f(); }
-})(document, window, "yandex_metrika_callbacks");
-</script>
-<noscript><div><img src="//mc.yandex.ru/watch/21558199" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
-
-</body>
+    </header>
 
 
 
+
+	<? 
+		include "my".$include;
+	?>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
 </html>

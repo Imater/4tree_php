@@ -4712,6 +4712,16 @@ $.contextMenu({
 										jsProgressStep();
 										setTimeout(function(){
 											jsProgressStep();
+											$.cookie("4tree_passw",null);
+											$.cookie("4tree_email",null);
+											$.cookie("4tree_email_md",null);
+											$.cookie("4tree_user_id",null);
+											$.cookie("4tree_social_md5",null);
+											$.cookie("main_tree_font",null);
+											$.cookie("main_x",null);
+											$.cookie("main_y",null);
+											$.cookie("pwidth",null);
+											$.cookie("sh",null);
 											window.location.href="login.php?exit_and_purged_local_data";
 											
 										},1000);
