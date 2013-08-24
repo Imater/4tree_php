@@ -1,0 +1,95 @@
+.image_inner {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top:85px;
+	text-align: center;
+}
+
+.image_inner img {
+	max-height: 65% !important;
+	max-width: 95% !important;
+	min-width: 10px !important;
+	display: inline-block !important;
+	text-align: center;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.8);
+}
+
+.carousel .item {
+	background: none !important;
+	height: 560px;
+}
+
+.carousel-caption {
+	padding-bottom: 37px;
+	text-shadow: 0px 2px 6px #000;
+}
+
+.carousel-inner {
+	background-image:url("../img/web/bg-tree1.jpg");
+	background-size: 100% 100%;
+}
+
+.navbar {
+	border: none;
+}
+
+.navbar .btn {
+	padding: 1px 10px;
+	font-size: 12px;
+	
+}
+
+@media (min-width: 50px) {
+.marketing .img-circle  {
+	max-width: 100% !important;
+	margin-top: 20px;
+}
+}
+
+@media (min-width: 500px) {
+.marketing .img-circle  {
+	max-width: 450px !important;
+	margin-top: 20px;
+}
+}
+
+
+@media (min-width: 1024px) {
+.marketing .img-circle  {
+	max-width: 280px !important;
+}
+}
+
+.featurette-heading {
+	margin-top: 0px;
+}
+
+.featurette-image {
+	margin-top: 20px;
+}
+
+.active > a {
+	font-weight: bold;
+}
+
+.bs-sidebar .nav .nav {
+display: none;
+margin-left:30px;
+}
+
+.bs-sidebar .nav .nav a {
+	padding: 5px 15px;
+}
+
+
+.bs-sidebar .nav > .active > ul {
+display: block;
+}
+
+@media (min-width: 1024px) {
+#navbar-example {
+	position: fixed;
+	overflow-y: auto;
+}
+}

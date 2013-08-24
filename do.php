@@ -933,7 +933,6 @@ return date("Y-m-d <b>H:i:s</b>",($now/1000+60*60));
 if (isset($HTTP_GET_VARS['get_tags'])) 
 {
 	$user_id = $GLOBALS['user_id'];
-	$user_id = 11;
 	
 	$sth = $db2->prepare("SELECT * FROM tree_tags WHERE user_id = '".$user_id."' ORDER by position");
 	$sth->execute();

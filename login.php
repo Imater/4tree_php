@@ -425,8 +425,22 @@ var params_get = 'grant_type=password&username='+md5email+
 		<h5></h5>
 	</div>
 
+<?				
 
-<div id="reg_page" style="display:none;">
+if( !isset($_GET['reg_me']) ) { 
+	$reg_visible = "block"; 
+	$log_visible = "none"; 	
+	$social = "регистрация";
+} else {
+	$reg_visible = "block"; 	
+	$log_visible = "none"; 	
+	$social = "вход";
+}
+	
+?>
+
+
+<div id="reg_page" style="display:<? echo $reg_visible; ?>;">
 	
 	
 	<div id="login_form">
@@ -449,7 +463,7 @@ var params_get = 'grant_type=password&username='+md5email+
 
 <!-- //////////////////////////////////////////////// -->
 
-<div id="login_page" style="display:block;">	
+<div id="login_page" style="display:<? echo $log_visible; ?>;">	
 	
 	<div id="login_form">
 	<h1>Вход</h1>
@@ -464,7 +478,7 @@ var params_get = 'grant_type=password&username='+md5email+
 </div>
 
 		<div id="social" style="" title="">
-		<label>вход с помощью:</label>
+		<label><? echo $social; ?> с помощью:</label>
 		<script src="//ulogin.ru/js/ulogin.js" async></script> 
 		<div id="uLogin" data-ulogin="display=panel;fields=first_name,email;optional=photo,phone,bdate,sex,city,country,photo_big;providers=google,vkontakte,facebook,mailru,twitter;hidden=other;redirect_uri=https://4tree.ru/login.php?login_me"></div>
 		<!-- http%3A%2F%2F4tree.ru%2F4tree.php -->

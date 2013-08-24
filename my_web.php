@@ -1,11 +1,62 @@
-<!DOCTYPE html>
+<?
+require_once("db.php");
+
+$s = file_get_contents('http://ulogin.ru/token.php?token=' . @$_POST['token'] . '&host=' . $_SERVER['HTTP_HOST']);
+$user = json_decode($s, true);
+//$user = array( "uid" => "38346778", "bdate" => "12.5.1978", "network" => "vkontakte", "country" => "Россия ", "profile" => "http://vk.com/id38346778", "sex" => "2", "last_name" => "Вецель", "first_name" => "Евгений", "city" => "Челябинск", "identity" => "http://vk.com/id38346778", "photo_big" => "http://cs4480.vk.me/u38346778/a_7e2ce3e6.jpg", "photo" => "http://cs4480.vk.me/u38346778/e_8908007b.jpg", "email" => "eugene.leonar@gmail.com");
+
+if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) 
+  push(array("am"),array('type' => "new_visit", 'from' => $fpk_id, 'txt' => "Визит <b title='".addslashes($_SERVER["HTTP_USER_AGENT"]." / ".$_SERVER["HTTP_COOKIE"])."'>".$_SERVER["REMOTE_ADDR"]."</b>"));
+
+
+if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/http.html?")) {
+//$user['network'] - соц. сеть, через которую авторизовался пользователь
+//$user['identity'] - уникальная строка определяющая конкретного пользователя соц. сети
+//$user['first_name'] - имя пользователя
+//$user['last_name'] - фамилия пользователя
+	$db2 = new PDO('mysql:dbname=h116;host=localhost;charset=utf8', $config["mysql_user"], $config["mysql_password"]);
+	$db2 -> exec("set names utf8");
+	$db2->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+	$db2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	$db = mysql_connect ($config["mysql_host"], $config["mysql_user"], $config["mysql_password"]);
+	mysql_query_my("SET NAMES utf8");
+
+	mysql_select_db('h116',$db);   
+	if (!$db) { echo "Ошибка подключения к SQL :("; exit();}
+	
+	if(isset($_GET["set_to_current_account"])) {
+		$last_user_id = $_COOKIE['4tree_user_id'];
+		$session_md5 = md5($user["identity"]."990990");
+		$sqlnews = "DELETE FROM tree_users_social WHERE session_md5 = '".$session_md5."'";
+		$result = mysql_query_my($sqlnews); 
+		if($last_user_id AND mySaveToSocial($last_user_id,$user,$db,$db2)) user_exist($user, $db2);
+	} else {
+		if(user_exist($user, $db2) == false) create_new_user($user, $db2);
+	}
+	
+}
+
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="ru" class="" style="" 
+
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+
+<meta charset="utf-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <html>
   <head>
-    <title>Bootstrap 101 Template</title>
+    <title>4tree.ru — мои дела</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
-    <link href="bootstrap-3/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="bootstrap-3/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="bootstrap-3/css/carousel.css" rel="stylesheet" media="screen">
+    <link href="css/my_web.css" rel="stylesheet" media="screen">
+	<link rel="stylesheet" type="text/css" href="fontello/css/fontello.css"/>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -13,7 +64,6 @@
       <script src="../../assets/js/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body>
   
   
   
@@ -22,11 +72,35 @@
   
 <!-- NAVBAR
 ================================================== -->
-  <body>
-    <div class="navbar-wrapper">
-      <div class="container">
+  <body data-spy="scroll" data-target="#navbar-example" data-offset="150">
+<?
+if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) 
+{
+} else {
+	echo "<script>document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1\"></' + 'script>')</script>";
+	
+}
 
-        <div class="navbar navbar-inverse navbar-static-top">
+
+		if(isset($_GET["part"])) {
+			$part = $_GET["part"];
+			if($part == "getting_started") {
+				$include = "_getting_started.php";		
+				$navbar = "navbar-fixed-top";
+			}
+		} else {
+			$include = "_first_page.php";
+			$navbar = "navbar-static-top";
+		}
+		
+
+
+?>
+    <header class="navbar">
+
+      
+
+        <nav class="navbar navbar-inverse <? echo $navbar; ?>">
           <div class="container">
             <div class="navbar-header">
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -34,160 +108,54 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#">4tree.ru — мои дела</a>
+              <a class="navbar-brand" href="#">4tree.ru</a>
             </div>
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Главная</a></li>
-                <li><a href="#about">Регистрация/Вход</a></li>
-                <li><a href="#docs">Обучение</a></li>
-                <li><a href="#docs">Тарифы</a></li>
+                <li><a href="#docs">Курс молодого бойца</a></li>
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Возможности <b class="caret"></b></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ещё <b class="caret"></b></a>
                   <ul class="dropdown-menu">
-                    <li><a href="#">Система Pomodorro</a></li>
-                    <li><a href="#">Карта ума</a></li>
+                    <li class="dropdown-header">Что нового?</li>
+                    <li><a href="#">Блог 4tree.ru</a></li>
+                    <li><a href="#">Интересные статьи по ТМ</a></li>
                     <li class="divider"></li>
                     <li class="dropdown-header">Продвинутые возможности</li>
                     <li><a href="#">Горячие клавиши</a></li>
-                    <li><a href="#">Связь с другими программами</a></li>
+                    <li><a href="#">Часто задаваемые вопросы</a></li>
+                    <li class="divider"></li>
+                    <li class="dropdown-header">О сайте 4tree.ru</li>
+					<li><a href="#docs">Тарифы</a></li>
+					<li><a href="#docs">Конфеденциальность</a></li>
+					<li><a href="#docs">Соглашение с пользователями</a></li>
                   </ul>
                 </li>
+                <li>       
+
+		<?
+		$last_user_id = $_COOKIE['4tree_user_id'];
+		if($last_user_id) $index = "./home/index.php";
+		else $index = "login.php?reg";
+		?>				
+
+                	<a href="<? echo $index; ?>"><button type="button" class="btn btn-success">Войти</button></a>
+				</li>
+				
+
               </ul>
             </div>
           </div>
-        </div>
+        </nav>
 
-      </div>
-    </div>
-
-
-    <!-- Carousel
-    ================================================== -->
-    <div id="myCarousel" class="carousel slide">
-      <!-- Indicators -->
-      <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-      </ol>
-      <div class="carousel-inner">
-        <div class="item active">
-          <img src="https://4tree.ru/img/mainpage/clip_750_fc1baf3e.png" data-src="bootstrap-3/js/holder.js/100%x500/auto/#777:#7a7a7a/text:First slide" alt="First slide">
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>Example headline.</h1>
-              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-              <p><a class="btn btn-large btn-primary" href="#">Sign up today</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <img src="https://4tree.ru/img/mainpage/clip_9087_31a9bd91.png" data-src="bootstrap-3/js/holder.js/100%x500/auto/#777:#7a7a7a/text:Second slide" alt="Second slide">
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>Another example headline.</h1>
-              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-              <p><a class="btn btn-large btn-primary" href="#">Learn more</a></p>
-            </div>
-          </div>
-        </div>
-        <div class="item">
-          <img src="https://4tree.ru/img/mainpage/clip_8580_658cb30a.png" data-src="bootstrap-3/js/holder.js/100%x500/auto/#777:#7a7a7a/text:Third slide" alt="Third slide">
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>One more for good measure.</h1>
-              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-              <p><a class="btn btn-large btn-primary" href="#">Browse gallery</a></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
-      <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div><!-- /.carousel -->
+    </header>
 
 
 
-    <!-- Marketing messaging and featurettes
-    ================================================== -->
-    <!-- Wrap the rest of the page in another container to center all the content. -->
 
-    <div class="container marketing">
-
-      <!-- Three columns of text below the carousel -->
-      <div class="row">
-        <div class="col-lg-4">
-          <img class="img-circle" src="data:image/png;base64," data-src="bootstrap-3/js/holder.js/140x140" alt="Generic placeholder image">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" src="data:image/png;base64," data-src="bootstrap-3/js/holder.js/140x140" alt="Generic placeholder image">
-          <h2>Heading</h2>
-          <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" src="data:image/png;base64," data-src="bootstrap-3/js/holder.js/140x140" alt="Generic placeholder image">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#">View details &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-      </div><!-- /.row -->
-
-
-      <!-- START THE FEATURETTES -->
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive" src="data:image/png;base64," data-src="bootstrap-3/js/holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive" src="data:image/png;base64," data-src="bootstrap-3/js/holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-        <div class="col-md-7">
-          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive" src="data:image/png;base64," data-src="bootstrap-3/js/holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
-
-      <!-- /END THE FEATURETTES -->
-
-
-      <!-- FOOTER -->
-      <footer>
-        <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2013 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-      </footer>
-
-    </div><!-- /.container -->
+	<? 
+		include "my".$include;
+	?>
   
   
   
