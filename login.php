@@ -418,7 +418,7 @@ var params_get = 'grant_type=password&username='+md5email+
 
 <body>
 
-	<a id="go_home" href="index.php" title="Перейти на главную страницу"><i class="icon-home"></i></a>
+	<a id="go_home" href="https://4tree.ru/" title="Перейти на главную страницу"><i class="icon-home"></i></a>
 
 	<div id="registrate_form">
 		<div id="reg_please2" class="reg_or_login">Регистрация на 4tree</div>
