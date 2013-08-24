@@ -1,4 +1,13 @@
-<div id="carousel-example-generic" class="carousel slide" data-interval="0">
+<script>
+	$(document).ready(function() {
+        $('#carousel-example-generic').carousel({
+			interval: 12000
+		});
+
+  });
+</script>
+
+<div id="carousel-example-generic" class="carousel slide" data-interval="12000" data-pause="hover">
   <!-- Indicators -->
   <ol class="carousel-indicators">
     <li data-target="#carousel-screen1" data-slide-to="0" class="active"></li>
@@ -19,7 +28,7 @@
       <img src="img/web/screen-1.jpg" alt="...">
       </div>
       <div class="carousel-caption">
-        Дела, заметки, календарь и дневник — в одном месте
+        Дела, заметки, календарь и дневник...
       </div>
     </div>
 
@@ -28,7 +37,7 @@
       <img src="img/web/screen-2.png" alt="...">
       </div>
       <div class="carousel-caption">
-        Карта ума, редактор с вложенными комментариями
+        Карта ума, редактор с вложенными комментариями...
       </div>
     </div>
 
@@ -37,7 +46,7 @@
       <img src="img/web/screen-3.jpg" alt="...">
       </div>
       <div class="carousel-caption">
-        Календарь с SMS напоминаниями
+        Календарь с SMS напоминаниями...
       </div>
     </div>
 
@@ -46,7 +55,7 @@
       <img src="img/web/screen-4.jpg" alt="...">
       </div>
       <div class="carousel-caption">
-        Встроенная [[Wiki]]. Вставка статей и картинок из буфера обмена.
+        Встроенная [[Wiki]]. Вставка картинок из буфера обмена...
       </div>
     </div>
 
@@ -55,8 +64,8 @@
       <img src="img/web/screen-5.png" alt="...">
       </div>
       <div class="carousel-caption">
-        Система сворачивающихся дневников с календарём.<br>
-        Можно делиться заметками ссылками вида <a>4tree.ru/7d62</a>.
+        Система сворачивающихся дневников с календарём...<br>
+        Делитесь заметками ссылками вида <a href="https://4tree.ru/7d62" target="_blank">4tree.ru/7d62</a>.
       </div>
     </div>
 
