@@ -1,3 +1,9 @@
+<?
+if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) 
+  push(array("am"),array('type' => "new_visit", 'from' => $fpk_id, 'txt' => "Пошаговое руководство <b title='".addslashes($_SERVER["HTTP_USER_AGENT"]." / ".$_SERVER["HTTP_COOKIE"])."'>".$_SERVER["REMOTE_ADDR"]."</b>"));
+
+?>
+
 <div class="container bs-docs-container">
       <div class="row">
         <div class="col-md-3">

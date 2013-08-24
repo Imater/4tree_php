@@ -6,6 +6,10 @@
 
 <?
 require_once("db.php");
+
+if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) 
+  push(array("am"),array('type' => "new_visit", 'from' => $fpk_id, 'txt' => "Логин/регистрация <b title='".addslashes($_SERVER["HTTP_USER_AGENT"]." / ".$_SERVER["HTTP_COOKIE"])."'>".$_SERVER["REMOTE_ADDR"]."</b>"));
+
 //qragowhget
 $db2 = new PDO('mysql:dbname=h116;host=localhost;charset=utf8', $config["mysql_user"], $config["mysql_password"]);
 $db2 -> exec("set names utf8");
