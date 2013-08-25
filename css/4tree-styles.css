@@ -39,8 +39,15 @@ position: absolute;
 right: 0px;
 left: 0px;
 bottom: 0px;
-z-index: 1;
+z-index: 2;
 background: #FFF;
+
+  -moz-transition: all 0.1s; 
+  -webkit-transition: all 0.1s;  
+  -ms-transition: all 0.1s;  
+  -o-transition: all 0.1s;  
+  transition: all 0.1s;  
+
 }
 
 .v4 .calendar_and_others {
@@ -318,13 +325,31 @@ white-space: nowrap;
 font-size: 1em;
 text-align: center;
 position: absolute;
-left: 30px;
-right: 30px;
-bottom:20px;
+margin: 0 auto;
+bottom:25px;
+left: 25px;
 color: #000;
 text-shadow: 0px 1px 0px #ССС;
 text-overflow: ellipsis;
 overflow: hidden;
+background: rgba(229,255,220,0.9);
+border-radius: 5px;
+padding: 2px 20px 2px 30px;
+border: 1px solid rgba(0,186,0,0.68);
+box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
+cursor: pointer;
+}
+
+.f_text:before
+{
+content: "x";
+margin-right: 20px;
+margin-left: 5px;
+display: inline-block;
+margin-top: -1px;
+color:rgba(0,186,0,0.9); 
+margin-left: -20px;
+position: absolute;
 }
 
 #add_do_panel
@@ -681,14 +706,14 @@ top:27px;
 left: -10px;
 right: 0px;
 height: auto; 
-bottom: 230px;
+bottom: 200px;
 margin-left: 0px;
 margin-right: 0px;
 width: auto;          
 }
 
 .show_pomidors .top_panel {
-  bottom: 245px;
+  bottom: 220px;
 }
 
 #bottom_panel .top_panel /* Верхняя панель */
@@ -728,6 +753,7 @@ filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Colo
 
 .fc-content
 {
+border-top: 1px solid #888;
 background: white;
 height: 100%;
 top:0px;
@@ -744,17 +770,20 @@ height: auto;
 color:#000;
 z-index: 2;
 
-  -moz-transition: all 0.15s; 
-  -webkit-transition: all 0.15s;  
-  -ms-transition: all 0.15s;  
-  -o-transition: all 0.15s;  
-  transition: all 0.15s;  
+  -moz-transition: all 0.1s; 
+  -webkit-transition: all 0.1s;  
+  -ms-transition: all 0.1s;  
+  -o-transition: all 0.1s;  
+  transition: all 0.1s;  
 
 }
 
 #tree_editor.bottom_open_no .all_editor_place {
   bottom: 21px !important;
+  left: 0px !important;
+  z-index: 3 !important;
 }
+
 
 .v2 .all_editor_place {
   bottom: 12px;
@@ -998,7 +1027,7 @@ color: white !important;
     position: absolute;
     border: none;
     bottom: 0px;
-    top: 27px;
+    top: 20px;
     left: 0px;
     right: 0px;
     overflow: auto;
@@ -1009,11 +1038,11 @@ color: white !important;
 .redactor_menu {
 padding: 1px !important;
 width: 46px;
-height: 25px;
+height: 17px;
 }
 
 .redactor_menu i{
-top: 4px !important;
+top: 0px !important;
 color: #000;
 font-size: 20px !important;
 display: inline-block;
@@ -1136,7 +1165,6 @@ font-size: 0.75em;
 
 .fc-header
 {
-  background: #777777;
   font-size: 1em !important;
   color: inherit;
   font-family: Helvetica, Arial, Verdana, Tahoma, sans-serif !important;
@@ -1147,26 +1175,13 @@ font-size: 0.75em;
   padding: 0 !important;
   padding-left: 2px !important;
   list-style: none !important;
-/*  background: #f1f1f1;
-  background: -moz-linear-gradient(top,  #f1f1f1 0%, #e2e2e2 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f1f1f1), color-stop(100%,#e2e2e2));
-  background: -webkit-linear-gradient(top,  #f1f1f1 0%,#e2e2e2 100%);
-  background: -o-linear-gradient(top,  #f1f1f1 0%,#e2e2e2 100%);
-  background: -ms-linear-gradient(top,  #f1f1f1 0%,#e2e2e2 100%);
-  background: linear-gradient(to bottom,  #f1f1f1 0%,#e2e2e2 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f1f1', endColorstr='#e2e2e2',GradientType=0 );
-*/  
-  
   overflow: hidden !important;
-  height: 20px !important;
-  border-top: 1px solid #CCC;
-
+  height: 19px !important;
 }
 
 .fc-header
 {
 /*text shadow*/
-  text-shadow: 0px 1px 0px #888;
 }
 
 .fc-header-left
@@ -1179,7 +1194,7 @@ left: 15px;
 {
 position: absolute;
 left: 95px;
-right: 223px;
+right: 195px;
 text-align: center;
 text-overflow: ellipsis;
 overflow: hidden;
@@ -1222,7 +1237,6 @@ border-right:none;
 .redactor_separator
 {
 background: none;
-border: none !important;
 width: 3px;
 }
 
@@ -1269,8 +1283,11 @@ border: 1px solid #888;
 }
 
 .fc-button {
-  padding: 0px 5px !important;
+  padding: 1px 5px !important;
   border-radius: 0px !important;
+  margin-bottom: 0px;
+  line-height: 1.6em;
+  margin-top: 0px;
 }
 
 .fc-header-left
@@ -2334,7 +2351,7 @@ position: absolute;
 top: 0px;
 right:0px;
 left:0px;
-height: 25px;
+height: 19px;
 padding-left: 40px; 
 border-bottom: 1px solid #888;
 background: #FFF;
@@ -2367,9 +2384,10 @@ width: 25px;
 #fav_redactor_btn li,#fav_redactor_btn_comment li {
 float: none !important;
 display: inline-block;
-height: 24px;
+height: 19px;
+line-height: 18px;
 padding: 0px;
-width: 23px;
+width: 21px;
 border-top-right-radius: 0px;
 border-bottom-right-radius: 0px;
 border-top-left-radius: 0px;
@@ -2384,8 +2402,10 @@ float: none !important;
 }
 
 #fav_redactor_btn .redactor_separator,#fav_redactor_btn_comment .redactor_separator {
-  height: 7px;
-  width: 2px;
+  height: 19px;
+  vertical-align: top;
+  width: 1px;
+  margin: 0px 3px !important;
 }
 
 #fav_redactor_btn li i, #fav_redactor_btn_comment li i {
@@ -2393,13 +2413,15 @@ color: inherit;
 font-size: 12px;
 margin: 0px !important;
 display: inline-block;
-padding-top: 6px;
-padding-left: 3px;
-color: #222;
+padding-top: 4px;
+padding-left: 2px;
+color: #333;
 }
 #fav_redactor_btn li a, #fav_redactor_btn_comment li a{
   color: inherit;
-  height: 23px;
+  height: 19px;
+  width: auto !important;
+  border: none !important;
 }
 
 /*
@@ -5107,10 +5129,9 @@ position: absolute;
 top:0px;
 left: 0px;
 right: 0px;
-height: 20px;
+height: 19px;
 vertical-align: middle;
-background: #777777;
-border-top: 1px solid #CCC;
+border-bottom: 1px solid #888;
 }
 
 
@@ -6294,7 +6315,7 @@ body > ._jsPlumb_connector {
     color: inherit;
     font-weight: normal;    
   position: absolute;
-  left: 300px;;
+  left: 320px;;
   top: 3px;
   right: 107px;
   text-align: center;
@@ -6441,3 +6462,6 @@ font-weight: normal;
 color: #000;
 }
 
+.fc-border-separate tr.fc-last td {
+border-bottom-width: 0px !important;
+}

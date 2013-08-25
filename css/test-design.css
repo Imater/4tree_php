@@ -4,7 +4,7 @@ body,html {
 	color: #000;
 	font-size: 12px;
 	font-family: Tahoma, Arial, Verdana;
-
+	overflow-y: hidden;
 }
 
 #tree_header {
@@ -144,12 +144,12 @@ opacity: 1;
 	right: 10px;
 	width: auto;
 	bottom:45px;
-	height: 185px;
+	height: 155px;
 	font-size: 11px;
 }
 
 .show_pomidors #left_calendar {
-	height: 200px;
+	height: 175px;
 }
 
 .gradient_line {
@@ -403,7 +403,6 @@ background: rgba(255,255,255,0.5);
 
 #fav_redactor_btn,#fav_redactor_btn_comment {
 color: #222;
-border-top: 1px solid #FFF;	
 }
 
 #params_header {
@@ -765,9 +764,10 @@ z-index: 5;
 
 .tree_search input {
 	width: 100%;
-	background: #777;
+	background: #555;
+	box-shadow: inset 0px 0px 3px #000;
 	border: 1px solid #444;
-	padding: 0px 5px 2px 5px;
+	padding: 0px 5px 1px 5px;
 	-moz-transition: all 0.2s; 
 	-webkit-transition: all 0.2s;  
 	-ms-transition: all 0.2s;  
@@ -780,6 +780,7 @@ z-index: 5;
 
 .tree_search input:focus {
 	background: #DDD;
+	box-shadow: none;	
 -moz-transition: all 0.2s; 
 -webkit-transition: all 0.2s;  
 -ms-transition: all 0.2s;  
@@ -790,10 +791,10 @@ transition: all 0.2s;
 
 #footer_horizont {
 	position: absolute;
-	right: 50px;
-	bottom: 2px;
+	left: 205px;
+	top: 4px;
 	width: auto;
-	height: 14px;
+	height: 18px;
 	font-size: 0px;
 	border: 1px solid #333;
 	border-radius: 4px;
@@ -801,16 +802,15 @@ transition: all 0.2s;
 }
 
 #footer_horizont #hor {
-	width: 41px;
-	height: 14px;
-	background: #555;
+	width: 29px;
+	height: 18px;
 	text-align: center;
 	display: inline-block;
 	vertical-align: middle;
 	border-top-left-radius: 3px;
 	border-bottom-left-radius: 3px;
-	box-shadow: inset 0px 0px 6px #000;
-	background: #555;
+	box-shadow: inset 0px 0px 3px #000;
+	background: rgba(0,0,0,0.3);
    -moz-transition: all 0.2s; 
    -webkit-transition: all 0.2s;  
    -ms-transition: all 0.2s;  
@@ -823,9 +823,19 @@ transition: all 0.2s;
 	background: #777;
 }
 
+.calendar_and_others {
+	border-right: 1px solid #888;
+}
+
+.horizont_split .calendar_and_others {
+	border-right: none;
+	border-top: 1px solid #888;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+}
+
 #footer_horizont #vert {
-	width: 41px;
-	height: 14px;
+	width: 29px;
+	height: 18px;
 	background: #777;
 	border-top-right-radius: 3px;
 	border-bottom-right-radius: 3px;
@@ -840,28 +850,23 @@ transition: all 0.2s;
 }
 
 .horizont_split #footer_horizont #vert {
-	box-shadow: inset 0px 0px 6px #000;
-	background: #555;
+	box-shadow: inset 0px 0px 3px #000;
+	background: rgba(0,0,0,0.3);
 }
 
 
 #footer_horizont i {
-	font-size: 10px;
+	font-size: 11px;
 	display: inline-block;
 	color: #222;
 	text-shadow: none;
-	margin-top: 2px;
+	margin-top: 4px;
 	margin-left: 3px;
 }
 
 #footer_horizont #vert i {
-	margin-top: 1px;
-	margin-left: 0px;
-}
-
-
-#footer_horizont .active {
-	box-shadow: inset 0px 0px 6px #000;
+	margin-top: 4px;
+	margin-left: 2px;
 }
 
 
@@ -942,10 +947,10 @@ top:-5px;
 }
 
 .makedone_header li {
-font-size: 12px;
+font-size: 11px;
 text-align: center;
 display: inline-block;
-padding: 11px 0px 0px 0px;
+padding: 10px 0px 0px 0px;
 border-bottom-left-radius: 5px;
 border-bottom-right-radius: 5px;
 border: 1px solid #BBB;
@@ -954,8 +959,9 @@ margin-top: 0px;
 cursor: pointer;
 color: #555;
 text-shadow: 0px 1px 0px #FFF;
-height: 18px;
-width: 60px;
+height: 16px;
+box-shadow: 0px 1px 2px rgba(0,0,0,0.2);
+width: 53px;
 margin-left: 2px;
 }
 
@@ -963,8 +969,8 @@ margin-left: 2px;
 	content: "x";
 	font-size: 9px;
 	color: #DDD;
-	margin-left: 3px;
-	margin-top: 0px;
+	margin-left: 1px;
+	margin-top: -1px;
 	line-height: 15px;
 	display: inline-block;
 	vertical-align: middle;	
@@ -1173,27 +1179,18 @@ color:#FFF;
 
 
 .fc-button-month {
-	margin-left: 10px;
 }
 
 .fc-button-month:before {
-font-family: "fontello";
-content: '\2630';
-font-style: normal;
-font-weight: normal;
-speak: none;
-display: inline-block;
-text-decoration: inherit;
-width: 1em;
-margin-right: .2em;
-text-align: center;
-opacity: .8;
-font-variant: normal;
-text-transform: none;
-line-height: 1.4em;
-margin-left: 0em;
-font-size: 150%;
+	border-left: 1px solid #CCC;
+	content: "";
+	height: 20px;
+	position: absolute;
+	margin-top: -2px;
+	margin-left: -5px;
+	display: block;
 }
+
 
 #tags_ul {
 	list-style: none;
@@ -1579,20 +1576,20 @@ cursor: pointer;
 	font-size: 12px;
 	display: block;
 	position: absolute;
-	left: 210px;
+	left: 278px;
 	top:4px;
 	padding: 3px 7px 3px 7px;
-	border: 1px solid #555;
+	border: 1px solid #333;
 	border-radius: 5px;
 	color: #000;
 	cursor: pointer;
+	
 }
 
 #mindmap_on i {
 	font-style: normal;
 	line-height: 10px;
 	font-size: 12px;
-	text-shadow: 0px 1px 0px #888;
 }
 
 #mindmap_on i:before{

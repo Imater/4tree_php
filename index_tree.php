@@ -366,7 +366,14 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
   		  	</div>
 
   		  </div>
-  		  <div id="mindmap_on" title="Карта ума вкл/выкл"><i class='icon-sitemap'>карта ума</i></div>
+  		  
+  		<div id="footer_horizont">
+			<div id="hor"><i class='icon-doc'></i></div>
+			<div id="vert"><i class='icon-docs-landscape'></i></div>
+		</div>
+
+  		  
+  		  <div id="mindmap_on" title="Карта ума вкл/выкл"><i class='icon-sitemap'></i></div>
   		  </div>
 
 
@@ -485,11 +492,6 @@ font-weight: bold;">Поиск</span>
 				<li id = "tab_files" title="Файлы и картинки"><a><i class="icon-attach-1"></i>Файлы</a></li>
 				<li id = "tab_news" title="Новые комментарии"><a><i class="icon-rss"></i>Новости</a></li>
 			</ul>
-		</div>
-		
-		<div id="footer_horizont">
-			<div id="hor"><i class='icon-docs-landscape'></i></div>
-			<div id="vert"><i class='icon-docs-landscape rotate90'></i></div>
 		</div>
 
 	   		<div class="f_text"></div>

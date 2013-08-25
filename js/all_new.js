@@ -2174,6 +2174,7 @@ function jsDoFirst() { //функция, которая выполняется �
 			//jsLoadWelcome();
 			jsProgressStep(); $("#load_screen").hide();  
 			check_hash_add_do();
+			onResize();
 //			$("li[myid=makedone_page_1]").click();
 //			$("#open_params").click();
 //			$("#tab_files").click();

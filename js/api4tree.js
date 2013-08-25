@@ -2238,21 +2238,27 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 				return false;		      	
 		      });
 		      
-		      
+		      $("body").on("click",".f_text", function() {
+			      $(this).fadeOut(200);
+			      return false;
+		      });
 		      
 		      $(".tree_view_center").on("click",function(){
 		      	$("body").toggleClass("params_hide");
+		      	onResize();
 				api4tree.jsCurrentOpenPanelsAndTabsSave();
 				return false;		      	
 		      });
 
 		      $(".tree_view_left,.tree_footer .icon-left-open.left").on("click",function(){
 		      	$("body").toggleClass("left_panel_hide");
+		      	onResize();
 				api4tree.jsCurrentOpenPanelsAndTabsSave();		      	
 		      });
 		      
 		      $(".tree_view_right,.tree_footer .icon-left-open.right").on("click",function(){
 		      	$("body").toggleClass("hide_right_panel");
+		      	onResize();
 				api4tree.jsCurrentOpenPanelsAndTabsSave();		      	
 		      });
 		      

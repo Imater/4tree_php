@@ -1666,9 +1666,10 @@ var tm_resize;
 function onResize() //вызывается при каждом ресайзе страницы
 {	
 	clearTimeout(tm_resize);
-	isMindmap = $(".mindmap").length;
+	var isMindmap = $(".mindmap").length;
 	
-	isHorizont = $("body").hasClass("horizont_split");
+	var isHorizont = $("body").hasClass("horizont_split");
+	var isTopOpen = !$("body").hasClass("params_hide");
 	
 	if($(".ui-resizable-resizing").length) return true;
 	
@@ -1689,36 +1690,43 @@ function onResize() //вызывается при каждом ресайзе с
 			$("#tree_right_panel").css("width",main_x_right-1);
 			$("#tree_editor").css("right",main_x_right);
 
+			h = $("body").height() - 55 - 19 - 1;
+			var newheight=main_y-40;
 
 			if(isHorizont) {
 
-			$("#tree_editor .calendar_and_others").css('height',main_y);
-			$("#tree_editor .calendar_and_others").css('top',"auto");
-			$("#tree_editor .all_editor_place").css('bottom',main_y);
-			$("#tree_editor .calendar_and_others").css('right','0');
-			$("#tree_editor .all_editor_place").css('left','0');
-			var newheight=$('#calendar').parent("div").height()-30-10;
-			if( $("#content1").hasClass("v3")  ) newheight += 0;
-			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
-			$(".search_panel_result").height(newheight-21+9);
-			$("#tree_news").height(newheight-21+9);
-			$("#tree_files_panel").height(newheight-21+9);			
+			$("#tree_editor .all_editor_place").css({'left':'0', 'bottom':main_y});
+			$("#tree_editor .calendar_and_others").css({'height':main_y, 'top':'auto', 'right':'0'});
+
+			setTimeout(function(){
+				$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
+			}, 150);
+				$(".search_panel_result").height(newheight-21+9);
+				$("#tree_news").height(newheight-21+9);
+				$("#tree_files_panel").height(newheight-21+9);			
 
 				
 			} else {
 
-			$("#tree_editor .calendar_and_others").css('height',"auto");
-			$("#tree_editor .calendar_and_others").css('top',main_y_top);
-			$("#tree_editor .all_editor_place").css('bottom',20);
+			if(isTopOpen) {
+				var top_height1 = main_y_top+1;
+				var newheight=h-main_y_top-19;
+			} else {
+				$("#tree_editor .calendar_and_others").css('top', '0');
+				var top_height1 = '0';
+				var newheight=h;
+			}
 
-			$("#tree_editor .calendar_and_others").css('right','50%');
-			$("#tree_editor .all_editor_place").css('left','50%');
-			var newheight=$('#calendar').parent("div").height()-30-10;
-			if( $("#content1").hasClass("v3")  ) newheight += 0;
-			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
-			$(".search_panel_result").height(newheight-21+9);
-			$("#tree_news").height(newheight-21+9);
-			$("#tree_files_panel").height(newheight-21+9);			
+			$("#tree_editor .calendar_and_others").css({'height':'auto', 'top':top_height1, 'right':'50%'});
+			$("#tree_editor .all_editor_place").css({'left':'50%', 'bottom':20});
+
+
+			setTimeout(function(){
+				$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
+			}, 150);
+				$(".search_panel_result").height(newheight-21+9);
+				$("#tree_news").height(newheight-21+9);
+				$("#tree_files_panel").height(newheight-21+9);			
 
 				
 			}
