@@ -125,7 +125,7 @@ $(document).ready(function(){
 
 </head>
 
-<body onResize="onResize();" class="params_hide hide_right_panel">
+<body onResize="onResize();" class="params_hide hide_right_panel horizont_split">
 <?
 if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhost") AND ($_SERVER["HTTP_HOST"]!="192.168.0.52")) 
 {
