@@ -1238,6 +1238,7 @@ border-right:none;
 {
 background: none;
 width: 3px;
+border-right: none;
 }
 
 .redactor_toolbar

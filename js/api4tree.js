@@ -2055,7 +2055,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 					     	data.fio = name[name.length-1];
 				     	}
 				     	
-				     	jsTitle(data.fio+", "+jsJoke2(), 30000);
+				     	jsTitle(data.fio+", "+jsJoke2(), 7000);
 				     	
 					 	/*$(".header_text").html(data.fio+", "+jsJoke2());
 					 	setTimeout(function(){
