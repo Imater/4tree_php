@@ -2231,6 +2231,14 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
 		      	return false;
 		      });
 
+		      $("#footer_horizont").on("click",function(){
+		      	$("body").toggleClass("horizont_split");
+		      	onResize();
+				//api4tree.jsCurrentOpenPanelsAndTabsSave();
+				return false;		      	
+		      });
+		      
+		      
 		      
 		      $(".tree_view_center").on("click",function(){
 		      	$("body").toggleClass("params_hide");

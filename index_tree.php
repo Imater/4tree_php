@@ -279,19 +279,7 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 		<div id="left_calendar" class="clean_calendar">
 			<div class="gradient_line"></div>
 		</div>
-		
-		<div id="tree_footer2">
-			<ul class="tree_footer_menu2">
-				<li id = "tab_calendar" title="Большой календарь"><a><i class="icon-calendar-2"></i></a></li>
-				<li id = "tab_files" title="Файлы и картинки"><a><i class="icon-attach-1"></i></a></li>
-				<li id = "tab_news" title="Новые комментарии"><a><i class="icon-rss"></i></a></li>
-				<li id = "tab_find" title="Панель поиска"><a><i class="icon-search"></i></a></li>
-			</ul>
-		</div>
-		
-		<div class="tree_search">
-			<input id="search_filter" placeholder="Искать...">
-		</div>
+				
 
 	    <div class="tree_footer">
 
@@ -484,6 +472,26 @@ font-weight: bold;">Поиск</span>
 	  	  
 	   <div class="tree_footer">
 	   		<i class="icon-left-open left icon_box"></i>
+
+		<div class="tree_search">
+			<input id="search_filter" placeholder="Искать...">
+		</div>
+
+
+		<div id="tree_footer2">
+			<ul class="tree_footer_menu2">
+				<li id = "tab_find" title="Панель поиска"><a><i class="icon-search"></i>Поиск</a></li>
+				<li id = "tab_calendar" title="Большой календарь"><a><i class="icon-calendar-2"></i>Календарь</a></li>
+				<li id = "tab_files" title="Файлы и картинки"><a><i class="icon-attach-1"></i>Файлы</a></li>
+				<li id = "tab_news" title="Новые комментарии"><a><i class="icon-rss"></i>Новости</a></li>
+			</ul>
+		</div>
+		
+		<div id="footer_horizont">
+			<div id="hor"><i class='icon-docs-landscape'></i></div>
+			<div id="vert"><i class='icon-docs-landscape rotate90'></i></div>
+		</div>
+
 	   		<div class="f_text"></div>
 		    <i class="icon-left-open right float_right">&nbsp;</i>&nbsp;
 	   </div>

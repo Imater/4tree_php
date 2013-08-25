@@ -1668,6 +1668,8 @@ function onResize() //вызывается при каждом ресайзе с
 	clearTimeout(tm_resize);
 	isMindmap = $(".mindmap").length;
 	
+	isHorizont = $("body").hasClass("horizont_split");
+	
 	if($(".ui-resizable-resizing").length) return true;
 	
 			var w = $(document).width();
@@ -1680,20 +1682,47 @@ function onResize() //вызывается при каждом ресайзе с
 			
 			$(".resize_me").css("left",main_x+"px");
 
-			$("#tree_editor .all_editor_place").css('bottom',main_y);
-			$("#tree_editor .calendar_and_others").css('height',main_y);
+			
 			$("#tree_center").css('height',main_y_top);
 			$(".all_editor_place").css('top',main_y_top+1);
 			
 			$("#tree_right_panel").css("width",main_x_right-1);
 			$("#tree_editor").css("right",main_x_right);
-			
+
+
+			if(isHorizont) {
+
+			$("#tree_editor .calendar_and_others").css('height',main_y);
+			$("#tree_editor .calendar_and_others").css('top',"auto");
+			$("#tree_editor .all_editor_place").css('bottom',main_y);
+			$("#tree_editor .calendar_and_others").css('right','0');
+			$("#tree_editor .all_editor_place").css('left','0');
 			var newheight=$('#calendar').parent("div").height()-30-10;
 			if( $("#content1").hasClass("v3")  ) newheight += 0;
 			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
 			$(".search_panel_result").height(newheight-21+9);
 			$("#tree_news").height(newheight-21+9);
 			$("#tree_files_panel").height(newheight-21+9);			
+
+				
+			} else {
+
+			$("#tree_editor .calendar_and_others").css('height',"auto");
+			$("#tree_editor .calendar_and_others").css('top',main_y_top);
+			$("#tree_editor .all_editor_place").css('bottom',20);
+
+			$("#tree_editor .calendar_and_others").css('right','50%');
+			$("#tree_editor .all_editor_place").css('left','50%');
+			var newheight=$('#calendar').parent("div").height()-30-10;
+			if( $("#content1").hasClass("v3")  ) newheight += 0;
+			$('#calendar').fullCalendar('option','contentHeight', newheight); //высота календаря
+			$(".search_panel_result").height(newheight-21+9);
+			$("#tree_news").height(newheight-21+9);
+			$("#tree_files_panel").height(newheight-21+9);			
+
+				
+			}
+			
 
 			if(!is_mobile) jsSetTimeNow(); //обновляю указатель текущего времени
 			

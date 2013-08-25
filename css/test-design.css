@@ -551,44 +551,6 @@ transition: all 0.2s;
 	
 }
 
-.tree_search {
-	position: absolute;
-	left: 45px;
-	bottom:36px;
-	right: 60px;
-	height: 20px;
-	z-index: 3;
-	text-align: center;
-}
-
-.show_pomidors .tree_search {
-	bottom: 50px;
-}
-
-
-.tree_search input {
-	width: 100%;
-	background: none;
-	border: 1px solid #888;
-	padding: 2px 5px;
--moz-transition: all 0.2s; 
--webkit-transition: all 0.2s;  
--ms-transition: all 0.2s;  
--o-transition: all 0.2s;  
-transition: all 0.2s;  
-outline: none;
-max-width: 18em;
-	
-}
-
-.tree_search input:focus {
-	background: #FFF;
--moz-transition: all 0.2s; 
--webkit-transition: all 0.2s;  
--ms-transition: all 0.2s;  
--o-transition: all 0.2s;  
-transition: all 0.2s;  
-}
 
 
 #tree_shelf {
@@ -777,35 +739,7 @@ z-index: 5;
 	float: right;	
 }
 
-#tree_footer2 {
-right: 0px;
-width: 24px;
-position: absolute;
-bottom: 32px;
-color: #FFF;
-z-index: 6;
-}
 
-.left_panel_hide #tree_footer2 {
-	right: auto;
-	left: 0px;
-	width: 10px;
-}
-
-.left_panel_hide #tree_footer2 li {
-padding: 7px 2px;
-border-top-right-radius: 5px;
-border-bottom-right-radius: 5px;
-border-top-left-radius: 0px;
-border-bottom-left-radius: 0px;
-border: 1px solid #BBB;
-border-left: none;
-color: #555;
-font-size: 11px;
-margin-top: 2px;
-cursor: pointer;
-width: 10px;
-}
 
 .show_pomidors #tree_footer2 {
 	bottom: 46px;
@@ -814,21 +748,148 @@ width: 10px;
 #tab_find {
 }
 
+.tree_search {
+	position: absolute;
+	left: 25px;
+	bottom:0px;
+	width: 160px;
+	height: 20px;
+	z-index: 3;
+	text-align: center;
+}
+
+.show_pomidors .tree_search {
+	bottom: 50px;
+}
+
+
+.tree_search input {
+	width: 100%;
+	background: #777;
+	border: 1px solid #444;
+	padding: 0px 5px 2px 5px;
+	-moz-transition: all 0.2s; 
+	-webkit-transition: all 0.2s;  
+	-ms-transition: all 0.2s;  
+	-o-transition: all 0.2s;  
+	transition: all 0.2s;  
+	outline: none;
+	max-width: 18em;
+	
+}
+
+.tree_search input:focus {
+	background: #DDD;
+-moz-transition: all 0.2s; 
+-webkit-transition: all 0.2s;  
+-ms-transition: all 0.2s;  
+-o-transition: all 0.2s;  
+transition: all 0.2s;  
+}
+
+
+#footer_horizont {
+	position: absolute;
+	right: 50px;
+	bottom: 2px;
+	width: auto;
+	height: 14px;
+	font-size: 0px;
+	border: 1px solid #333;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+#footer_horizont #hor {
+	width: 41px;
+	height: 14px;
+	background: #555;
+	text-align: center;
+	display: inline-block;
+	vertical-align: middle;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+	box-shadow: inset 0px 0px 6px #000;
+	background: #555;
+   -moz-transition: all 0.2s; 
+   -webkit-transition: all 0.2s;  
+   -ms-transition: all 0.2s;  
+   -o-transition: all 0.2s;  
+   transition: all 0.2s;  
+}
+
+.horizont_split #footer_horizont #hor {
+	box-shadow: none;
+	background: #777;
+}
+
+#footer_horizont #vert {
+	width: 41px;
+	height: 14px;
+	background: #777;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	text-align: center;
+	display: inline-block;
+	vertical-align: middle;
+   -moz-transition: all 0.2s; 
+   -webkit-transition: all 0.2s;  
+   -ms-transition: all 0.2s;  
+   -o-transition: all 0.2s;  
+   transition: all 0.2s;  
+}
+
+.horizont_split #footer_horizont #vert {
+	box-shadow: inset 0px 0px 6px #000;
+	background: #555;
+}
+
+
+#footer_horizont i {
+	font-size: 10px;
+	display: inline-block;
+	color: #222;
+	text-shadow: none;
+	margin-top: 2px;
+	margin-left: 3px;
+}
+
+#footer_horizont #vert i {
+	margin-top: 1px;
+	margin-left: 0px;
+}
+
+
+#footer_horizont .active {
+	box-shadow: inset 0px 0px 6px #000;
+}
+
+
 #tree_footer2 ul {
 	list-style: none;
 	margin: 0px;
 	padding: 0px;	
 }
 
+#tree_footer2 {
+left: 210px;
+right: 140px;
+width: auto;
+position: absolute;
+bottom: 1px;
+color: #FFF;
+z-index: 6;
+}
+
+
 #tree_footer2 ul li{
-	padding: 5px 5px 7px 5px;	
-	border-top-left-radius: 5px;
+	display: inline-block;
+	padding: 0px 10px;	
+	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
-	border: 1px solid #BBB;
 	border-right: none;
-	color: #555;
-	font-size: 12px;
-	margin-top: 2px;	
+	color: #222;
+	font-size: 11px;
 	cursor: pointer;
 }
 
@@ -846,7 +907,7 @@ width: 10px;
 #tree_footer2 ul li.active{
 	background: #FFF;
 	color: #000;
-	box-shadow: 0px 0px 1px #000;
+	box-shadow: 0px 1px 1px #000;
 }
 
 
