@@ -573,7 +573,7 @@ if(arrow=='up')
 		{
 		current.removeClass("selected");
 		prev.addClass("selected");
-		prev.find(".n_title:first").click();
+		if(!isTree) prev.find(".n_title:first").click();
 		api4panel.jsSelectNode(prev.attr("myid"));
 		}
 	}
@@ -605,7 +605,7 @@ if(arrow=='down')
 		{
 		current.removeClass("selected");
 		prev.addClass("selected");
-		prev.find(".n_title:first").click();
+		if(!isTree) prev.find(".n_title:first").click();
 		api4panel.jsSelectNode(prev.attr("myid"));
 		}
 
