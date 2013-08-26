@@ -1866,9 +1866,20 @@ vertical-align: middle;
 	font-weight: normal;
 }
 
+.editor_fullscreen .all_editor_place {
+	left: 0px !important;
+	right: 0px !important;
+	top:28px !important;
+	bottom:0px !important;
+	position: fixed;
+	z-index: 100;
+	
+}
 
-
-
+.editor_fullscreen .redactor_ {
+	max-width: 900px;
+	
+}
 
 
 

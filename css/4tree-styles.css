@@ -7,6 +7,7 @@ html {
   min-width: 500px;
   min-height: 500px;
   position: relative;
+  overflow-x: hidden;
 }
 
 body { 
@@ -1237,8 +1238,10 @@ border-right:none;
 .redactor_separator
 {
 background: none;
-width: 3px;
-border-right: none;
+margin: 0px !important;
+width: 0px !important;
+border-right: none !important;
+border-left-color: #EEE !important;
 }
 
 .redactor_toolbar
@@ -1247,8 +1250,8 @@ top:0px;
 border: none !important;
 background: none !important;
 text-align: center;
-white-space: nowrap;
-overflow: hidden;
+/*white-space: nowrap;
+overflow: hidden;*/
 }
 
 
@@ -6466,3 +6469,4 @@ color: #000;
 .fc-border-separate tr.fc-last td {
 border-bottom-width: 0px !important;
 }
+

@@ -771,7 +771,7 @@ var API_4TREE = function(global_table_name,need_log){  //singleton
     	  			sender.removeAttr("old_title");
 			 		api4tree.jsSetSettings(id);
 			 		if( sender.parents(".mypanel:first").attr("id")=="tree_2" )	jsRefreshTree("tree_1");
-			 		else jsRefreshTree("tree_2");
+			 		else jsRefreshTree();
     	  			}
     	  	  }
     	  	else
@@ -7640,6 +7640,8 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  		  lang:'ru', focus:false, 
 		  		  fileUpload: 'do.php?access_token=' + token + '&save_file='+main_user_id,
 		  		  imageUpload: './do.php?access_token=' + token + '&save_file='+main_user_id,
+		  		  clipboardUploadUrl: './do.php?access_token=' + token + '&clipboard=true&save_file='+main_user_id,
+		  		  plugins: ['fontsize','fontfamily', 'fontcolor', 'fullscreen'],
 		  		  autoresize:true, 
 		  			focusCallback: function() {
 		  			   $("#fav_redactor_btn").show();
@@ -7695,6 +7697,7 @@ var API_4EDITOR = function(global_panel_id,need_log) {
 		  	
 		  	myr_comment = $('.comment_enter_input').redactor({imageUpload: './do.php?access_token=' + token + '&save_file='+main_user_id, lang:'ru', focus:false, fileUpload: 'do.php?access_token=' + token + '&save_file='+main_user_id, autoresize:false, toolbarExternal: "#fav_redactor_btn_comment",
 		  			toolbar: true,
+		  			clipboardUploadUrl: './do.php?access_token=' + token + '&clipboard=true&save_file='+main_user_id,
 		  			focusCallback: function() {
 		  			   $("#fav_redactor_btn").hide();
 		  			   $("#fav_redactor_btn_comment").show();

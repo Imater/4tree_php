@@ -3991,7 +3991,9 @@ function save_file_to_amazone($newname,$name_of_bucket) {
 /////////////////////сохранение файла на Amazone///////////////////////////
 if (isset($HTTP_GET_VARS['save_file'])) 
 {
-if(!$_FILES['file']['tmp_name']) exit;
+
+
+if( (!$_FILES['file']['tmp_name']) AND (!$HTTP_GET_VARS['clipboard']) ) exit;
 
 
 $today = date("m-Y"); 
@@ -4004,6 +4006,15 @@ mkdir($uploads_dir,0777);
 
 $rnd = rand(1,9999);
 $rnd .= "_".substr(md5( gmdate( "D, d M Y H:i:s T", strtotime("+5 years") ) ),0,8);
+
+if( $HTTP_GET_VARS['clipboard'] ) {
+	$contentType = $_POST['contentType'];
+	$data = base64_decode($_POST['data']);
+
+	$_FILES['file']['type'] = $contentType;
+	$_FILES['file']['name'] = md5(date('YmdHis')).'.png';
+	$_FILES['file']['size'] = count($data);
+}
 
 if($_FILES['file']['type']=="image/png") {
 	$newname = $uploads_dir."/clip_".$rnd.".png";
@@ -4022,7 +4033,14 @@ if($_FILES['file']['type']=="image/png") {
 	$newname = $uploads_dir."/".$rnd."_".$_FILES['file']['name'];
 }
 
-move_uploaded_file($_FILES['file']['tmp_name'],$newname);
+if( isset($HTTP_GET_VARS['clipboard']) ) {
+	file_put_contents($newname, $data);
+} else {
+	move_uploaded_file($_FILES['file']['tmp_name'],$newname);	
+}
+
+
+
 
 $type = $_FILES['file']['type'];
 $filename = $_FILES['file']['name'];
@@ -4068,11 +4086,11 @@ if($newname_preview1) {
 	$response = save_file_to_amazone($preview0,$newname);
 
 	//делаем 2 превьюшки большую и маленькую
-	$preview1 = create_image_preview("/".$newname, 200, 200, "1:1");
-	$response1 = save_file_to_amazone($preview1, $newname_preview1);
+//	$preview1 = create_image_preview("/".$newname, 200, 200, "1:1");
+//	$response1 = save_file_to_amazone($preview1, $newname_preview1);
 	
-	$preview2 = create_image_preview("/".$newname, 50, 50, "1:1");
-	$response2 = save_file_to_amazone($preview2, $newname_preview2);
+//	$preview2 = create_image_preview("/".$newname, 50, 50, "1:1");
+//	$response2 = save_file_to_amazone($preview2, $newname_preview2);
 
 	$preview_big = "https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/".$newname_preview1;
 	$preview_litle = "https://s3-eu-west-1.amazonaws.com/upload.4tree.ru/".$newname_preview2;

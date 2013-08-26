@@ -47,7 +47,7 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 	echo '
     <link rel="stylesheet" type="text/css" href="css/ui/css/smoothness/jquery-ui-1.8.21.custom.css"/>
     <link rel="stylesheet" type="text/css" href="css/iphone.css"/>
-    <link rel="stylesheet" type="text/css" href="redactor904/redactor/redactor.css"/>
+    <link rel="stylesheet" type="text/css" href="redactor911/redactor/redactor.css"/>
     <link rel="stylesheet" type="text/css" href="css/4tree-styles.css"/>
     <link rel="stylesheet" type="text/css" href="fullcalendar-1.6.1/fullcalendar/fullcalendar.css"/>
     <link rel="stylesheet" type="text/css" href="css/4tree-foto.css"/>
@@ -76,8 +76,12 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 	  	  <script src="js/api4tree.js"></script>
 	  	  <script src="js/all_new.js"></script>
 	  	  <script src="js/ydn.db-jquery-0.7.5.js"></script>
-	  	  <script src="redactor904/redactor/redactor.js"></script>
-	  	  <script src="redactor904/redactor/ru.js"></script>
+	  	  <script src="redactor911/redactor/redactor.js"></script>
+	  	  <script src="redactor911/redactor/fontsize.js"></script>
+	  	  <script src="redactor911/redactor/fontfamily.js"></script>
+	  	  <script src="redactor911/redactor/fontcolor.js"></script>
+	  	  <script src="redactor911/redactor/fullscreen.js"></script>
+	  	  <script src="redactor911/redactor/ru.js"></script>
 	  	  <script src="js/iphone-style-checkboxes.js"></script>
 	  	  <script src="js/jszip.js"></script>
 	  	  <script src="js/vcdiff.js"></script>
