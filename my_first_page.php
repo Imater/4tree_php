@@ -179,7 +179,7 @@
 		  <a href="./getting_started"><button type="button" class="btn btn-info">Пройти курс молодого бойца</button></a>
         </div>
         <div class="col-md-6">
-          <img class="featurette-image img-responsive" src="img/web/screen-words-3.jpg" data-src="bootstrap-3/js/holder.js/500x500/auto" alt="Generic placeholder image">
+          <img class="featurette-image img-responsive" src="img/web/screen-last.png" data-src="bootstrap-3/js/holder.js/500x500/auto" alt="Generic placeholder image">
         </div>
       </div>
 
