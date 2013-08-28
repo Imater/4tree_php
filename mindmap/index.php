@@ -14,13 +14,13 @@
 	<link rel="stylesheet" href="fontello/css/fontello.css">
     <link rel="stylesheet" type="text/css" href="contextmenu/src/jquery.contextMenu.css"/>
 
-	<script src="jquery-1.10.1.min.js"></script>
-	<script src="jquery-ui-1.10.3.custom.min.js"></script>
- 	<script src="jquery.jsPlumb-1.4.1-all.js"></script>
+	<script src="js/jquery-1.10.1.min.js"></script>
+	<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
+ 	<script src="js/jquery.jsPlumb-1.4.1-all.js"></script>
 	<script src="mindmap.js"></script>
     <script src="contextmenu/src/jquery.contextMenu.js"></script>	  	  
  	<script src="contextmenu/src/jquery.ui.position.js"></script>	  	  
-	<script src="ydn.db-jquery-0.7.5.js"></script>
+	<script src="js/ydn.db-jquery-0.7.5.js"></script>
 
 	
 	<title>Карта ума своими руками</title>
