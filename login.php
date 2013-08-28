@@ -288,6 +288,9 @@ function jsNewPass() {
 
 function jsClearCurrentBase() { //очищаем существующую базу данных
    	var d=$.Deferred();
+   	d.resolve(); 
+   	return d.promise();
+   	
    	var global_table_name = "4tree_db";
 
 		 
