@@ -246,11 +246,7 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 </ul>
 </li>
 </ul>
-
-
-
 </div> <!-- myslidemenu -->
-
 
 
 
@@ -335,6 +331,8 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 				<i title="Нажмите, чтобы вернуться. Нажмите правую клавишу для вывода истории просмотров." class="icon-left-1 disabled"></i>
 				<i title="Нажмите, чтобы перейти вперёд. Нажмите правую клавишу для вывода истории просмотров." class="icon-right-1 disabled"></i>
 			</div>
+		
+			<a id="help" target="_blank" href="https://4tree.ru/getting_started" title="Раздел справки. Откроется в новом окне"><i class="icon-help"></i>Справка</a>
 		
 			<div id="tree_add_new_element" class="tree_add_new_element" title="Добавить новое дело вниз">
 				<i class="icon-plus">Добавить</i>
