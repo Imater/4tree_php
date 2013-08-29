@@ -81,7 +81,9 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
     <p>4tree — это программа для управления делами и заметками. Вы можете легко манипулировать любыми данными. Всё что у вас есть, хранится в одном единственном дереве. Вы можете добавлять новые заметки, удалять, переименовывать, назначать им время напоминания, перемещать в любое место дерева, перемещать в календарь и давать доступ знакомым через включение короткой ссылки вида: <a href="https://4tree.ru/7d62" target="_blank">4tree.ru/7d62</a>. 
     <hr>
 	<p><b>Видео демонстрирующее добавления заметки и вставки картинок:</b>
-			<iframe width="640" height="360" src="http://www.youtube.com/embed/V-9tJDpVNVc?feature=player_detailpage" frameborder="0" allowfullscreen></iframe><br>
+			<div class="flex-video">
+			<iframe src="http://www.youtube.com/embed/V-9tJDpVNVc?&vq=hd720" frameborder="0" allowfullscreen></iframe>
+			</div>
 	PS: При просмотре переключите качество в HD и разверните на весь экран.
 			
 	</p>

@@ -143,6 +143,14 @@
 
       <hr class="featurette-divider">
 
+	<p><b>Видео демонстрирующее добавление заметки и вставку картинок в редактор:</b>
+			<div class="flex-video">
+			<iframe src="http://www.youtube.com/embed/V-9tJDpVNVc?&vq=hd1080" frameborder="0" allowfullscreen></iframe>
+			</div>
+	PS: При просмотре переключите качество в HD и разверните на весь экран.
+	  
+      <hr class="featurette-divider">
+
       <div class="row featurette">
         <div class="col-md-6">
           <h2 class="featurette-heading">Тайм-менеджмент, <span class="text-muted">когда всё под рукой</span></h2>
