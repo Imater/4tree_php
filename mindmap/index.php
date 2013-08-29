@@ -79,6 +79,7 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
 </div>
 
 <div id="mindmap_footer">
+<center><a target="_blank" href="https://4tree.ru">Такая карта ума используется в 4tree.ru — управление делами, заметками и календарём.</a></center>
 </div>
 
 
