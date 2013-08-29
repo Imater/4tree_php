@@ -302,6 +302,11 @@ var API_4_MINDMAP = function(){  //singleton - при многократном �
 			 	 	return false;
 			 	 });
 
+			 	 $("#mindmap").on("click", ".contextmenu", function(){ //при сворачивании и разворачивании узлов
+			 	 	$(this).contextmenu();
+			 	 	return false;
+				 });
+
 			 	 var font_size = 14; //шрифт по умолчанию
 			 	 $("#zoom_in").on("click", function(){ //кнопка увеличения масштаба
 			 	 	font_size += 1;
@@ -460,7 +465,7 @@ function jsDoFirst() {
 
 	$.contextMenu({ //генерируем контекстное меню заранее и назначаем на левый клик в .contextmenu
         selector: '.contextmenu', 
-        trigger: 'left',
+        trigger: 'none',
         callback: function(key, options) {
         	var id = $(this).parents("li:first").attr("myid");
             if( /icon-/ig.test(key) ) { //назначаем иконку
