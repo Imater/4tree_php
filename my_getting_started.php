@@ -82,7 +82,7 @@ if( ($_SERVER["SERVER_ADDR"]!="127.0.0.1") AND ($_SERVER["HTTP_HOST"]!="localhos
     <hr>
 	<p><b>Видео демонстрирующее добавления заметки и вставки картинок:</b>
 			<div class="flex-video">
-			<iframe src="http://www.youtube.com/embed/V-9tJDpVNVc?&vq=hd720" frameborder="0" allowfullscreen></iframe>
+			<iframe src="https://www.youtube.com/embed/V-9tJDpVNVc?&vq=hd720" frameborder="0" allowfullscreen></iframe>
 			</div>
 	PS: При просмотре переключите качество в HD и разверните на весь экран.
 			

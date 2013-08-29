@@ -145,7 +145,7 @@
 
 	<p><b>Видео демонстрирующее добавление заметки и вставку картинок в редактор:</b>
 			<div class="flex-video">
-			<iframe src="http://www.youtube.com/embed/V-9tJDpVNVc?&vq=hd1080" frameborder="0" allowfullscreen></iframe>
+			<iframe src="https://www.youtube.com/embed/V-9tJDpVNVc?&vq=hd1080" frameborder="0" allowfullscreen></iframe>
 			</div>
 	  
       <hr class="featurette-divider">
