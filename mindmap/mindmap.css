@@ -95,7 +95,7 @@ body, html {
 
 #mindmap .n_title {
 	display: inline-block;
-	padding: 0.3em 2em 0.3em 0.3em;
+	margin: 0.3em 2em 0.3em 0.3em;
 	max-width: 20em;
 	min-width: 5em;
 	white-space: normal;
