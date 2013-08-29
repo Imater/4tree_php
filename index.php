@@ -50,6 +50,27 @@ if(@!$user["error"] AND startsWith($_SERVER["HTTP_REFERER"],"http://ulogin.ru/ht
 		}
 
 
+if(isset($_GET['confirm']))
+   {	
+
+		$confirm = $_GET['confirm'];
+
+		$sqlnews="SELECT count(*) cnt FROM `tree_users` WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
+		$result = mysql_query_my($sqlnews); 
+		@$sql = mysql_fetch_object ($result);
+
+		if($sql->cnt>0) 
+		  {
+		  $sqlnews="UPDATE `tree_users` SET confirm_email='' WHERE confirm_email = '".mysql_real_escape_string($confirm)."'";
+		  $result = mysql_query_my($sqlnews); 
+		  @$sql = mysql_fetch_object ($result);
+		  echo '<script>alert("Спасибо за подтверждение электронной почты. Удачи в ваших делах.");</script>';
+		  }
+
+	}
+
+
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
